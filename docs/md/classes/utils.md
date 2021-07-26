@@ -1,4 +1,4 @@
-[PlayCanvas Editor API](../docs/md/README.md) / [Exports](../modules.md) / utils
+[PlayCanvas Editor API](../README.md) / [Exports](../modules.md) / utils
 
 # Class: utils
 
@@ -32,4 +32,4 @@ A copy of the data
 
 #### Defined in
 
-[src/utils.js:18](https://github.com/playcanvas/editor-api/blob/81ce39f/src/utils.js#L18)
+[src/utils.js:18](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/utils.js#L18)

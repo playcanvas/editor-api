@@ -1,4 +1,4 @@
-[PlayCanvas Editor API](../docs/md/README.md) / [Exports](../modules.md) / Entities
+[PlayCanvas Editor API](../README.md) / [Exports](../modules.md) / Entities
 
 # Class: Entities
 
@@ -42,7 +42,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:12](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L12)
+[src/entities.js:12](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L12)
 
 ## Methods
 
@@ -64,7 +64,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:104](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L104)
+[src/entities.js:104](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L104)
 
 ___
 
@@ -80,7 +80,7 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:209](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L209)
+[src/entities.js:209](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L209)
 
 ___
 
@@ -107,7 +107,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:240](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L240)
+[src/entities.js:240](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L240)
 
 ___
 
@@ -131,7 +131,7 @@ Delete specified entities
 
 #### Defined in
 
-[src/entities.js:350](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L350)
+[src/entities.js:350](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L350)
 
 ___
 
@@ -155,7 +155,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:85](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L85)
+[src/entities.js:85](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L85)
 
 ___
 
@@ -173,7 +173,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:95](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L95)
+[src/entities.js:95](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L95)
 
 ___
 
@@ -196,7 +196,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:143](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L143)
+[src/entities.js:143](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L143)
 
 ___
 
@@ -218,7 +218,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:129](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L129)
+[src/entities.js:129](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L129)
 
 ___
 
@@ -240,4 +240,4 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:188](https://github.com/playcanvas/editor-api/blob/81ce39f/src/entities.js#L188)
+[src/entities.js:188](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L188)

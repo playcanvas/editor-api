@@ -1,4 +1,4 @@
-[PlayCanvas Editor API](docs/md/README.md) / Exports
+[PlayCanvas Editor API](README.md) / Exports
 
 # PlayCanvas Editor API
 
