@@ -1,0 +1,10 @@
+{
+    "include": ["**/*.js"],
+    "exclude": ["dist/**"],
+    "compilerOptions": {
+        "allowJs": true,
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "module": "ES6"
+    }
+}
