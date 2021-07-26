@@ -1,8 +1,8 @@
 {
     "name": "PlayCanvas Editor API",
     "entryPoints": ["index.js"],
-    "out": "docs/html",
-    "theme": "docs/themes/playcanvas",
+    "out": "docs/md",
+    "entryDocument": "docs/md/README.md",
     "highlightTheme": "github-light",
     "excludePrivate": true,
     "excludeNotDocumented": true
