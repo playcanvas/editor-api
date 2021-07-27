@@ -52,7 +52,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/connection.js:16](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L16)
+[src/realtime/connection.js:16](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L16)
 
 ## Accessors
 
@@ -68,7 +68,7 @@ Whether the server has authenticated the user
 
 #### Defined in
 
-[src/realtime/connection.js:266](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L266)
+[src/realtime/connection.js:266](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L266)
 
 ___
 
@@ -84,7 +84,7 @@ Whether the user is connected to the server
 
 #### Defined in
 
-[src/realtime/connection.js:257](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L257)
+[src/realtime/connection.js:257](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L257)
 
 ___
 
@@ -100,7 +100,7 @@ Gets the sharedb instance
 
 #### Defined in
 
-[src/realtime/connection.js:275](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L275)
+[src/realtime/connection.js:275](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L275)
 
 ## Methods
 
@@ -116,7 +116,7 @@ Connect to the realtime server
 
 #### Defined in
 
-[src/realtime/connection.js:32](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L32)
+[src/realtime/connection.js:32](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L32)
 
 ___
 
@@ -132,7 +132,7 @@ Disconnect from the server
 
 #### Defined in
 
-[src/realtime/connection.js:68](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L68)
+[src/realtime/connection.js:68](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L68)
 
 ___
 
@@ -148,7 +148,7 @@ Stop bulk subscribing to documents
 
 #### Defined in
 
-[src/realtime/connection.js:118](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L118)
+[src/realtime/connection.js:118](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L118)
 
 ___
 
@@ -173,7 +173,7 @@ The sharedb document
 
 #### Defined in
 
-[src/realtime/connection.js:104](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L104)
+[src/realtime/connection.js:104](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L104)
 
 ___
 
@@ -195,7 +195,7 @@ Sends a string to the server
 
 #### Defined in
 
-[src/realtime/connection.js:91](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L91)
+[src/realtime/connection.js:91](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L91)
 
 ___
 
@@ -218,7 +218,7 @@ Send message to server
 
 #### Defined in
 
-[src/realtime/connection.js:82](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L82)
+[src/realtime/connection.js:82](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L82)
 
 ___
 
@@ -234,4 +234,4 @@ Start bulk subscribing to documents
 
 #### Defined in
 
-[src/realtime/connection.js:111](https://github.com/playcanvas/editor-api/blob/3c9e682/src/realtime/connection.js#L111)
+[src/realtime/connection.js:111](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/connection.js#L111)

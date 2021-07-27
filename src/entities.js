@@ -352,7 +352,7 @@ class Entities extends Events {
     /**
      * Delete specified entities
      *
-     * @param {Entity[]} entities - The entities
+     * @param {Entity[]|Entity} entities - The entities
      * @param {object} [options] - Options
      * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
