@@ -311,6 +311,23 @@ class Entity {
     }
 
     /**
+     * Reparents entity under new parent
+     *
+     * @param {Entity} parent - The new parent
+     * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+     */
+    reparent(parent, index, options = {}) {
+        this._entitiesApi.reparent([{
+            entity: this,
+            parent: parent,
+            index: index
+        }], options);
+    }
+
+    /**
      * Returns the latest version of the Entity from the Entities API.
      *
      * @returns {Entity} The entity

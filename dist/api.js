@@ -3428,6 +3428,23 @@
         }
 
         /**
+         * Reparents entity under new parent
+         *
+         * @param {Entity} parent - The new parent
+         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action
+         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+         */
+        reparent(parent, index, options = {}) {
+            this._entitiesApi.reparent([{
+                entity: this,
+                parent: parent,
+                index: index
+            }], options);
+        }
+
+        /**
          * Returns the latest version of the Entity from the Entities API.
          *
          * @returns {Entity} The entity
@@ -3820,7 +3837,7 @@
         /**
          * Delete specified entities
          *
-         * @param {Entity[]} entities - The entities
+         * @param {Entity[]|Entity} entities - The entities
          * @param {object} [options] - Options
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
@@ -4492,6 +4509,9 @@
         }
     }
 
+    const RECONNECT_INTERVAL = 3;
+    const MAX_ATTEMPTS = 3;
+
     /**
      * Handles connecting and communicating with the Realtime server.
      */
@@ -4510,18 +4530,17 @@
             this._socket = null;
             this._sharedb = null;
             this._reconnectAttempts = 0;
-            this._reconnectInterval = 3;
+            this._reconnectInterval = RECONNECT_INTERVAL;
             this._connected = false;
             this._authenticated = false;
             this._domEvtVisibilityChange = this._onVisibilityChange.bind(this);
-            this._maxAttempts = 3;
         }
 
         /**
          * Connect to the realtime server
          */
         connect() {
-            if (this._reconnectAttempts > this._maxAttempts) {
+            if (this._reconnectAttempts > MAX_ATTEMPTS) {
                 this._realtime.emit('cannotConnect');
                 return;
             }
@@ -4620,7 +4639,7 @@
         _onConnect() {
             this._connected = true;
             this._reconnectAttempts = 0;
-            this._reconnectInterval = 3;
+            this._reconnectInterval = RECONNECT_INTERVAL;
             this._sendAuth();
             this._realtime.emit('connected');
         }
@@ -5010,58 +5029,6 @@
     }
 
     /**
-     * Provides methods to load assets from sharedb
-     */
-    class RealtimeAssets extends __webpack_exports__Events {
-        /** @typedef {import("../realtime").Realtime} Realtime */
-        /** @typedef {import("../realtime/connection").RealtimeConnection} RealtimeConnection */
-
-        /**
-         * Constructor
-         *
-         * @param {Realtime} realtime - The realtime API
-         * @param {RealtimeConnection} connection - The realtime connection
-         */
-        constructor(realtime, connection) {
-            super();
-            this._realtime = realtime;
-            this._connection = connection;
-            this._assets = {};
-        }
-
-        /**
-         * Loads an asset
-         *
-         * @param {number} id - The asset id
-         * @returns {RealtimeAsset} The asset
-         */
-        load(id) {
-            let asset = this._assets[id];
-            if (!asset) {
-                asset = new RealtimeAsset(id, this._realtime, this._connection);
-            }
-
-            if (!asset.loaded) {
-                asset.load();
-            }
-
-            return asset;
-        }
-
-        /**
-         * Unloads an asset
-         *
-         * @param {number} id - The asset id
-         */
-        unload(id) {
-            if (this._assets[id]) {
-                this._assets[id].unload();
-                delete this._scenes[id];
-            }
-        }
-    }
-
-    /**
      * Provides methods to communicate and load / save data to the realtime server
      */
     class Realtime extends __webpack_exports__Events {
@@ -5069,7 +5036,6 @@
             super();
             this._connection = new RealtimeConnection(this);
             this._scenes = new RealtimeScenes(this, this.connection);
-            this._assets = new RealtimeAssets(this, this.connection);
         }
 
         /**
@@ -5088,15 +5054,6 @@
          */
         get scenes() {
             return this._scenes;
-        }
-
-        /**
-         * Gets the realtime assets API
-         *
-         * @type {RealtimeAssets}
-         */
-        get assets() {
-            return this._assets;
         }
     }
 

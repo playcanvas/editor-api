@@ -46,7 +46,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/scenes.js:17](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/scenes.js#L17)
+[src/realtime/scenes.js:17](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime/scenes.js#L17)
 
 ## Accessors
 
@@ -62,7 +62,7 @@ The current scene
 
 #### Defined in
 
-[src/realtime/scenes.js:70](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/scenes.js#L70)
+[src/realtime/scenes.js:70](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime/scenes.js#L70)
 
 ## Methods
 
@@ -86,7 +86,7 @@ The scene
 
 #### Defined in
 
-[src/realtime/scenes.js:31](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/scenes.js#L31)
+[src/realtime/scenes.js:31](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime/scenes.js#L31)
 
 ___
 
@@ -108,4 +108,4 @@ Unloads a scene
 
 #### Defined in
 
-[src/realtime/scenes.js:54](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime/scenes.js#L54)
+[src/realtime/scenes.js:54](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime/scenes.js#L54)

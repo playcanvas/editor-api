@@ -33,7 +33,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime.js:9](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime.js#L9)
+[src/realtime.js:9](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime.js#L9)
 
 ## Accessors
 
@@ -49,7 +49,7 @@ Gets the realtime connection
 
 #### Defined in
 
-[src/realtime.js:20](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime.js#L20)
+[src/realtime.js:20](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime.js#L20)
 
 ___
 
@@ -65,4 +65,4 @@ Gets the realtime scenes API
 
 #### Defined in
 
-[src/realtime.js:29](https://github.com/playcanvas/editor-api/blob/3ddc9db/src/realtime.js#L29)
+[src/realtime.js:29](https://github.com/playcanvas/editor-api/blob/82b05e2/src/realtime.js#L29)
