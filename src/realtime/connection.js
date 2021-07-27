@@ -1,6 +1,9 @@
 import { globals as api } from '../globals';
 import { Events } from '../pcui';
 
+const RECONNECT_INTERVAL = 3;
+const MAX_ATTEMPTS = 3;
+
 /**
  * Handles connecting and communicating with the Realtime server.
  */
@@ -19,18 +22,17 @@ class RealtimeConnection extends Events {
         this._socket = null;
         this._sharedb = null;
         this._reconnectAttempts = 0;
-        this._reconnectInterval = 3;
+        this._reconnectInterval = RECONNECT_INTERVAL;
         this._connected = false;
         this._authenticated = false;
         this._domEvtVisibilityChange = this._onVisibilityChange.bind(this);
-        this._maxAttempts = 3;
     }
 
     /**
      * Connect to the realtime server
      */
     connect() {
-        if (this._reconnectAttempts > this._maxAttempts) {
+        if (this._reconnectAttempts > MAX_ATTEMPTS) {
             this._realtime.emit('cannotConnect');
             return;
         }
@@ -129,7 +131,7 @@ class RealtimeConnection extends Events {
     _onConnect() {
         this._connected = true;
         this._reconnectAttempts = 0;
-        this._reconnectInterval = 3;
+        this._reconnectInterval = RECONNECT_INTERVAL;
         this._sendAuth();
         this._realtime.emit('connected');
     }
