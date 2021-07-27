@@ -479,7 +479,7 @@ class Entities extends Events {
                 parentOld: parentOld,
                 indOld: indexOld,
                 parent: entry.parent,
-                indNew: entry.index !== undefined ? entry.index : entry.parent.get('children').length
+                indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
             };
 
             if (options.preserveTransform) {
