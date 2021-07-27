@@ -1,5 +1,5 @@
 import { globals as api } from './globals';
-import { Observer } from './pcui';
+import { Observer, ObserverHistory } from './pcui';
 
 /**
  * Represents an Entity
@@ -32,6 +32,14 @@ class Entity {
         });
 
         const id = this._observer.get('resource_id');
+
+        this._history = new ObserverHistory({
+            item: this._observer,
+            prefix: 'entity.' + id + '.',
+            history: api.history
+        });
+        this._observer.history = this._history;
+
         this._observer.latestFn = () => {
             const latest = this._entitiesApi.get(id);
             return latest && latest._observer;
@@ -328,8 +336,20 @@ class Entity {
         return this.get('children').map(id => this._entitiesApi.get(id));
     }
 
+    /**
+     * @type {ObserverHistory}
+     * @description The history object for this entity
+     */
     get history() {
-        return this._observer.history || this._history;
+        return this._history;
+    }
+
+    /**
+     * @type {pc.Entity}
+     * @description The entity in the 3D viewport of the Editor
+     */
+    get viewportEntity() {
+        return this._observer ? this._observer.entity : null;
     }
 }
 

@@ -1,1 +1,7 @@
-export { Observer, ObserverList, History, Events } from '../node_modules/@playcanvas/pcui/pcui-binding.mjs';
+export {
+    Observer,
+    ObserverList,
+    ObserverHistory,
+    History,
+    Events
+} from '../node_modules/@playcanvas/pcui/pcui-binding.mjs';
