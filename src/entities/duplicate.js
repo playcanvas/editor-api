@@ -1,4 +1,5 @@
 import { globals as api } from '../globals';
+import { findReferences, updateReferences } from './references';
 
 /**
  * When an entity that has properties that contain references to some entities
@@ -6,15 +7,12 @@ import { globals as api } from '../globals';
  * the newly created duplicate subtree.
  *
  * @private
- * @param {Entities} entitiesApi - The entities API
- * @param {Entity} oldSubtreeRoot - The root entity from the tree that was duplicated
- * @param {Entity} oldEntity - The source entity
- * @param {Entity} newEntity - The duplicated entity
- * @param {object} duplicatedIdsMap - Contains a map that points from the old resource ids to the new resource ids
+ * @param {Entities} entitiesApi - The Entities API
+ * @param {Entity} newEntity - The new (duplicated) entity
+ * @param {Entity} oldEntity - The old entity
+ * @param {object} duplicatedIdsMap - Map of old id -> new id
  */
-function resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldEntity, newEntity, duplicatedIdsMap) {
-    let history;
-
+function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, duplicatedIdsMap) {
     // remap template_ent_ids for template instances
     const templateEntIds = newEntity.get('template_ent_ids');
     if (templateEntIds) {
@@ -25,57 +23,26 @@ function resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldEntit
             }
         }
 
-        history = newEntity.history.enabled;
+        const history = newEntity.history.enabled;
         newEntity.history.enabled = false;
         newEntity.set('template_ent_ids', newTemplateEntIds);
         newEntity.history.enabled = history;
     }
 
-    const components = oldEntity.get('components');
+    // update entity references
+    const entityReferences = findReferences(newEntity);
+    for (const id in entityReferences) {
+        const prevEntity = entitiesApi.get(id);
+        // only update references to this entity if it is in the old entity's subtree
+        if (!prevEntity || (prevEntity !== oldEntity && !prevEntity.isDescendantOf(oldEntity))) {
+            delete entityReferences[id];
+        }
+    }
 
-    Object.keys(components).forEach(componentName => {
-        const component = components[componentName];
-        const entityFields = api.schema.components.getFieldsOfType(componentName, 'entity');
-
-        entityFields.forEach(fieldName => {
-            const oldEntityId = component[fieldName];
-            const oldEntity = entitiesApi.get(oldEntityId);
-            if (oldEntity && (oldEntity === oldSubtreeRoot || oldEntity.isDescendantOf(oldSubtreeRoot))) {
-                const newEntityId = duplicatedIdsMap[oldEntityId];
-
-                if (newEntityId) {
-                    history = newEntity.history.enabled;
-                    newEntity.history.enabled = false;
-                    newEntity.set(`components.${componentName}.${fieldName}`, newEntityId);
-                    newEntity.history.enabled = history;
-                } else {
-                    console.warn('Could not find corresponding entity id when resolving duplicated entity references');
-                }
-            }
-        });
-    });
-
-    // TODO: remap entity script attributes
-    // const scriptComponent = oldEntity.get('components.script');
-    // if (scriptComponent && !api.hasLegacyScripts) {
-    //     for (const scriptName in scriptComponent.scripts) {
-    //     }
-    // }
-
-    // Recurse into children. Note that we continue to pass in the same `oldSubtreeRoot`,
-    // in order to correctly handle cases where a child has an entity reference
-    // field that points to a parent or other ancestor that is still within the
-    // duplicated subtree.
-    const oldChildren = oldEntity.get('children');
-    const newChildren = newEntity.get('children');
-
-    if (oldChildren && oldChildren.length > 0) {
-        oldChildren.forEach((oldChildId, index) => {
-            const oldChild = entitiesApi.get(oldChildId);
-            const newChild = entitiesApi.get(newChildren[index]);
-
-            resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldChild, newChild, duplicatedIdsMap);
-        });
+    if (Object.keys(entityReferences).length) {
+        for (const oldId in duplicatedIdsMap) {
+            updateReferences(entitiesApi, entityReferences, oldId, duplicatedIdsMap[oldId]);
+        }
     }
 }
 
@@ -181,7 +148,7 @@ function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, use
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
  * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
  * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
- * @returns {Entity[]} The duplicated entities
+ * @returns {Promise<Entity[]>} The duplicated entities
  */
 async function duplicateEntities(entitiesApi, entities, options) {
     if (options.history === undefined) {
@@ -191,7 +158,10 @@ async function duplicateEntities(entitiesApi, entities, options) {
     const root = entitiesApi.root;
 
     // make sure we are not duplicating the root
-    if (entities.includes(root)) return;
+    if (entities.includes(root)) {
+        console.error('Cannot duplicate the root Entity');
+        return;
+    };
 
     // build index
     const records = {};
@@ -261,7 +231,7 @@ async function duplicateEntities(entitiesApi, entities, options) {
             options.rename
         );
 
-        resolveDuplicatedEntityReferences(entitiesApi, entity, entity, newEntity, duplicatedIdsMap);
+        updateDuplicatedEntityReferences(entitiesApi, newEntity, entity, duplicatedIdsMap);
 
         newEntities.push(newEntity);
     });

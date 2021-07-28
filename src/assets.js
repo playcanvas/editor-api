@@ -1,6 +1,6 @@
 import { Asset } from './asset';
 import { globals as api } from './globals';
-import { Events, ObserverList } from './pcui';
+import { Events } from './pcui';
 
 /**
  * The Assets Editor API
@@ -38,7 +38,7 @@ class Assets extends Events {
      */
     get(id) {
         const a = this._assets.get(id);
-        return a ? e.apiAsset : null;
+        return a ? a.apiAsset : null;
     }
 
     /**
@@ -102,6 +102,8 @@ class Assets extends Events {
      * @param {Asset} asset - The asset
      */
     add(asset) {
+        asset._initializeHistory();
+
         const pos = this._assets.add(asset._observer);
         if (pos === null) return;
 
@@ -154,6 +156,11 @@ class Assets extends Events {
         if (this._assets.remove(asset)) {
             delete this._uniqueIdToItemId[asset.get('uniqueId')];
             asset._observer.destroy();
+
+            if (api.realtime) {
+                api.realtime.assets.unload(asset.get('uniqueId'));
+            }
+
             this.emit(`remove`, asset);
             this.emit(`remove[${asset.get('id')}]`);
         }
@@ -185,8 +192,22 @@ class Assets extends Events {
         return this._assets.data.filter(observer => fn(observer.apiAsset)).map(observer => observer.apiAssset);
     }
 
+    /**
+     * Finds first asset that satisfies function
+     *
+     * @param {Function} fn - A function that takes an asset as an argument and returns boolean.
+     * @returns {Asset} The asset
+     */
+    findOne(fn) {
+        const result = this._assets.data.find(observer => fn(observer.apiAsset));
+        return result ? result.apiAsset : null;
+    }
+
+    /**
+     * Loads all assets in the current project / branch
+     * and subscribes to changes
+     */
     async loadAllAndSubscribe() {
-        // TODO: idle test
         this.clear();
 
         this.emit('load:progress', 0.1);
@@ -259,6 +280,19 @@ class Assets extends Events {
 
             startBatch += batchSize;
         }
+    }
+
+    /**
+     * Gets the first script asset that contains the specified script
+     *
+     * @param {string} script - The script name
+     * @returns {Asset} The script asset
+     */
+    getAssetForScript(script) {
+        return this.findOne(asset => {
+            return asset.get('type') === 'script' &&
+                   asset.has('data.scripts.' + script);
+        });
     }
 }
 

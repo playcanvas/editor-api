@@ -149,6 +149,412 @@
         }
     }
 
+    /**
+     * Represents an Entity
+     */
+    class Entity {
+        /** @typedef {import("./entities").Entities} Entities */
+
+        /**
+         * Creates new Entity
+         *
+         * @param {Entities} entitiesApi - The Entities API
+         * @param {object} [data] - Optional entity data
+         */
+        constructor(entitiesApi, data = {}) {
+            this._entitiesApi = entitiesApi;
+
+            this._observer = new Observer({
+                name: data.name || 'New Entity',
+                tags: data.tags || [],
+                enabled: data.enabled || true,
+                resource_id: data.resource_id || pc.guid.create(),
+                parent: typeof data.parent === 'string' ? data.parent : null,
+                children: [],
+                position: data.position || [0, 0, 0],
+                rotation: data.rotation || [0, 0, 0],
+                scale: data.scale || [1, 1, 1],
+                components: {}
+            });
+
+            const id = this._observer.get('resource_id');
+
+            this._observer.latestFn = () => {
+                const latest = this._entitiesApi.get(id);
+                return latest && latest._observer;
+            };
+
+            this._observer.apiEntity = this;
+
+            if (data.components) {
+                for (const component in data.components) {
+                    this.addComponent(component, data.components[component]);
+                }
+            }
+
+            this._history = {};
+        }
+
+        _initializeHistory() {
+            if (this._observer.history) return;
+
+            this._history = new ObserverHistory({
+                item: this._observer,
+                prefix: 'entity.' + this.get('resource_id') + '.',
+                history: globals.history
+            });
+            this._observer.history = this._history;
+        }
+
+        /**
+         * Checks if path exists
+         *
+         * @param {string} path - The path
+         * @returns {boolean} True if path exists
+         */
+        has(path) {
+            return this._observer.has(path);
+        }
+
+        /**
+         * Gets value at path
+         *
+         * @param {string} path - The path
+         * @returns {any} The value
+         */
+        get(path) {
+            return this._observer.get(path);
+        }
+
+        /**
+         * Sets value at path
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was set
+         */
+        set(path, value) {
+            return this._observer.set(path, value);
+        }
+
+        /**
+         * Unsets value at path
+         *
+         * @param {string} path - The path
+         * @returns {boolean} Whether the value was unset
+         */
+        unset(path) {
+            return this._observer.unset(path);
+        }
+
+        /**
+         * Inserts value in array at path, at specified index
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @param {number} index - The index (if undefined the value will be inserted in the end)
+         * @returns {boolean} Whether the value was inserted
+         */
+        insert(path, value, index) {
+            return this._observer.insert(path, value, index);
+        }
+
+        /**
+         * Remove value from array at path.
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was removed
+         */
+        removeValue(path, value) {
+            return this._observer.removeValue(path, value);
+        }
+
+        /**
+         * Returns JSON representation of entity data
+         *
+         * @returns {object} - The data
+         */
+        json() {
+            return this._observer.json();
+        }
+
+        /**
+         * Returns true if this entity is a descendant of the specified parent entity.
+         *
+         * @param {Entity} parent - The parent
+         * @returns {boolean} True if it is
+         */
+        isDescendantOf(parent) {
+            let p = this.parent;
+            while (p) {
+                if (p === parent) {
+                    return true;
+                }
+
+                p = p.parent;
+            }
+
+            return false;
+        }
+
+        /**
+         * Finds first entity by name using depth-first search
+         *
+         * @param {string} name - The name
+         * @returns {Entity} The entity
+         */
+        findByName(name) {
+            if (this.get('name') === name) {
+                return this;
+            }
+
+            const children = this.children;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child) {
+                    const found = child.findByName(name);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Finds all entities with specified tags
+         *
+         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
+         * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
+         * @returns {Entity[]} The entities
+         */
+        listByTag(...tags) {
+            return this.filter(entity => {
+                const t = entity.get('tags');
+                for (let i = 0; i < tags.length; i++) {
+                    if (Array.isArray(tags[i])) {
+                        let countTags = 0;
+                        for (let j = 0; j < tags[i].length; j++) {
+                            if (t.includes(tags[i][j])) {
+                                countTags++;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (countTags === tags[i].length) {
+                            return true;
+                        }
+                    } else {
+                        if (t.includes(tags[i])) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            });
+        }
+
+        /**
+         * Returns the entity and children that satisfy the function
+         *
+         * @param {Function} fn - A function that takes an Entity and returns whether it should be included
+         * in the result
+         * @returns {Entity[]} The result
+         */
+        filter(fn) {
+            let result = [];
+
+            if (fn(this)) {
+                result.push(this);
+            }
+
+            const children = this.children;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child) {
+                    result = result.concat(child.filter(fn));
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Executes function for this entity and its children
+         * in depth first order.
+         *
+         * @param {Function} fn - A function that takes an entity as an argument
+         */
+        depthFirst(fn) {
+            fn(this);
+
+            const children = this.children;
+            children.forEach(child => {
+                child.depthFirst(fn);
+            });
+        }
+
+        /**
+         * Adds a component to this Entity
+         *
+         * @param {string} component - The component name
+         * @param {object} [data] - Default component data
+         */
+        addComponent(component, data) {
+            const defaultData = globals.schema.components.getDefaultData(component);
+            const componentData = Object.assign(defaultData, data);
+            this.set(`components.${component}`, componentData);
+        }
+
+        /**
+         * Removes a component from this Entity
+         *
+         * @param {string} component - The component name
+         */
+        removeComponent(component) {
+            this.unset(`components.${component}`);
+        }
+
+        /**
+         * Adds entity as a child
+         *
+         * @param {Entity} entity - The entity
+         * @returns {boolean} Whether the child was added
+         */
+        addChild(entity) {
+            return this.insertChild(entity);
+        }
+
+        /**
+         * Inserts entity as a child at specified index.
+         *
+         * @param {Entity} entity - The entity
+         * @param {number} [index] - The index. If undefined the child will be added in the end.
+         * @returns {boolean} Whether the child was added
+         */
+        insertChild(entity, index) {
+            let history = this.history.enabled;
+            this.history.enabled = false;
+            const result = this.insert('children', entity.get('resource_id'), index);
+            this.history.enabled = history;
+
+            if (result) {
+                history = entity.history.enabled;
+                entity.history.enabled = false;
+                entity.set('parent', this.get('resource_id'));
+                entity.history.enabled = history;
+                return true;
+            }
+
+            console.error(`Cannot add duplicate child ${entity.get('resource_id')} under parent ${this.get('resource_id')}`);
+            return false;
+        }
+
+        /**
+         * Removes entity from children
+         *
+         * @param {Entity} entity - The entity
+         */
+        removeChild(entity) {
+            let history = entity.history.enabled;
+            entity.history.enabled = false;
+            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
+            entity.history.enabled = history;
+
+            history = this.history.enabled;
+            this.history.enabled = false;
+            this.removeValue('children', entity.get('resource_id'));
+            this.history.enabled = history;
+        }
+
+        /**
+         * Deletes entity (and its children)
+         *
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         */
+        delete(options = {}) {
+            this._entitiesApi.delete([this], options);
+        }
+
+        /**
+         * Reparents entity under new parent
+         *
+         * @param {Entity} parent - The new parent
+         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+         */
+        reparent(parent, index, options = {}) {
+            this._entitiesApi.reparent([{
+                entity: this,
+                parent: parent,
+                index: index
+            }], options);
+        }
+
+        /**
+         * Duplicates entity under the same parent
+         *
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
+         * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
+         * @returns {Entity} The new entity
+         */
+        async duplicate(options = {}) {
+            const result = await this._entitiesApi.duplicate([this], options);
+            return result[0];
+        }
+
+        /**
+         * Returns the latest version of the Entity from the Entities API.
+         *
+         * @returns {Entity} The entity
+         */
+        latest() {
+            return this._entitiesApi.get(this._observer.get('resource_id'));
+        }
+
+        /**
+         * @type {Entity}
+         * @description The parent entity
+         */
+        get parent() {
+            const id = this.get('parent');
+            return id ? this._entitiesApi.get(id) : null;
+        }
+
+        /**
+         * @type {Entity[]}
+         * @description The children entities. Warning: this creates a new array every time it's called.
+         */
+        get children() {
+            return this.get('children').map(id => this._entitiesApi.get(id));
+        }
+
+        /**
+         * @type {ObserverHistory}
+         * @description The history object for this entity
+         */
+        get history() {
+            return this._history;
+        }
+
+        /**
+         * @type {pc.Entity}
+         * @description The entity in the 3D viewport of the Editor
+         */
+        get viewportEntity() {
+            return this._observer ? this._observer.entity : null;
+        }
+    }
+
     /******/ var __webpack_modules__ = ({
 
     /***/ 3896:
@@ -3128,413 +3534,9 @@
     __webpack_exports__.Kx;
     var __webpack_exports__Events = __webpack_exports__.zW;
     var __webpack_exports__History = __webpack_exports__.Ay;
-    var __webpack_exports__Observer = __webpack_exports__.Qj;
-    var __webpack_exports__ObserverHistory = __webpack_exports__.ki;
-    var __webpack_exports__ObserverList = __webpack_exports__.B3;
-
-    /**
-     * Represents an Entity
-     */
-    class Entity {
-        /** @typedef {import("./entities").Entities} Entities */
-
-        /**
-         * Creates new Entity
-         *
-         * @param {Entities} entitiesApi - The Entities API
-         * @param {object} [data] - Optional entity data
-         */
-        constructor(entitiesApi, data = {}) {
-            this._entitiesApi = entitiesApi;
-
-            this._observer = new __webpack_exports__Observer({
-                name: data.name || 'New Entity',
-                tags: data.tags || [],
-                enabled: data.enabled || true,
-                resource_id: data.resource_id || pc.guid.create(),
-                parent: typeof data.parent === 'string' ? data.parent : null,
-                children: [],
-                position: data.position || [0, 0, 0],
-                rotation: data.rotation || [0, 0, 0],
-                scale: data.scale || [1, 1, 1],
-                components: {}
-            });
-
-            const id = this._observer.get('resource_id');
-
-            this._observer.latestFn = () => {
-                const latest = this._entitiesApi.get(id);
-                return latest && latest._observer;
-            };
-
-            this._observer.apiEntity = this;
-
-            if (data.components) {
-                for (const component in data.components) {
-                    this.addComponent(component, data.components[component]);
-                }
-            }
-
-            this._history = {};
-        }
-
-        _initializeHistory() {
-            this._history = new __webpack_exports__ObserverHistory({
-                item: this._observer,
-                prefix: 'entity.' + this.get('resource_id') + '.',
-                history: globals.history
-            });
-            this._observer.history = this._history;
-        }
-
-        /**
-         * Checks if path exists
-         *
-         * @param {string} path - The path
-         * @returns {boolean} True if path exists
-         */
-        has(path) {
-            return this._observer.has(path);
-        }
-
-        /**
-         * Gets value at path
-         *
-         * @param {string} path - The path
-         * @returns {any} The value
-         */
-        get(path) {
-            return this._observer.get(path);
-        }
-
-        /**
-         * Sets value at path
-         *
-         * @param {string} path - The path
-         * @param {any} value - The value
-         * @returns {boolean} Whether the value was set
-         */
-        set(path, value) {
-            return this._observer.set(path, value);
-        }
-
-        /**
-         * Unsets value at path
-         *
-         * @param {string} path - The path
-         * @returns {boolean} Whether the value was unset
-         */
-        unset(path) {
-            return this._observer.unset(path);
-        }
-
-        /**
-         * Inserts value in array at path, at specified index
-         *
-         * @param {string} path - The path
-         * @param {any} value - The value
-         * @param {number} index - The index (if undefined the value will be inserted in the end)
-         * @returns {boolean} Whether the value was inserted
-         */
-        insert(path, value, index) {
-            return this._observer.insert(path, value, index);
-        }
-
-        /**
-         * Remove value from array at path.
-         *
-         * @param {string} path - The path
-         * @param {any} value - The value
-         * @returns {boolean} Whether the value was removed
-         */
-        removeValue(path, value) {
-            return this._observer.removeValue(path, value);
-        }
-
-        /**
-         * Returns JSON representation of entity data
-         *
-         * @returns {object} - The data
-         */
-        json() {
-            return this._observer.json();
-        }
-
-        /**
-         * Returns true if this entity is a descendant of the specified parent entity.
-         *
-         * @param {Entity} parent - The parent
-         * @returns {boolean} True if it is
-         */
-        isDescendantOf(parent) {
-            let p = this.parent;
-            while (p) {
-                if (p === parent) {
-                    return true;
-                }
-
-                p = p.parent;
-            }
-
-            return false;
-        }
-
-        /**
-         * Finds first entity by name using depth-first search
-         *
-         * @param {string} name - The name
-         * @returns {Entity} The entity
-         */
-        findByName(name) {
-            if (this.get('name') === name) {
-                return this;
-            }
-
-            const children = this.children;
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                if (child) {
-                    const found = child.findByName(name);
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        /**
-         * Finds all entities with specified tags
-         *
-         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
-         * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
-         * @returns {Entity[]} The entities
-         */
-        listByTag(...tags) {
-            return this.filter(entity => {
-                const t = entity.get('tags');
-                for (let i = 0; i < tags.length; i++) {
-                    if (Array.isArray(tags[i])) {
-                        let countTags = 0;
-                        for (let j = 0; j < tags[i].length; j++) {
-                            if (t.includes(tags[i][j])) {
-                                countTags++;
-                            } else {
-                                break;
-                            }
-                        }
-
-                        if (countTags === tags[i].length) {
-                            return true;
-                        }
-                    } else {
-                        if (t.includes(tags[i])) {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            });
-        }
-
-        /**
-         * Returns the entity and children that satisfy the function
-         *
-         * @param {Function} fn - A function that takes an Entity and returns whether it should be included
-         * in the result
-         * @returns {Entity[]} The result
-         */
-        filter(fn) {
-            let result = [];
-
-            if (fn(this)) {
-                result.push(this);
-            }
-
-            const children = this.children;
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                if (child) {
-                    result = result.concat(child.filter(fn));
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * Executes function for this entity and its children
-         * in depth first order.
-         *
-         * @param {Function} fn - A function that takes an entity as an argument
-         */
-        depthFirst(fn) {
-            fn(this);
-
-            const children = this.children;
-            children.forEach(child => {
-                child.depthFirst(fn);
-            });
-        }
-
-        /**
-         * Adds a component to this Entity
-         *
-         * @param {string} component - The component name
-         * @param {object} [data] - Default component data
-         */
-        addComponent(component, data) {
-            const defaultData = globals.schema.components.getDefaultData(component);
-            const componentData = Object.assign(defaultData, data);
-            this.set(`components.${component}`, componentData);
-        }
-
-        /**
-         * Removes a component from this Entity
-         *
-         * @param {string} component - The component name
-         */
-        removeComponent(component) {
-            this.unset(`components.${component}`);
-        }
-
-        /**
-         * Adds entity as a child
-         *
-         * @param {Entity} entity - The entity
-         * @returns {boolean} Whether the child was added
-         */
-        addChild(entity) {
-            return this.insertChild(entity);
-        }
-
-        /**
-         * Inserts entity as a child at specified index.
-         *
-         * @param {Entity} entity - The entity
-         * @param {number} [index] - The index. If undefined the child will be added in the end.
-         * @returns {boolean} Whether the child was added
-         */
-        insertChild(entity, index) {
-            let history = this.history.enabled;
-            this.history.enabled = false;
-            const result = this.insert('children', entity.get('resource_id'), index);
-            this.history.enabled = history;
-
-            if (result) {
-                history = entity.history.enabled;
-                entity.history.enabled = false;
-                entity.set('parent', this.get('resource_id'));
-                entity.history.enabled = history;
-                return true;
-            }
-
-            console.error(`Cannot add duplicate child ${entity.get('resource_id')} under parent ${this.get('resource_id')}`);
-            return false;
-        }
-
-        /**
-         * Removes entity from children
-         *
-         * @param {Entity} entity - The entity
-         */
-        removeChild(entity) {
-            let history = entity.history.enabled;
-            entity.history.enabled = false;
-            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
-            entity.history.enabled = history;
-
-            history = this.history.enabled;
-            this.history.enabled = false;
-            this.removeValue('children', entity.get('resource_id'));
-            this.history.enabled = history;
-        }
-
-        /**
-         * Deletes entity (and its children)
-         *
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         */
-        delete(options = {}) {
-            this._entitiesApi.delete([this], options);
-        }
-
-        /**
-         * Reparents entity under new parent
-         *
-         * @param {Entity} parent - The new parent
-         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
-         */
-        reparent(parent, index, options = {}) {
-            this._entitiesApi.reparent([{
-                entity: this,
-                parent: parent,
-                index: index
-            }], options);
-        }
-
-        /**
-         * Duplicates entity under the same parent
-         *
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
-         * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
-         * @returns {Entity} The new entity
-         */
-        async duplicate(options = {}) {
-            const result = await this._entitiesApi.duplicate([this], options);
-            return result[0];
-        }
-
-        /**
-         * Returns the latest version of the Entity from the Entities API.
-         *
-         * @returns {Entity} The entity
-         */
-        latest() {
-            return this._entitiesApi.get(this._observer.get('resource_id'));
-        }
-
-        /**
-         * @type {Entity}
-         * @description The parent entity
-         */
-        get parent() {
-            const id = this.get('parent');
-            return id ? this._entitiesApi.get(id) : null;
-        }
-
-        /**
-         * @type {Entity[]}
-         * @description The children entities. Warning: this creates a new array every time it's called.
-         */
-        get children() {
-            return this.get('children').map(id => this._entitiesApi.get(id));
-        }
-
-        /**
-         * @type {ObserverHistory}
-         * @description The history object for this entity
-         */
-        get history() {
-            return this._history;
-        }
-
-        /**
-         * @type {pc.Entity}
-         * @description The entity in the 3D viewport of the Editor
-         */
-        get viewportEntity() {
-            return this._observer ? this._observer.entity : null;
-        }
-    }
+    __webpack_exports__.Qj;
+    __webpack_exports__.ki;
+    __webpack_exports__.B3;
 
     /**
      * Creates new entity and adds it to the hierarchy
@@ -3657,21 +3659,141 @@
         return entity;
     }
 
+    const entityFieldsCache = {};
+
+    /**
+     * Return a map of all entity reference properties in the graph. This will
+     * include references of the entity and also references of its children
+     *
+     * @private
+     * @param {Entity} entity - The entity
+     * @returns {object} The entity references
+     */
+    function findReferences(entity) {
+        const result = {};
+
+        function addReference(entity, path, value) {
+            if (!result[value]) {
+                result[value] = [];
+            }
+
+            result[value].push({
+                entityId: entity.get('resource_id'),
+                path: path
+            });
+        }
+
+        function handleScriptAttribute(entity, path, attributeDefinition, attributeValue) {
+            if (!attributeValue) return;
+            if (attributeDefinition.array) {
+                attributeValue.forEach((id, i) => {
+                    if (!id) return;
+                    addReference(entity, `${path}.${i}`, id);
+                });
+            } else {
+                addReference(entity, path, attributeValue);
+            }
+        }
+
+        entity.depthFirst(entity => {
+            const componentNames = Object.keys(entity.get('components') || {});
+            componentNames.forEach(component => {
+                if (!entityFieldsCache[component]) {
+                    entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
+                }
+
+                entityFieldsCache[component].forEach(field => {
+                    const path = `components.${component}.${field}`;
+                    const id = entity.get(path);
+                    addReference(entity, path, id);
+                });
+
+                // get script attributes
+                if (!globals.hasLegacyScripts && globals.assets && component === 'script') {
+                    const scriptComponent = entity.get(`components.script`);
+                    for (const scriptName in scriptComponent.scripts) {
+                        // get script asset
+                        const scriptAsset = globals.assets.getAssetForScript(scriptName);
+                        if (!scriptAsset) continue;
+
+                        // go through the script component attribute values
+                        for (const attributeName in scriptComponent.scripts[scriptName].attributes) {
+                            const attributeValue = scriptComponent.scripts[scriptName].attributes[attributeName];
+                            // early out if the value is null
+                            if (!attributeValue || (Array.isArray(attributeValue) && !attributeValue.length)) continue;
+
+                            const attributeDef = scriptAsset.get(`data.scripts.${scriptName}.attributes.${attributeName}`);
+                            if (!attributeDef) continue;
+
+                            const componentAttributePath = `components.script.scripts.${scriptName}.attributes.${attributeName}`;
+
+                            if (attributeDef.type === 'json') {
+                                if (!Array.isArray(attributeDef.schema)) continue;
+
+                                if (attributeDef.array) {
+                                    for (let i = 0; i < attributeValue.length; i++) {
+                                        attributeDef.schema.forEach(field => {
+                                            if (field.type !== 'entity') return;
+
+                                            handleScriptAttribute(entity, `${componentAttributePath}.${i}.${field.name}`, field, attributeValue[i]?.[field.name]);
+                                        });
+                                    }
+                                } else {
+                                    attributeDef.schema.forEach(field => {
+                                        if (field.type !== 'entity') return;
+
+                                        handleScriptAttribute(entity, `${componentAttributePath}.${field.name}`, field, attributeValue[field.name]);
+                                    });
+                                }
+                            } else if (attributeDef.type === 'entity') {
+                                handleScriptAttribute(entity, componentAttributePath, attributeDef, attributeValue);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        return result;
+    }
+
+    /**
+     * Updates entity references to the old entity to point to the new entity
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {object} entityReferences - A map of entity references
+     * @param {string} oldValue - The entity id that we want to replace
+     * @param {string} newValue - The new entity id that we want our references to point to
+     */
+    function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
+        const referencesToEntity = entityReferences[oldValue];
+        if (!referencesToEntity) return;
+
+        referencesToEntity.forEach(reference => {
+            const entity = entitiesApi.get(reference.entityId);
+            if (entity) {
+                const history = entity.history.enabled;
+                entity.history.enabled = false;
+                entity.set(reference.path, newValue);
+                entity.history.enabled = history;
+            }
+        });
+    }
+
     /**
      * When an entity that has properties that contain references to some entities
      * within its subtree is duplicated, update the references to the corresponding entities within
      * the newly created duplicate subtree.
      *
      * @private
-     * @param {Entities} entitiesApi - The entities API
-     * @param {Entity} oldSubtreeRoot - The root entity from the tree that was duplicated
-     * @param {Entity} oldEntity - The source entity
-     * @param {Entity} newEntity - The duplicated entity
-     * @param {object} duplicatedIdsMap - Contains a map that points from the old resource ids to the new resource ids
+     * @param {Entities} entitiesApi - The Entities API
+     * @param {Entity} newEntity - The new (duplicated) entity
+     * @param {Entity} oldEntity - The old entity
+     * @param {object} duplicatedIdsMap - Map of old id -> new id
      */
-    function resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldEntity, newEntity, duplicatedIdsMap) {
-        let history;
-
+    function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, duplicatedIdsMap) {
         // remap template_ent_ids for template instances
         const templateEntIds = newEntity.get('template_ent_ids');
         if (templateEntIds) {
@@ -3682,57 +3804,26 @@
                 }
             }
 
-            history = newEntity.history.enabled;
+            const history = newEntity.history.enabled;
             newEntity.history.enabled = false;
             newEntity.set('template_ent_ids', newTemplateEntIds);
             newEntity.history.enabled = history;
         }
 
-        const components = oldEntity.get('components');
+        // update entity references
+        const entityReferences = findReferences(newEntity);
+        for (const id in entityReferences) {
+            const prevEntity = entitiesApi.get(id);
+            // only update references to this entity if it is in the old entity's subtree
+            if (!prevEntity || (prevEntity !== oldEntity && !prevEntity.isDescendantOf(oldEntity))) {
+                delete entityReferences[id];
+            }
+        }
 
-        Object.keys(components).forEach(componentName => {
-            const component = components[componentName];
-            const entityFields = globals.schema.components.getFieldsOfType(componentName, 'entity');
-
-            entityFields.forEach(fieldName => {
-                const oldEntityId = component[fieldName];
-                const oldEntity = entitiesApi.get(oldEntityId);
-                if (oldEntity && (oldEntity === oldSubtreeRoot || oldEntity.isDescendantOf(oldSubtreeRoot))) {
-                    const newEntityId = duplicatedIdsMap[oldEntityId];
-
-                    if (newEntityId) {
-                        history = newEntity.history.enabled;
-                        newEntity.history.enabled = false;
-                        newEntity.set(`components.${componentName}.${fieldName}`, newEntityId);
-                        newEntity.history.enabled = history;
-                    } else {
-                        console.warn('Could not find corresponding entity id when resolving duplicated entity references');
-                    }
-                }
-            });
-        });
-
-        // TODO: remap entity script attributes
-        // const scriptComponent = oldEntity.get('components.script');
-        // if (scriptComponent && !api.hasLegacyScripts) {
-        //     for (const scriptName in scriptComponent.scripts) {
-        //     }
-        // }
-
-        // Recurse into children. Note that we continue to pass in the same `oldSubtreeRoot`,
-        // in order to correctly handle cases where a child has an entity reference
-        // field that points to a parent or other ancestor that is still within the
-        // duplicated subtree.
-        const oldChildren = oldEntity.get('children');
-        const newChildren = newEntity.get('children');
-
-        if (oldChildren && oldChildren.length > 0) {
-            oldChildren.forEach((oldChildId, index) => {
-                const oldChild = entitiesApi.get(oldChildId);
-                const newChild = entitiesApi.get(newChildren[index]);
-
-                resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldChild, newChild, duplicatedIdsMap);
-            });
+        if (Object.keys(entityReferences).length) {
+            for (const oldId in duplicatedIdsMap) {
+                updateReferences(entitiesApi, entityReferences, oldId, duplicatedIdsMap[oldId]);
+            }
         }
     }
 
@@ -3845,8 +3936,10 @@
         const root = entitiesApi.root;
 
         // make sure we are not duplicating the root
-        if (entities.includes(root)) return;
-
+        if (entities.includes(root)) {
+            console.error('Cannot duplicate the root Entity');
+            return;
+        }
         // build index
         const records = {};
         entities.forEach(entity => {
@@ -3915,7 +4008,7 @@
                 options.rename
             );
 
-            resolveDuplicatedEntityReferences(entitiesApi, entity, entity, newEntity, duplicatedIdsMap);
+            updateDuplicatedEntityReferences(entitiesApi, newEntity, entity, duplicatedIdsMap);
 
             newEntities.push(newEntity);
         });
@@ -4115,68 +4208,6 @@
     }
 
     /**
-     * Return a map of all entity reference properties in the graph. This will
-     * include references of the entity and also references of its children
-     *
-     * @private
-     * @param {Entity} entity - The entity
-     * @returns {object} The entity references
-     */
-    function findReferences(entity) {
-        const result = {};
-
-        const entityFieldsCache = {};
-
-        entity.depthFirst(entity => {
-            const componentNames = Object.keys(entity.get('components') || {});
-            componentNames.forEach(component => {
-                if (!entityFieldsCache[component]) {
-                    entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
-                }
-
-                entityFieldsCache[component].forEach(field => {
-                    const path = `components.${component}.${field}`;
-                    const id = entity.get(path);
-                    if (!result[id]) {
-                        result[id] = [];
-                    }
-                    result[id].push({
-                        entityId: entity.get('resource_id'),
-                        path: path
-                    });
-                });
-            });
-        });
-
-        return result;
-    }
-
-    /**
-     * Updates entity references to the old entity to point to the new entity
-     *
-     * @private
-     * @typedef {import("../entities").Entities} Entities
-     * @param {Entities} entitiesApi - The entities API
-     * @param {object} entityReferences - A map of entity references
-     * @param {string} oldValue - The entity id that we want to replace
-     * @param {string} newValue - The new entity id that we want our references to point to
-     */
-    function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
-        const referencesToEntity = entityReferences[oldValue];
-        if (!referencesToEntity) return;
-
-        referencesToEntity.forEach(reference => {
-            const entity = entitiesApi.get(reference.entityId);
-            if (entity) {
-                const history = entity.history.enabled;
-                entity.history.enabled = false;
-                entity.set(reference.path, newValue);
-                entity.history.enabled = history;
-            }
-        });
-    }
-
-    /**
      * Delete specified entities
      *
      * @private
@@ -4306,7 +4337,7 @@
 
             this._root = null;
 
-            this._entities = new __webpack_exports__ObserverList({
+            this._entities = new ObserverList({
                 index: 'resource_id'
             });
         }
@@ -4521,6 +4552,496 @@
          */
         get root() {
             return this._root;
+        }
+    }
+
+    /**
+     * Represents an Asset
+     */
+    class Asset {
+        /**  @typedef {import("./assets").Assets} Assets */
+
+        /**
+         * Constructor
+         *
+         * @param {Assets} assetsApi - The asset api
+         * @param {object} data - The asset data
+         */
+        constructor(assetsApi, data) {
+            this._assets = assetsApi;
+
+            // allow duplicate values in data.frameKeys of sprite asset
+            let options = null;
+            if (data.type === 'sprite') {
+                options = {
+                    pathsWithDuplicates: ['data.frameKeys']
+                };
+            }
+
+            this._observer = new Observer(data, options);
+            this._observer.apiAsset = this;
+
+            const id = data.id;
+            this._observer.latestFn = () => {
+                const latest = this._assets.get(id);
+                return latest && latest._observer;
+            };
+
+            this._resetThumbnailUrls();
+
+            this._observer.on('has_thumbnail:set', this._resetThumbnailUrls.bind(this));
+
+            this._suspendOnSet = false;
+            this._observer.on('*:set', this._onSet.bind(this));
+
+            this._history = {};
+        }
+
+        _initializeHistory() {
+            if (this._observer.history) return;
+
+            this._history = new ObserverHistory({
+                item: this._observer,
+                prefix: 'asset.' + this.get('id') + '.',
+                history: globals.history
+            });
+
+            this._observer.history = this._history;
+        }
+
+        _resetThumbnailUrls() {
+            const type = this.get('type');
+            if (!type.startsWith('texture')) return;
+
+            if (this.get('has_thumbnail')) {
+                const id = this.get('id');
+                this.set('thumbnails', {
+                    's': `/api/assets/${id}/thumbnail/small?branchId=${globals.branchId}`,
+                    'm': `/api/assets/${id}/thumbnail/medium?branchId=${globals.branchId}`,
+                    'l': `/api/assets/${id}/thumbnail/large?branchId=${globals.branchId}`,
+                    'xl': `/api/assets/${id}/thumbnail/xlarge?branchId=${globals.branchId}`
+                });
+            } else {
+                this.unset('thumbnails');
+            }
+        }
+
+        _onSet(path, value) {
+            if (this._suspendOnSet || ! path.startsWith('file') || path.endsWith('.url') || ! asset.get('file'))
+                return;
+
+            this._suspendOnSet = true;
+
+            const parts = path.split('.');
+
+            if ((parts.length === 1 || parts.length === 2) && parts[1] !== 'variants') {
+                // reset file url
+                this.set('file.url', Asset.getFileUrl(this.get('id'), this.get('file.filename')));
+                // reset thumbnails
+                this._resetThumbnailUrls();
+            } else if (parts.length >= 3 && parts[1] === 'variants') {
+                const format = parts[2];
+                this.set(`file.variants.${format}.url`, Asset.getFileUrl(this.get('id'), this.get(`file.variants.${format}.filename`)));
+            }
+
+            this._suspendOnSet = false;
+        }
+
+        /**
+         * Checks if path exists
+         *
+         * @param {string} path - The path
+         * @returns {boolean} True if path exists
+         */
+        has(path) {
+            return this._observer.has(path);
+        }
+
+        /**
+         * Gets value at path
+         *
+         * @param {string} path - The path
+         * @returns {any} The value
+         */
+        get(path) {
+            return this._observer.get(path);
+        }
+
+        /**
+         * Sets value at path
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was set
+         */
+        set(path, value) {
+            return this._observer.set(path, value);
+        }
+
+        /**
+         * Unsets value at path
+         *
+         * @param {string} path - The path
+         * @returns {boolean} Whether the value was unset
+         */
+        unset(path) {
+            return this._observer.unset(path);
+        }
+
+        /**
+         * Inserts value in array at path, at specified index
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @param {number} index - The index (if undefined the value will be inserted in the end)
+         * @returns {boolean} Whether the value was inserted
+         */
+        insert(path, value, index) {
+            return this._observer.insert(path, value, index);
+        }
+
+        /**
+         * Remove value from array at path.
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was removed
+         */
+        removeValue(path, value) {
+            return this._observer.removeValue(path, value);
+        }
+
+        /**
+         * Returns JSON representation of entity data
+         *
+         * @returns {object} - The data
+         */
+        json() {
+            return this._observer.json();
+        }
+
+        /**
+         * Returns the latest version of the Asset from the Assets API.
+         *
+         * @returns {Asset} The asset
+         */
+        latest() {
+            return this._assets.get(this._observer.get('id'));
+        }
+
+        /**
+         * Gets observer history for this assset
+         *
+         * @type {ObserverHistory}
+         */
+        get history() {
+            return this._history;
+        }
+
+        /**
+         * Gets the file URL for an asset file
+         *
+         * @param {number} id - The asset id
+         * @param {string} filename - The desired filename
+         * @returns {string} The file URL
+         */
+        static getFileUrl(id, filename) {
+            return `/api/assets/${id}/file/${filename}?branchId=${globals.branchId}`;
+        }
+    }
+
+    /**
+     * The Assets Editor API
+     */
+    class Assets extends __webpack_exports__Events {
+        /**
+         * Constructor
+         */
+        constructor() {
+            super();
+
+            this._uniqueIdToItemId = {};
+
+            this._assets = new ObserverList({
+                index: 'id',
+                sorted: (a, b) => {
+                    const f = (b._data.type === 'folder') - (a._data.type === 'folder');
+                    if (f !== 0)
+                        return f;
+                    if (a._data.name.toLowerCase() > b._data.name.toLowerCase()) {
+                        return 1;
+                    } else if (a._data.name.toLowerCase() < b._data.name.toLowerCase()) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+        }
+
+        /**
+         * Gets asset by id
+         *
+         * @param {number} id - The asset id
+         * @returns {Asset} The asset
+         */
+        get(id) {
+            const a = this._assets.get(id);
+            return a ? a.apiAsset : null;
+        }
+
+        /**
+         * Gets asset by its unique id
+         *
+         * @param {number} uniqueId - The unique id
+         * @returns {Asset} The asset
+         */
+        getUnique(uniqueId) {
+            const id = this._uniqueIdToItemId[uniqueId];
+            return id ? this.get(id) : null;
+        }
+
+        /**
+         * Returns array of all assets
+         *
+         * @returns {Array[]} The assets
+         */
+        list() {
+            return this._assets.array().map(a => a.apiAsset);
+        }
+
+        /**
+         * Finds all assets with specified tags
+         *
+         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
+         * tags will be included. If an argument is an array of tags then assets that contain ALL of the tags in the array will be included.
+         * @returns {Asset[]} The assets
+         */
+        listByTag(...tags) {
+            return this.filter(asset => {
+                const t = asset.get('tags');
+                for (let i = 0; i < tags.length; i++) {
+                    if (Array.isArray(tags[i])) {
+                        let countTags = 0;
+                        for (let j = 0; j < tags[i].length; j++) {
+                            if (t.includes(tags[i][j])) {
+                                countTags++;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (countTags === tags[i].length) {
+                            return true;
+                        }
+                    } else {
+                        if (t.includes(tags[i])) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            });
+        }
+
+        /**
+         * Adds asset to the list
+         *
+         * @param {Asset} asset - The asset
+         */
+        add(asset) {
+            asset._initializeHistory();
+
+            const pos = this._assets.add(asset._observer);
+            if (pos === null) return;
+
+            const id = asset.get('id');
+            this._uniqueIdToItemId[asset.get('uniqueId')] = id;
+
+            asset._observer.on('name:set', (name, oldName) => {
+                name = name.toLowerCase();
+                oldName = oldName.toLowerCase();
+
+                const ind = this._assets.data.indexOf(asset._observer);
+                let pos = this._assets.positionNextClosest(asset._observer, (a, b) => {
+                    const f = (b._data.type === 'folder') - (a._data.type === 'folder');
+
+                    if (f !== 0)
+                        return f;
+
+                    if ((a === b ? oldName : a._data.name.toLowerCase()) > name) {
+                        return 1;
+                    } else if ((a === b ? oldName : a._data.name.toLowerCase()) < name) {
+                        return -1;
+                    }
+                    return 0;
+
+                });
+
+                if (pos === -1 && (ind + 1) === this._assets.data.length)
+                    return;
+
+                if (ind !== -1 && (ind + 1 === pos) || (ind === pos))
+                    return;
+
+                if (ind < pos)
+                    pos--;
+
+                this._assets.move(asset._observer, pos);
+                this.emit('move', asset, pos);
+            });
+
+            this.emit(`add:[${id}]`, asset, pos);
+            this.emit('add', asset, pos);
+        }
+
+        /**
+         * Removes asset from the list
+         *
+         * @param {Asset} asset - The asset
+         */
+        remove(asset) {
+            if (this._assets.remove(asset)) {
+                delete this._uniqueIdToItemId[asset.get('uniqueId')];
+                asset._observer.destroy();
+
+                if (globals.realtime) {
+                    globals.realtime.assets.unload(asset.get('uniqueId'));
+                }
+
+                this.emit(`remove`, asset);
+                this.emit(`remove[${asset.get('id')}]`);
+            }
+        }
+
+        /**
+         * Removes all assets from the list
+         */
+        clear() {
+            const assets = this.list();
+
+            this._assets.clear();
+
+            let i = assets.length;
+            while (i--) {
+                this.remove(assets[i]);
+            }
+
+            this.emit('clear');
+        }
+
+        /**
+         * Gets assets that satisfy function
+         *
+         * @param {Function} fn - The function (takes an asset as an argument and returns boolean).
+         * @returns {Asset[]} The assets
+         */
+        filter(fn) {
+            return this._assets.data.filter(observer => fn(observer.apiAsset)).map(observer => observer.apiAssset);
+        }
+
+        /**
+         * Finds first asset that satisfies function
+         *
+         * @param {Function} fn - A function that takes an asset as an argument and returns boolean.
+         * @returns {Asset} The asset
+         */
+        findOne(fn) {
+            const result = this._assets.data.find(observer => fn(observer.apiAsset));
+            return result ? result.apiAsset : null;
+        }
+
+        /**
+         * Loads all assets in the current project / branch
+         * and subscribes to changes
+         * @returns
+         */
+        async loadAllAndSubscribe() {
+            this.clear();
+
+            this.emit('load:progress', 0.1);
+
+            const response = await fetch(`/api/projects/${globals.projectId}/assets?branchId=${globals.branchId}&view=designer`);
+            if (!response.ok) {
+                console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
+                return;
+            }
+
+            const assets = await response.json();
+            this.emit('load:progress', 0.5);
+
+            const total = assets.length;
+            if (!total) {
+                this.emit('load:progress', 1);
+                this.emit('load:all');
+                return;
+            }
+
+            const batchSize = 256;
+            let loaded = 0;
+            let startBatch = 0;
+
+            const onProgress = () => {
+                loaded++;
+                this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
+                if (loaded === total) {
+                    this.emit('load:progress', 1);
+                    this.emit('load:all');
+                }
+            };
+
+            const createAsset = (asset, realtimeAsset) => {
+                const data = realtimeAsset.data;
+
+                data.id = parseInt(data.item_id, 10);
+                data.uniqueId = asset.uniqueId;
+                data.createdAt = asset.createdAt;
+
+                // delete unnecessary fields
+                delete data.item_id;
+                delete data.branch_id;
+
+                if (data.file) {
+                    data.file.url = Asset.getFileUrl(data.id, data.file.filename);
+
+                    if (data.file.variants) {
+                        for (const key in data.file.variants) {
+                            data.file.variants[key].url = Asset.getFileUrl(data.id, data.file.variants[key].filename);
+                        }
+                    }
+                }
+
+                this.add(new Asset(this, data));
+            };
+
+            // load using bulk subscribe
+            while (startBatch < total) {
+                globals.realtime.connection.startBulkSubscribe();
+                for (let i = startBatch; i < startBatch + batchSize && i < total; i++) {
+                    const realtimeAsset = globals.realtime.assets.load(assets[i].uniqueId);
+                    realtimeAsset.once('load', () => {
+                        onProgress();
+                        createAsset(assets[i], realtimeAsset);
+                    });
+                    realtimeAsset.once('error:load', onProgress);
+                }
+                globals.realtime.connection.endBulkSubscribe();
+
+                startBatch += batchSize;
+            }
+        }
+
+        /**
+         * Gets the first script asset that contains the specified script
+         *
+         * @param {string} script - The script name
+         * @returns {Asset} The script asset
+         */
+        getAssetForScript(script) {
+            return this.findOne(asset => {
+                return asset.get('type') === 'script' &&
+                       asset.has('data.scripts.' + script);
+            });
         }
     }
 
@@ -5539,8 +6060,167 @@
     }
 
     /**
+     * Represents an asset in sharedb
+     */
+    class RealtimeAsset extends __webpack_exports__Events {
+
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("./connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {number} uniqueId - The unique asset id
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         *
+         */
+        constructor(uniqueId, realtime, connection) {
+            super();
+            this._uniqueId = uniqueId;
+            this._realtime = realtime;
+            this._connection = connection;
+            this._document = null;
+            this._loaded = false;
+
+            this._evtConnection = null;
+        }
+
+        /**
+         * Loads asset from sharedb and subscribes to changes.
+         */
+        load() {
+            if (this._document) return;
+
+            this._document = this._connection.getDocument('assets', this._uniqueId);
+            this._document.on('error', this._onError.bind(this));
+            this._document.on('load', this._onLoad.bind(this));
+
+            this._evtConnection = this._realtime.on('disconnect', this.unload.bind(this));
+
+            this._document.subscribe();
+        }
+
+        /**
+         * Unloads scene from sharedb and unsubscribes from changes.
+         */
+        unload() {
+            if (!this._document) return;
+
+            this._document.unsubscribe();
+            this._document.destroy();
+            this._document = null;
+            this._loaded = false;
+
+            this._connection.send('close:scene:' + this._uniqueId);
+
+            this._evtConnection.unbind();
+            this._evtConnection = null;
+
+            this.emit('unload');
+        }
+
+        /**
+         * Submits sharedb operation
+         *
+         * @param {object} op - The operation
+         */
+        submitOp(op) {
+            if (!this._loaded) return;
+
+            try {
+                this._document.submitOp([op]);
+            } catch (err) {
+                console.error(err);
+                this._realtime.emit('error:asset', err, this._uniqueId);
+            }
+        }
+
+        /**
+         * Calls the callback when there are no changes pending to be
+         * sent to the server
+         *
+         * @param {Function} callback - The callback
+         */
+        whenNothingPending(callback) {
+            if (this._document) {
+                this._document.whenNothingPending(callback);
+            }
+        }
+
+        _onError(err) {
+            if (this._connection.connected) {
+                console.log(err);
+            } else {
+                this._realtime.emit('error:asset', err, this._uniqueId);
+            }
+        }
+
+        _onLoad() {
+            const assetData = this._document.data;
+            if (!assetData) {
+                this._onError('Could not load asset: ' + this._uniqueId);
+                this.unload();
+                this.emit('error:load');
+                return;
+            }
+
+            // notify of operations
+            this._document.on('op', this._onOp.bind(this));
+            this._loaded = true;
+            this.emit('load');
+        }
+
+        _onOp(ops, local) {
+            if (local) return;
+
+            for (let i = 0; i < ops.length; i++) {
+                if (ops[i].p[0]) {
+                    this._realtime.emit('asset:op', ops[i], this._uniqueId);
+                }
+            }
+        }
+
+
+        /**
+         * Whether the asset is loaded
+         *
+         * @type {boolean}
+         */
+        get loaded() {
+            return this._loaded;
+        }
+
+        /**
+         * The asset data
+         *
+         * @type {object}
+         */
+        get data() {
+            return (this._loaded && this._document) ? this._document.data : null;
+        }
+
+        /**
+         * The asset id - used in combination with branch id
+         *
+         * @type {number}
+         */
+        get id() {
+            return this.data?.item_id;
+        }
+
+        /**
+         * The asset's unique id
+         *
+         * @type {number}
+         */
+        get uniqueId() {
+            return this._uniqueId;
+        }
+    }
+
+    /**
      * Provides methods to load assets from sharedb
-     * @private
      */
     class RealtimeAssets extends __webpack_exports__Events {
         /** @typedef {import("../realtime").Realtime} Realtime */
@@ -5562,7 +6242,7 @@
         /**
          * Loads an asset
          *
-         * @param {number} id - The asset id
+         * @param {number} id - The asset's unique id
          * @returns {RealtimeAsset} The asset
          */
         load(id) {
@@ -5579,9 +6259,19 @@
         }
 
         /**
+         * Gets an already loaded asset
+         *
+         * @param {number} id - The asset's unique id
+         * @returns {RealtimeAsset} The asset
+         */
+        get(id) {
+            return this._assets[id] || null;
+        }
+
+        /**
          * Unloads an asset
          *
-         * @param {number} id - The asset id
+         * @param {number} id - The asset's unique id
          */
         unload(id) {
             if (this._assets[id]) {
@@ -5630,11 +6320,16 @@
         }
     }
 
+    exports.Asset = Asset;
+    exports.Assets = Assets;
     exports.ComponentSchema = ComponentSchema;
     exports.Entities = Entities;
     exports.Entity = Entity;
+    exports.Events = __webpack_exports__Events;
     exports.History = History;
     exports.Realtime = Realtime;
+    exports.RealtimeAsset = RealtimeAsset;
+    exports.RealtimeAssets = RealtimeAssets;
     exports.RealtimeConnection = RealtimeConnection;
     exports.RealtimeScene = RealtimeScene;
     exports.RealtimeScenes = RealtimeScenes;

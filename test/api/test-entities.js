@@ -5,6 +5,7 @@ describe('api.Entities tests', function () {
         api.globals.history = null;
         api.globals.selection = null;
         api.globals.schema = null;
+        api.globals.assets = null;
         entitiesApi = new api.Entities();
     });
 
@@ -585,4 +586,85 @@ describe('api.Entities tests', function () {
         expect(dups[0].get('name')).to.equal('parent5');
     });
 
+    it('duplicate updates script attribute references', async function () {
+        api.globals.assets = new api.Assets();
+        api.globals.schema = new api.Schema(schema);
+
+        const script = new api.Asset(api.globals.assets, {
+            id: 1,
+            type: 'script',
+            data: {
+                scripts: {
+                    test: {
+                        attributes: {
+                            entity: {
+                                type: 'entity'
+                            },
+                            entityArray: {
+                                type: 'entity',
+                                array: true
+                            },
+                            json: {
+                                type: 'json',
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            },
+                            jsonArray: {
+                                type: 'json',
+                                array: true,
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        api.globals.assets.add(script);
+
+        const root = entitiesApi.create();
+        const entity = entitiesApi.create({ parent: root });
+        const id = entity.get('resource_id');
+
+        entity.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        entity: id,
+                        entityArray: [id, id],
+                        json: {
+                            entity: id,
+                            entityArray: [id, id]
+                        },
+                        jsonArray: [{
+                            entity: id,
+                            entityArray: [id, id]
+                        }]
+                    }
+                }
+            }
+        });
+
+        const dup = await entity.duplicate();
+        const newId = dup.get('resource_id');
+        expect(dup.get('components.script.scripts.test.attributes.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([newId, newId]);
+        expect(dup.get('components.script.scripts.test.attributes.json.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newId, newId]);
+        expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
+    });
 });

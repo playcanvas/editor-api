@@ -6,11 +6,15 @@
 
 ### Classes
 
+- [Asset](classes/Asset.md)
+- [Assets](classes/Assets.md)
 - [ComponentSchema](classes/ComponentSchema.md)
 - [Entities](classes/Entities.md)
 - [Entity](classes/Entity.md)
 - [History](classes/History.md)
 - [Realtime](classes/Realtime.md)
+- [RealtimeAsset](classes/RealtimeAsset.md)
+- [RealtimeAssets](classes/RealtimeAssets.md)
 - [RealtimeConnection](classes/RealtimeConnection.md)
 - [RealtimeScene](classes/RealtimeScene.md)
 - [RealtimeScenes](classes/RealtimeScenes.md)

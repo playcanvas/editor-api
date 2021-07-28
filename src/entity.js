@@ -1,5 +1,4 @@
 import { globals as api } from './globals';
-import { Observer, ObserverHistory } from './pcui';
 
 /**
  * Represents an Entity
@@ -48,6 +47,8 @@ class Entity {
     }
 
     _initializeHistory() {
+        if (this._observer.history) return;
+
         this._history = new ObserverHistory({
             item: this._observer,
             prefix: 'entity.' + this.get('resource_id') + '.',
@@ -355,7 +356,7 @@ class Entity {
      * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
      * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
-     * @returns {Entity} The new entity
+     * @returns {Promise<Entity>} The new entity
      */
     async duplicate(options = {}) {
         const result = await this._entitiesApi.duplicate([this], options);

@@ -1,6 +1,6 @@
 import { globals as api } from './globals';
 import { Entity } from './entity';
-import { Events, ObserverList } from './pcui';
+import { Events } from './pcui';
 import { createEntity } from './entities/create';
 import { duplicateEntities } from './entities/duplicate';
 import { reparentEntities } from './entities/reparent';
@@ -230,11 +230,12 @@ class Entities extends Events {
      * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
      * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
-     * @returns {Entity[]} The duplicated entities
+     * @returns {Promise<Entity[]>} The duplicated entities
      */
     async duplicate(entities, options = {}) {
         const result = await duplicateEntities(this, entities, options);
         return result;
+
     }
 
     /**

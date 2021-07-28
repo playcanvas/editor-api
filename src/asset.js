@@ -38,10 +38,25 @@ class Asset {
 
         this._suspendOnSet = false;
         this._observer.on('*:set', this._onSet.bind(this));
+
+        this._history = {};
+    }
+
+    _initializeHistory() {
+        if (this._observer.history) return;
+
+        this._history = new ObserverHistory({
+            item: this._observer,
+            prefix: 'asset.' + this.get('id') + '.',
+            history: api.history
+        });
+
+        this._observer.history = this._history;
     }
 
     _resetThumbnailUrls() {
-        if (!['texture', 'textureatlas'].includes(this.get('type'))) return;
+        const type = this.get('type');
+        if (!type.startsWith('texture')) return;
 
         if (this.get('has_thumbnail')) {
             const id = this.get('id');
@@ -157,6 +172,15 @@ class Asset {
      */
     latest() {
         return this._assets.get(this._observer.get('id'));
+    }
+
+    /**
+     * Gets observer history for this assset
+     *
+     * @type {ObserverHistory}
+     */
+    get history() {
+        return this._history;
     }
 
     /**

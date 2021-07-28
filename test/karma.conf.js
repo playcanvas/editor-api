@@ -13,9 +13,19 @@ module.exports = function (config) {
             'node_modules/sinon/pkg/sinon.js',
             'node_modules/chai/chai.js',
 
-            'test/setup.js',
             'test/lib/schema.js',
             'dist/api.js',
+            {
+                pattern: 'node_modules/@playcanvas/pcui/pcui-binding.mjs',
+                type: 'module',
+                nocache : true
+            },
+
+            {
+                pattern: 'test/setup.js',
+                type: 'module',
+                nocache: true
+            },
 
             // test files - change this to a specific file in order to run a single suite
             'test/**/test-*.js'

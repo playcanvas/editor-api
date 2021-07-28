@@ -1,4 +1,5 @@
 import { Events } from '../pcui';
+import { RealtimeAsset } from './asset';
 
 /**
  * Provides methods to load assets from sharedb
@@ -23,7 +24,7 @@ class RealtimeAssets extends Events {
     /**
      * Loads an asset
      *
-     * @param {number} id - The asset id
+     * @param {number} id - The asset's unique id
      * @returns {RealtimeAsset} The asset
      */
     load(id) {
@@ -40,9 +41,19 @@ class RealtimeAssets extends Events {
     }
 
     /**
+     * Gets an already loaded asset
+     *
+     * @param {number} id - The asset's unique id
+     * @returns {RealtimeAsset} The asset
+     */
+    get(id) {
+        return this._assets[id] || null;
+    }
+
+    /**
      * Unloads an asset
      *
-     * @param {number} id - The asset id
+     * @param {number} id - The asset's unique id
      */
     unload(id) {
         if (this._assets[id]) {
