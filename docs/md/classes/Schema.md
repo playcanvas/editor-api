@@ -30,7 +30,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema.js:12](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/schema.js#L12)
+[src/schema.js:12](https://github.com/playcanvas/editor-api/blob/82b05e2/src/schema.js#L12)
 
 ## Accessors
 
@@ -46,4 +46,4 @@ Gets the component schema
 
 #### Defined in
 
-[src/schema.js:22](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/schema.js#L22)
+[src/schema.js:22](https://github.com/playcanvas/editor-api/blob/82b05e2/src/schema.js#L22)

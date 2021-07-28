@@ -3115,7 +3115,7 @@
     var __webpack_exports__Events = __webpack_exports__.zW;
     var __webpack_exports__History = __webpack_exports__.Ay;
     var __webpack_exports__Observer = __webpack_exports__.Qj;
-    __webpack_exports__.ki;
+    var __webpack_exports__ObserverHistory = __webpack_exports__.ki;
     var __webpack_exports__ObserverList = __webpack_exports__.B3;
 
     /**
@@ -3149,6 +3149,14 @@
             });
 
             const id = this._observer.get('resource_id');
+
+            this._history = new __webpack_exports__ObserverHistory({
+                item: this._observer,
+                prefix: 'entity.' + id + '.',
+                history: globals.history
+            });
+            this._observer.history = this._history;
+
             this._observer.latestFn = () => {
                 const latest = this._entitiesApi.get(id);
                 return latest && latest._observer;
@@ -3420,6 +3428,23 @@
         }
 
         /**
+         * Reparents entity under new parent
+         *
+         * @param {Entity} parent - The new parent
+         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+         */
+        reparent(parent, index, options = {}) {
+            this._entitiesApi.reparent([{
+                entity: this,
+                parent: parent,
+                index: index
+            }], options);
+        }
+
+        /**
          * Returns the latest version of the Entity from the Entities API.
          *
          * @returns {Entity} The entity
@@ -3445,10 +3470,31 @@
             return this.get('children').map(id => this._entitiesApi.get(id));
         }
 
+        /**
+         * @type {ObserverHistory}
+         * @description The history object for this entity
+         */
         get history() {
-            return this._observer.history || this._history;
+            return this._history;
+        }
+
+        /**
+         * @type {pc.Entity}
+         * @description The entity in the 3D viewport of the Editor
+         */
+        get viewportEntity() {
+            return this._observer ? this._observer.entity : null;
         }
     }
+
+    /**
+     * Data to reparent an entity under a new parent
+     *
+     * @typedef {object} ReparentArguments
+     * @property {Entity} entity - The entity to reparent
+     * @property {Entity} parent - The new parent for the entity
+     * @property {number} index - The child index of the entity under the new parent
+     */
 
     /**
      * The entities editor API
@@ -3688,7 +3734,7 @@
         create(data, options = {}) {
             data = data || {};
 
-            if (options.history !== false) {
+            if (options.history === undefined) {
                 options.history = true;
             }
 
@@ -3791,12 +3837,12 @@
         /**
          * Delete specified entities
          *
-         * @param {Entity[]} entities - The entities
+         * @param {Entity[]|Entity} entities - The entities
          * @param {object} [options] - Options
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
         delete(entities, options = {}) {
-            if (options.history !== false) {
+            if (options.history === undefined) {
                 options.history = true;
             }
 
@@ -3897,6 +3943,130 @@
         }
 
         /**
+         * Reparents entities under new parent.
+         *
+         * @param {ReparentArguments[]} data - The reparenting data
+         * @param {object} [options] - Options
+         * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
+         * @param {boolean} [options.history] - Whether to record history. Defaults to true
+         */
+        reparent(data, options = {}) {
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            const records = data.map(entry => {
+                const parentOld = entry.entity.parent;
+                const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
+                const record = {
+                    entity: entry.entity,
+                    resourceId: entry.entity.get('resource_id'),
+                    parentOld: parentOld,
+                    indOld: indexOld,
+                    parent: entry.parent,
+                    indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
+                };
+
+                if (options.preserveTransform) {
+                    record.position = record.entity.viewportEntity.getPosition().clone();
+                    record.rotation = record.entity.viewportEntity.getRotation().clone();
+                }
+
+                return record;
+            });
+
+            const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
+                const resourceId = entity.get('resource_id');
+                if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
+                    return false;
+
+                // check if not reparenting to own child
+                let deny = false;
+                let checkParent = parent.parent;
+                while (checkParent) {
+                    if (checkParent === entity) {
+                        deny = true;
+                        checkParent = null;
+                        break;
+                    }
+
+                    checkParent = checkParent.parent;
+                }
+
+                if (deny)
+                    return false;
+
+                parentOld.history.enabled = false;
+                parentOld.removeValue('children', resourceId);
+                parentOld.history.enabled = true;
+
+                parent.history.enabled = false;
+                let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
+                parent.insert('children', resourceId, indNew + off);
+                parent.history.enabled = true;
+
+                entity.history.enabled = false;
+                entity.set('parent', parent.get('resource_id'));
+
+                if (options.preserveTransform && position && entity.viewportEntity) {
+                    entity.viewportEntity.setPosition(position);
+                    entity.viewportEntity.setRotation(rotation);
+
+                    var localPosition = entity.viewportEntity.getLocalPosition();
+                    var localRotation = entity.viewportEntity.getLocalEulerAngles();
+                    entity.set('position', [localPosition.x, localPosition.y, localPosition.z]);
+                    entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
+                }
+
+                entity.history.enabled = true;
+
+                return true;
+            };
+
+            const redo = () => {
+                let dirty = false;
+                records.forEach((record, i) => {
+                    const entity = record.entity.latest();
+                    if (!entity) return;
+
+                    const parent = record.parent.latest();
+                    const parentOld = entity.parent;
+                    if (!parentOld || !parent) return;
+
+                    if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
+                        dirty = true;
+                    }
+                });
+
+                return dirty;
+            };
+
+            let dirty = redo();
+            if (dirty && options.history && globals.history) {
+                const undo = () => {
+                    records.forEach((record, i) => {
+                        const entity = record.entity.latest();
+                        if (! entity) return;
+
+                        const parent = entity.parent;
+                        if (!parent) return;
+
+                        const parentOld = record.parentOld.latest();
+                        if (!parentOld) return;
+
+                        doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
+                    });
+                };
+
+                globals.history.add({
+                    name: 'reparent entities',
+                    undo: undo,
+                    redo: redo
+                });
+            }
+        }
+
+        /**
          * @type {Entity}
          * Gets the root Entity
          */
@@ -3904,6 +4074,15 @@
             return this._root;
         }
     }
+
+    /**
+     * A history action
+     *
+     * @typedef {object} HistoryAction
+     * @property {string} name - The action name
+     * @property {Function} undo - The undo function
+     * @property {Function} redo - The redo function
+     */
 
     /**
      * The history API responsible for undo / redo.
@@ -3925,10 +4104,7 @@
         /**
          * Adds history action
          *
-         * @param {object} action - The action
-         * @param {string} action.name - The action name
-         * @param {Function} action.undo - The undo function
-         * @param {Function} action.redo - The redo function
+         * @param {HistoryAction} action - The action
          */
         add(action) {
             this._history.add(action);
@@ -3958,7 +4134,7 @@
         /**
          * Gets the current action
          *
-         * @type {object}
+         * @type {HistoryAction}
          */
         get currentAction() {
             return this._history.currentAction;
@@ -3967,7 +4143,7 @@
         /**
          * Gets the last action
          *
-         * @type {object}
+         * @type {HistoryAction}
          */
         get lastAction() {
             return this._history.lastAction;
@@ -4333,32 +4509,38 @@
         }
     }
 
-    class Realtime extends __webpack_exports__Events {
-        constructor() {
-            super();
-            this.connection = new RealtimeConnection(this);
-            this.scenes = new RealtimeScenes(this, this.connection);
-        }
-    }
+    const RECONNECT_INTERVAL = 3;
+    const MAX_ATTEMPTS = 3;
 
+    /**
+     * Handles connecting and communicating with the Realtime server.
+     */
     class RealtimeConnection extends __webpack_exports__Events {
-        static MAX_ATTEMPTS = 3;
-        static RECONNECT_INTERVAL = 3;
+        /** @typedef {import("../realtime").Realtime} Realtime */
 
+        /**
+         * Constructor
+         *
+         * @param {Realtime} realtime - The realtime API
+         *
+         */
         constructor(realtime) {
             super();
             this._realtime = realtime;
             this._socket = null;
             this._sharedb = null;
             this._reconnectAttempts = 0;
-            this._reconnectInterval = RealtimeConnection.RECONNECT_INTERVAL;
+            this._reconnectInterval = RECONNECT_INTERVAL;
             this._connected = false;
             this._authenticated = false;
             this._domEvtVisibilityChange = this._onVisibilityChange.bind(this);
         }
 
+        /**
+         * Connect to the realtime server
+         */
         connect() {
-            if (this._reconnectAttempts > RealtimeConnection.MAX_ATTEMPTS) {
+            if (this._reconnectAttempts > MAX_ATTEMPTS) {
                 this._realtime.emit('cannotConnect');
                 return;
             }
@@ -4390,6 +4572,9 @@
             document.addEventListener('visibilitychange', this._domEvtVisibilityChange);
         }
 
+        /**
+         * Disconnect from the server
+         */
         disconnect() {
             if (this._socket) {
                 this._socket.close();
@@ -4398,18 +4583,50 @@
             document.removeEventListener('visibilitychange', this._domEvtVisibilityChange);
         }
 
+        /**
+         * Send message to server
+         *
+         * @param {string} name - The message name
+         * @param {object} data - The message data
+         */
         sendMessage(name, data) {
             this.send(name + JSON.stringify(data));
         }
 
+        /**
+         * Sends a string to the server
+         *
+         * @param {string} data - The message data
+         */
         send(data) {
             if (this._socket && this._socket.readyState === 1) {
                 this._socket.send(data);
             }
         }
 
+        /**
+         * Gets a sharedb document
+         *
+         * @param {string} collection - The collection name
+         * @param {string} id - The document id
+         * @returns {object} The sharedb document
+         */
         getDocument(collection, id) {
             return this._sharedb.get(collection, id.toString());
+        }
+
+        /**
+         * Start bulk subscribing to documents
+         */
+        startBulkSubscribe() {
+            this._sharedb.startBulk();
+        }
+
+        /**
+         * Stop bulk subscribing to documents
+         */
+        endBulkSubscribe() {
+            this._sharedb.endBulk();
         }
 
         _onVisibilityChange() {
@@ -4422,7 +4639,7 @@
         _onConnect() {
             this._connected = true;
             this._reconnectAttempts = 0;
-            this._reconnectInterval = RealtimeConnection.RECONNECT_INTERVAL;
+            this._reconnectInterval = RECONNECT_INTERVAL;
             this._sendAuth();
             this._realtime.emit('connected');
         }
@@ -4443,7 +4660,7 @@
             this._realtime.emit('disconnect', reason);
             originalOnClose();
 
-            this._realtime.emit('nextAttempt', this._reconnectInterval * 1000);
+            this._realtime.emit('nextAttempt', this._reconnectInterval);
 
             if (!document.hidden) {
                 setTimeout(() => {
@@ -4541,63 +4758,50 @@
             });
         }
 
+
+        /**
+         * Whether the user is connected to the server
+         *
+         * @type {boolean}
+         */
         get connected() {
             return this._connected;
         }
 
+        /**
+         * Whether the server has authenticated the user
+         *
+         * @type {boolean}
+         */
         get authenticated() {
             return this._authenticated;
         }
 
+        /**
+         * Gets the sharedb instance
+         *
+         * @type {object}
+         */
         get sharedb() {
             return this._sharedb;
         }
     }
 
-    class RealtimeScenes extends __webpack_exports__Events {
-        constructor(realtime, connection) {
-            super();
-            this._realtime = realtime;
-            this._connection = connection;
-            this._scenes = {};
-            this._currentScene = null;
-        }
-
-        load(sceneId) {
-            this._currentScene = this._scenes[sceneId];
-
-            if (!this._currentScene) {
-                this._currentScene = new RealtimeScene(sceneId, this._realtime, this._connection);
-                this._scenes[sceneId] = this._currentScene;
-            }
-
-            if (!this._currentScene.loaded) {
-                this._currentScene.load();
-                this._currentScene.once('load', () => {
-                    this._realtime.emit('load:scene', this._currentScene);
-                });
-            }
-
-            return this._currentScene;
-        }
-
-        unload(sceneId) {
-            if (this._scenes[sceneId]) {
-                this._scenes[sceneId].unload();
-                if (this._currentScene === this._scenes[sceneId]) {
-                    this._currentScene = null;
-                }
-
-                delete this._scenes[sceneId];
-            }
-        }
-
-        get current() {
-            return this._currentScene;
-        }
-    }
-
+    /**
+     * Represents a scene in sharedb
+     */
     class RealtimeScene extends __webpack_exports__Events {
+        /** @typedef {import("../entity").Entity} Entity */
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("./connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {number} uniqueId - The unique scene id
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         */
         constructor(uniqueId, realtime, connection) {
             super();
             this._uniqueId = uniqueId;
@@ -4609,6 +4813,9 @@
             this._evtConnection = null;
         }
 
+        /**
+         * Loads scene from sharedb and subscribes to changes.
+         */
         load() {
             if (this._document) return;
 
@@ -4616,25 +4823,35 @@
             this._document.on('error', this._onError.bind(this));
             this._document.on('load', this._onLoad.bind(this));
 
-            this._evtConnection = this._connection.on('disconnect', this.unload.bind(this));
+            this._evtConnection = this._realtime.on('disconnect', this.unload.bind(this));
 
             this._document.subscribe();
         }
 
+        /**
+         * Unloads scene from sharedb and unsubscribes from changes.
+         */
         unload() {
             if (!this._document) return;
 
             this._document.unsubscribe();
             this._document.destroy();
             this._document = null;
-            this._loaded = null;
+            this._loaded = false;
 
-            this._connection.sendData('close:scene:' + this._uniqueId);
+            this._connection.send('close:scene:' + this._uniqueId);
 
             this._evtConnection.unbind();
             this._evtConnection = null;
+
+            this.emit('unload');
         }
 
+        /**
+         * Add entity to scene
+         *
+         * @param {Entity} entity - The entity
+         */
         addEntity(entity) {
             this.submitOp({
                 p: ['entities', entity.get('resource_id')],
@@ -4642,6 +4859,11 @@
             });
         }
 
+        /**
+         * Removes entity from scene (not from children of another entity)
+         *
+         * @param {Entity} entity - The entity
+         */
         removeEntity(entity) {
             this.submitOp({
                 p: ['entities', entity.get('resource_id')],
@@ -4649,6 +4871,11 @@
             });
         }
 
+        /**
+         * Submits sharedb operation
+         *
+         * @param {object} op - The operation
+         */
         submitOp(op) {
             if (!this._loaded) return;
 
@@ -4656,10 +4883,16 @@
                 this._document.submitOp([op]);
             } catch (err) {
                 console.error(err);
-                this._realtime.emit('scene:error', err, this._uniqueId);
+                this._realtime.emit('error:scene', err, this._uniqueId);
             }
         }
 
+        /**
+         * Calls the callback when there are no changes pending to be
+         * sent to the server
+         *
+         * @param {Function} callback - The callback
+         */
         whenNothingPending(callback) {
             if (this._document) {
                 this._document.whenNothingPending(callback);
@@ -4667,7 +4900,7 @@
         }
 
         _onError(err) {
-            this._realtime.emit('error:scene', err);
+            this._realtime.emit('error:scene', err, this._uniqueId);
         }
 
         _onLoad() {
@@ -4687,20 +4920,140 @@
             }
         }
 
+        /**
+         * Whether the scene is loaded
+         *
+         * @type {boolean}
+         */
         get loaded() {
             return this._loaded;
         }
 
+        /**
+         * The scene data
+         *
+         * @type {object}
+         */
         get data() {
-            return this._loaded && this._document && this._document.data || null;
+            return this._loaded?._document?.data || null;
         }
 
+        /**
+         * The scene id - used in combination with the branch id
+         *
+         * @type {number}
+         */
         get id() {
-            return this.data && this.data.item_id;
+            return this.data?.item_id;
         }
 
+        /**
+         * The scene's unique id
+         *
+         * @type {number}
+         */
         get uniqueId() {
             return this._uniqueId;
+        }
+    }
+
+    /**
+     * Provides methods to load scenes from sharedb
+     */
+    class RealtimeScenes extends __webpack_exports__Events {
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("./connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         */
+        constructor(realtime, connection) {
+            super();
+            this._realtime = realtime;
+            this._connection = connection;
+            this._scenes = {};
+            this._currentScene = null;
+        }
+
+        /**
+         * Loads a scene
+         *
+         * @param {number} sceneId - The scene id
+         * @returns {RealtimeScene} The scene
+         */
+        load(sceneId) {
+            this._currentScene = this._scenes[sceneId];
+
+            if (!this._currentScene) {
+                this._currentScene = new RealtimeScene(sceneId, this._realtime, this._connection);
+                this._scenes[sceneId] = this._currentScene;
+            }
+
+            if (!this._currentScene.loaded) {
+                this._currentScene.load();
+                this._currentScene.once('load', () => {
+                    this._realtime.emit('load:scene', this._currentScene);
+                });
+            }
+
+            return this._currentScene;
+        }
+
+        /**
+         * Unloads a scene
+         *
+         * @param {number} sceneId - The scene id
+         */
+        unload(sceneId) {
+            if (this._scenes[sceneId]) {
+                this._scenes[sceneId].unload();
+                if (this._currentScene === this._scenes[sceneId]) {
+                    this._currentScene = null;
+                }
+
+                delete this._scenes[sceneId];
+            }
+        }
+
+        /**
+         * The current scene
+         *
+         * @type {RealtimeScene}
+         */
+        get current() {
+            return this._currentScene;
+        }
+    }
+
+    /**
+     * Provides methods to communicate and load / save data to the realtime server
+     */
+    class Realtime extends __webpack_exports__Events {
+        constructor() {
+            super();
+            this._connection = new RealtimeConnection(this);
+            this._scenes = new RealtimeScenes(this, this.connection);
+        }
+
+        /**
+         * Gets the realtime connection
+         *
+         * @type {RealtimeConnection}
+         */
+        get connection() {
+            return this._connection;
+        }
+
+        /**
+         * Gets the realtime scenes API
+         *
+         * @type {RealtimeScenes}
+         */
+        get scenes() {
+            return this._scenes;
         }
     }
 
@@ -4709,6 +5062,9 @@
     exports.Entity = Entity;
     exports.History = History;
     exports.Realtime = Realtime;
+    exports.RealtimeConnection = RealtimeConnection;
+    exports.RealtimeScene = RealtimeScene;
+    exports.RealtimeScenes = RealtimeScenes;
     exports.Schema = Schema;
     exports.Selection = Selection;
     exports.SelectionHistory = SelectionHistory;

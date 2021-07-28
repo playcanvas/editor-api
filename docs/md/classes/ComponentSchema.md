@@ -31,7 +31,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema/components.js:14](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/schema/components.js#L14)
+[src/schema/components.js:14](https://github.com/playcanvas/editor-api/blob/82b05e2/src/schema/components.js#L14)
 
 ## Methods
 
@@ -55,7 +55,7 @@ The default data
 
 #### Defined in
 
-[src/schema/components.js:37](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/schema/components.js#L37)
+[src/schema/components.js:37](https://github.com/playcanvas/editor-api/blob/82b05e2/src/schema/components.js#L37)
 
 ___
 
@@ -80,4 +80,4 @@ A list of fields
 
 #### Defined in
 
-[src/schema/components.js:59](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/schema/components.js#L59)
+[src/schema/components.js:59](https://github.com/playcanvas/editor-api/blob/82b05e2/src/schema/components.js#L59)

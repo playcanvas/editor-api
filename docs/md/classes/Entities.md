@@ -25,6 +25,7 @@ The entities editor API
 - [get](Entities.md#get)
 - [list](Entities.md#list)
 - [remove](Entities.md#remove)
+- [reparent](Entities.md#reparent)
 - [serverAdd](Entities.md#serveradd)
 - [serverRemove](Entities.md#serverremove)
 
@@ -42,7 +43,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:12](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L12)
+[src/entities.js:21](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L21)
 
 ## Methods
 
@@ -64,7 +65,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:104](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L104)
+[src/entities.js:113](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L113)
 
 ___
 
@@ -80,7 +81,7 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:209](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L209)
+[src/entities.js:218](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L218)
 
 ___
 
@@ -107,7 +108,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:240](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L240)
+[src/entities.js:249](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L249)
 
 ___
 
@@ -121,7 +122,7 @@ Delete specified entities
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `entities` | [`Entity`](Entity.md)[] | The entities |
+| `entities` | [`Entity`](Entity.md) \| [`Entity`](Entity.md)[] | The entities |
 | `options` | `Object` | - |
 | `options.history` | `boolean` | - |
 
@@ -131,7 +132,7 @@ Delete specified entities
 
 #### Defined in
 
-[src/entities.js:350](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L350)
+[src/entities.js:359](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L359)
 
 ___
 
@@ -155,7 +156,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:85](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L85)
+[src/entities.js:94](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L94)
 
 ___
 
@@ -173,7 +174,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:95](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L95)
+[src/entities.js:104](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L104)
 
 ___
 
@@ -196,7 +197,32 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:143](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L143)
+[src/entities.js:152](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L152)
+
+___
+
+### reparent
+
+▸ **reparent**(`data`, `options?`): `void`
+
+Reparents entities under new parent.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `data` | [`ReparentArguments`](../interfaces/ReparentArguments.md)[] | The reparenting data |
+| `options` | `Object` | - |
+| `options.history` | `boolean` | - |
+| `options.preserverTransform` | `boolean` | - |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/entities.js:468](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L468)
 
 ___
 
@@ -218,7 +244,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:129](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L129)
+[src/entities.js:138](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L138)
 
 ___
 
@@ -240,4 +266,4 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:188](https://github.com/playcanvas/editor-api/blob/ebc05d8/src/entities.js#L188)
+[src/entities.js:197](https://github.com/playcanvas/editor-api/blob/82b05e2/src/entities.js#L197)

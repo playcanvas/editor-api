@@ -1,6 +1,15 @@
 import { Events, History as pcuiHistory } from './pcui';
 
 /**
+ * A history action
+ *
+ * @typedef {object} HistoryAction
+ * @property {string} name - The action name
+ * @property {Function} undo - The undo function
+ * @property {Function} redo - The redo function
+ */
+
+/**
  * The history API responsible for undo / redo.
  */
 class History extends Events {
@@ -20,10 +29,7 @@ class History extends Events {
     /**
      * Adds history action
      *
-     * @param {object} action - The action
-     * @param {string} action.name - The action name
-     * @param {Function} action.undo - The undo function
-     * @param {Function} action.redo - The redo function
+     * @param {HistoryAction} action - The action
      */
     add(action) {
         this._history.add(action);
@@ -53,7 +59,7 @@ class History extends Events {
     /**
      * Gets the current action
      *
-     * @type {object}
+     * @type {HistoryAction}
      */
     get currentAction() {
         return this._history.currentAction;
@@ -62,7 +68,7 @@ class History extends Events {
     /**
      * Gets the last action
      *
-     * @type {object}
+     * @type {HistoryAction}
      */
     get lastAction() {
         return this._history.lastAction;
