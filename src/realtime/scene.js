@@ -148,7 +148,7 @@ class RealtimeScene extends Events {
      * @type {object}
      */
     get data() {
-        return this._loaded?._document?.data || null;
+        return this._loaded && this._document ? this._document.data : null;
     }
 
     /**
