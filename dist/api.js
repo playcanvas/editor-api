@@ -66,6 +66,13 @@
         static realtime;
 
         /**
+         * The assets API
+         *
+         * @type {import("./assets").Assets}
+         */
+        static assets;
+
+        /**
          * Global URLs
          *
          * @type {object}
@@ -95,6 +102,13 @@
          * @type {string}
          */
         static branchId;
+
+        /**
+         * Whether this project is using legacy scripts
+         *
+         * @type {boolean}
+         */
+        static hasLegacyScripts;
     }
 
     /**
@@ -3133,8 +3147,6 @@
         constructor(entitiesApi, data = {}) {
             this._entitiesApi = entitiesApi;
 
-            this._history = {};
-
             this._observer = new __webpack_exports__Observer({
                 name: data.name || 'New Entity',
                 tags: data.tags || [],
@@ -3150,13 +3162,6 @@
 
             const id = this._observer.get('resource_id');
 
-            this._history = new __webpack_exports__ObserverHistory({
-                item: this._observer,
-                prefix: 'entity.' + id + '.',
-                history: globals.history
-            });
-            this._observer.history = this._history;
-
             this._observer.latestFn = () => {
                 const latest = this._entitiesApi.get(id);
                 return latest && latest._observer;
@@ -3169,6 +3174,17 @@
                     this.addComponent(component, data.components[component]);
                 }
             }
+
+            this._history = {};
+        }
+
+        _initializeHistory() {
+            this._history = new __webpack_exports__ObserverHistory({
+                item: this._observer,
+                prefix: 'entity.' + this.get('resource_id') + '.',
+                history: globals.history
+            });
+            this._observer.history = this._history;
         }
 
         /**
@@ -3242,6 +3258,25 @@
          */
         json() {
             return this._observer.json();
+        }
+
+        /**
+         * Returns true if this entity is a descendant of the specified parent entity.
+         *
+         * @param {Entity} parent - The parent
+         * @returns {boolean} True if it is
+         */
+        isDescendantOf(parent) {
+            let p = this.parent;
+            while (p) {
+                if (p === parent) {
+                    return true;
+                }
+
+                p = p.parent;
+            }
+
+            return false;
         }
 
         /**
@@ -3445,6 +3480,20 @@
         }
 
         /**
+         * Duplicates entity under the same parent
+         *
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
+         * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
+         * @returns {Entity} The new entity
+         */
+        async duplicate(options = {}) {
+            const result = await this._entitiesApi.duplicate([this], options);
+            return result[0];
+        }
+
+        /**
          * Returns the latest version of the Entity from the Entities API.
          *
          * @returns {Entity} The entity
@@ -3488,6 +3537,755 @@
     }
 
     /**
+     * Creates new entity and adds it to the hierarchy
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {object} [data] - Optional initial data for the entity
+     * @param {object} [options] - Options
+     * @param {number} [options.index] - The child index that this entity will have under its parent.
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
+     * @returns {Entity} The new entity
+     */
+    function createEntity(entitiesApi, data, options = {}) {
+        data = data || {};
+
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        if (!data.parent) {
+            data.parent = entitiesApi.root ? entitiesApi.root.get('resource_id') : null;
+        }
+
+        if (data.parent instanceof Entity) {
+            data.parent = data.parent.get('resource_id');
+        }
+
+
+        if (data.parent && !entitiesApi.get(data.parent)) {
+            console.error(`Cannot create entity because parent ${data.parent} was not found`);
+            return null;
+        }
+
+        let entity = new Entity(entitiesApi, data);
+
+        entitiesApi.add(entity);
+
+        // sharedb
+        if (globals.realtime && globals.realtime.scenes.current) {
+            globals.realtime.scenes.current.addEntity(entity);
+        }
+
+        const parent = entitiesApi.get(data.parent);
+        if (parent) {
+            if (options.index === undefined) {
+                parent.addChild(entity);
+            } else {
+                parent.insertChild(entity, options.index);
+            }
+        }
+
+        // use same resource id in redo's
+        data.resource_id = entity.get('resource_id');
+
+        // add children
+        if (data.children) {
+            data.children.forEach(childData => {
+                childData.parent = entity;
+                const child = createEntity(entitiesApi, childData, {
+                    history: false,
+                    select: false
+                });
+
+                // use same resource_id in subsequent redo's
+                childData.resource_id = child.get('resource_id');
+            });
+        }
+
+        let prevSelection;
+
+        // remember previous selection
+        if (options.history && globals.history) {
+            if (options.select && globals.selection) {
+                prevSelection = globals.selection.items;
+            }
+        }
+
+        // select new entity
+        if (options.select && globals.selection) {
+            globals.selection.set([entity], {
+                history: false
+            });
+        }
+
+        if (options.history && globals.history) {
+            globals.history.add({
+                name: 'new entity ' + entity.get('resource_id'),
+                // undo new entity
+                undo: () => {
+                    entity = entity.latest();
+                    if (!entity) return;
+
+                    entitiesApi.delete([entity], {
+                        history: false
+                    });
+
+                    if (prevSelection) {
+                        globals.selection.set(prevSelection, {
+                            history: false
+                        });
+                    }
+                },
+                // redo new entity
+                redo: () => {
+                    entity = createEntity(
+                        entitiesApi,
+                        data, {
+                            history: false,
+                            select: options.select
+                        }
+                    );
+                }
+            });
+        }
+
+        // TODO: post creation callaback
+
+        return entity;
+    }
+
+    /**
+     * When an entity that has properties that contain references to some entities
+     * within its subtree is duplicated, update the references to the corresponding entities within
+     * the newly created duplicate subtree.
+     *
+     * @private
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity} oldSubtreeRoot - The root entity from the tree that was duplicated
+     * @param {Entity} oldEntity - The source entity
+     * @param {Entity} newEntity - The duplicated entity
+     * @param {object} duplicatedIdsMap - Contains a map that points from the old resource ids to the new resource ids
+     */
+    function resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldEntity, newEntity, duplicatedIdsMap) {
+        let history;
+
+        // remap template_ent_ids for template instances
+        const templateEntIds = newEntity.get('template_ent_ids');
+        if (templateEntIds) {
+            const newTemplateEntIds = {};
+            for (const oldId in templateEntIds) {
+                if (duplicatedIdsMap[oldId]) {
+                    newTemplateEntIds[duplicatedIdsMap[oldId]] = templateEntIds[oldId];
+                }
+            }
+
+            history = newEntity.history.enabled;
+            newEntity.history.enabled = false;
+            newEntity.set('template_ent_ids', newTemplateEntIds);
+            newEntity.history.enabled = history;
+        }
+
+        const components = oldEntity.get('components');
+
+        Object.keys(components).forEach(componentName => {
+            const component = components[componentName];
+            const entityFields = globals.schema.components.getFieldsOfType(componentName, 'entity');
+
+            entityFields.forEach(fieldName => {
+                const oldEntityId = component[fieldName];
+                const oldEntity = entitiesApi.get(oldEntityId);
+                if (oldEntity && (oldEntity === oldSubtreeRoot || oldEntity.isDescendantOf(oldSubtreeRoot))) {
+                    const newEntityId = duplicatedIdsMap[oldEntityId];
+
+                    if (newEntityId) {
+                        history = newEntity.history.enabled;
+                        newEntity.history.enabled = false;
+                        newEntity.set(`components.${componentName}.${fieldName}`, newEntityId);
+                        newEntity.history.enabled = history;
+                    } else {
+                        console.warn('Could not find corresponding entity id when resolving duplicated entity references');
+                    }
+                }
+            });
+        });
+
+        // TODO: remap entity script attributes
+        // const scriptComponent = oldEntity.get('components.script');
+        // if (scriptComponent && !api.hasLegacyScripts) {
+        //     for (const scriptName in scriptComponent.scripts) {
+        //     }
+        // }
+
+        // Recurse into children. Note that we continue to pass in the same `oldSubtreeRoot`,
+        // in order to correctly handle cases where a child has an entity reference
+        // field that points to a parent or other ancestor that is still within the
+        // duplicated subtree.
+        const oldChildren = oldEntity.get('children');
+        const newChildren = newEntity.get('children');
+
+        if (oldChildren && oldChildren.length > 0) {
+            oldChildren.forEach((oldChildId, index) => {
+                const oldChild = entitiesApi.get(oldChildId);
+                const newChild = entitiesApi.get(newChildren[index]);
+
+                resolveDuplicatedEntityReferences(entitiesApi, oldSubtreeRoot, oldChild, newChild, duplicatedIdsMap);
+            });
+        }
+    }
+
+    function splitEntityNameAndNumber(entityName) {
+        let name = '';
+        let number = 1;
+
+        // step from end of string character by character checking to see if we have a trailing number
+        // stopping when the string we are constructing is no longer a valid number
+        let numberString = '';
+        let foundNumber = true;
+        for (let i = entityName.length - 1; i >= 0; i--) {
+            const char = entityName.charAt(i);
+            if (foundNumber) {
+                numberString = char + numberString;
+                foundNumber = /^\d+$/.test(numberString);
+                if (foundNumber) {
+                    number = parseInt(numberString);
+                }
+            }
+            if (foundNumber === false) {
+                name = char + name;
+            }
+        }
+
+        return {
+            name,
+            number
+        };
+    }
+    function isEntityNameTaken(name, entities) {
+        for (let j = 0; j < entities.length; j++) {
+            const entity = entities[j];
+            const entityName = entities[j].get('name');
+            if (entity && entityName === name) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function getUniqueNameForDuplicatedEntity(entityName, entities) {
+        // if entityName === '1box23' then name === '1box' and number === 23,  if entityName === '1' then name === '' and number === 1
+        const { name, number } = splitEntityNameAndNumber(entityName);
+
+        let startIndex = number + 1;
+        let newUniqueName = name + startIndex;
+        while (isEntityNameTaken(newUniqueName, entities)) {
+            newUniqueName = name + startIndex++;
+        }
+        return newUniqueName;
+    }
+    /**
+     * Duplicates an entity in the scene
+     *
+     * @private
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity} entity - The entity
+     * @param {Entity} parent - The parent of the new entity
+     * @param {number} ind - The index in the parent's children array where we want to insert the new entity
+     * @param {object} duplicatedIdsMap - A guid->guid map that contains references from the source resource ids to the new resource ids
+     * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
+     * @returns {Entity} The new entity
+     */
+    function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, useUniqueName) {
+        const originalResourceId = entity.get('resource_id');
+        const data = entity.json();
+        const children = data.children;
+
+        data.children = [];
+        if (useUniqueName) {
+            data.name = getUniqueNameForDuplicatedEntity(data.name, parent.children);
+        }
+        data.resource_id = pc.guid.create();
+        data.parent = parent.get('resource_id');
+
+        entity = entitiesApi.create(data, {
+            history: false,
+            select: false,
+            index: ind
+        });
+
+        duplicatedIdsMap[originalResourceId] = entity.get('resource_id');
+
+        // add children too
+        children.forEach(function (childId) {
+            duplicateEntity(entitiesApi, entitiesApi.get(childId), entity, undefined, duplicatedIdsMap);
+        });
+
+        return entity;
+    }
+
+    /**
+     * Duplicates entities under the same parent
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity[]} entities - The entities
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
+     * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
+     * @returns {Entity[]} The duplicated entities
+     */
+    async function duplicateEntities(entitiesApi, entities, options) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        const root = entitiesApi.root;
+
+        // make sure we are not duplicating the root
+        if (entities.includes(root)) return;
+
+        // build index
+        const records = {};
+        entities.forEach(entity => {
+            const id = entity.get('resource_id');
+            records[id] = {
+                entity: entity,
+                index: entity.parent.children.indexOf(entity)
+            };
+        });
+
+        // only duplicate top level parents
+        let i = entities.length;
+        while (i--) {
+            let parent = entities[i].parent;
+            while (parent && parent !== root) {
+                if (records[parent.get('resource_id')]) {
+                    entities.splice(i, 1);
+                    delete records[entities[i].get('resource_id')];
+                    break;
+                }
+
+                parent = parent.parent;
+            }
+        }
+
+        // original order is a dictionary that contains
+        // resource_id -> [index_before_sort, index_after_sort]
+        // for each entity. It used to return our results in the
+        // original order passed by the user because when we duplicate
+        // we change the order of the entities to their order within their parent
+        const originalOrder = {};
+        entities.forEach((e, i) => {
+            originalOrder[e.get('resource_id')] = [i, null];
+        });
+
+        // sort by order within parent
+        entities.sort((a, b) => {
+            return records[b.get('resource_id')].index - records[a.get('resource_id')].index;
+        });
+
+        entities.forEach((e, i) => {
+            originalOrder[e.get('resource_id')][1] = i;
+        });
+
+        // TODO: If we have a lot of entities duplicate in the backend
+
+
+        // remember previous selection
+        let previousSelection;
+        if (options.history && globals.history && globals.selection && options.select) {
+            previousSelection = globals.selection.items;
+        }
+
+        let newEntities = [];
+
+        // duplicate
+        entities.forEach(entity => {
+            const duplicatedIdsMap = {};
+
+            const newEntity = duplicateEntity(
+                entitiesApi,
+                entity,
+                entity.parent,
+                records[entity.get('resource_id')].index + 1,
+                duplicatedIdsMap,
+                options.rename
+            );
+
+            resolveDuplicatedEntityReferences(entitiesApi, entity, entity, newEntity, duplicatedIdsMap);
+
+            newEntities.push(newEntity);
+        });
+
+        // select duplicated
+        if (options.select && globals.selection) {
+            globals.selection.set(newEntities, {
+                history: false
+            });
+        }
+
+        if (options.history && globals.history) {
+            let previous;
+
+            globals.history.add({
+                name: 'duplicate entities',
+                undo: () => {
+                    // remember previous entities
+                    previous = {};
+                    newEntities.forEach(entity => {
+                        entity.depthFirst(e => {
+                            previous[e.get('resource_id')] = e.json();
+                        });
+                    });
+
+                    entitiesApi.delete(newEntities, {
+                        history: false
+                    });
+
+                    if (previousSelection) {
+                        globals.selection.set(previousSelection, {
+                            history: false
+                        });
+                    }
+                },
+                redo: () => {
+                    function recreateEntityData(data) {
+                        data = Object.assign({}, data);
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        return data;
+                    }
+
+                    newEntities = newEntities.map((entity, index) => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                        entity = entitiesApi.create(data, {
+                            history: false,
+                            select: false,
+                            index: records[entities[index].get('resource_id')].index + 1
+                        });
+
+                        return entity;
+                    });
+
+                    if (options.select && globals.selection) {
+                        globals.selection.set(newEntities, { history: false });
+                    }
+
+                    previous = null;
+                }
+            });
+        }
+
+        // return duplicated entities in their original order
+        const result = new Array(newEntities.length);
+        for (const id in originalOrder) {
+            const pair = originalOrder[id];
+            result[pair[0]] = newEntities[pair[1]];
+        }
+
+        return result;
+    }
+
+    /**
+     * Reparents entities under new parent.
+     *
+     * @private
+     * @param {ReparentArguments[]} data - The reparenting data
+     * @param {object} [options] - Options
+     * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
+     * @param {boolean} [options.history] - Whether to record history. Defaults to true
+     */
+    function reparentEntities(data, options = {}) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        const records = data.map(entry => {
+            const parentOld = entry.entity.parent;
+            const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
+            const record = {
+                entity: entry.entity,
+                resourceId: entry.entity.get('resource_id'),
+                parentOld: parentOld,
+                indOld: indexOld,
+                parent: entry.parent,
+                indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
+            };
+
+            if (options.preserveTransform) {
+                record.position = record.entity.viewportEntity.getPosition().clone();
+                record.rotation = record.entity.viewportEntity.getRotation().clone();
+            }
+
+            return record;
+        });
+
+        const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
+            const resourceId = entity.get('resource_id');
+            if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
+                return false;
+
+            // check if not reparenting to own child
+            let deny = false;
+            let checkParent = parent.parent;
+            while (checkParent) {
+                if (checkParent === entity) {
+                    deny = true;
+                    checkParent = null;
+                    break;
+                }
+
+                checkParent = checkParent.parent;
+            }
+
+            if (deny)
+                return false;
+
+            parentOld.history.enabled = false;
+            parentOld.removeValue('children', resourceId);
+            parentOld.history.enabled = true;
+
+            parent.history.enabled = false;
+            let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
+            parent.insert('children', resourceId, indNew + off);
+            parent.history.enabled = true;
+
+            entity.history.enabled = false;
+            entity.set('parent', parent.get('resource_id'));
+
+            if (options.preserveTransform && position && entity.viewportEntity) {
+                entity.viewportEntity.setPosition(position);
+                entity.viewportEntity.setRotation(rotation);
+
+                var localPosition = entity.viewportEntity.getLocalPosition();
+                var localRotation = entity.viewportEntity.getLocalEulerAngles();
+                entity.set('position', [localPosition.x, localPosition.y, localPosition.z]);
+                entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
+            }
+
+            entity.history.enabled = true;
+
+            return true;
+        };
+
+        const redo = () => {
+            let dirty = false;
+            records.forEach((record, i) => {
+                const entity = record.entity.latest();
+                if (!entity) return;
+
+                const parent = record.parent.latest();
+                const parentOld = entity.parent;
+                if (!parentOld || !parent) return;
+
+                if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
+                    dirty = true;
+                }
+            });
+
+            return dirty;
+        };
+
+        let dirty = redo();
+        if (dirty && options.history && globals.history) {
+            const undo = () => {
+                records.forEach((record, i) => {
+                    const entity = record.entity.latest();
+                    if (!entity) return;
+
+                    const parent = entity.parent;
+                    if (!parent) return;
+
+                    const parentOld = record.parentOld.latest();
+                    if (!parentOld) return;
+
+                    doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
+                });
+            };
+
+            globals.history.add({
+                name: 'reparent entities',
+                undo: undo,
+                redo: redo
+            });
+        }
+
+    }
+
+    /**
+     * Return a map of all entity reference properties in the graph. This will
+     * include references of the entity and also references of its children
+     *
+     * @private
+     * @param {Entity} entity - The entity
+     * @returns {object} The entity references
+     */
+    function findReferences(entity) {
+        const result = {};
+
+        const entityFieldsCache = {};
+
+        entity.depthFirst(entity => {
+            const componentNames = Object.keys(entity.get('components') || {});
+            componentNames.forEach(component => {
+                if (!entityFieldsCache[component]) {
+                    entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
+                }
+
+                entityFieldsCache[component].forEach(field => {
+                    const path = `components.${component}.${field}`;
+                    const id = entity.get(path);
+                    if (!result[id]) {
+                        result[id] = [];
+                    }
+                    result[id].push({
+                        entityId: entity.get('resource_id'),
+                        path: path
+                    });
+                });
+            });
+        });
+
+        return result;
+    }
+
+    /**
+     * Updates entity references to the old entity to point to the new entity
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {object} entityReferences - A map of entity references
+     * @param {string} oldValue - The entity id that we want to replace
+     * @param {string} newValue - The new entity id that we want our references to point to
+     */
+    function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
+        const referencesToEntity = entityReferences[oldValue];
+        if (!referencesToEntity) return;
+
+        referencesToEntity.forEach(reference => {
+            const entity = entitiesApi.get(reference.entityId);
+            if (entity) {
+                const history = entity.history.enabled;
+                entity.history.enabled = false;
+                entity.set(reference.path, newValue);
+                entity.history.enabled = history;
+            }
+        });
+    }
+
+    /**
+     * Delete specified entities
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity[]|Entity} entities - The entities
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     */
+    function deleteEntities(entitiesApi, entities, options = {}) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        if (!Array.isArray(entities)) {
+            entities = [entities];
+        }
+
+        // first only gather top level entities
+        const ids = new Set();
+        entities.forEach(entity => ids.add(entity.get('resource_id')));
+
+        entities = entities.filter(entity => {
+            entity = entity.latest();
+            if (!entity) return false;
+
+            let parent = entity.parent;
+            let parentInSelection = false;
+            while (parent) {
+                if (ids.has(parent.get('resource_id'))) {
+                    parentInSelection = true;
+                    break;
+                }
+                parent = parent.parent;
+            }
+
+            return !parentInSelection;
+        });
+
+        // TODO: if we have a lot of entities delete in backend
+
+        // remember previous entities
+        let previous;
+        if (options.history && globals.history) {
+            previous = {};
+            entities.forEach(entity => {
+                entity.depthFirst(e => {
+                    previous[e.get('resource_id')] = e.json();
+                });
+            });
+        }
+
+        // find entity references
+        const entityReferences = findReferences(entitiesApi.root);
+
+        entities.forEach(entity => {
+            entitiesApi.remove(entity, entityReferences);
+        });
+
+        if (previous) {
+            globals.history.add({
+                name: 'delete entities',
+                undo: () => {
+                    function recreateEntityData(data) {
+                        data = Object.assign({}, data);
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        return data;
+                    }
+
+                    entities = entities.map(entity => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                        entity = entitiesApi.create(data, {
+                            history: false
+                        });
+
+                        return entity;
+                    });
+
+                    entities.forEach(entity => {
+                        updateReferences(entitiesApi, entityReferences, entity.get('resource_id'), entity.get('resource_id'));
+                    });
+
+                    if (globals.selection) {
+                        globals.selection.set(entities, {
+                            history: false
+                        });
+                    }
+
+                    previous = null;
+                },
+                redo: () => {
+                    previous = {};
+                    entities = entities.map(e => e.latest()).filter(e => !!e);
+
+                    entities.forEach(entity => {
+                        entity.depthFirst(e => {
+                            previous[e.get('resource_id')] = e.json();
+                        });
+                    });
+
+                    entitiesApi.delete(entities, {
+                        history: false
+                    });
+                }
+            });
+        }
+    }
+
+    /**
      * Data to reparent an entity under a new parent
      *
      * @typedef {object} ReparentArguments
@@ -3510,63 +4308,6 @@
 
             this._entities = new __webpack_exports__ObserverList({
                 index: 'resource_id'
-            });
-        }
-
-        /**
-         * Return a map of all entity reference properties in the graph. This will
-         * include references of the entity and also references of its children
-         *
-         * @private
-         * @param {Entity} entity - The entity
-         * @returns {object} The entity references
-         */
-        _findReferences(entity) {
-            const result = {};
-
-            const entityFieldsCache = {};
-
-            entity.depthFirst(entity => {
-                const componentNames = Object.keys(entity.get('components') || {});
-                componentNames.forEach(component => {
-                    if (!entityFieldsCache[component]) {
-                        entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
-                    }
-
-                    entityFieldsCache[component].forEach(field => {
-                        const path = `components.${component}.${field}`;
-                        const id = entity.get(path);
-                        if (!result[id]) {
-                            result[id] = [];
-                        }
-                        result[id].push({
-                            entityId: entity.get('resource_id'),
-                            path: path
-                        });
-                    });
-                });
-            });
-
-            return result;
-        }
-
-        /**
-         * Updates entity references to the old entity to point to the new entity
-         *
-         * @private
-         * @param {object} entityReferences - A map of entity references
-         * @param {string} oldValue - The entity id that we want to replace
-         * @param {string} newValue - The new entity id that we want our references to point to
-         */
-        _updateReferences(entityReferences, oldValue, newValue) {
-            const referencesToEntity = entityReferences[oldValue];
-            if (!referencesToEntity) return;
-
-            referencesToEntity.forEach(reference => {
-                const entity = this.get(reference.entityId);
-                if (entity) {
-                    entity.set(reference.path, newValue);
-                }
             });
         }
 
@@ -3612,6 +4353,8 @@
                 }
             }
 
+            entity._initializeHistory();
+
             this.emit('add', entity, this._root === entity);
         }
 
@@ -3636,7 +4379,7 @@
          */
         remove(entity, entityReferences) {
             if (entityReferences) {
-                this._updateReferences(entityReferences, entity.get('resource_id'), null);
+                updateReferences(this, entityReferences, entity.get('resource_id'), null);
             }
 
             // remove children first
@@ -3646,10 +4389,9 @@
 
             // remove from selection
             if (globals.selection && globals.selection.has(entity)) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.remove(entity);
-                globals.selection.history.enabled = history;
+                globals.selection.remove(entity, {
+                    history: false
+                });
             }
 
             // remove from parent
@@ -3681,10 +4423,9 @@
          */
         serverRemove(entity) {
             if (globals.selection && globals.selection.has(entity)) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.remove(entity);
-                globals.selection.history.enabled = history;
+                globals.selection.remove(entity, {
+                    history: false
+                });
             }
 
             this._entities.remove(entity._observer);
@@ -3727,111 +4468,13 @@
          *
          * @param {object} [data] - Optional initial data for the entity
          * @param {object} [options] - Options
+         * @param {number} [options.index] - The child index that this entity will have under its parent.
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
          * @returns {Entity} The new entity
          */
         create(data, options = {}) {
-            data = data || {};
-
-            if (options.history === undefined) {
-                options.history = true;
-            }
-
-            if (!data.parent) {
-                data.parent = this._root ? this._root.get('resource_id') : null;
-            }
-
-            if (data.parent instanceof Entity) {
-                data.parent = data.parent.get('resource_id');
-            }
-
-
-            if (data.parent && !this.get(data.parent)) {
-                console.error(`Cannot create entity because parent ${data.parent} was not found`);
-                return null;
-            }
-
-            let entity = new Entity(this, data);
-
-            this.add(entity);
-
-            // sharedb
-            if (globals.realtime && globals.realtime.scenes.current) {
-                globals.realtime.scenes.current.addEntity(entity);
-            }
-
-            const parent = this.get(data.parent);
-            if (parent) {
-                parent.addChild(entity);
-            }
-
-            // use same resource id in redo's
-            data.resource_id = entity.get('resource_id');
-
-            // add children
-            if (data.children) {
-                data.children.forEach(childData => {
-                    childData.parent = entity;
-                    const child = this.create(childData, {
-                        history: false,
-                        select: false
-                    });
-
-                    // use same resource_id in subsequent redo's
-                    childData.resource_id = child.get('resource_id');
-                });
-            }
-
-            let prevSelection;
-
-            // remember previous selection
-            if (options.history && globals.history) {
-                if (options.select && globals.selection) {
-                    prevSelection = globals.selection.items;
-                }
-            }
-
-            // select new entity
-            if (options.select && globals.selection) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.items = [entity];
-                globals.selection.history.enabled = history;
-            }
-
-            if (options.history && globals.history) {
-                globals.history.add({
-                    name: 'new entity ' + entity.get('resource_id'),
-                    // undo new entity
-                    undo: () => {
-                        entity = entity.latest();
-                        if (!entity) return;
-
-                        this.delete([entity], {
-                            history: false
-                        });
-
-                        if (prevSelection) {
-                            const history = globals.selection.history.enabled;
-                            globals.selection.history.enabled = false;
-                            globals.selection.items = prevSelection;
-                            globals.selection.history.enabled = history;
-                        }
-                    },
-                    // redo new entity
-                    redo: () => {
-                        entity = this.create(data, {
-                            history: false,
-                            select: options.select
-                        });
-                    }
-                });
-            }
-
-            // TODO: post creation callaback
-
-            return entity;
+            return createEntity(this, data, options);
         }
 
         /**
@@ -3842,104 +4485,7 @@
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
         delete(entities, options = {}) {
-            if (options.history === undefined) {
-                options.history = true;
-            }
-
-            if (!Array.isArray(entities)) {
-                entities = [entities];
-            }
-
-            // first only gather top level entities
-            const ids = new Set();
-            entities.forEach(entity => ids.add(entity.get('resource_id')));
-
-            entities = entities.filter(entity => {
-                entity = entity.latest();
-                if (!entity) return false;
-
-                let parent = entity.parent;
-                let parentInSelection = false;
-                while (parent) {
-                    if (ids.has(parent.get('resource_id'))) {
-                        parentInSelection = true;
-                        break;
-                    }
-                    parent = parent.parent;
-                }
-
-                return !parentInSelection;
-            });
-
-            // TODO: if we have a lot of entities delete in backend
-
-            // remember previous entities
-            let previous;
-            if (options.history && globals.history) {
-                previous = {};
-                entities.forEach(entity => {
-                    entity.depthFirst(e => {
-                        previous[e.get('resource_id')] = e.json();
-                    });
-                });
-            }
-
-            // find entity references
-            const entityReferences = this._findReferences(this.root);
-
-            entities.forEach(entity => {
-                this.remove(entity, entityReferences);
-            });
-
-            if (previous) {
-                globals.history.add({
-                    name: 'delete entities',
-                    undo: () => {
-                        function recreateEntityData(data) {
-                            data = Object.assign({}, data);
-                            data.children = data.children.map(id => recreateEntityData(previous[id]));
-                            return data;
-                        }
-
-                        entities = entities.map(entity => {
-                            const data = recreateEntityData(previous[entity.get('resource_id')]);
-                            entity = this.create(data, {
-                                history: false
-                            });
-
-                            return entity;
-                        });
-
-                        entities.forEach(entity => {
-                            this._updateReferences(entityReferences, entity.get('resource_id'), entity.get('resource_id'));
-
-                        });
-
-                        if (globals.selection) {
-                            const history = globals.selection.history.enabled;
-                            globals.selection.history.enabled = false;
-                            globals.selection.items = entities;
-                            globals.selection.history.enabled = history;
-                        }
-
-                        previous = null;
-                    },
-                    redo: () => {
-                        previous = {};
-                        entities = entities.map(e => e.latest()).filter(e => !!e);
-
-                        entities.forEach(entity => {
-                            entity.depthFirst(e => {
-                                previous[e.get('resource_id')] = e.json();
-                            });
-                        });
-
-                        this.delete(entities, {
-                            history: false
-                        });
-                    }
-                });
-            }
+            return deleteEntities(this, entities, options);
         }
 
         /**
@@ -3951,119 +4497,22 @@
          * @param {boolean} [options.history] - Whether to record history. Defaults to true
          */
         reparent(data, options = {}) {
-            if (options.history === undefined) {
-                options.history = true;
-            }
+            return reparentEntities(data, options);
+        }
 
-            const records = data.map(entry => {
-                const parentOld = entry.entity.parent;
-                const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
-                const record = {
-                    entity: entry.entity,
-                    resourceId: entry.entity.get('resource_id'),
-                    parentOld: parentOld,
-                    indOld: indexOld,
-                    parent: entry.parent,
-                    indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
-                };
-
-                if (options.preserveTransform) {
-                    record.position = record.entity.viewportEntity.getPosition().clone();
-                    record.rotation = record.entity.viewportEntity.getRotation().clone();
-                }
-
-                return record;
-            });
-
-            const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
-                const resourceId = entity.get('resource_id');
-                if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
-                    return false;
-
-                // check if not reparenting to own child
-                let deny = false;
-                let checkParent = parent.parent;
-                while (checkParent) {
-                    if (checkParent === entity) {
-                        deny = true;
-                        checkParent = null;
-                        break;
-                    }
-
-                    checkParent = checkParent.parent;
-                }
-
-                if (deny)
-                    return false;
-
-                parentOld.history.enabled = false;
-                parentOld.removeValue('children', resourceId);
-                parentOld.history.enabled = true;
-
-                parent.history.enabled = false;
-                let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
-                parent.insert('children', resourceId, indNew + off);
-                parent.history.enabled = true;
-
-                entity.history.enabled = false;
-                entity.set('parent', parent.get('resource_id'));
-
-                if (options.preserveTransform && position && entity.viewportEntity) {
-                    entity.viewportEntity.setPosition(position);
-                    entity.viewportEntity.setRotation(rotation);
-
-                    var localPosition = entity.viewportEntity.getLocalPosition();
-                    var localRotation = entity.viewportEntity.getLocalEulerAngles();
-                    entity.set('position', [localPosition.x, localPosition.y, localPosition.z]);
-                    entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
-                }
-
-                entity.history.enabled = true;
-
-                return true;
-            };
-
-            const redo = () => {
-                let dirty = false;
-                records.forEach((record, i) => {
-                    const entity = record.entity.latest();
-                    if (!entity) return;
-
-                    const parent = record.parent.latest();
-                    const parentOld = entity.parent;
-                    if (!parentOld || !parent) return;
-
-                    if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
-                        dirty = true;
-                    }
-                });
-
-                return dirty;
-            };
-
-            let dirty = redo();
-            if (dirty && options.history && globals.history) {
-                const undo = () => {
-                    records.forEach((record, i) => {
-                        const entity = record.entity.latest();
-                        if (! entity) return;
-
-                        const parent = entity.parent;
-                        if (!parent) return;
-
-                        const parentOld = record.parentOld.latest();
-                        if (!parentOld) return;
-
-                        doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
-                    });
-                };
-
-                globals.history.add({
-                    name: 'reparent entities',
-                    undo: undo,
-                    redo: redo
-                });
-            }
+        /**
+         * Duplicates the specified entities under the same parent
+         *
+         * @param {Entitiy[]} entities - The entities
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
+         * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
+         * @returns {Entity[]} The duplicated entities
+         */
+        async duplicate(entities, options = {}) {
+            const result = await duplicateEntities(this, entities, options);
+            return result;
         }
 
         /**
@@ -4223,17 +4672,15 @@
                 name: name,
                 undo: () => {
                     // set previous selection making sure every item still exists
-                    const enabled = this._enabled;
-                    this._enabled = false;
-                    this._selection.items = previousSelection.map(item => item.latest()).filter(item => !!item);
-                    this._enabled = enabled;
+                    this._selection.set(previousSelection.map(item => item.latest()).filter(item => !!item), {
+                        history: false
+                    });
                 },
                 redo: () => {
                     // set new selection making sure every item still exists
-                    const enabled = this._enabled;
-                    this._enabled = false;
-                    this._selection.items = newSelection.map(item => item.latest()).filter(item => !!item);
-                    this._enabled = enabled;
+                    this._selection.set(newSelection.map(item => item.latest()).filter(item => !!item), {
+                        history: false
+                    });
                 }
             });
         }
@@ -4272,11 +4719,21 @@
          * Add item to selection
          *
          * @param {any} item - The item
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
-        add(item) {
+        add(item, options = {}) {
             if (!this.enabled) return;
             if (this.has(item)) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('select', () => {
                 if (this._items[0] && this._items[0].constructor !== item.constructor) {
                     this.clear();
@@ -4286,33 +4743,56 @@
                 this.emit('add', item);
                 this._deferChangeEvt();
             });
+            this._history.enabled = history;
         }
 
         /**
          * Remove item from selection
          *
          * @param {any} item - The item
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
-        remove(item) {
+        remove(item, options = {}) {
             if (!this.enabled) return;
+
+            if (options.history === undefined) {
+                options.history = true;
+            }
 
             const index = this._items.indexOf(item);
             if (index !== -1) {
+
+                let history = this._history.enabled;
+                if (!options.history) {
+                    this._history.enabled = false;
+                }
                 this._history.wrapAction('deselect', () => {
                     this._items.splice(index, 1);
                     this.emit('remove', item);
                     this._deferChangeEvt();
-                });        }
+                });            this._history.enabled = history;
+            }
         }
 
         /**
          * Toggle item selection
          *
          * @param {any} item
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
-        toggle(item) {
+        toggle(item, options = {}) {
             if (!this.enabled) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('toggle selection', () => {
                 if (this._items[0] && this._items[0].constructor !== item.constructor) {
                     this.clear();
@@ -4324,6 +4804,8 @@
                     this.add(item);
                 }
             });
+
+            this._history.enabled = history;
         }
 
         /**
@@ -4338,13 +4820,24 @@
 
         /**
          * Clears selection
+         *
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
-        clear() {
+        clear(options = {}) {
             if (!this.enabled) return;
 
             const length = this._items.length;
             if (!length) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('deselect', () => {
                 let i = length;
                 const changed = (i > 0);
@@ -4358,30 +4851,47 @@
                     this._deferChangeEvt();
                 }
             });
+            this._history.enabled = history;
         }
 
         /**
-         * Gets / sets the selected items
+         * Sets current selection
          *
-         * @type {any[]}
+         * @param {any[]} items - The items to select
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          */
-        get items() {
-            return this._items.slice();
-        }
-
-        set items(value) {
+        set(items, options = {}) {
             if (!this.enabled) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('modify selection', () => {
                 // remove items no longer selected
-                const removed = this._items.filter(item => !value.includes(item));
+                const removed = this._items.filter(item => !items.includes(item));
                 removed.forEach(item => {
                     this.remove(item);
                 });
 
                 // add new items
-                value.forEach(item => this.add(item));
+                items.forEach(item => this.add(item));
             });
+            this._history.enabled = history;
+        }
+
+        /**
+         * Gets the selected items. This creates a new array every time it is called.
+         *
+         * @type {any[]}
+         */
+        get items() {
+            return this._items.slice();
         }
 
         /**
@@ -4935,7 +5445,7 @@
          * @type {object}
          */
         get data() {
-            return this._loaded?._document?.data || null;
+            return (this._loaded && this._document) ? this._document.data : null;
         }
 
         /**
@@ -5029,6 +5539,59 @@
     }
 
     /**
+     * Provides methods to load assets from sharedb
+     * @private
+     */
+    class RealtimeAssets extends __webpack_exports__Events {
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("../realtime/connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         */
+        constructor(realtime, connection) {
+            super();
+            this._realtime = realtime;
+            this._connection = connection;
+            this._assets = {};
+        }
+
+        /**
+         * Loads an asset
+         *
+         * @param {number} id - The asset id
+         * @returns {RealtimeAsset} The asset
+         */
+        load(id) {
+            let asset = this._assets[id];
+            if (!asset) {
+                asset = new RealtimeAsset(id, this._realtime, this._connection);
+            }
+
+            if (!asset.loaded) {
+                asset.load();
+            }
+
+            return asset;
+        }
+
+        /**
+         * Unloads an asset
+         *
+         * @param {number} id - The asset id
+         */
+        unload(id) {
+            if (this._assets[id]) {
+                this._assets[id].unload();
+                delete this._scenes[id];
+            }
+        }
+    }
+
+    /**
      * Provides methods to communicate and load / save data to the realtime server
      */
     class Realtime extends __webpack_exports__Events {
@@ -5036,6 +5599,7 @@
             super();
             this._connection = new RealtimeConnection(this);
             this._scenes = new RealtimeScenes(this, this.connection);
+            this._assets = new RealtimeAssets(this, this.connection);
         }
 
         /**
@@ -5054,6 +5618,15 @@
          */
         get scenes() {
             return this._scenes;
+        }
+
+        /**
+         * Gets the realtime assets API
+         *
+         * @type {RealtimeAssets}
+         */
+        get assets() {
+            return this._assets;
         }
     }
 

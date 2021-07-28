@@ -37,6 +37,13 @@ class globals {
     static realtime;
 
     /**
+     * The assets API
+     *
+     * @type {import("./assets").Assets}
+     */
+    static assets;
+
+    /**
      * Global URLs
      *
      * @type {object}
@@ -66,6 +73,13 @@ class globals {
      * @type {string}
      */
     static branchId;
+
+    /**
+     * Whether this project is using legacy scripts
+     *
+     * @type {boolean}
+     */
+    static hasLegacyScripts;
 }
 
 export { globals };

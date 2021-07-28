@@ -443,4 +443,146 @@ describe('api.Entities tests', function () {
 
         expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
     });
+
+    it('duplicate duplicates an entity', async function () {
+        api.globals.history = new api.History();
+        api.globals.schema = new api.Schema(schema);
+
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: parent
+        });
+
+        parent.addComponent('testcomponent', {
+            entityRef: child.get('resource_id')
+        });
+
+        const duplicated = await entitiesApi.duplicate([parent], {
+            history: true
+        });
+        expect(duplicated.length).to.equal(1);
+        expect(duplicated[0].get('name')).to.equal('parent');
+        expect(duplicated[0].children.length).to.equal(1);
+        expect(duplicated[0].children[0].get('name')).to.equal('child');
+        expect(duplicated[0].get('components.testcomponent.entityRef')).to.equal(duplicated[0].children[0].get('resource_id'));
+        expect(root.children).to.deep.equal([parent, duplicated[0]]);
+
+        const jsonParent = duplicated[0].json();
+        const jsonChild = duplicated[0].children[0].json();
+
+        // test undo / redo
+        api.globals.history.undo();
+        expect(entitiesApi.get(duplicated[0].get('resource_id'))).to.equal(null);
+        expect(root.children).to.deep.equal([parent]);
+
+        api.globals.history.redo();
+
+        duplicated[0] = duplicated[0].latest();
+        expect(duplicated[0].json()).to.deep.equal(jsonParent);
+        expect(duplicated[0].children[0].json()).to.deep.equal(jsonChild);
+        expect(root.children).to.deep.equal([parent, duplicated[0]]);
+    });
+
+    it('duplicate resolves entity references', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = entitiesApi.create();
+        const parent = entitiesApi.create({ name: 'parent' });
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: parent
+        });
+        const parent2 = entitiesApi.create({ name: 'parent2' });
+        const parent3 = entitiesApi.create({ name: 'parent3' });
+
+        parent.addComponent('testcomponent', {
+            entityRef: child.get('resource_id')
+        });
+        child.addComponent('testcomponent', {
+            entityRef: parent.get('resource_id')
+        });
+        parent2.addComponent('testcomponent', {
+            entityRef: parent2.get('resource_id')
+        });
+        parent3.addComponent('testcomponent', {
+            entityRef: root.get('resource_id')
+        });
+
+        const dups = await entitiesApi.duplicate([parent, parent2, parent3]);
+        expect(dups[0].children[0].get('components.testcomponent.entityRef')).to.equal(dups[0].get('resource_id'));
+        expect(dups[0].get('components.testcomponent.entityRef')).to.equal(dups[0].children[0].get('resource_id'));
+        expect(dups[1].get('components.testcomponent.entityRef')).to.equal(dups[1].get('resource_id'));
+        expect(dups[2].get('components.testcomponent.entityRef')).to.equal(root.get('resource_id'));
+    });
+
+    it('duplicate selects entities', async function () {
+        api.globals.selection = new api.Selection();
+        api.globals.history = new api.History();
+
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const dups = await entitiesApi.duplicate([parent], {
+            history: true,
+            select: true
+        });
+
+        expect(api.globals.selection.items).to.deep.equal(dups);
+
+        // test undo / redo
+        api.globals.history.undo();
+        expect(api.globals.selection.items).to.deep.equal([]);
+
+        api.globals.history.redo();
+        expect(api.globals.selection.items).to.deep.equal(dups.map(e => e.latest()));
+    });
+
+    it('renames duplicated entities', async function () {
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const dups = await entitiesApi.duplicate([parent], {
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent2');
+
+        dups[0] = await dups[0].duplicate({
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent3');
+
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: dups[0]
+        });
+
+        dups[0] = await dups[0].duplicate({
+            rename: true
+        });
+        expect(dups[0].children[0].get('name')).to.equal('child');
+
+        dups[0] = await parent.duplicate({
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent5');
+    });
+
 });

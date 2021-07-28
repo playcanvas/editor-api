@@ -48,17 +48,15 @@ class SelectionHistory {
             name: name,
             undo: () => {
                 // set previous selection making sure every item still exists
-                const enabled = this._enabled;
-                this._enabled = false;
-                this._selection.items = previousSelection.map(item => item.latest()).filter(item => !!item);
-                this._enabled = enabled;
+                this._selection.set(previousSelection.map(item => item.latest()).filter(item => !!item), {
+                    history: false
+                });
             },
             redo: () => {
                 // set new selection making sure every item still exists
-                const enabled = this._enabled;
-                this._enabled = false;
-                this._selection.items = newSelection.map(item => item.latest()).filter(item => !!item);
-                this._enabled = enabled;
+                this._selection.set(newSelection.map(item => item.latest()).filter(item => !!item), {
+                    history: false
+                });
             }
         });
     }
@@ -97,11 +95,21 @@ class Selection extends Events {
      * Add item to selection
      *
      * @param {any} item - The item
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
-    add(item) {
+    add(item, options = {}) {
         if (!this.enabled) return;
         if (this.has(item)) return;
 
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        let history = this._history.enabled;
+        if (!options.history) {
+            this._history.enabled = false;
+        }
         this._history.wrapAction('select', () => {
             if (this._items[0] && this._items[0].constructor !== item.constructor) {
                 this.clear();
@@ -111,23 +119,36 @@ class Selection extends Events {
             this.emit('add', item);
             this._deferChangeEvt();
         });
+        this._history.enabled = history;
     }
 
     /**
      * Remove item from selection
      *
      * @param {any} item - The item
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
-    remove(item) {
+    remove(item, options = {}) {
         if (!this.enabled) return;
+
+        if (options.history === undefined) {
+            options.history = true;
+        }
 
         const index = this._items.indexOf(item);
         if (index !== -1) {
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('deselect', () => {
                 this._items.splice(index, 1);
                 this.emit('remove', item);
                 this._deferChangeEvt();
             });;
+            this._history.enabled = history;
         }
     }
 
@@ -135,10 +156,20 @@ class Selection extends Events {
      * Toggle item selection
      *
      * @param {any} item
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
-    toggle(item) {
+    toggle(item, options = {}) {
         if (!this.enabled) return;
 
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        let history = this._history.enabled;
+        if (!options.history) {
+            this._history.enabled = false;
+        }
         this._history.wrapAction('toggle selection', () => {
             if (this._items[0] && this._items[0].constructor !== item.constructor) {
                 this.clear();
@@ -150,6 +181,8 @@ class Selection extends Events {
                 this.add(item);
             }
         });
+
+        this._history.enabled = history;
     }
 
     /**
@@ -164,13 +197,24 @@ class Selection extends Events {
 
     /**
      * Clears selection
+     *
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
-    clear() {
+    clear(options = {}) {
         if (!this.enabled) return;
 
         const length = this._items.length;
         if (!length) return;
 
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        let history = this._history.enabled;
+        if (!options.history) {
+            this._history.enabled = false;
+        }
         this._history.wrapAction('deselect', () => {
             let i = length;
             const changed = (i > 0);
@@ -184,30 +228,47 @@ class Selection extends Events {
                 this._deferChangeEvt();
             }
         });
+        this._history.enabled = history;
     }
 
     /**
-     * Gets / sets the selected items
+     * Sets current selection
      *
-     * @type {any[]}
+     * @param {any[]} items - The items to select
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      */
-    get items() {
-        return this._items.slice();
-    }
-
-    set items(value) {
+    set(items, options = {}) {
         if (!this.enabled) return;
 
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        let history = this._history.enabled;
+        if (!options.history) {
+            this._history.enabled = false;
+        }
         this._history.wrapAction('modify selection', () => {
             // remove items no longer selected
-            const removed = this._items.filter(item => !value.includes(item));
+            const removed = this._items.filter(item => !items.includes(item));
             removed.forEach(item => {
                 this.remove(item);
             });
 
             // add new items
-            value.forEach(item => this.add(item));
+            items.forEach(item => this.add(item));
         });
+        this._history.enabled = history;
+    }
+
+    /**
+     * Gets the selected items. This creates a new array every time it is called.
+     *
+     * @type {any[]}
+     */
+    get items() {
+        return this._items.slice();
     }
 
     /**
