@@ -148,7 +148,7 @@ class RealtimeScene extends Events {
      * @type {object}
      */
     get data() {
-        return this._loaded && this._document && this._document.data || null;
+        return this._loaded?._document?.data || null;
     }
 
     /**
@@ -157,7 +157,7 @@ class RealtimeScene extends Events {
      * @type {number}
      */
     get id() {
-        return this.data && this.data.item_id;
+        return this.data?.item_id;
     }
 
     /**
