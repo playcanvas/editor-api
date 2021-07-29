@@ -4793,7 +4793,7 @@
 
                     data.id = parseInt(data.item_id, 10);
                     data.uniqueId = uniqueId;
-                    data.createdAt = this.createdAt;
+                    data.createdAt = this.get('createdAt');
 
                     // delete unnecessary fields
                     delete data.item_id;
