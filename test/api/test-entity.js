@@ -223,4 +223,21 @@ describe('api.Entity tests', function () {
         expect(root.isDescendantOf(child)).to.equal(false);
         expect(root.isDescendantOf(root)).to.equal(false);
     });
+
+    it('observer events are emitted by entity', function () {
+        const e = entitiesApi.create();
+        let evtNameSet = false;
+        let evtSet = false;
+        e.once('name:set', () => {
+            evtNameSet = true;
+        });
+        e.once('*:set', () => {
+            evtSet = true;
+        });
+
+        e.set('name', 'test');
+
+        expect(evtNameSet).to.equal(true)
+        expect(evtSet).to.equal(true);
+    });
 });

@@ -246,40 +246,16 @@ class Assets extends Events {
             }
         };
 
-        const createAsset = (asset, realtimeAsset) => {
-            const data = realtimeAsset.data;
-
-            data.id = parseInt(data.item_id, 10);
-            data.uniqueId = asset.uniqueId;
-            data.createdAt = asset.createdAt;
-
-            // delete unnecessary fields
-            delete data.item_id;
-            delete data.branch_id;
-
-            if (data.file) {
-                data.file.url = Asset.getFileUrl(data.id, data.file.filename);
-
-                if (data.file.variants) {
-                    for (const key in data.file.variants) {
-                        data.file.variants[key].url = Asset.getFileUrl(data.id, data.file.variants[key].filename);
-                    }
-                }
-            }
-
-            this.add(new Asset(this, data));
-        };
-
-        // load using bulk subscribe
         while (startBatch < total) {
             api.realtime.connection.startBulkSubscribe();
             for (let i = startBatch; i < startBatch + batchSize && i < total; i++) {
-                const realtimeAsset = api.realtime.assets.load(assets[i].uniqueId);
-                realtimeAsset.once('load', () => {
+                const asset = new Asset(this, assets[i]);
+                asset.loadAndSubscribe().then(() => {
                     onProgress();
-                    createAsset(assets[i], realtimeAsset);
+                    this.add(asset);
+                }).catch(err => {
+                    onProgress();
                 });
-                realtimeAsset.once('error:load', onProgress);
             }
             api.realtime.connection.endBulkSubscribe();
 

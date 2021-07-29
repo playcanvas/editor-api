@@ -1,9 +1,10 @@
 import { globals as api } from './globals';
+import { Events } from './pcui';
 
 /**
  * Represents an Asset
  */
-class Asset {
+class Asset extends Events {
     /**  @typedef {import("./assets").Assets} Assets */
 
     /**
@@ -13,6 +14,7 @@ class Asset {
      * @param {object} data - The asset data
      */
     constructor(assetsApi, data = {}) {
+        super();
         this._assets = assetsApi;
 
         // allow duplicate values in data.frameKeys of sprite asset
@@ -34,10 +36,10 @@ class Asset {
 
         this._observer = new Observer(data, options);
         this._observer.apiAsset = this;
+        this._observer.addEmitter(this);
 
-        const id = data.id;
         this._observer.latestFn = () => {
-            const latest = this._assets.get(id);
+            const latest = this._assets.get(this.get('id'));
             return latest && latest._observer;
         };
 
@@ -64,7 +66,7 @@ class Asset {
     }
 
     _resetThumbnailUrls() {
-        const type = this.get('type');
+        const type = this.get('type') || '';
         if (!type.startsWith('texture')) return;
 
         if (this.get('has_thumbnail')) {
@@ -81,7 +83,7 @@ class Asset {
     }
 
     _onSet(path, value) {
-        if (this._suspendOnSet || ! path.startsWith('file') || path.endsWith('.url') || ! asset.get('file'))
+        if (this._suspendOnSet || ! path.startsWith('file') || path.endsWith('.url') || ! this.get('file'))
             return;
 
         this._suspendOnSet = true;
@@ -181,6 +183,49 @@ class Asset {
      */
     latest() {
         return this._assets.get(this._observer.get('id'));
+    }
+
+    /**
+     * Loads the asset's data from sharedb and subscribes to changes
+     */
+    async loadAndSubscribe() {
+        if (!api.realtime) return;
+
+        const uniqueId = this.get('uniqueId');
+        const a = api.realtime.assets.load(uniqueId);
+        return new Promise((resolve, reject) => {
+            a.once('load', () => {
+                const data = a.data;
+
+                data.id = parseInt(data.item_id, 10);
+                data.uniqueId = uniqueId;
+                data.createdAt = this.createdAt;
+
+                // delete unnecessary fields
+                delete data.item_id;
+                delete data.branch_id;
+
+                if (data.file) {
+                    data.file.url = Asset.getFileUrl(data.id, data.file.filename);
+
+                    if (data.file.variants) {
+                        for (const key in data.file.variants) {
+                            data.file.variants[key].url = Asset.getFileUrl(data.id, data.file.variants[key].filename);
+                        }
+                    }
+                }
+
+                for (const field in a.data) {
+                    this.set(field, a.data[field]);
+                }
+
+                resolve();
+            });
+
+            a.once('error:load', () => {
+                reject();
+            });
+        });
     }
 
     /**

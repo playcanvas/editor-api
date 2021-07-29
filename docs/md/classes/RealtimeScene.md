@@ -54,7 +54,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/scene.js:18](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L18)
+[src/realtime/scene.js:18](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L18)
 
 ## Accessors
 
@@ -70,7 +70,7 @@ The scene data
 
 #### Defined in
 
-[src/realtime/scene.js:150](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L150)
+[src/realtime/scene.js:150](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L150)
 
 ___
 
@@ -86,7 +86,7 @@ The scene id - used in combination with the branch id
 
 #### Defined in
 
-[src/realtime/scene.js:159](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L159)
+[src/realtime/scene.js:159](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L159)
 
 ___
 
@@ -102,7 +102,7 @@ Whether the scene is loaded
 
 #### Defined in
 
-[src/realtime/scene.js:141](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L141)
+[src/realtime/scene.js:141](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L141)
 
 ___
 
@@ -118,7 +118,7 @@ The scene's unique id
 
 #### Defined in
 
-[src/realtime/scene.js:168](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L168)
+[src/realtime/scene.js:168](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L168)
 
 ## Methods
 
@@ -140,7 +140,7 @@ Add entity to scene
 
 #### Defined in
 
-[src/realtime/scene.js:68](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L68)
+[src/realtime/scene.js:68](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L68)
 
 ___
 
@@ -156,7 +156,7 @@ Loads scene from sharedb and subscribes to changes.
 
 #### Defined in
 
-[src/realtime/scene.js:32](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L32)
+[src/realtime/scene.js:32](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L32)
 
 ___
 
@@ -178,7 +178,7 @@ Removes entity from scene (not from children of another entity)
 
 #### Defined in
 
-[src/realtime/scene.js:80](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L80)
+[src/realtime/scene.js:80](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L80)
 
 ___
 
@@ -200,7 +200,7 @@ Submits sharedb operation
 
 #### Defined in
 
-[src/realtime/scene.js:92](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L92)
+[src/realtime/scene.js:92](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L92)
 
 ___
 
@@ -216,7 +216,7 @@ Unloads scene from sharedb and unsubscribes from changes.
 
 #### Defined in
 
-[src/realtime/scene.js:47](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L47)
+[src/realtime/scene.js:47](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L47)
 
 ___
 
@@ -239,4 +239,4 @@ sent to the server
 
 #### Defined in
 
-[src/realtime/scene.js:109](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/scene.js#L109)
+[src/realtime/scene.js:109](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scene.js#L109)

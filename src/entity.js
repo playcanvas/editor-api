@@ -1,9 +1,10 @@
 import { globals as api } from './globals';
+import { Events } from './pcui';
 
 /**
  * Represents an Entity
  */
-class Entity {
+class Entity extends Events {
     /** @typedef {import("./entities").Entities} Entities */
 
     /**
@@ -13,6 +14,7 @@ class Entity {
      * @param {object} [data] - Optional entity data
      */
     constructor(entitiesApi, data = {}) {
+        super();
         this._entitiesApi = entitiesApi;
 
         this._observer = new Observer({
@@ -27,6 +29,8 @@ class Entity {
             scale: data.scale || [1, 1, 1],
             components: {}
         });
+
+        this._observer.addEmitter(this);
 
         const id = this._observer.get('resource_id');
 
