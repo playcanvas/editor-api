@@ -46,7 +46,7 @@ Events.constructor
 
 #### Defined in
 
-[src/selection.js:72](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L72)
+[src/selection.js:72](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L72)
 
 ## Accessors
 
@@ -62,7 +62,7 @@ Gets the number of selected items
 
 #### Defined in
 
-[src/selection.js:292](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L292)
+[src/selection.js:292](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L292)
 
 ___
 
@@ -78,7 +78,7 @@ Enables / disables the selection methods
 
 #### Defined in
 
-[src/selection.js:279](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L279)
+[src/selection.js:279](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L279)
 
 • `set` **enabled**(`value`): `void`
 
@@ -96,7 +96,7 @@ Enables / disables the selection methods
 
 #### Defined in
 
-[src/selection.js:283](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L283)
+[src/selection.js:283](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L283)
 
 ___
 
@@ -112,7 +112,7 @@ Gets the selection history
 
 #### Defined in
 
-[src/selection.js:301](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L301)
+[src/selection.js:301](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L301)
 
 ___
 
@@ -128,7 +128,7 @@ Gets the selected items. This creates a new array every time it is called.
 
 #### Defined in
 
-[src/selection.js:270](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L270)
+[src/selection.js:270](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L270)
 
 ## Methods
 
@@ -152,7 +152,7 @@ Add item to selection
 
 #### Defined in
 
-[src/selection.js:101](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L101)
+[src/selection.js:101](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L101)
 
 ___
 
@@ -175,7 +175,7 @@ Clears selection
 
 #### Defined in
 
-[src/selection.js:204](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L204)
+[src/selection.js:204](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L204)
 
 ___
 
@@ -199,7 +199,7 @@ If item is in selection
 
 #### Defined in
 
-[src/selection.js:194](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L194)
+[src/selection.js:194](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L194)
 
 ___
 
@@ -223,7 +223,7 @@ Remove item from selection
 
 #### Defined in
 
-[src/selection.js:132](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L132)
+[src/selection.js:132](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L132)
 
 ___
 
@@ -247,7 +247,7 @@ Sets current selection
 
 #### Defined in
 
-[src/selection.js:241](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L241)
+[src/selection.js:241](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L241)
 
 ___
 
@@ -271,4 +271,4 @@ Toggle item selection
 
 #### Defined in
 
-[src/selection.js:162](https://github.com/playcanvas/editor-api/blob/08f5d47/src/selection.js#L162)
+[src/selection.js:162](https://github.com/playcanvas/editor-api/blob/92241b1/src/selection.js#L162)

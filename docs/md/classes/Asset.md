@@ -30,7 +30,7 @@ Represents an Asset
 
 ### constructor
 
-• **new Asset**(`assetsApi`, `data`)
+• **new Asset**(`assetsApi`, `data?`)
 
 Constructor
 
@@ -43,7 +43,7 @@ Constructor
 
 #### Defined in
 
-[src/asset.js:15](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L15)
+[src/asset.js:15](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L15)
 
 ## Accessors
 
@@ -59,7 +59,7 @@ Gets observer history for this assset
 
 #### Defined in
 
-[src/asset.js:182](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L182)
+[src/asset.js:191](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L191)
 
 ## Methods
 
@@ -83,7 +83,7 @@ The value
 
 #### Defined in
 
-[src/asset.js:111](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L111)
+[src/asset.js:120](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L120)
 
 ___
 
@@ -107,7 +107,7 @@ True if path exists
 
 #### Defined in
 
-[src/asset.js:101](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L101)
+[src/asset.js:110](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L110)
 
 ___
 
@@ -133,7 +133,7 @@ Whether the value was inserted
 
 #### Defined in
 
-[src/asset.js:144](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L144)
+[src/asset.js:153](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L153)
 
 ___
 
@@ -151,7 +151,7 @@ Returns JSON representation of entity data
 
 #### Defined in
 
-[src/asset.js:164](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L164)
+[src/asset.js:173](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L173)
 
 ___
 
@@ -169,7 +169,7 @@ The asset
 
 #### Defined in
 
-[src/asset.js:173](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L173)
+[src/asset.js:182](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L182)
 
 ___
 
@@ -194,7 +194,7 @@ Whether the value was removed
 
 #### Defined in
 
-[src/asset.js:155](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L155)
+[src/asset.js:164](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L164)
 
 ___
 
@@ -219,7 +219,7 @@ Whether the value was set
 
 #### Defined in
 
-[src/asset.js:122](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L122)
+[src/asset.js:131](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L131)
 
 ___
 
@@ -243,7 +243,7 @@ Whether the value was unset
 
 #### Defined in
 
-[src/asset.js:132](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L132)
+[src/asset.js:141](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L141)
 
 ___
 
@@ -268,4 +268,4 @@ The file URL
 
 #### Defined in
 
-[src/asset.js:193](https://github.com/playcanvas/editor-api/blob/08f5d47/src/asset.js#L193)
+[src/asset.js:202](https://github.com/playcanvas/editor-api/blob/92241b1/src/asset.js#L202)

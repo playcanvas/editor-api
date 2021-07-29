@@ -52,7 +52,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/asset.js:19](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L19)
+[src/realtime/asset.js:19](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L19)
 
 ## Accessors
 
@@ -68,7 +68,7 @@ The asset data
 
 #### Defined in
 
-[src/realtime/asset.js:140](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L140)
+[src/realtime/asset.js:140](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L140)
 
 ___
 
@@ -84,7 +84,7 @@ The asset id - used in combination with branch id
 
 #### Defined in
 
-[src/realtime/asset.js:149](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L149)
+[src/realtime/asset.js:149](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L149)
 
 ___
 
@@ -100,7 +100,7 @@ Whether the asset is loaded
 
 #### Defined in
 
-[src/realtime/asset.js:131](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L131)
+[src/realtime/asset.js:131](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L131)
 
 ___
 
@@ -116,7 +116,7 @@ The asset's unique id
 
 #### Defined in
 
-[src/realtime/asset.js:158](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L158)
+[src/realtime/asset.js:158](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L158)
 
 ## Methods
 
@@ -132,7 +132,7 @@ Loads asset from sharedb and subscribes to changes.
 
 #### Defined in
 
-[src/realtime/asset.js:33](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L33)
+[src/realtime/asset.js:33](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L33)
 
 ___
 
@@ -154,7 +154,7 @@ Submits sharedb operation
 
 #### Defined in
 
-[src/realtime/asset.js:69](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L69)
+[src/realtime/asset.js:69](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L69)
 
 ___
 
@@ -170,7 +170,7 @@ Unloads scene from sharedb and unsubscribes from changes.
 
 #### Defined in
 
-[src/realtime/asset.js:48](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L48)
+[src/realtime/asset.js:48](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L48)
 
 ___
 
@@ -193,4 +193,4 @@ sent to the server
 
 #### Defined in
 
-[src/realtime/asset.js:86](https://github.com/playcanvas/editor-api/blob/08f5d47/src/realtime/asset.js#L86)
+[src/realtime/asset.js:86](https://github.com/playcanvas/editor-api/blob/92241b1/src/realtime/asset.js#L86)
