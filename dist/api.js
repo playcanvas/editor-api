@@ -505,7 +505,7 @@
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
          * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
-         * @returns {Entity} The new entity
+         * @returns {Promise<Entity>} The new entity
          */
         async duplicate(options = {}) {
             const result = await this._entitiesApi.duplicate([this], options);
@@ -3926,7 +3926,7 @@
      * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
      * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
-     * @returns {Entity[]} The duplicated entities
+     * @returns {Promise<Entity[]>} The duplicated entities
      */
     async function duplicateEntities(entitiesApi, entities, options) {
         if (options.history === undefined) {
@@ -4539,11 +4539,12 @@
          * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
          * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
          * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
-         * @returns {Entity[]} The duplicated entities
+         * @returns {Promise<Entity[]>} The duplicated entities
          */
         async duplicate(entities, options = {}) {
             const result = await duplicateEntities(this, entities, options);
             return result;
+
         }
 
         /**
@@ -4567,7 +4568,7 @@
          * @param {Assets} assetsApi - The asset api
          * @param {object} data - The asset data
          */
-        constructor(assetsApi, data) {
+        constructor(assetsApi, data = {}) {
             this._assets = assetsApi;
 
             // allow duplicate values in data.frameKeys of sprite asset
@@ -4577,6 +4578,15 @@
                     pathsWithDuplicates: ['data.frameKeys']
                 };
             }
+
+            data = Object.assign({
+                name: 'New Asset',
+                tags: [],
+                meta: null,
+                data: null,
+                file: null,
+                path: []
+            }, data);
 
             this._observer = new Observer(data, options);
             this._observer.apiAsset = this;
@@ -4901,17 +4911,19 @@
          * @param {Asset} asset - The asset
          */
         remove(asset) {
-            if (this._assets.remove(asset)) {
-                delete this._uniqueIdToItemId[asset.get('uniqueId')];
-                asset._observer.destroy();
+            if (!this._assets.has(asset._observer)) return;
 
-                if (globals.realtime) {
-                    globals.realtime.assets.unload(asset.get('uniqueId'));
-                }
+            this._assets.remove(asset._observer);
 
-                this.emit(`remove`, asset);
-                this.emit(`remove[${asset.get('id')}]`);
+            delete this._uniqueIdToItemId[asset.get('uniqueId')];
+            asset._observer.destroy();
+
+            if (globals.realtime) {
+                globals.realtime.assets.unload(asset.get('uniqueId'));
             }
+
+            this.emit(`remove`, asset);
+            this.emit(`remove[${asset.get('id')}]`);
         }
 
         /**
@@ -4919,6 +4931,7 @@
          */
         clear() {
             const assets = this.list();
+            if (!assets.length) return;
 
             this._assets.clear();
 
@@ -4937,7 +4950,9 @@
          * @returns {Asset[]} The assets
          */
         filter(fn) {
-            return this._assets.data.filter(observer => fn(observer.apiAsset)).map(observer => observer.apiAssset);
+            return this._assets.data
+            .filter(observer => fn(observer.apiAsset))
+            .map(observer => observer.apiAsset);
         }
 
         /**
@@ -4954,7 +4969,6 @@
         /**
          * Loads all assets in the current project / branch
          * and subscribes to changes
-         * @returns
          */
         async loadAllAndSubscribe() {
             this.clear();

@@ -1,6 +1,53 @@
 describe('api.Entities tests', function () {
     let entitiesApi;
 
+    function makeScriptAsset() {
+        return new api.Asset(api.globals.assets, {
+            id: 1,
+            uniqueId: 1,
+            type: 'script',
+            name: 'script',
+            data: {
+                scripts: {
+                    test: {
+                        attributes: {
+                            entity: {
+                                type: 'entity'
+                            },
+                            entityArray: {
+                                type: 'entity',
+                                array: true
+                            },
+                            json: {
+                                type: 'json',
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            },
+                            jsonArray: {
+                                type: 'json',
+                                array: true,
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     beforeEach(() => {
         api.globals.history = null;
         api.globals.selection = null;
@@ -222,7 +269,11 @@ describe('api.Entities tests', function () {
 
     it('delete removes entity references', function () {
         api.globals.schema = new api.Schema(schema);
-        api.globals.history = new api.History(schema);
+        api.globals.history = new api.History();
+        api.globals.assets = new api.Assets();
+
+        const script = makeScriptAsset();
+        api.globals.assets.add(script);
 
         const root = entitiesApi.create({
             name: 'root',
@@ -240,17 +291,48 @@ describe('api.Entities tests', function () {
         const c2 = root.findByName('child 2');
         const c3 = root.findByName('sub child');
 
+        const reference = c1.get('resource_id');
         [root, c1, c2, c3].forEach(e => {
             e.set('components.testcomponent', {
-                entityRef: c1.get('resource_id')
+                entityRef: reference
             });
-            expect(e.get('components.testcomponent.entityRef')).to.equal(c1.get('resource_id'));
+            e.set('components.script', {
+                scripts: {
+                    test: {
+                        attributes: {
+                            entity: reference,
+                            entityArray: [reference, reference],
+                            json: {
+                                entity: reference,
+                                entityArray: [reference, reference]
+                            },
+                            jsonArray: [{
+                                entity: reference,
+                                entityArray: [reference, reference]
+                            }]
+                        }
+                    }
+                }
+            })
+            expect(e.get('components.testcomponent.entityRef')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
 
         entitiesApi.delete([c1]);
 
         [root, c1, c2, c3].forEach(e => {
             expect(e.get('components.testcomponent.entityRef')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([null, null]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([null, null]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([null, null]);
         });
 
         // test undo brings back references
@@ -259,7 +341,13 @@ describe('api.Entities tests', function () {
         c1 = c1.latest();
 
         [root, c1, c2, c3].forEach(e => {
-            expect(e.get('components.testcomponent.entityRef')).to.equal(c1.get('resource_id'));
+            expect(e.get('components.testcomponent.entityRef')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
     });
 
@@ -590,48 +678,7 @@ describe('api.Entities tests', function () {
         api.globals.assets = new api.Assets();
         api.globals.schema = new api.Schema(schema);
 
-        const script = new api.Asset(api.globals.assets, {
-            id: 1,
-            type: 'script',
-            data: {
-                scripts: {
-                    test: {
-                        attributes: {
-                            entity: {
-                                type: 'entity'
-                            },
-                            entityArray: {
-                                type: 'entity',
-                                array: true
-                            },
-                            json: {
-                                type: 'json',
-                                schema: [{
-                                    name: 'entity',
-                                    type: 'entity'
-                                }, {
-                                    name: 'entityArray',
-                                    type: 'entity',
-                                    array: true
-                                }]
-                            },
-                            jsonArray: {
-                                type: 'json',
-                                array: true,
-                                schema: [{
-                                    name: 'entity',
-                                    type: 'entity'
-                                }, {
-                                    name: 'entityArray',
-                                    type: 'entity',
-                                    array: true
-                                }]
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        const script = makeScriptAsset();
 
         api.globals.assets.add(script);
 

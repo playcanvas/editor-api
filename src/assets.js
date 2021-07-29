@@ -153,17 +153,19 @@ class Assets extends Events {
      * @param {Asset} asset - The asset
      */
     remove(asset) {
-        if (this._assets.remove(asset)) {
-            delete this._uniqueIdToItemId[asset.get('uniqueId')];
-            asset._observer.destroy();
+        if (!this._assets.has(asset._observer)) return;
 
-            if (api.realtime) {
-                api.realtime.assets.unload(asset.get('uniqueId'));
-            }
+        this._assets.remove(asset._observer);
 
-            this.emit(`remove`, asset);
-            this.emit(`remove[${asset.get('id')}]`);
+        delete this._uniqueIdToItemId[asset.get('uniqueId')];
+        asset._observer.destroy();
+
+        if (api.realtime) {
+            api.realtime.assets.unload(asset.get('uniqueId'));
         }
+
+        this.emit(`remove`, asset);
+        this.emit(`remove[${asset.get('id')}]`);
     }
 
     /**
@@ -171,6 +173,7 @@ class Assets extends Events {
      */
     clear() {
         const assets = this.list();
+        if (!assets.length) return;
 
         this._assets.clear();
 
@@ -189,7 +192,9 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     filter(fn) {
-        return this._assets.data.filter(observer => fn(observer.apiAsset)).map(observer => observer.apiAssset);
+        return this._assets.data
+        .filter(observer => fn(observer.apiAsset))
+        .map(observer => observer.apiAsset);
     }
 
     /**

@@ -12,7 +12,7 @@ class Asset {
      * @param {Assets} assetsApi - The asset api
      * @param {object} data - The asset data
      */
-    constructor(assetsApi, data) {
+    constructor(assetsApi, data = {}) {
         this._assets = assetsApi;
 
         // allow duplicate values in data.frameKeys of sprite asset
@@ -22,6 +22,15 @@ class Asset {
                 pathsWithDuplicates: ['data.frameKeys']
             };
         }
+
+        data = Object.assign({
+            name: 'New Asset',
+            tags: [],
+            meta: null,
+            data: null,
+            file: null,
+            path: []
+        }, data);
 
         this._observer = new Observer(data, options);
         this._observer.apiAsset = this;
