@@ -32,7 +32,7 @@ The history API
 
 #### Defined in
 
-[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L16)
+[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L16)
 
 ___
 
@@ -44,7 +44,7 @@ The selection API
 
 #### Defined in
 
-[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L23)
+[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L23)
 
 ___
 
@@ -56,7 +56,7 @@ The schema API
 
 #### Defined in
 
-[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L30)
+[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L30)
 
 ___
 
@@ -68,7 +68,7 @@ The assets API
 
 #### Defined in
 
-[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L45)
+[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L45)
 
 ___
 
@@ -80,7 +80,7 @@ The current project id
 
 #### Defined in
 
-[src/globals.js:71](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L71)
+[src/globals.js:71](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L71)
 
 ___
 
@@ -92,7 +92,7 @@ The current branch id
 
 #### Defined in
 
-[src/globals.js:78](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L78)
+[src/globals.js:78](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L78)
 
 ___
 
@@ -104,7 +104,7 @@ Whether this project is using legacy scripts
 
 #### Defined in
 
-[src/globals.js:85](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L85)
+[src/globals.js:85](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L85)
 
 ___
 
@@ -118,7 +118,7 @@ The realtime API
 
 #### Defined in
 
-[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L38)
+[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L38)
 
 ___
 
@@ -132,7 +132,7 @@ Global URLs
 
 #### Defined in
 
-[src/globals.js:54](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L54)
+[src/globals.js:54](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L54)
 
 ___
 
@@ -144,4 +144,4 @@ The user's access token
 
 #### Defined in
 
-[src/globals.js:64](https://github.com/playcanvas/editor-api/blob/8325281/src/globals.js#L64)
+[src/globals.js:64](https://github.com/playcanvas/editor-api/blob/d967346/src/globals.js#L64)
