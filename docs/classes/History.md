@@ -12,7 +12,7 @@ The history API responsible for undo / redo.
 
 ## Table of contents
 
-### Constructors
+### Internal Constructors
 
 - [constructor](History.md#constructor)
 
@@ -30,7 +30,7 @@ The history API responsible for undo / redo.
 - [canUndo](History.md#canundo)
 - [canRedo](History.md#canredo)
 
-## Constructors
+## Internal Constructors
 
 ### constructor
 
@@ -38,13 +38,15 @@ The history API responsible for undo / redo.
 
 Creates new instance of the API
 
+**`category`** Internal
+
 #### Overrides
 
 Events.constructor
 
 #### Defined in
 
-[src/history.js:19](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L19)
+[src/history.js:21](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L21)
 
 ## Methods
 
@@ -53,6 +55,16 @@ Events.constructor
 ▸ **add**(`action`): `void`
 
 Adds history action
+
+**`example`**
+```javascript
+const prevSelection = editor.selection.items;
+editor.history.add({
+    name: 'clear selection',
+    redo: () => { editor.selection.clear({ history: false }); },
+    undo: () => { editor.selection.set(prevSelection, { history: false }); },
+});
+```
 
 #### Parameters
 
@@ -66,7 +78,7 @@ Adds history action
 
 #### Defined in
 
-[src/history.js:34](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L34)
+[src/history.js:45](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L45)
 
 ___
 
@@ -76,13 +88,18 @@ ___
 
 Undo last action
 
+**`example`**
+```javascript
+editor.history.undo();
+```
+
 #### Returns
 
 `void`
 
 #### Defined in
 
-[src/history.js:41](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L41)
+[src/history.js:57](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L57)
 
 ___
 
@@ -92,13 +109,18 @@ ___
 
 Redo last action
 
+**`example`**
+```javascript
+editor.history.redo();
+```
+
 #### Returns
 
 `void`
 
 #### Defined in
 
-[src/history.js:48](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L48)
+[src/history.js:69](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L69)
 
 ___
 
@@ -108,13 +130,18 @@ ___
 
 Clear history
 
+**`example`**
+```javascript
+editor.history.clear();
+```
+
 #### Returns
 
 `void`
 
 #### Defined in
 
-[src/history.js:55](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L55)
+[src/history.js:81](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L81)
 
 ## Accessors
 
@@ -130,7 +157,7 @@ Gets the current action
 
 #### Defined in
 
-[src/history.js:64](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L64)
+[src/history.js:90](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L90)
 
 ___
 
@@ -146,7 +173,7 @@ Gets the last action
 
 #### Defined in
 
-[src/history.js:73](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L73)
+[src/history.js:99](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L99)
 
 ___
 
@@ -162,7 +189,7 @@ Whether there are any actions to undo
 
 #### Defined in
 
-[src/history.js:82](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L82)
+[src/history.js:108](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L108)
 
 • `set` **canUndo**(`value`): `void`
 
@@ -180,7 +207,7 @@ Whether there are any actions to undo
 
 #### Defined in
 
-[src/history.js:86](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L86)
+[src/history.js:112](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L112)
 
 ___
 
@@ -196,7 +223,7 @@ Whether there are actions to redo
 
 #### Defined in
 
-[src/history.js:95](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L95)
+[src/history.js:121](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L121)
 
 • `set` **canRedo**(`value`): `void`
 
@@ -214,4 +241,4 @@ Whether there are actions to redo
 
 #### Defined in
 
-[src/history.js:99](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/history.js#L99)
+[src/history.js:125](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L125)

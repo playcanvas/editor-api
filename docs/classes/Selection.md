@@ -12,7 +12,7 @@ Selection API. Allows selecting Entities, Assets etc.
 
 ## Table of contents
 
-### Constructors
+### Internal Constructors
 
 - [constructor](Selection.md#constructor)
 
@@ -31,13 +31,15 @@ Selection API. Allows selecting Entities, Assets etc.
 - [count](Selection.md#count)
 - [history](Selection.md#history)
 
-## Constructors
+## Internal Constructors
 
 ### constructor
 
 • **new Selection**()
 
-Creates new instance of API
+Constructor
+
+**`category`** Internal
 
 #### Overrides
 
@@ -45,7 +47,7 @@ Events.constructor
 
 #### Defined in
 
-[src/selection.js:74](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L74)
+[src/selection.js:82](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L82)
 
 ## Methods
 
@@ -54,6 +56,12 @@ Events.constructor
 ▸ **add**(`item`): `void`
 
 Add item to selection
+
+**`example`**
+```javascript
+// add root entity to selection
+editor.selection.add(editor.entities.root);
+```
 
 #### Parameters
 
@@ -67,7 +75,7 @@ Add item to selection
 
 #### Defined in
 
-[src/selection.js:101](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L101)
+[src/selection.js:114](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L114)
 
 ___
 
@@ -81,7 +89,7 @@ Remove item from selection
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `item` | `any` | The item |
+| `item` | `any` | The item * @example ```javascript // remove root entity from selection editor.selection.remove(editor.entities.root); ``` |
 
 #### Returns
 
@@ -89,7 +97,7 @@ Remove item from selection
 
 #### Defined in
 
-[src/selection.js:121](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L121)
+[src/selection.js:139](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L139)
 
 ___
 
@@ -98,6 +106,12 @@ ___
 ▸ **toggle**(`item`): `void`
 
 Toggle item selection
+
+**`example`**
+```javascript
+// toggle root entity selection
+editor.selection.toogle(editor.entities.root);
+```
 
 #### Parameters
 
@@ -111,7 +125,7 @@ Toggle item selection
 
 #### Defined in
 
-[src/selection.js:139](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L139)
+[src/selection.js:162](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L162)
 
 ___
 
@@ -120,6 +134,11 @@ ___
 ▸ **has**(`item`): `boolean`
 
 Checks if item is in selection
+
+**`example`**
+```javascript
+const isRootSelected = editor.selection.has(editor.entities.root);
+```
 
 #### Parameters
 
@@ -135,7 +154,7 @@ If item is in selection
 
 #### Defined in
 
-[src/selection.js:161](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L161)
+[src/selection.js:188](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L188)
 
 ___
 
@@ -145,13 +164,18 @@ ___
 
 Clears selection
 
+**`example`**
+```javascript
+editor.selection.clear();
+```
+
 #### Returns
 
 `void`
 
 #### Defined in
 
-[src/selection.js:168](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L168)
+[src/selection.js:200](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L200)
 
 ## Accessors
 
@@ -161,13 +185,19 @@ Clears selection
 
 Gets / sets the selected items
 
+**`example`**
+```javascript
+editor.selection.items.add(editor.entities.root);
+const selectedEntities = editor.selection.items;
+```
+
 #### Returns
 
 `any`[]
 
 #### Defined in
 
-[src/selection.js:194](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L194)
+[src/selection.js:231](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L231)
 
 • `set` **items**(`value`): `void`
 
@@ -185,7 +215,7 @@ Gets / sets the selected items
 
 #### Defined in
 
-[src/selection.js:198](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L198)
+[src/selection.js:235](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L235)
 
 ___
 
@@ -201,7 +231,7 @@ Enables / disables the selection methods
 
 #### Defined in
 
-[src/selection.js:218](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L218)
+[src/selection.js:255](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L255)
 
 • `set` **enabled**(`value`): `void`
 
@@ -219,7 +249,7 @@ Enables / disables the selection methods
 
 #### Defined in
 
-[src/selection.js:222](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L222)
+[src/selection.js:259](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L259)
 
 ___
 
@@ -235,7 +265,7 @@ Gets the number of selected items
 
 #### Defined in
 
-[src/selection.js:231](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L231)
+[src/selection.js:268](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L268)
 
 ___
 
@@ -251,4 +281,4 @@ Gets the selection history
 
 #### Defined in
 
-[src/selection.js:240](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L240)
+[src/selection.js:277](https://github.com/playcanvas/editor-api/blob/867701a/src/selection.js#L277)
