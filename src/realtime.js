@@ -5,7 +5,7 @@ import { Events } from './pcui';
 /**
  * Provides methods to communicate and load / save data to the realtime server
  *
- * @internal
+ * @category Internal
  */
 class Realtime extends Events {
     constructor() {

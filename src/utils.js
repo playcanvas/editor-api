@@ -1,7 +1,7 @@
 /**
  * Contains various utility methods
  *
- * @internal
+ * @category Internal
  */
 class utils {
     /**

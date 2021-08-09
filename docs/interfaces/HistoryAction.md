@@ -7,8 +7,8 @@
 ### Properties
 
 - [name](HistoryAction.md#name)
-- [redo](HistoryAction.md#redo)
 - [undo](HistoryAction.md#undo)
+- [redo](HistoryAction.md#redo)
 
 ## Properties
 
@@ -20,19 +20,7 @@ The action name
 
 #### Defined in
 
-[src/history.js:7](https://github.com/playcanvas/editor-api/blob/022e512/src/history.js#L7)
-
-___
-
-### redo
-
-• **redo**: `Function`
-
-The redo function
-
-#### Defined in
-
-[src/history.js:9](https://github.com/playcanvas/editor-api/blob/022e512/src/history.js#L9)
+[src/history.js:7](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/history.js#L7)
 
 ___
 
@@ -44,4 +32,16 @@ The undo function
 
 #### Defined in
 
-[src/history.js:8](https://github.com/playcanvas/editor-api/blob/022e512/src/history.js#L8)
+[src/history.js:8](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/history.js#L8)
+
+___
+
+### redo
+
+• **redo**: `Function`
+
+The redo function
+
+#### Defined in
+
+[src/history.js:9](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/history.js#L9)

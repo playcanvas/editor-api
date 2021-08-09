@@ -4,18 +4,26 @@
 
 ## Table of contents
 
-### Classes
+### Public Classes
 
-- [ComponentSchema](classes/ComponentSchema.md)
 - [Entities](classes/Entities.md)
 - [Entity](classes/Entity.md)
+- [globals](classes/globals.md)
 - [History](classes/History.md)
 - [Schema](classes/Schema.md)
-- [Selection](classes/Selection.md)
+- [ComponentSchema](classes/ComponentSchema.md)
 - [SelectionHistory](classes/SelectionHistory.md)
-- [globals](classes/globals.md)
+- [Selection](classes/Selection.md)
+
+### Internal Classes
+
+- [Realtime](classes/Realtime.md)
+- [RealtimeConnection](classes/RealtimeConnection.md)
+- [RealtimeScene](classes/RealtimeScene.md)
+- [RealtimeScenes](classes/RealtimeScenes.md)
+- [utils](classes/utils.md)
 
 ### Interfaces
 
-- [HistoryAction](interfaces/HistoryAction.md)
 - [ReparentArguments](interfaces/ReparentArguments.md)
+- [HistoryAction](interfaces/HistoryAction.md)

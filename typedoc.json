@@ -6,5 +6,8 @@
     "highlightTheme": "github-light",
     "excludeInternal": true,
     "excludePrivate": true,
-    "excludeNotDocumented": true
+    "excludeNotDocumented": true,
+    "sort": "source-order",
+    "defaultCategory": "Public",
+    "categoryOrder": ["Public", "*"]
 }

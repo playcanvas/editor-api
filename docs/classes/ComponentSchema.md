@@ -6,7 +6,7 @@ Provides methods to access the components schema
 
 ## Table of contents
 
-### Constructors
+### Internal Constructors
 
 - [constructor](ComponentSchema.md#constructor)
 
@@ -15,13 +15,15 @@ Provides methods to access the components schema
 - [getDefaultData](ComponentSchema.md#getdefaultdata)
 - [getFieldsOfType](ComponentSchema.md#getfieldsoftype)
 
-## Constructors
+## Internal Constructors
 
 ### constructor
 
 • **new ComponentSchema**(`schema`)
 
 Creates new instance of API
+
+**`category`** Internal
 
 #### Parameters
 
@@ -31,7 +33,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema/components.js:14](https://github.com/playcanvas/editor-api/blob/022e512/src/schema/components.js#L14)
+[src/schema/components.js:15](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/schema/components.js#L15)
 
 ## Methods
 
@@ -40,6 +42,11 @@ Creates new instance of API
 ▸ **getDefaultData**(`component`): `any`
 
 Gets default data for a component
+
+**`example`**
+```javascript
+const modelData = editor.schema.components.getDefaultData('model');
+```
 
 #### Parameters
 
@@ -55,7 +62,7 @@ The default data
 
 #### Defined in
 
-[src/schema/components.js:37](https://github.com/playcanvas/editor-api/blob/022e512/src/schema/components.js#L37)
+[src/schema/components.js:42](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/schema/components.js#L42)
 
 ___
 
@@ -64,6 +71,11 @@ ___
 ▸ **getFieldsOfType**(`componentName`, `type`): `string`[]
 
 Gets a list of fields of a particular type for a component
+
+**`example`**
+```javascript
+const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
+```
 
 #### Parameters
 
@@ -80,4 +92,4 @@ A list of fields
 
 #### Defined in
 
-[src/schema/components.js:59](https://github.com/playcanvas/editor-api/blob/022e512/src/schema/components.js#L59)
+[src/schema/components.js:68](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/schema/components.js#L68)

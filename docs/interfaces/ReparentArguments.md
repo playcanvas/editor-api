@@ -7,8 +7,8 @@
 ### Properties
 
 - [entity](ReparentArguments.md#entity)
-- [index](ReparentArguments.md#index)
 - [parent](ReparentArguments.md#parent)
+- [index](ReparentArguments.md#index)
 
 ## Properties
 
@@ -20,19 +20,7 @@ The entity to reparent
 
 #### Defined in
 
-[src/entities.js:9](https://github.com/playcanvas/editor-api/blob/022e512/src/entities.js#L9)
-
-___
-
-### index
-
-• **index**: `number`
-
-The child index of the entity under the new parent
-
-#### Defined in
-
-[src/entities.js:11](https://github.com/playcanvas/editor-api/blob/022e512/src/entities.js#L11)
+[src/entities.js:9](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/entities.js#L9)
 
 ___
 
@@ -44,4 +32,16 @@ The new parent for the entity
 
 #### Defined in
 
-[src/entities.js:10](https://github.com/playcanvas/editor-api/blob/022e512/src/entities.js#L10)
+[src/entities.js:10](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/entities.js#L10)
+
+___
+
+### index
+
+• **index**: `number`
+
+The child index of the entity under the new parent
+
+#### Defined in
+
+[src/entities.js:11](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/entities.js#L11)

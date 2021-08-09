@@ -6,27 +6,21 @@ Global variables
 
 ## Table of contents
 
-### Properties
+### Public Properties
 
-- [branchId](globals.md#branchid)
 - [history](globals.md#history)
-- [projectId](globals.md#projectid)
-- [schema](globals.md#schema)
 - [selection](globals.md#selection)
+- [schema](globals.md#schema)
+- [projectId](globals.md#projectid)
+- [branchId](globals.md#branchid)
 
-## Properties
+### Internal Properties
 
-### branchId
+- [realtime](globals.md#realtime)
+- [url](globals.md#url)
+- [accessToken](globals.md#accesstoken)
 
-▪ `Static` **branchId**: `string`
-
-The current branch id
-
-#### Defined in
-
-[src/globals.js:71](https://github.com/playcanvas/editor-api/blob/022e512/src/globals.js#L71)
-
-___
+## Public Properties
 
 ### history
 
@@ -36,31 +30,7 @@ The history API
 
 #### Defined in
 
-[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/022e512/src/globals.js#L16)
-
-___
-
-### projectId
-
-▪ `Static` **projectId**: `number`
-
-The current project id
-
-#### Defined in
-
-[src/globals.js:64](https://github.com/playcanvas/editor-api/blob/022e512/src/globals.js#L64)
-
-___
-
-### schema
-
-▪ `Static` **schema**: [`Schema`](Schema.md)
-
-The schema API
-
-#### Defined in
-
-[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/022e512/src/globals.js#L30)
+[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L16)
 
 ___
 
@@ -72,4 +42,80 @@ The selection API
 
 #### Defined in
 
-[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/022e512/src/globals.js#L23)
+[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L23)
+
+___
+
+### schema
+
+▪ `Static` **schema**: [`Schema`](Schema.md)
+
+The schema API
+
+#### Defined in
+
+[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L30)
+
+___
+
+### projectId
+
+▪ `Static` **projectId**: `number`
+
+The current project id
+
+#### Defined in
+
+[src/globals.js:64](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L64)
+
+___
+
+### branchId
+
+▪ `Static` **branchId**: `string`
+
+The current branch id
+
+#### Defined in
+
+[src/globals.js:71](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L71)
+
+___
+
+## Internal Properties
+
+### realtime
+
+▪ `Static` **realtime**: [`Realtime`](Realtime.md)
+
+The realtime API
+
+#### Defined in
+
+[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L38)
+
+___
+
+### url
+
+▪ `Static` **url**: `any`
+
+Global URLs
+
+**`property`** {string} realtime - The realtime server URL
+
+#### Defined in
+
+[src/globals.js:47](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L47)
+
+___
+
+### accessToken
+
+▪ `Static` **accessToken**: `string`
+
+The user's access token
+
+#### Defined in
+
+[src/globals.js:57](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/globals.js#L57)

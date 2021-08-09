@@ -2,6 +2,12 @@
 
 This is the PlayCanvas Editor API. You can find API documentation here https://github.com/playcanvas/editor-api/blob/master/docs/modules.md.
 
+# Installing
+Run:
+```
+npm install
+```
+
 # Building
 
 Run:
