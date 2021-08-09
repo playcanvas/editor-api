@@ -5,6 +5,12 @@ import { Events } from './pcui';
  * Enables undo / redo of selection changes
  */
 class SelectionHistory {
+    /**
+     * Constructor
+     *
+     * @param {Selection} selection - The selection API
+     * @category Internal
+     */
     constructor(selection) {
         this._selection = selection;
         this._enabled = true;
@@ -69,7 +75,9 @@ class SelectionHistory {
  */
 class Selection extends Events {
     /**
-     * Creates new instance of API
+     * Constructor
+     *
+     * @category Internal
      */
     constructor() {
         super();
@@ -97,6 +105,11 @@ class Selection extends Events {
      * Add item to selection
      *
      * @param {any} item - The item
+     * @example
+     * ```javascript
+     * // add root entity to selection
+     * editor.selection.add(editor.entities.root);
+     * ```
      */
     add(item) {
         if (!this.enabled) return;
@@ -117,6 +130,11 @@ class Selection extends Events {
      * Remove item from selection
      *
      * @param {any} item - The item
+     * * @example
+     * ```javascript
+     * // remove root entity from selection
+     * editor.selection.remove(editor.entities.root);
+     * ```
      */
     remove(item) {
         if (!this.enabled) return;
@@ -135,6 +153,11 @@ class Selection extends Events {
      * Toggle item selection
      *
      * @param {any} item
+     * @example
+     * ```javascript
+     * // toggle root entity selection
+     * editor.selection.toogle(editor.entities.root);
+     * ```
      */
     toggle(item) {
         if (!this.enabled) return;
@@ -157,6 +180,10 @@ class Selection extends Events {
      *
      * @param {any} item - The item
      * @returns {boolean} If item is in selection
+     * @example
+     * ```javascript
+     * const isRootSelected = editor.selection.has(editor.entities.root);
+     * ```
      */
     has(item) {
         return this._items.includes(item);
@@ -164,6 +191,11 @@ class Selection extends Events {
 
     /**
      * Clears selection
+     *
+     * @example
+     * ```javascript
+     * editor.selection.clear();
+     * ```
      */
     clear() {
         if (!this.enabled) return;
@@ -190,6 +222,11 @@ class Selection extends Events {
      * Gets / sets the selected items
      *
      * @type {any[]}
+     * @example
+     * ```javascript
+     * editor.selection.items.add(editor.entities.root);
+     * const selectedEntities = editor.selection.items;
+     * ```
      */
     get items() {
         return this._items.slice();

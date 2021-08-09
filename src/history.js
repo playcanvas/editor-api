@@ -15,6 +15,8 @@ import { Events, History as pcuiHistory } from './pcui';
 class History extends Events {
     /**
      * Creates new instance of the API
+     *
+     * @category Internal
      */
     constructor() {
         super();
@@ -30,6 +32,15 @@ class History extends Events {
      * Adds history action
      *
      * @param {HistoryAction} action - The action
+     * @example
+     * ```javascript
+     * const prevSelection = editor.selection.items;
+     * editor.history.add({
+     *     name: 'clear selection',
+     *     redo: () => { editor.selection.clear({ history: false }); },
+     *     undo: () => { editor.selection.set(prevSelection, { history: false }); },
+     * });
+     * ```
      */
     add(action) {
         this._history.add(action);
@@ -37,6 +48,11 @@ class History extends Events {
 
     /**
      * Undo last action
+     *
+     * @example
+     * ```javascript
+     * editor.history.undo();
+     * ```
      */
     undo() {
         this._history.undo();
@@ -44,6 +60,11 @@ class History extends Events {
 
     /**
      * Redo last action
+     *
+     * @example
+     * ```javascript
+     * editor.history.redo();
+     * ```
      */
     redo() {
         this._history.redo();
@@ -51,6 +72,11 @@ class History extends Events {
 
     /**
      * Clear history
+     *
+     * @example
+     * ```javascript
+     * editor.history.clear();
+     * ```
      */
     clear() {
         this._history.clear();
