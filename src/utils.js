@@ -1,5 +1,7 @@
 /**
  * Contains various utility methods
+ *
+ * @internal
  */
 class utils {
     /**

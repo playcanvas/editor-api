@@ -2,6 +2,8 @@ import { Events } from '../pcui';
 
 /**
  * Represents a scene in sharedb
+ *
+ * @internal
  */
 class RealtimeScene extends Events {
     /** @typedef {import("../entity").Entity} Entity */

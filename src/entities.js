@@ -108,6 +108,7 @@ class Entities extends Events {
     /**
      * Adds entity to list
      *
+     * @internal
      * @param {Entity} entity - The entity
      */
     add(entity) {
@@ -133,6 +134,7 @@ class Entities extends Events {
     /**
      * Called when an entity is added from the server
      *
+     * @internal
      * @param {object} entityData - The entity data
      */
     serverAdd(entityData) {
@@ -145,6 +147,7 @@ class Entities extends Events {
     /**
      * Removes entity from the list
      *
+     * @internal
      * @param {Entity} entity - The entity
      * @param {object} [entityReferences] - A map of entity references to nullify
      * when this entity is removed
@@ -192,6 +195,7 @@ class Entities extends Events {
     /**
      * Called when an entity is removed from the server
      *
+     * @internal
      * @param {Entity} entity - The entity
      */
     serverRemove(entity) {
@@ -214,6 +218,8 @@ class Entities extends Events {
 
     /**
      * Removes all entities from the list
+     *
+     * @internal
      */
     clear() {
         this._root = null;
