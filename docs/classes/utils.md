@@ -32,4 +32,4 @@ A copy of the data
 
 #### Defined in
 
-[src/utils.js:18](https://github.com/playcanvas/editor-api/blob/1a570fa/src/utils.js#L18)
+[src/utils.js:20](https://github.com/playcanvas/editor-api/blob/449ed08/src/utils.js#L20)

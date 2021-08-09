@@ -5,6 +5,12 @@ import { Events } from './pcui';
  * Enables undo / redo of selection changes
  */
 class SelectionHistory {
+    /**
+     * Constructor
+     *
+     * @param {Selection} selection - The selection API
+     * @category Internal
+     */
     constructor(selection) {
         this._selection = selection;
         this._enabled = true;
@@ -67,7 +73,9 @@ class SelectionHistory {
  */
 class Selection extends Events {
     /**
-     * Creates new instance of API
+     * Constructor
+     *
+     * @category Internal
      */
     constructor() {
         super();
@@ -95,8 +103,13 @@ class Selection extends Events {
      * Add item to selection
      *
      * @param {any} item - The item
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @example
+     * ```javascript
+     * // add root entity to selection
+     * editor.selection.add(editor.entities.root);
+     * ```
      */
     add(item, options = {}) {
         if (!this.enabled) return;
@@ -126,8 +139,13 @@ class Selection extends Events {
      * Remove item from selection
      *
      * @param {any} item - The item
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * * @example
+     * ```javascript
+     * // remove root entity from selection
+     * editor.selection.remove(editor.entities.root);
+     * ```
      */
     remove(item, options = {}) {
         if (!this.enabled) return;
@@ -156,8 +174,13 @@ class Selection extends Events {
      * Toggle item selection
      *
      * @param {any} item
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @example
+     * ```javascript
+     * // toggle root entity selection
+     * editor.selection.toogle(editor.entities.root);
+     * ```
      */
     toggle(item, options = {}) {
         if (!this.enabled) return;
@@ -190,6 +213,10 @@ class Selection extends Events {
      *
      * @param {any} item - The item
      * @returns {boolean} If item is in selection
+     * @example
+     * ```javascript
+     * const isRootSelected = editor.selection.has(editor.entities.root);
+     * ```
      */
     has(item) {
         return this._items.includes(item);
@@ -198,8 +225,12 @@ class Selection extends Events {
     /**
      * Clears selection
      *
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @example
+     * ```javascript
+     * editor.selection.clear();
+     * ```
      */
     clear(options = {}) {
         if (!this.enabled) return;
@@ -235,8 +266,14 @@ class Selection extends Events {
      * Sets current selection
      *
      * @param {any[]} items - The items to select
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @type {any[]}
+     * @example
+     * ```javascript
+     * editor.selection.items.add(editor.entities.root);
+     * const selectedEntities = editor.selection.items;
+     * ```
      */
     set(items, options = {}) {
         if (!this.enabled) return;

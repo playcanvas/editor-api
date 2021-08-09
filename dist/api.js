@@ -61,6 +61,7 @@
         /**
          * The realtime API
          *
+         * @category Internal
          * @type {import("./realtime").Realtime}
          */
         static realtime;
@@ -75,6 +76,7 @@
         /**
          * Global URLs
          *
+         * @category Internal
          * @type {object}
          * @property {string} realtime - The realtime server URL
          */
@@ -85,6 +87,7 @@
         /**
          * The user's access token
          *
+         * @category Internal
          * @type {string}
          */
         static accessToken;
@@ -113,6 +116,8 @@
 
     /**
      * Contains various utility methods
+     *
+     * @category Internal
      */
     class utils {
         /**
@@ -3177,8 +3182,9 @@
         /**
          * Creates new Entity
          *
+         * @category Internal
          * @param {Entities} entitiesApi - The Entities API
-         * @param {object} [data] - Optional entity data
+         * @param {object} data - Optional entity data
          */
         constructor(entitiesApi, data = {}) {
             super();
@@ -3233,6 +3239,11 @@
          *
          * @param {string} path - The path
          * @returns {boolean} True if path exists
+         *
+         * @example
+         * ```javascript
+         * console.log(entity.has('components.model'));
+         * ```
          */
         has(path) {
             return this._observer.has(path);
@@ -3243,6 +3254,10 @@
          *
          * @param {string} path - The path
          * @returns {any} The value
+         * @example
+         * ```javascript
+         * console.log(entity.get('position'));
+         * ```
          */
         get(path) {
             return this._observer.get(path);
@@ -3254,6 +3269,10 @@
          * @param {string} path - The path
          * @param {any} value - The value
          * @returns {boolean} Whether the value was set
+         * @example
+         * ```javascript
+         * entity.set('position', [1, 0, 0]);
+         * ```
          */
         set(path, value) {
             return this._observer.set(path, value);
@@ -3264,6 +3283,10 @@
          *
          * @param {string} path - The path
          * @returns {boolean} Whether the value was unset
+         * @example
+         * ```javascript
+         * entity.unset('components.model');
+         * ```
          */
         unset(path) {
             return this._observer.unset(path);
@@ -3276,6 +3299,10 @@
          * @param {any} value - The value
          * @param {number} index - The index (if undefined the value will be inserted in the end)
          * @returns {boolean} Whether the value was inserted
+         * @example
+         * ```javascript
+         * entity.insert('tags', 'a_tag');
+         * ```
          */
         insert(path, value, index) {
             return this._observer.insert(path, value, index);
@@ -3287,6 +3314,9 @@
          * @param {string} path - The path
          * @param {any} value - The value
          * @returns {boolean} Whether the value was removed
+         * ```javascript
+         * entity.removeValue('tags', 'a_tag');
+         * ```
          */
         removeValue(path, value) {
             return this._observer.removeValue(path, value);
@@ -3296,6 +3326,9 @@
          * Returns JSON representation of entity data
          *
          * @returns {object} - The data
+         * ```javascript
+         * console.log(entity.json());
+         * ```
          */
         json() {
             return this._observer.json();
@@ -3325,6 +3358,10 @@
          *
          * @param {string} name - The name
          * @returns {Entity} The entity
+         * @example
+         * ```javascript
+         * const door = editor.entities.root.findByName('Door');
+         * ```
          */
         findByName(name) {
             if (this.get('name') === name) {
@@ -3351,6 +3388,15 @@
          * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
          * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
          * @returns {Entity[]} The entities
+         * @example
+         * ```javascript
+         * // entities that have the following tag
+         * const entities = editor.entities.root.listByTag('tag');
+         * // entities that have any of the following tags
+         * const entities = editor.entities.root.listByTag('tag', 'tag2');
+         * // entities that have all of the following tags
+         * const entities = editor.entities.root.listByTag(['tag', 'tag2']);
+         * ```
          */
         listByTag(...tags) {
             return this.filter(entity => {
@@ -3386,6 +3432,10 @@
          * @param {Function} fn - A function that takes an Entity and returns whether it should be included
          * in the result
          * @returns {Entity[]} The result
+         * @example
+         * ```javascript
+         * const doors = editor.entities.root.filter(entity => entity.get('name').startsWith('door'));
+         * ```
          */
         filter(fn) {
             let result = [];
@@ -3410,6 +3460,12 @@
          * in depth first order.
          *
          * @param {Function} fn - A function that takes an entity as an argument
+         * @example
+         * ```javascript
+         * // get a list of all entities in the graph in depth first order
+         * const entities = [];
+         * editor.entities.root.depthFirst(entity => entities.push(entity));
+         * ```
          */
         depthFirst(fn) {
             fn(this);
@@ -3424,9 +3480,15 @@
          * Adds a component to this Entity
          *
          * @param {string} component - The component name
-         * @param {object} [data] - Default component data
+         * @param {object} data - Default component data
+         * @example
+         * ```javascript
+         * editor.entities.root.addComponent('model', {
+         *     type: 'box'
+         * });
+         * ```
          */
-        addComponent(component, data) {
+        addComponent(component, data = {}) {
             const defaultData = globals.schema.components.getDefaultData(component);
             const componentData = Object.assign(defaultData, data);
             this.set(`components.${component}`, componentData);
@@ -3436,6 +3498,10 @@
          * Removes a component from this Entity
          *
          * @param {string} component - The component name
+         * @example
+         * ```javascript
+         * editor.entities.root.removeComponent('model');
+         * ```
          */
         removeComponent(component) {
             this.unset(`components.${component}`);
@@ -3444,6 +3510,7 @@
         /**
          * Adds entity as a child
          *
+         * @category Internal
          * @param {Entity} entity - The entity
          * @returns {boolean} Whether the child was added
          */
@@ -3454,11 +3521,12 @@
         /**
          * Inserts entity as a child at specified index.
          *
+         * @category Internal
          * @param {Entity} entity - The entity
-         * @param {number} [index] - The index. If undefined the child will be added in the end.
+         * @param {number} index - The index. If undefined the child will be added in the end.
          * @returns {boolean} Whether the child was added
          */
-        insertChild(entity, index) {
+        insertChild(entity, index = undefined) {
             let history = this.history.enabled;
             this.history.enabled = false;
             const result = this.insert('children', entity.get('resource_id'), index);
@@ -3479,6 +3547,7 @@
         /**
          * Removes entity from children
          *
+         * @category Internal
          * @param {Entity} entity - The entity
          */
         removeChild(entity) {
@@ -3496,8 +3565,13 @@
         /**
          * Deletes entity (and its children)
          *
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * editor.entities.root.findByName('door').delete();
+         * ```
+         *
          */
         delete(options = {}) {
             this._entitiesApi.delete([this], options);
@@ -3507,12 +3581,19 @@
          * Reparents entity under new parent
          *
          * @param {Entity} parent - The new parent
-         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+         * @param {number} index - The desired index. If undefined the entity will be added at the end of the parent's children.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @param {boolean} options.preserverTransform - Whether to preserve the original transform after reparenting
+         * @example
+         * ```javascript
+         * const redHouse = editor.entities.root.findByName('red house');
+         * const greenHouse = editor.entities.root.findByName('green house');
+         * const door = redHouse.findByName('door');
+         * door.reparent(greenHouse);
+         * ```
          */
-        reparent(parent, index, options = {}) {
+        reparent(parent, index = null, options = {}) {
             this._entitiesApi.reparent([{
                 entity: this,
                 parent: parent,
@@ -4370,6 +4451,8 @@
     class Entities extends __webpack_exports__Events {
         /**
          * Creates new API instance
+         *
+         * @category Internal
          */
         constructor() {
             super();
@@ -4386,6 +4469,10 @@
          *
          * @param {string} id - The entity's resource id
          * @returns {Entity} The entity
+         * @example
+         * ```javascript
+         * const entity = editor.entities.get(resourceId);
+         * ```
          */
         get(id) {
             const e = this._entities.get(id);
@@ -4396,6 +4483,11 @@
          * Returns array of all entities
          *
          * @returns {Entity[]} The entities
+         * @example
+         * ```javascript
+         * const entities = editor.entities.list();
+         * console.log(entities.length);
+         * ```
          */
         list() {
             return this._entities.array().map(e => e.apiEntity);
@@ -4404,6 +4496,7 @@
         /**
          * Adds entity to list
          *
+         * @category Internal
          * @param {Entity} entity - The entity
          */
         add(entity) {
@@ -4431,6 +4524,7 @@
         /**
          * Called when an entity is added from the server
          *
+         * @category Internal
          * @param {object} entityData - The entity data
          */
         serverAdd(entityData) {
@@ -4443,11 +4537,12 @@
         /**
          * Removes entity from the list
          *
+         * @category Internal
          * @param {Entity} entity - The entity
-         * @param {object} [entityReferences] - A map of entity references to nullify
+         * @param {object} entityReferences - A map of entity references to nullify
          * when this entity is removed
          */
-        remove(entity, entityReferences) {
+        remove(entity, entityReferences = null) {
             if (entityReferences) {
                 updateReferences(this, entityReferences, entity.get('resource_id'), null);
             }
@@ -4489,6 +4584,7 @@
         /**
          * Called when an entity is removed from the server
          *
+         * @category Internal
          * @param {Entity} entity - The entity
          */
         serverRemove(entity) {
@@ -4510,6 +4606,8 @@
 
         /**
          * Removes all entities from the list
+         *
+         * @category Internal
          */
         clear() {
             this._root = null;
@@ -4536,14 +4634,26 @@
         /**
          * Creates new entity and adds it to the hierarchy
          *
-         * @param {object} [data] - Optional initial data for the entity
-         * @param {object} [options] - Options
-         * @param {number} [options.index] - The child index that this entity will have under its parent.
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
+         * @param {object} data - Optional initial data for the entity
+         * @param {object} options - Options
+         * @param {number} options.index - The child index that this entity will have under its parent.
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @param {boolean} options.select - Whether to select new Entity. Defaults to false.
          * @returns {Entity} The new entity
+         *
+         * @example
+         * ```javascript
+         * const root = editor.entities.create({
+         *     name: 'parent',
+         * });
+         *
+         * const child = editor.entities.create({
+         *     name: 'child',
+         *     parent: root,
+         * });
+         *```
          */
-        create(data, options = {}) {
+        create(data = null, options = {}) {
             return createEntity(this, data, options);
         }
 
@@ -4551,8 +4661,13 @@
          * Delete specified entities
          *
          * @param {Entity[]|Entity} entities - The entities
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         *
+         * @example
+         * ```javascript
+         * editor.entities.delete([entity1, entity2]);
+         * ```
          */
         delete(entities, options = {}) {
             return deleteEntities(this, entities, options);
@@ -4562,9 +4677,18 @@
          * Reparents entities under new parent.
          *
          * @param {ReparentArguments[]} data - The reparenting data
-         * @param {object} [options] - Options
-         * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
-         * @param {boolean} [options.history] - Whether to record history. Defaults to true
+         * @param {object} options - Options
+         * @param {boolean} options.preserveTransform - Whether to preserve the transform of the entities. Defaults to false.
+         * @param {boolean} options.history - Whether to record history. Defaults to true
+         * @example
+         * ```javascript
+         * const child = editor.entities.create();
+         * const parent = editor.entities.create();
+         * editor.entities.reparent([{
+         *     entity: child,
+         *     parent: parent
+         * }])
+         * ```
          */
         reparent(data, options = {}) {
             return reparentEntities(data, options);
@@ -5133,6 +5257,8 @@
     class History extends __webpack_exports__Events {
         /**
          * Creates new instance of the API
+         *
+         * @category Internal
          */
         constructor() {
             super();
@@ -5148,6 +5274,15 @@
          * Adds history action
          *
          * @param {HistoryAction} action - The action
+         * @example
+         * ```javascript
+         * const prevSelection = editor.selection.items;
+         * editor.history.add({
+         *     name: 'clear selection',
+         *     redo: () => { editor.selection.clear({ history: false }); },
+         *     undo: () => { editor.selection.set(prevSelection, { history: false }); },
+         * });
+         * ```
          */
         add(action) {
             this._history.add(action);
@@ -5155,6 +5290,11 @@
 
         /**
          * Undo last action
+         *
+         * @example
+         * ```javascript
+         * editor.history.undo();
+         * ```
          */
         undo() {
             this._history.undo();
@@ -5162,6 +5302,11 @@
 
         /**
          * Redo last action
+         *
+         * @example
+         * ```javascript
+         * editor.history.redo();
+         * ```
          */
         redo() {
             this._history.redo();
@@ -5169,6 +5314,11 @@
 
         /**
          * Clear history
+         *
+         * @example
+         * ```javascript
+         * editor.history.clear();
+         * ```
          */
         clear() {
             this._history.clear();
@@ -5223,6 +5373,12 @@
      * Enables undo / redo of selection changes
      */
     class SelectionHistory {
+        /**
+         * Constructor
+         *
+         * @param {Selection} selection - The selection API
+         * @category Internal
+         */
         constructor(selection) {
             this._selection = selection;
             this._enabled = true;
@@ -5285,7 +5441,9 @@
      */
     class Selection extends __webpack_exports__Events {
         /**
-         * Creates new instance of API
+         * Constructor
+         *
+         * @category Internal
          */
         constructor() {
             super();
@@ -5313,8 +5471,13 @@
          * Add item to selection
          *
          * @param {any} item - The item
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * // add root entity to selection
+         * editor.selection.add(editor.entities.root);
+         * ```
          */
         add(item, options = {}) {
             if (!this.enabled) return;
@@ -5344,8 +5507,13 @@
          * Remove item from selection
          *
          * @param {any} item - The item
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * * @example
+         * ```javascript
+         * // remove root entity from selection
+         * editor.selection.remove(editor.entities.root);
+         * ```
          */
         remove(item, options = {}) {
             if (!this.enabled) return;
@@ -5373,8 +5541,13 @@
          * Toggle item selection
          *
          * @param {any} item
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * // toggle root entity selection
+         * editor.selection.toogle(editor.entities.root);
+         * ```
          */
         toggle(item, options = {}) {
             if (!this.enabled) return;
@@ -5407,6 +5580,10 @@
          *
          * @param {any} item - The item
          * @returns {boolean} If item is in selection
+         * @example
+         * ```javascript
+         * const isRootSelected = editor.selection.has(editor.entities.root);
+         * ```
          */
         has(item) {
             return this._items.includes(item);
@@ -5415,8 +5592,12 @@
         /**
          * Clears selection
          *
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * editor.selection.clear();
+         * ```
          */
         clear(options = {}) {
             if (!this.enabled) return;
@@ -5452,8 +5633,14 @@
          * Sets current selection
          *
          * @param {any[]} items - The items to select
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @type {any[]}
+         * @example
+         * ```javascript
+         * editor.selection.items.add(editor.entities.root);
+         * const selectedEntities = editor.selection.items;
+         * ```
          */
         set(items, options = {}) {
             if (!this.enabled) return;
@@ -5529,6 +5716,7 @@
         /**
          * Creates new instance of API
          *
+         * @category Internal
          * @param {Schema} schema - The schema API
          */
         constructor(schema) {
@@ -5553,6 +5741,10 @@
          *
          * @param {string} component - The component name
          * @returns {object} The default data
+         * @example
+         * ```javascript
+         * const modelData = editor.schema.components.getDefaultData('model');
+         * ```
          */
         getDefaultData(component) {
             const result = {};
@@ -5575,6 +5767,10 @@
          * @param {string} componentName - The component name
          * @param {string} type - The desired type
          * @returns {string[]} A list of fields
+         * @example
+         * ```javascript
+         * const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
+         * ```
          */
         getFieldsOfType(componentName, type) {
             const result = [];
@@ -5618,6 +5814,8 @@
 
     /**
      * Handles connecting and communicating with the Realtime server.
+     *
+     * @category Internal
      */
     class RealtimeConnection extends __webpack_exports__Events {
         /** @typedef {import("../realtime").Realtime} Realtime */
@@ -5626,7 +5824,6 @@
          * Constructor
          *
          * @param {Realtime} realtime - The realtime API
-         *
          */
         constructor(realtime) {
             super();
@@ -5893,6 +6090,8 @@
 
     /**
      * Represents a scene in sharedb
+     *
+     * @category Internal
      */
     class RealtimeScene extends __webpack_exports__Events {
         /** @typedef {import("../entity").Entity} Entity */
@@ -6063,6 +6262,8 @@
 
     /**
      * Provides methods to load scenes from sharedb
+     *
+     * @category Internal
      */
     class RealtimeScenes extends __webpack_exports__Events {
         /** @typedef {import("../realtime").Realtime} Realtime */
@@ -6356,6 +6557,8 @@
 
     /**
      * Provides methods to communicate and load / save data to the realtime server
+     *
+     * @category Internal
      */
     class Realtime extends __webpack_exports__Events {
         constructor() {

@@ -1,9 +1,13 @@
 {
     "name": "PlayCanvas Editor API",
     "entryPoints": ["index.js"],
-    "out": "docs/md",
+    "out": "docs",
     "entryDocument": "README.md",
     "highlightTheme": "github-light",
+    "excludeInternal": true,
     "excludePrivate": true,
-    "excludeNotDocumented": true
+    "excludeNotDocumented": true,
+    "sort": "source-order",
+    "defaultCategory": "Public",
+    "categoryOrder": ["Public", "*"]
 }

@@ -10,8 +10,9 @@ class Entity extends Events {
     /**
      * Creates new Entity
      *
+     * @category Internal
      * @param {Entities} entitiesApi - The Entities API
-     * @param {object} [data] - Optional entity data
+     * @param {object} data - Optional entity data
      */
     constructor(entitiesApi, data = {}) {
         super();
@@ -66,6 +67,11 @@ class Entity extends Events {
      *
      * @param {string} path - The path
      * @returns {boolean} True if path exists
+     *
+     * @example
+     * ```javascript
+     * console.log(entity.has('components.model'));
+     * ```
      */
     has(path) {
         return this._observer.has(path);
@@ -76,6 +82,10 @@ class Entity extends Events {
      *
      * @param {string} path - The path
      * @returns {any} The value
+     * @example
+     * ```javascript
+     * console.log(entity.get('position'));
+     * ```
      */
     get(path) {
         return this._observer.get(path);
@@ -87,6 +97,10 @@ class Entity extends Events {
      * @param {string} path - The path
      * @param {any} value - The value
      * @returns {boolean} Whether the value was set
+     * @example
+     * ```javascript
+     * entity.set('position', [1, 0, 0]);
+     * ```
      */
     set(path, value) {
         return this._observer.set(path, value);
@@ -97,6 +111,10 @@ class Entity extends Events {
      *
      * @param {string} path - The path
      * @returns {boolean} Whether the value was unset
+     * @example
+     * ```javascript
+     * entity.unset('components.model');
+     * ```
      */
     unset(path) {
         return this._observer.unset(path);
@@ -109,6 +127,10 @@ class Entity extends Events {
      * @param {any} value - The value
      * @param {number} index - The index (if undefined the value will be inserted in the end)
      * @returns {boolean} Whether the value was inserted
+     * @example
+     * ```javascript
+     * entity.insert('tags', 'a_tag');
+     * ```
      */
     insert(path, value, index) {
         return this._observer.insert(path, value, index);
@@ -120,6 +142,9 @@ class Entity extends Events {
      * @param {string} path - The path
      * @param {any} value - The value
      * @returns {boolean} Whether the value was removed
+     * ```javascript
+     * entity.removeValue('tags', 'a_tag');
+     * ```
      */
     removeValue(path, value) {
         return this._observer.removeValue(path, value);
@@ -129,6 +154,9 @@ class Entity extends Events {
      * Returns JSON representation of entity data
      *
      * @returns {object} - The data
+     * ```javascript
+     * console.log(entity.json());
+     * ```
      */
     json() {
         return this._observer.json();
@@ -158,6 +186,10 @@ class Entity extends Events {
      *
      * @param {string} name - The name
      * @returns {Entity} The entity
+     * @example
+     * ```javascript
+     * const door = editor.entities.root.findByName('Door');
+     * ```
      */
     findByName(name) {
         if (this.get('name') === name) {
@@ -184,6 +216,15 @@ class Entity extends Events {
      * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
      * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
      * @returns {Entity[]} The entities
+     * @example
+     * ```javascript
+     * // entities that have the following tag
+     * const entities = editor.entities.root.listByTag('tag');
+     * // entities that have any of the following tags
+     * const entities = editor.entities.root.listByTag('tag', 'tag2');
+     * // entities that have all of the following tags
+     * const entities = editor.entities.root.listByTag(['tag', 'tag2']);
+     * ```
      */
     listByTag(...tags) {
         return this.filter(entity => {
@@ -219,6 +260,10 @@ class Entity extends Events {
      * @param {Function} fn - A function that takes an Entity and returns whether it should be included
      * in the result
      * @returns {Entity[]} The result
+     * @example
+     * ```javascript
+     * const doors = editor.entities.root.filter(entity => entity.get('name').startsWith('door'));
+     * ```
      */
     filter(fn) {
         let result = [];
@@ -243,6 +288,12 @@ class Entity extends Events {
      * in depth first order.
      *
      * @param {Function} fn - A function that takes an entity as an argument
+     * @example
+     * ```javascript
+     * // get a list of all entities in the graph in depth first order
+     * const entities = [];
+     * editor.entities.root.depthFirst(entity => entities.push(entity));
+     * ```
      */
     depthFirst(fn) {
         fn(this);
@@ -257,9 +308,15 @@ class Entity extends Events {
      * Adds a component to this Entity
      *
      * @param {string} component - The component name
-     * @param {object} [data] - Default component data
+     * @param {object} data - Default component data
+     * @example
+     * ```javascript
+     * editor.entities.root.addComponent('model', {
+     *     type: 'box'
+     * });
+     * ```
      */
-    addComponent(component, data) {
+    addComponent(component, data = {}) {
         const defaultData = api.schema.components.getDefaultData(component);
         const componentData = Object.assign(defaultData, data);
         this.set(`components.${component}`, componentData);
@@ -269,6 +326,10 @@ class Entity extends Events {
      * Removes a component from this Entity
      *
      * @param {string} component - The component name
+     * @example
+     * ```javascript
+     * editor.entities.root.removeComponent('model');
+     * ```
      */
     removeComponent(component) {
         this.unset(`components.${component}`);
@@ -277,6 +338,7 @@ class Entity extends Events {
     /**
      * Adds entity as a child
      *
+     * @category Internal
      * @param {Entity} entity - The entity
      * @returns {boolean} Whether the child was added
      */
@@ -287,11 +349,12 @@ class Entity extends Events {
     /**
      * Inserts entity as a child at specified index.
      *
+     * @category Internal
      * @param {Entity} entity - The entity
-     * @param {number} [index] - The index. If undefined the child will be added in the end.
+     * @param {number} index - The index. If undefined the child will be added in the end.
      * @returns {boolean} Whether the child was added
      */
-    insertChild(entity, index) {
+    insertChild(entity, index = undefined) {
         let history = this.history.enabled;
         this.history.enabled = false;
         const result = this.insert('children', entity.get('resource_id'), index);
@@ -312,6 +375,7 @@ class Entity extends Events {
     /**
      * Removes entity from children
      *
+     * @category Internal
      * @param {Entity} entity - The entity
      */
     removeChild(entity) {
@@ -329,8 +393,13 @@ class Entity extends Events {
     /**
      * Deletes entity (and its children)
      *
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @example
+     * ```javascript
+     * editor.entities.root.findByName('door').delete();
+     * ```
+     *
      */
     delete(options = {}) {
         this._entitiesApi.delete([this], options);
@@ -340,12 +409,19 @@ class Entity extends Events {
      * Reparents entity under new parent
      *
      * @param {Entity} parent - The new parent
-     * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-     * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
+     * @param {number} index - The desired index. If undefined the entity will be added at the end of the parent's children.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @param {boolean} options.preserverTransform - Whether to preserve the original transform after reparenting
+     * @example
+     * ```javascript
+     * const redHouse = editor.entities.root.findByName('red house');
+     * const greenHouse = editor.entities.root.findByName('green house');
+     * const door = redHouse.findByName('door');
+     * door.reparent(greenHouse);
+     * ```
      */
-    reparent(parent, index, options = {}) {
+    reparent(parent, index = null, options = {}) {
         this._entitiesApi.reparent([{
             entity: this,
             parent: parent,

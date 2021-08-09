@@ -18,8 +18,8 @@ Provides methods to load assets from sharedb
 
 ### Methods
 
-- [get](RealtimeAssets.md#get)
 - [load](RealtimeAssets.md#load)
+- [get](RealtimeAssets.md#get)
 - [unload](RealtimeAssets.md#unload)
 
 ## Constructors
@@ -43,33 +43,9 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/assets.js:17](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/assets.js#L17)
+[src/realtime/assets.js:17](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/assets.js#L17)
 
 ## Methods
-
-### get
-
-▸ **get**(`id`): [`RealtimeAsset`](RealtimeAsset.md)
-
-Gets an already loaded asset
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `id` | `number` | The asset's unique id |
-
-#### Returns
-
-[`RealtimeAsset`](RealtimeAsset.md)
-
-The asset
-
-#### Defined in
-
-[src/realtime/assets.js:49](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/assets.js#L49)
-
-___
 
 ### load
 
@@ -91,7 +67,31 @@ The asset
 
 #### Defined in
 
-[src/realtime/assets.js:30](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/assets.js#L30)
+[src/realtime/assets.js:30](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/assets.js#L30)
+
+___
+
+### get
+
+▸ **get**(`id`): [`RealtimeAsset`](RealtimeAsset.md)
+
+Gets an already loaded asset
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `id` | `number` | The asset's unique id |
+
+#### Returns
+
+[`RealtimeAsset`](RealtimeAsset.md)
+
+The asset
+
+#### Defined in
+
+[src/realtime/assets.js:49](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/assets.js#L49)
 
 ___
 
@@ -113,4 +113,4 @@ Unloads an asset
 
 #### Defined in
 
-[src/realtime/assets.js:58](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/assets.js#L58)
+[src/realtime/assets.js:58](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/assets.js#L58)

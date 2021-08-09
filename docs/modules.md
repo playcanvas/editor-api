@@ -4,27 +4,30 @@
 
 ## Table of contents
 
-### Classes
+### Public Classes
 
 - [Asset](classes/Asset.md)
 - [Assets](classes/Assets.md)
-- [ComponentSchema](classes/ComponentSchema.md)
 - [Entities](classes/Entities.md)
 - [Entity](classes/Entity.md)
+- [globals](classes/globals.md)
 - [History](classes/History.md)
-- [Realtime](classes/Realtime.md)
 - [RealtimeAsset](classes/RealtimeAsset.md)
 - [RealtimeAssets](classes/RealtimeAssets.md)
+- [Schema](classes/Schema.md)
+- [ComponentSchema](classes/ComponentSchema.md)
+- [SelectionHistory](classes/SelectionHistory.md)
+- [Selection](classes/Selection.md)
+
+### Internal Classes
+
+- [Realtime](classes/Realtime.md)
 - [RealtimeConnection](classes/RealtimeConnection.md)
 - [RealtimeScene](classes/RealtimeScene.md)
 - [RealtimeScenes](classes/RealtimeScenes.md)
-- [Schema](classes/Schema.md)
-- [Selection](classes/Selection.md)
-- [SelectionHistory](classes/SelectionHistory.md)
-- [globals](classes/globals.md)
 - [utils](classes/utils.md)
 
 ### Interfaces
 
-- [HistoryAction](interfaces/HistoryAction.md)
 - [ReparentArguments](interfaces/ReparentArguments.md)
+- [HistoryAction](interfaces/HistoryAction.md)

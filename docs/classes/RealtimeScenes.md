@@ -16,14 +16,14 @@ Provides methods to load scenes from sharedb
 
 - [constructor](RealtimeScenes.md#constructor)
 
-### Accessors
-
-- [current](RealtimeScenes.md#current)
-
 ### Methods
 
 - [load](RealtimeScenes.md#load)
 - [unload](RealtimeScenes.md#unload)
+
+### Accessors
+
+- [current](RealtimeScenes.md#current)
 
 ## Constructors
 
@@ -46,23 +46,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/scenes.js:17](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scenes.js#L17)
-
-## Accessors
-
-### current
-
-• `get` **current**(): [`RealtimeScene`](RealtimeScene.md)
-
-The current scene
-
-#### Returns
-
-[`RealtimeScene`](RealtimeScene.md)
-
-#### Defined in
-
-[src/realtime/scenes.js:70](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scenes.js#L70)
+[src/realtime/scenes.js:19](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/scenes.js#L19)
 
 ## Methods
 
@@ -86,7 +70,7 @@ The scene
 
 #### Defined in
 
-[src/realtime/scenes.js:31](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scenes.js#L31)
+[src/realtime/scenes.js:33](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/scenes.js#L33)
 
 ___
 
@@ -108,4 +92,20 @@ Unloads a scene
 
 #### Defined in
 
-[src/realtime/scenes.js:54](https://github.com/playcanvas/editor-api/blob/1a570fa/src/realtime/scenes.js#L54)
+[src/realtime/scenes.js:56](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/scenes.js#L56)
+
+## Accessors
+
+### current
+
+• `get` **current**(): [`RealtimeScene`](RealtimeScene.md)
+
+The current scene
+
+#### Returns
+
+[`RealtimeScene`](RealtimeScene.md)
+
+#### Defined in
+
+[src/realtime/scenes.js:72](https://github.com/playcanvas/editor-api/blob/449ed08/src/realtime/scenes.js#L72)

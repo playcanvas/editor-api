@@ -32,6 +32,7 @@ class globals {
     /**
      * The realtime API
      *
+     * @category Internal
      * @type {import("./realtime").Realtime}
      */
     static realtime;
@@ -46,6 +47,7 @@ class globals {
     /**
      * Global URLs
      *
+     * @category Internal
      * @type {object}
      * @property {string} realtime - The realtime server URL
      */
@@ -56,6 +58,7 @@ class globals {
     /**
      * The user's access token
      *
+     * @category Internal
      * @type {string}
      */
     static accessToken;

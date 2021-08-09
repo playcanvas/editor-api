@@ -22,6 +22,8 @@ import { updateReferences } from './entities/references';
 class Entities extends Events {
     /**
      * Creates new API instance
+     *
+     * @category Internal
      */
     constructor() {
         super();
@@ -38,6 +40,10 @@ class Entities extends Events {
      *
      * @param {string} id - The entity's resource id
      * @returns {Entity} The entity
+     * @example
+     * ```javascript
+     * const entity = editor.entities.get(resourceId);
+     * ```
      */
     get(id) {
         const e = this._entities.get(id);
@@ -48,6 +54,11 @@ class Entities extends Events {
      * Returns array of all entities
      *
      * @returns {Entity[]} The entities
+     * @example
+     * ```javascript
+     * const entities = editor.entities.list();
+     * console.log(entities.length);
+     * ```
      */
     list() {
         return this._entities.array().map(e => e.apiEntity);
@@ -56,6 +67,7 @@ class Entities extends Events {
     /**
      * Adds entity to list
      *
+     * @category Internal
      * @param {Entity} entity - The entity
      */
     add(entity) {
@@ -83,6 +95,7 @@ class Entities extends Events {
     /**
      * Called when an entity is added from the server
      *
+     * @category Internal
      * @param {object} entityData - The entity data
      */
     serverAdd(entityData) {
@@ -95,11 +108,12 @@ class Entities extends Events {
     /**
      * Removes entity from the list
      *
+     * @category Internal
      * @param {Entity} entity - The entity
-     * @param {object} [entityReferences] - A map of entity references to nullify
+     * @param {object} entityReferences - A map of entity references to nullify
      * when this entity is removed
      */
-    remove(entity, entityReferences) {
+    remove(entity, entityReferences = null) {
         if (entityReferences) {
             updateReferences(this, entityReferences, entity.get('resource_id'), null);
         }
@@ -141,6 +155,7 @@ class Entities extends Events {
     /**
      * Called when an entity is removed from the server
      *
+     * @category Internal
      * @param {Entity} entity - The entity
      */
     serverRemove(entity) {
@@ -162,6 +177,8 @@ class Entities extends Events {
 
     /**
      * Removes all entities from the list
+     *
+     * @category Internal
      */
     clear() {
         this._root = null;
@@ -188,14 +205,26 @@ class Entities extends Events {
     /**
      * Creates new entity and adds it to the hierarchy
      *
-     * @param {object} [data] - Optional initial data for the entity
-     * @param {object} [options] - Options
-     * @param {number} [options.index] - The child index that this entity will have under its parent.
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-     * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
+     * @param {object} data - Optional initial data for the entity
+     * @param {object} options - Options
+     * @param {number} options.index - The child index that this entity will have under its parent.
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @param {boolean} options.select - Whether to select new Entity. Defaults to false.
      * @returns {Entity} The new entity
+     *
+     * @example
+     * ```javascript
+     * const root = editor.entities.create({
+     *     name: 'parent',
+     * });
+     *
+     * const child = editor.entities.create({
+     *     name: 'child',
+     *     parent: root,
+     * });
+     *```
      */
-    create(data, options = {}) {
+    create(data = null, options = {}) {
         return createEntity(this, data, options);
     }
 
@@ -203,8 +232,13 @@ class Entities extends Events {
      * Delete specified entities
      *
      * @param {Entity[]|Entity} entities - The entities
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     *
+     * @example
+     * ```javascript
+     * editor.entities.delete([entity1, entity2]);
+     * ```
      */
     delete(entities, options = {}) {
         return deleteEntities(this, entities, options);
@@ -214,9 +248,18 @@ class Entities extends Events {
      * Reparents entities under new parent.
      *
      * @param {ReparentArguments[]} data - The reparenting data
-     * @param {object} [options] - Options
-     * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
-     * @param {boolean} [options.history] - Whether to record history. Defaults to true
+     * @param {object} options - Options
+     * @param {boolean} options.preserveTransform - Whether to preserve the transform of the entities. Defaults to false.
+     * @param {boolean} options.history - Whether to record history. Defaults to true
+     * @example
+     * ```javascript
+     * const child = editor.entities.create();
+     * const parent = editor.entities.create();
+     * editor.entities.reparent([{
+     *     entity: child,
+     *     parent: parent
+     * }])
+     * ```
      */
     reparent(data, options = {}) {
         return reparentEntities(data, options);

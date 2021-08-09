@@ -9,6 +9,7 @@ class ComponentSchema {
     /**
      * Creates new instance of API
      *
+     * @category Internal
      * @param {Schema} schema - The schema API
      */
     constructor(schema) {
@@ -33,6 +34,10 @@ class ComponentSchema {
      *
      * @param {string} component - The component name
      * @returns {object} The default data
+     * @example
+     * ```javascript
+     * const modelData = editor.schema.components.getDefaultData('model');
+     * ```
      */
     getDefaultData(component) {
         const result = {};
@@ -55,6 +60,10 @@ class ComponentSchema {
      * @param {string} componentName - The component name
      * @param {string} type - The desired type
      * @returns {string[]} A list of fields
+     * @example
+     * ```javascript
+     * const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
+     * ```
      */
     getFieldsOfType(componentName, type) {
         const result = [];

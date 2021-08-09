@@ -2,7 +2,13 @@ PlayCanvas Editor API / [Exports](modules.md)
 
 # Overview
 
-This is the PlayCanvas Editor API. You can find API documentation here https://github.com/playcanvas/editor-api/blob/master/docs/md/modules.md.
+This is the PlayCanvas Editor API. You can find API documentation here https://github.com/playcanvas/editor-api/blob/master/docs/modules.md.
+
+# Installing
+Run:
+```
+npm install
+```
 
 # Building
 
@@ -20,7 +26,7 @@ To build the documentation run:
 npm run build:docs
 ```
 
-The resulting .md file will be under docs/md/module.
+The resulting .md file will be under docs/modules.md.
 
 # Tests
 

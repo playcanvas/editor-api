@@ -6,6 +6,8 @@ const MAX_ATTEMPTS = 3;
 
 /**
  * Handles connecting and communicating with the Realtime server.
+ *
+ * @category Internal
  */
 class RealtimeConnection extends Events {
     /** @typedef {import("../realtime").Realtime} Realtime */
@@ -14,7 +16,6 @@ class RealtimeConnection extends Events {
      * Constructor
      *
      * @param {Realtime} realtime - The realtime API
-     *
      */
     constructor(realtime) {
         super();

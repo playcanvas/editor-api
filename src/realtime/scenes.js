@@ -3,6 +3,8 @@ import { Events } from '../pcui';
 
 /**
  * Provides methods to load scenes from sharedb
+ *
+ * @category Internal
  */
 class RealtimeScenes extends Events {
     /** @typedef {import("../realtime").Realtime} Realtime */
