@@ -12,8 +12,6 @@
 - [Entity](classes/Entity.md)
 - [globals](classes/globals.md)
 - [History](classes/History.md)
-- [RealtimeAsset](classes/RealtimeAsset.md)
-- [RealtimeAssets](classes/RealtimeAssets.md)
 - [Schema](classes/Schema.md)
 - [ComponentSchema](classes/ComponentSchema.md)
 - [SelectionHistory](classes/SelectionHistory.md)
@@ -22,6 +20,8 @@
 ### Internal Classes
 
 - [Realtime](classes/Realtime.md)
+- [RealtimeAsset](classes/RealtimeAsset.md)
+- [RealtimeAssets](classes/RealtimeAssets.md)
 - [RealtimeConnection](classes/RealtimeConnection.md)
 - [RealtimeScene](classes/RealtimeScene.md)
 - [RealtimeScenes](classes/RealtimeScenes.md)

@@ -44,7 +44,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:12](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L12)
+[src/assets.js:12](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L12)
 
 ## Methods
 
@@ -68,7 +68,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:39](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L39)
+[src/assets.js:39](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L39)
 
 ___
 
@@ -92,7 +92,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:50](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L50)
+[src/assets.js:50](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L50)
 
 ___
 
@@ -110,7 +110,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:60](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L60)
+[src/assets.js:60](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L60)
 
 ___
 
@@ -134,7 +134,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:71](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L71)
+[src/assets.js:71](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L71)
 
 ___
 
@@ -156,7 +156,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:104](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L104)
+[src/assets.js:104](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L104)
 
 ___
 
@@ -178,7 +178,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:155](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L155)
+[src/assets.js:155](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L155)
 
 ___
 
@@ -194,7 +194,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:174](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L174)
+[src/assets.js:174](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L174)
 
 ___
 
@@ -218,7 +218,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:194](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L194)
+[src/assets.js:194](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L194)
 
 ___
 
@@ -242,7 +242,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:206](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L206)
+[src/assets.js:206](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L206)
 
 ___
 
@@ -259,7 +259,7 @@ and subscribes to changes
 
 #### Defined in
 
-[src/assets.js:215](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L215)
+[src/assets.js:215](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L215)
 
 ___
 
@@ -283,4 +283,4 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:272](https://github.com/playcanvas/editor-api/blob/d967346/src/assets.js#L272)
+[src/assets.js:272](https://github.com/playcanvas/editor-api/blob/28bcf74/src/assets.js#L272)
