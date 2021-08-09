@@ -3,6 +3,8 @@ import { RealtimeAsset } from './asset';
 
 /**
  * Provides methods to load assets from sharedb
+ *
+ * @category Internal
  */
 class RealtimeAssets extends Events {
     /** @typedef {import("../realtime").Realtime} Realtime */

@@ -2,6 +2,8 @@ import { Events } from '../pcui';
 
 /**
  * Represents an asset in sharedb
+ *
+ * @category Internal
  */
 class RealtimeAsset extends Events {
 
