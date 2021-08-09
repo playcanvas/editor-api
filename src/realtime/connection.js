@@ -16,7 +16,6 @@ class RealtimeConnection extends Events {
      * Constructor
      *
      * @param {Realtime} realtime - The realtime API
-     *
      */
     constructor(realtime) {
         super();

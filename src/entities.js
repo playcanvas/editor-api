@@ -275,7 +275,9 @@ class Entities extends Events {
      * });
      *```
      */
-    create(data = {}, options = {}) {
+    create(data = null, options = {}) {
+        data = data || {};
+
         if (options.history === undefined) {
             options.history = true;
         }
