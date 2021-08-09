@@ -28,7 +28,7 @@ Enables undo / redo of selection changes
 
 #### Defined in
 
-[src/selection.js:8](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/selection.js#L8)
+[src/selection.js:8](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L8)
 
 ## Accessors
 
@@ -44,7 +44,7 @@ Disables / enables selection undo / redo
 
 #### Defined in
 
-[src/selection.js:19](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/selection.js#L19)
+[src/selection.js:19](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L19)
 
 • `set` **enabled**(`value`): `void`
 
@@ -62,4 +62,4 @@ Disables / enables selection undo / redo
 
 #### Defined in
 
-[src/selection.js:23](https://github.com/playcanvas/editor-api/blob/ffe57c6/src/selection.js#L23)
+[src/selection.js:23](https://github.com/playcanvas/editor-api/blob/6c8e33e/src/selection.js#L23)
