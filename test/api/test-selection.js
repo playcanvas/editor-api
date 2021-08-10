@@ -80,7 +80,7 @@ describe('api.Selection tests', function () {
 
     it('set items selects them', function (done) {
         const item = new api.Entity();
-        api.globals.selection.items = [item];
+        api.globals.selection.set([item]);
         expect(api.globals.selection.items).to.deep.equal([item]);
         expect(api.globals.selection.emit.calledOnceWith('add', item)).to.equal(true);
         api.globals.selection.emit.resetHistory();
@@ -95,7 +95,7 @@ describe('api.Selection tests', function () {
         api.globals.selection.add(item);
         const item2 = new api.Entity();
         api.globals.selection.emit.resetHistory();
-        api.globals.selection.items = [item2];
+        api.globals.selection.set([item2]);
         expect(api.globals.selection.items).to.deep.equal([item2]);
         expect(api.globals.selection.emit.getCall(0).args).to.deep.equal(['remove', item]);
         expect(api.globals.selection.emit.getCall(1).args).to.deep.equal(['add', item2]);
@@ -119,7 +119,7 @@ describe('api.Selection tests', function () {
         expect(api.globals.selection.count).to.equal(0);
         api.globals.selection.toggle(item);
         expect(api.globals.selection.count).to.equal(0);
-        api.globals.selection.items = [item];
+        api.globals.selection.set([item]);
         expect(api.globals.selection.count).to.equal(0);
 
         api.globals.selection.enabled = true;
@@ -186,7 +186,7 @@ describe('api.Selection tests', function () {
         const item = new api.Entities().create();
         const item2 = new api.Entities().create();
         api.globals.selection.add(item);
-        api.globals.selection.items = [item2];
+        api.globals.selection.set([item2]);
         api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([item]);
         api.globals.history.redo();

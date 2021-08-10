@@ -1,5 +1,6 @@
 import { RealtimeConnection } from './realtime/connection';
 import { RealtimeScenes } from './realtime/scenes';
+import { RealtimeAssets } from './realtime/assets';
 import { Events } from './pcui';
 
 /**
@@ -12,6 +13,7 @@ class Realtime extends Events {
         super();
         this._connection = new RealtimeConnection(this);
         this._scenes = new RealtimeScenes(this, this.connection);
+        this._assets = new RealtimeAssets(this, this.connection);
     }
 
     /**
@@ -30,6 +32,15 @@ class Realtime extends Events {
      */
     get scenes() {
         return this._scenes;
+    }
+
+    /**
+     * Gets the realtime assets API
+     *
+     * @type {RealtimeAssets}
+     */
+    get assets() {
+        return this._assets;
     }
 }
 

@@ -1,10 +1,10 @@
 import { globals as api } from './globals';
-import { Observer, ObserverHistory } from './pcui';
+import { Events } from './pcui';
 
 /**
  * Represents an Entity
  */
-class Entity {
+class Entity extends Events {
     /** @typedef {import("./entities").Entities} Entities */
 
     /**
@@ -15,9 +15,8 @@ class Entity {
      * @param {object} data - Optional entity data
      */
     constructor(entitiesApi, data = {}) {
+        super();
         this._entitiesApi = entitiesApi;
-
-        this._history = {};
 
         this._observer = new Observer({
             name: data.name || 'New Entity',
@@ -32,14 +31,9 @@ class Entity {
             components: {}
         });
 
-        const id = this._observer.get('resource_id');
+        this._observer.addEmitter(this);
 
-        this._history = new ObserverHistory({
-            item: this._observer,
-            prefix: 'entity.' + id + '.',
-            history: api.history
-        });
-        this._observer.history = this._history;
+        const id = this._observer.get('resource_id');
 
         this._observer.latestFn = () => {
             const latest = this._entitiesApi.get(id);
@@ -53,6 +47,19 @@ class Entity {
                 this.addComponent(component, data.components[component]);
             }
         }
+
+        this._history = {};
+    }
+
+    _initializeHistory() {
+        if (this._observer.history) return;
+
+        this._history = new ObserverHistory({
+            item: this._observer,
+            prefix: 'entity.' + this.get('resource_id') + '.',
+            history: api.history
+        });
+        this._observer.history = this._history;
     }
 
     /**
@@ -153,6 +160,25 @@ class Entity {
      */
     json() {
         return this._observer.json();
+    }
+
+    /**
+     * Returns true if this entity is a descendant of the specified parent entity.
+     *
+     * @param {Entity} parent - The parent
+     * @returns {boolean} True if it is
+     */
+    isDescendantOf(parent) {
+        let p = this.parent;
+        while (p) {
+            if (p === parent) {
+                return true;
+            }
+
+            p = p.parent;
+        }
+
+        return false;
     }
 
     /**
@@ -401,6 +427,20 @@ class Entity {
             parent: parent,
             index: index
         }], options);
+    }
+
+    /**
+     * Duplicates entity under the same parent
+     *
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
+     * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
+     * @returns {Promise<Entity>} The new entity
+     */
+    async duplicate(options = {}) {
+        const result = await this._entitiesApi.duplicate([this], options);
+        return result[0];
     }
 
     /**

@@ -1,10 +1,58 @@
 describe('api.Entities tests', function () {
     let entitiesApi;
 
+    function makeScriptAsset() {
+        return new api.Asset(api.globals.assets, {
+            id: 1,
+            uniqueId: 1,
+            type: 'script',
+            name: 'script',
+            data: {
+                scripts: {
+                    test: {
+                        attributes: {
+                            entity: {
+                                type: 'entity'
+                            },
+                            entityArray: {
+                                type: 'entity',
+                                array: true
+                            },
+                            json: {
+                                type: 'json',
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            },
+                            jsonArray: {
+                                type: 'json',
+                                array: true,
+                                schema: [{
+                                    name: 'entity',
+                                    type: 'entity'
+                                }, {
+                                    name: 'entityArray',
+                                    type: 'entity',
+                                    array: true
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     beforeEach(() => {
         api.globals.history = null;
         api.globals.selection = null;
         api.globals.schema = null;
+        api.globals.assets = null;
         entitiesApi = new api.Entities();
     });
 
@@ -221,7 +269,11 @@ describe('api.Entities tests', function () {
 
     it('delete removes entity references', function () {
         api.globals.schema = new api.Schema(schema);
-        api.globals.history = new api.History(schema);
+        api.globals.history = new api.History();
+        api.globals.assets = new api.Assets();
+
+        const script = makeScriptAsset();
+        api.globals.assets.add(script);
 
         const root = entitiesApi.create({
             name: 'root',
@@ -239,17 +291,48 @@ describe('api.Entities tests', function () {
         const c2 = root.findByName('child 2');
         const c3 = root.findByName('sub child');
 
+        const reference = c1.get('resource_id');
         [root, c1, c2, c3].forEach(e => {
             e.set('components.testcomponent', {
-                entityRef: c1.get('resource_id')
+                entityRef: reference
             });
-            expect(e.get('components.testcomponent.entityRef')).to.equal(c1.get('resource_id'));
+            e.set('components.script', {
+                scripts: {
+                    test: {
+                        attributes: {
+                            entity: reference,
+                            entityArray: [reference, reference],
+                            json: {
+                                entity: reference,
+                                entityArray: [reference, reference]
+                            },
+                            jsonArray: [{
+                                entity: reference,
+                                entityArray: [reference, reference]
+                            }]
+                        }
+                    }
+                }
+            })
+            expect(e.get('components.testcomponent.entityRef')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
 
         entitiesApi.delete([c1]);
 
         [root, c1, c2, c3].forEach(e => {
             expect(e.get('components.testcomponent.entityRef')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([null, null]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([null, null]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(null);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([null, null]);
         });
 
         // test undo brings back references
@@ -258,7 +341,13 @@ describe('api.Entities tests', function () {
         c1 = c1.latest();
 
         [root, c1, c2, c3].forEach(e => {
-            expect(e.get('components.testcomponent.entityRef')).to.equal(c1.get('resource_id'));
+            expect(e.get('components.testcomponent.entityRef')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.json.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([reference, reference]);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(reference);
+            expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
     });
 
@@ -442,5 +531,187 @@ describe('api.Entities tests', function () {
         api.globals.history.undo();
 
         expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
+    });
+
+    it('duplicate duplicates an entity', async function () {
+        api.globals.history = new api.History();
+        api.globals.schema = new api.Schema(schema);
+
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: parent
+        });
+
+        parent.addComponent('testcomponent', {
+            entityRef: child.get('resource_id')
+        });
+
+        const duplicated = await entitiesApi.duplicate([parent], {
+            history: true
+        });
+        expect(duplicated.length).to.equal(1);
+        expect(duplicated[0].get('name')).to.equal('parent');
+        expect(duplicated[0].children.length).to.equal(1);
+        expect(duplicated[0].children[0].get('name')).to.equal('child');
+        expect(duplicated[0].get('components.testcomponent.entityRef')).to.equal(duplicated[0].children[0].get('resource_id'));
+        expect(root.children).to.deep.equal([parent, duplicated[0]]);
+
+        const jsonParent = duplicated[0].json();
+        const jsonChild = duplicated[0].children[0].json();
+
+        // test undo / redo
+        api.globals.history.undo();
+        expect(entitiesApi.get(duplicated[0].get('resource_id'))).to.equal(null);
+        expect(root.children).to.deep.equal([parent]);
+
+        api.globals.history.redo();
+
+        duplicated[0] = duplicated[0].latest();
+        expect(duplicated[0].json()).to.deep.equal(jsonParent);
+        expect(duplicated[0].children[0].json()).to.deep.equal(jsonChild);
+        expect(root.children).to.deep.equal([parent, duplicated[0]]);
+    });
+
+    it('duplicate resolves entity references', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = entitiesApi.create();
+        const parent = entitiesApi.create({ name: 'parent' });
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: parent
+        });
+        const parent2 = entitiesApi.create({ name: 'parent2' });
+        const parent3 = entitiesApi.create({ name: 'parent3' });
+
+        parent.addComponent('testcomponent', {
+            entityRef: child.get('resource_id')
+        });
+        child.addComponent('testcomponent', {
+            entityRef: parent.get('resource_id')
+        });
+        parent2.addComponent('testcomponent', {
+            entityRef: parent2.get('resource_id')
+        });
+        parent3.addComponent('testcomponent', {
+            entityRef: root.get('resource_id')
+        });
+
+        const dups = await entitiesApi.duplicate([parent, parent2, parent3]);
+        expect(dups[0].children[0].get('components.testcomponent.entityRef')).to.equal(dups[0].get('resource_id'));
+        expect(dups[0].get('components.testcomponent.entityRef')).to.equal(dups[0].children[0].get('resource_id'));
+        expect(dups[1].get('components.testcomponent.entityRef')).to.equal(dups[1].get('resource_id'));
+        expect(dups[2].get('components.testcomponent.entityRef')).to.equal(root.get('resource_id'));
+    });
+
+    it('duplicate selects entities', async function () {
+        api.globals.selection = new api.Selection();
+        api.globals.history = new api.History();
+
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const dups = await entitiesApi.duplicate([parent], {
+            history: true,
+            select: true
+        });
+
+        expect(api.globals.selection.items).to.deep.equal(dups);
+
+        // test undo / redo
+        api.globals.history.undo();
+        expect(api.globals.selection.items).to.deep.equal([]);
+
+        api.globals.history.redo();
+        expect(api.globals.selection.items).to.deep.equal(dups.map(e => e.latest()));
+    });
+
+    it('renames duplicated entities', async function () {
+        const root = entitiesApi.create();
+
+        const parent = entitiesApi.create({
+            name: 'parent',
+            parent: root
+        });
+
+        const dups = await entitiesApi.duplicate([parent], {
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent2');
+
+        dups[0] = await dups[0].duplicate({
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent3');
+
+        const child = entitiesApi.create({
+            name: 'child',
+            parent: dups[0]
+        });
+
+        dups[0] = await dups[0].duplicate({
+            rename: true
+        });
+        expect(dups[0].children[0].get('name')).to.equal('child');
+
+        dups[0] = await parent.duplicate({
+            rename: true
+        });
+
+        expect(dups[0].get('name')).to.equal('parent5');
+    });
+
+    it('duplicate updates script attribute references', async function () {
+        api.globals.assets = new api.Assets();
+        api.globals.schema = new api.Schema(schema);
+
+        const script = makeScriptAsset();
+
+        api.globals.assets.add(script);
+
+        const root = entitiesApi.create();
+        const entity = entitiesApi.create({ parent: root });
+        const id = entity.get('resource_id');
+
+        entity.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        entity: id,
+                        entityArray: [id, id],
+                        json: {
+                            entity: id,
+                            entityArray: [id, id]
+                        },
+                        jsonArray: [{
+                            entity: id,
+                            entityArray: [id, id]
+                        }]
+                    }
+                }
+            }
+        });
+
+        const dup = await entity.duplicate();
+        const newId = dup.get('resource_id');
+        expect(dup.get('components.script.scripts.test.attributes.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([newId, newId]);
+        expect(dup.get('components.script.scripts.test.attributes.json.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newId, newId]);
+        expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
+        expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
     });
 });

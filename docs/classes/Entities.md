@@ -23,6 +23,7 @@ The entities editor API
 - [create](Entities.md#create)
 - [delete](Entities.md#delete)
 - [reparent](Entities.md#reparent)
+- [duplicate](Entities.md#duplicate)
 
 ### Internal Methods
 
@@ -48,7 +49,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:23](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L23)
+[src/entities.js:28](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L28)
 
 ## Public Methods
 
@@ -77,7 +78,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:100](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L100)
+[src/entities.js:48](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L48)
 
 ___
 
@@ -101,7 +102,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:115](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L115)
+[src/entities.js:63](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L63)
 
 ___
 
@@ -125,12 +126,13 @@ const child = editor.entities.create({
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `data` | `any` | Optional initial data for the entity |
-| `options` | `Object` | Options |
-| `options.history` | `boolean` | Whether to record a history action. Defaults to true. |
-| `options.select` | `boolean` | Whether to select new Entity. Defaults to false. |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `data` | `any` | `null` | Optional initial data for the entity |
+| `options` | `Object` | `{}` | Options |
+| `options.index` | `number` | `undefined` | The child index that this entity will have under its parent. |
+| `options.history` | `boolean` | `undefined` | Whether to record a history action. Defaults to true. |
+| `options.select` | `boolean` | `undefined` | Whether to select new Entity. Defaults to false. |
 
 #### Returns
 
@@ -140,7 +142,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:278](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L278)
+[src/entities.js:227](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L227)
 
 ___
 
@@ -169,7 +171,7 @@ editor.entities.delete([entity1, entity2]);
 
 #### Defined in
 
-[src/entities.js:391](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L391)
+[src/entities.js:243](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L243)
 
 ___
 
@@ -204,7 +206,35 @@ editor.entities.reparent([{
 
 #### Defined in
 
-[src/entities.js:509](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L509)
+[src/entities.js:264](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L264)
+
+___
+
+### duplicate
+
+▸ **duplicate**(`entities`, `options?`): `Promise`<[`Entity`](Entity.md)[]\>
+
+Duplicates the specified entities under the same parent
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entities` | `any`[] | The entities |
+| `options` | `Object` | - |
+| `options.history` | `boolean` | - |
+| `options.select` | `boolean` | - |
+| `options.rename` | `boolean` | - |
+
+#### Returns
+
+`Promise`<[`Entity`](Entity.md)[]\>
+
+The duplicated entities
+
+#### Defined in
+
+[src/entities.js:278](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L278)
 
 ___
 
@@ -228,7 +258,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:125](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L125)
+[src/entities.js:73](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L73)
 
 ___
 
@@ -250,7 +280,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:151](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L151)
+[src/entities.js:101](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L101)
 
 ___
 
@@ -273,7 +303,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:166](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L166)
+[src/entities.js:116](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L116)
 
 ___
 
@@ -295,7 +325,7 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:212](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L212)
+[src/entities.js:161](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L161)
 
 ___
 
@@ -311,4 +341,4 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:235](https://github.com/playcanvas/editor-api/blob/867701a/src/entities.js#L235)
+[src/entities.js:183](https://github.com/playcanvas/editor-api/blob/28bcf74/src/entities.js#L183)

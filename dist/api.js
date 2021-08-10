@@ -61,13 +61,22 @@
         /**
          * The realtime API
          *
+         * @category Internal
          * @type {import("./realtime").Realtime}
          */
         static realtime;
 
         /**
+         * The assets API
+         *
+         * @type {import("./assets").Assets}
+         */
+        static assets;
+
+        /**
          * Global URLs
          *
+         * @category Internal
          * @type {object}
          * @property {string} realtime - The realtime server URL
          */
@@ -78,6 +87,7 @@
         /**
          * The user's access token
          *
+         * @category Internal
          * @type {string}
          */
         static accessToken;
@@ -95,10 +105,19 @@
          * @type {string}
          */
         static branchId;
+
+        /**
+         * Whether this project is using legacy scripts
+         *
+         * @type {boolean}
+         */
+        static hasLegacyScripts;
     }
 
     /**
      * Contains various utility methods
+     *
+     * @category Internal
      */
     class utils {
         /**
@@ -137,7 +156,7 @@
 
     /******/ var __webpack_modules__ = ({
 
-    /***/ 3896:
+    /***/ 103:
     /***/ (function(module) {
 
     /*
@@ -238,7 +257,7 @@
 
     /***/ }),
 
-    /***/ 1563:
+    /***/ 563:
     /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
     /** @license React v16.14.0
      * react.production.min.js
@@ -252,7 +271,7 @@
 
     function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-    var l = __webpack_require__(3896);
+    var l = __webpack_require__(103);
 
     function C(a) {
       for (var b = "https://reactjs.org/docs/error-decoder.html?invariant=" + a, c = 1; c < arguments.length; c++) {
@@ -308,18 +327,18 @@
 
     /***/ }),
 
-    /***/ 8709:
+    /***/ 709:
     /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 
 
     {
-      /* unused reexport */ __webpack_require__(1563);
+      /* unused reexport */ __webpack_require__(563);
     }
 
     /***/ }),
 
-    /***/ 9006:
+    /***/ 6:
     /***/ (function(__unused_webpack_module, __webpack_exports__) {
 
     /**
@@ -348,6 +367,7 @@
         value: {}
       });
       this._suspendEvents = false;
+      this._additionalEmitters = [];
       Object.defineProperty(this, 'suspendEvents', {
         get: function get() {
           return this._suspendEvents;
@@ -410,18 +430,28 @@
     Events.prototype.emit = function (name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
       if (this._suspendEvents) return;
       var events = this._events[name];
-      if (!events) return this;
-      events = events.slice(0);
 
-      for (var i = 0; i < events.length; i++) {
-        if (!events[i]) continue;
+      if (events) {
+        events = events.slice(0);
 
-        try {
-          events[i].call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-        } catch (ex) {
-          console.info('%c%s %c(event error)', 'color: #06f', name, 'color: #f00');
-          console.log(ex.stack);
+        for (var i = 0; i < events.length; i++) {
+          if (!events[i]) continue;
+
+          try {
+            events[i].call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+          } catch (ex) {
+            console.info('%c%s %c(event error)', 'color: #06f', name, 'color: #f00');
+            console.log(ex.stack);
+          }
         }
+      }
+
+      if (this._additionalEmitters.length) {
+        var emitters = this._additionalEmitters.slice();
+
+        emitters.forEach(function (emitter) {
+          emitter.emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        });
       }
 
       return this;
@@ -457,6 +487,33 @@
       }
 
       return this;
+    };
+    /**
+     * Adds another emitter. Any events fired by this instance
+     * will also be fired on the additional emitter.
+     *
+     * @param {Events} emitter - The emitter
+     */
+
+
+    Events.prototype.addEmitter = function (emitter) {
+      if (!this._additionalEmitters.includes(emitter)) {
+        this._additionalEmitters.push(emitter);
+      }
+    };
+    /**
+     * Removes emitter.
+     *
+     * @param {Events} emitter - The emitter
+     */
+
+
+    Events.prototype.removeEmitter = function (emitter) {
+      var idx = this._additionalEmitters.indexOf(emitter);
+
+      if (idx !== -1) {
+        this._additionalEmitters.splice(idx, 1);
+      }
     };
     /**
      * @class
@@ -572,9 +629,9 @@
     });
 
     // EXTERNAL MODULE: ./src/binding/events.js
-    var events = __webpack_require__(9006);
+    var events = __webpack_require__(6);
     // EXTERNAL MODULE: ./node_modules/react/index.js
-    __webpack_require__(8709);
+    __webpack_require__(709);
 
     function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -2045,8 +2102,6 @@
     /* harmony default export */ var binding_element_observers = (BindingElementToObservers);
     function binding_observers_element_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { binding_observers_element_typeof = function _typeof(obj) { return typeof obj; }; } else { binding_observers_element_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return binding_observers_element_typeof(obj); }
 
-    var _excluded = ["customUpdate"];
-
     function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
     function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -2100,7 +2155,7 @@
 
         var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
             customUpdate = _ref.customUpdate,
-            args = _objectWithoutProperties(_ref, _excluded);
+            args = _objectWithoutProperties(_ref, ["customUpdate"]);
 
         binding_observers_element_classCallCheck(this, BindingObserversToElement);
 
@@ -3114,28 +3169,28 @@
     __webpack_exports__.Kx;
     var __webpack_exports__Events = __webpack_exports__.zW;
     var __webpack_exports__History = __webpack_exports__.Ay;
-    var __webpack_exports__Observer = __webpack_exports__.Qj;
-    var __webpack_exports__ObserverHistory = __webpack_exports__.ki;
-    var __webpack_exports__ObserverList = __webpack_exports__.B3;
+    __webpack_exports__.Qj;
+    __webpack_exports__.ki;
+    __webpack_exports__.B3;
 
     /**
      * Represents an Entity
      */
-    class Entity {
+    class Entity extends __webpack_exports__Events {
         /** @typedef {import("./entities").Entities} Entities */
 
         /**
          * Creates new Entity
          *
+         * @category Internal
          * @param {Entities} entitiesApi - The Entities API
-         * @param {object} [data] - Optional entity data
+         * @param {object} data - Optional entity data
          */
         constructor(entitiesApi, data = {}) {
+            super();
             this._entitiesApi = entitiesApi;
 
-            this._history = {};
-
-            this._observer = new __webpack_exports__Observer({
+            this._observer = new Observer({
                 name: data.name || 'New Entity',
                 tags: data.tags || [],
                 enabled: data.enabled || true,
@@ -3148,14 +3203,9 @@
                 components: {}
             });
 
-            const id = this._observer.get('resource_id');
+            this._observer.addEmitter(this);
 
-            this._history = new __webpack_exports__ObserverHistory({
-                item: this._observer,
-                prefix: 'entity.' + id + '.',
-                history: globals.history
-            });
-            this._observer.history = this._history;
+            const id = this._observer.get('resource_id');
 
             this._observer.latestFn = () => {
                 const latest = this._entitiesApi.get(id);
@@ -3169,6 +3219,1606 @@
                     this.addComponent(component, data.components[component]);
                 }
             }
+
+            this._history = {};
+        }
+
+        _initializeHistory() {
+            if (this._observer.history) return;
+
+            this._history = new ObserverHistory({
+                item: this._observer,
+                prefix: 'entity.' + this.get('resource_id') + '.',
+                history: globals.history
+            });
+            this._observer.history = this._history;
+        }
+
+        /**
+         * Checks if path exists
+         *
+         * @param {string} path - The path
+         * @returns {boolean} True if path exists
+         *
+         * @example
+         * ```javascript
+         * console.log(entity.has('components.model'));
+         * ```
+         */
+        has(path) {
+            return this._observer.has(path);
+        }
+
+        /**
+         * Gets value at path
+         *
+         * @param {string} path - The path
+         * @returns {any} The value
+         * @example
+         * ```javascript
+         * console.log(entity.get('position'));
+         * ```
+         */
+        get(path) {
+            return this._observer.get(path);
+        }
+
+        /**
+         * Sets value at path
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was set
+         * @example
+         * ```javascript
+         * entity.set('position', [1, 0, 0]);
+         * ```
+         */
+        set(path, value) {
+            return this._observer.set(path, value);
+        }
+
+        /**
+         * Unsets value at path
+         *
+         * @param {string} path - The path
+         * @returns {boolean} Whether the value was unset
+         * @example
+         * ```javascript
+         * entity.unset('components.model');
+         * ```
+         */
+        unset(path) {
+            return this._observer.unset(path);
+        }
+
+        /**
+         * Inserts value in array at path, at specified index
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @param {number} index - The index (if undefined the value will be inserted in the end)
+         * @returns {boolean} Whether the value was inserted
+         * @example
+         * ```javascript
+         * entity.insert('tags', 'a_tag');
+         * ```
+         */
+        insert(path, value, index) {
+            return this._observer.insert(path, value, index);
+        }
+
+        /**
+         * Remove value from array at path.
+         *
+         * @param {string} path - The path
+         * @param {any} value - The value
+         * @returns {boolean} Whether the value was removed
+         * ```javascript
+         * entity.removeValue('tags', 'a_tag');
+         * ```
+         */
+        removeValue(path, value) {
+            return this._observer.removeValue(path, value);
+        }
+
+        /**
+         * Returns JSON representation of entity data
+         *
+         * @returns {object} - The data
+         * ```javascript
+         * console.log(entity.json());
+         * ```
+         */
+        json() {
+            return this._observer.json();
+        }
+
+        /**
+         * Returns true if this entity is a descendant of the specified parent entity.
+         *
+         * @param {Entity} parent - The parent
+         * @returns {boolean} True if it is
+         */
+        isDescendantOf(parent) {
+            let p = this.parent;
+            while (p) {
+                if (p === parent) {
+                    return true;
+                }
+
+                p = p.parent;
+            }
+
+            return false;
+        }
+
+        /**
+         * Finds first entity by name using depth-first search
+         *
+         * @param {string} name - The name
+         * @returns {Entity} The entity
+         * @example
+         * ```javascript
+         * const door = editor.entities.root.findByName('Door');
+         * ```
+         */
+        findByName(name) {
+            if (this.get('name') === name) {
+                return this;
+            }
+
+            const children = this.children;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child) {
+                    const found = child.findByName(name);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Finds all entities with specified tags
+         *
+         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
+         * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
+         * @returns {Entity[]} The entities
+         * @example
+         * ```javascript
+         * // entities that have the following tag
+         * const entities = editor.entities.root.listByTag('tag');
+         * // entities that have any of the following tags
+         * const entities = editor.entities.root.listByTag('tag', 'tag2');
+         * // entities that have all of the following tags
+         * const entities = editor.entities.root.listByTag(['tag', 'tag2']);
+         * ```
+         */
+        listByTag(...tags) {
+            return this.filter(entity => {
+                const t = entity.get('tags');
+                for (let i = 0; i < tags.length; i++) {
+                    if (Array.isArray(tags[i])) {
+                        let countTags = 0;
+                        for (let j = 0; j < tags[i].length; j++) {
+                            if (t.includes(tags[i][j])) {
+                                countTags++;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (countTags === tags[i].length) {
+                            return true;
+                        }
+                    } else {
+                        if (t.includes(tags[i])) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            });
+        }
+
+        /**
+         * Returns the entity and children that satisfy the function
+         *
+         * @param {Function} fn - A function that takes an Entity and returns whether it should be included
+         * in the result
+         * @returns {Entity[]} The result
+         * @example
+         * ```javascript
+         * const doors = editor.entities.root.filter(entity => entity.get('name').startsWith('door'));
+         * ```
+         */
+        filter(fn) {
+            let result = [];
+
+            if (fn(this)) {
+                result.push(this);
+            }
+
+            const children = this.children;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child) {
+                    result = result.concat(child.filter(fn));
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Executes function for this entity and its children
+         * in depth first order.
+         *
+         * @param {Function} fn - A function that takes an entity as an argument
+         * @example
+         * ```javascript
+         * // get a list of all entities in the graph in depth first order
+         * const entities = [];
+         * editor.entities.root.depthFirst(entity => entities.push(entity));
+         * ```
+         */
+        depthFirst(fn) {
+            fn(this);
+
+            const children = this.children;
+            children.forEach(child => {
+                child.depthFirst(fn);
+            });
+        }
+
+        /**
+         * Adds a component to this Entity
+         *
+         * @param {string} component - The component name
+         * @param {object} data - Default component data
+         * @example
+         * ```javascript
+         * editor.entities.root.addComponent('model', {
+         *     type: 'box'
+         * });
+         * ```
+         */
+        addComponent(component, data = {}) {
+            const defaultData = globals.schema.components.getDefaultData(component);
+            const componentData = Object.assign(defaultData, data);
+            this.set(`components.${component}`, componentData);
+        }
+
+        /**
+         * Removes a component from this Entity
+         *
+         * @param {string} component - The component name
+         * @example
+         * ```javascript
+         * editor.entities.root.removeComponent('model');
+         * ```
+         */
+        removeComponent(component) {
+            this.unset(`components.${component}`);
+        }
+
+        /**
+         * Adds entity as a child
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         * @returns {boolean} Whether the child was added
+         */
+        addChild(entity) {
+            return this.insertChild(entity);
+        }
+
+        /**
+         * Inserts entity as a child at specified index.
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         * @param {number} index - The index. If undefined the child will be added in the end.
+         * @returns {boolean} Whether the child was added
+         */
+        insertChild(entity, index = undefined) {
+            let history = this.history.enabled;
+            this.history.enabled = false;
+            const result = this.insert('children', entity.get('resource_id'), index);
+            this.history.enabled = history;
+
+            if (result) {
+                history = entity.history.enabled;
+                entity.history.enabled = false;
+                entity.set('parent', this.get('resource_id'));
+                entity.history.enabled = history;
+                return true;
+            }
+
+            console.error(`Cannot add duplicate child ${entity.get('resource_id')} under parent ${this.get('resource_id')}`);
+            return false;
+        }
+
+        /**
+         * Removes entity from children
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         */
+        removeChild(entity) {
+            let history = entity.history.enabled;
+            entity.history.enabled = false;
+            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
+            entity.history.enabled = history;
+
+            history = this.history.enabled;
+            this.history.enabled = false;
+            this.removeValue('children', entity.get('resource_id'));
+            this.history.enabled = history;
+        }
+
+        /**
+         * Deletes entity (and its children)
+         *
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * editor.entities.root.findByName('door').delete();
+         * ```
+         *
+         */
+        delete(options = {}) {
+            this._entitiesApi.delete([this], options);
+        }
+
+        /**
+         * Reparents entity under new parent
+         *
+         * @param {Entity} parent - The new parent
+         * @param {number} index - The desired index. If undefined the entity will be added at the end of the parent's children.
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @param {boolean} options.preserverTransform - Whether to preserve the original transform after reparenting
+         * @example
+         * ```javascript
+         * const redHouse = editor.entities.root.findByName('red house');
+         * const greenHouse = editor.entities.root.findByName('green house');
+         * const door = redHouse.findByName('door');
+         * door.reparent(greenHouse);
+         * ```
+         */
+        reparent(parent, index = null, options = {}) {
+            this._entitiesApi.reparent([{
+                entity: this,
+                parent: parent,
+                index: index
+            }], options);
+        }
+
+        /**
+         * Duplicates entity under the same parent
+         *
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.select] - Whether to select the new entity. Defaults to false.
+         * @param {boolean} [options.rename] - Whether to rename the duplicated entity. Defaults to false.
+         * @returns {Promise<Entity>} The new entity
+         */
+        async duplicate(options = {}) {
+            const result = await this._entitiesApi.duplicate([this], options);
+            return result[0];
+        }
+
+        /**
+         * Returns the latest version of the Entity from the Entities API.
+         *
+         * @returns {Entity} The entity
+         */
+        latest() {
+            return this._entitiesApi.get(this._observer.get('resource_id'));
+        }
+
+        /**
+         * @type {Entity}
+         * @description The parent entity
+         */
+        get parent() {
+            const id = this.get('parent');
+            return id ? this._entitiesApi.get(id) : null;
+        }
+
+        /**
+         * @type {Entity[]}
+         * @description The children entities. Warning: this creates a new array every time it's called.
+         */
+        get children() {
+            return this.get('children').map(id => this._entitiesApi.get(id));
+        }
+
+        /**
+         * @type {ObserverHistory}
+         * @description The history object for this entity
+         */
+        get history() {
+            return this._history;
+        }
+
+        /**
+         * @type {pc.Entity}
+         * @description The entity in the 3D viewport of the Editor
+         */
+        get viewportEntity() {
+            return this._observer ? this._observer.entity : null;
+        }
+    }
+
+    /**
+     * Creates new entity and adds it to the hierarchy
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {object} [data] - Optional initial data for the entity
+     * @param {object} [options] - Options
+     * @param {number} [options.index] - The child index that this entity will have under its parent.
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
+     * @returns {Entity} The new entity
+     */
+    function createEntity(entitiesApi, data, options = {}) {
+        data = data || {};
+
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        if (!data.parent) {
+            data.parent = entitiesApi.root ? entitiesApi.root.get('resource_id') : null;
+        }
+
+        if (data.parent instanceof Entity) {
+            data.parent = data.parent.get('resource_id');
+        }
+
+
+        if (data.parent && !entitiesApi.get(data.parent)) {
+            console.error(`Cannot create entity because parent ${data.parent} was not found`);
+            return null;
+        }
+
+        let entity = new Entity(entitiesApi, data);
+
+        entitiesApi.add(entity);
+
+        // sharedb
+        if (globals.realtime && globals.realtime.scenes.current) {
+            globals.realtime.scenes.current.addEntity(entity);
+        }
+
+        const parent = entitiesApi.get(data.parent);
+        if (parent) {
+            if (options.index === undefined) {
+                parent.addChild(entity);
+            } else {
+                parent.insertChild(entity, options.index);
+            }
+        }
+
+        // use same resource id in redo's
+        data.resource_id = entity.get('resource_id');
+
+        // add children
+        if (data.children) {
+            data.children.forEach(childData => {
+                childData.parent = entity;
+                const child = createEntity(entitiesApi, childData, {
+                    history: false,
+                    select: false
+                });
+
+                // use same resource_id in subsequent redo's
+                childData.resource_id = child.get('resource_id');
+            });
+        }
+
+        let prevSelection;
+
+        // remember previous selection
+        if (options.history && globals.history) {
+            if (options.select && globals.selection) {
+                prevSelection = globals.selection.items;
+            }
+        }
+
+        // select new entity
+        if (options.select && globals.selection) {
+            globals.selection.set([entity], {
+                history: false
+            });
+        }
+
+        if (options.history && globals.history) {
+            globals.history.add({
+                name: 'new entity ' + entity.get('resource_id'),
+                // undo new entity
+                undo: () => {
+                    entity = entity.latest();
+                    if (!entity) return;
+
+                    entitiesApi.delete([entity], {
+                        history: false
+                    });
+
+                    if (prevSelection) {
+                        globals.selection.set(prevSelection, {
+                            history: false
+                        });
+                    }
+                },
+                // redo new entity
+                redo: () => {
+                    entity = createEntity(
+                        entitiesApi,
+                        data, {
+                            history: false,
+                            select: options.select
+                        }
+                    );
+                }
+            });
+        }
+
+        // TODO: post creation callaback
+
+        return entity;
+    }
+
+    const entityFieldsCache = {};
+
+    /**
+     * Return a map of all entity reference properties in the graph. This will
+     * include references of the entity and also references of its children
+     *
+     * @private
+     * @param {Entity} entity - The entity
+     * @returns {object} The entity references
+     */
+    function findReferences(entity) {
+        const result = {};
+
+        function addReference(entity, path, value) {
+            if (!result[value]) {
+                result[value] = [];
+            }
+
+            result[value].push({
+                entityId: entity.get('resource_id'),
+                path: path
+            });
+        }
+
+        function handleScriptAttribute(entity, path, attributeDefinition, attributeValue) {
+            if (!attributeValue) return;
+            if (attributeDefinition.array) {
+                attributeValue.forEach((id, i) => {
+                    if (!id) return;
+                    addReference(entity, `${path}.${i}`, id);
+                });
+            } else {
+                addReference(entity, path, attributeValue);
+            }
+        }
+
+        entity.depthFirst(entity => {
+            const componentNames = Object.keys(entity.get('components') || {});
+            componentNames.forEach(component => {
+                if (!entityFieldsCache[component]) {
+                    entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
+                }
+
+                entityFieldsCache[component].forEach(field => {
+                    const path = `components.${component}.${field}`;
+                    const id = entity.get(path);
+                    addReference(entity, path, id);
+                });
+
+                // get script attributes
+                if (!globals.hasLegacyScripts && globals.assets && component === 'script') {
+                    const scriptComponent = entity.get(`components.script`);
+                    for (const scriptName in scriptComponent.scripts) {
+                        // get script asset
+                        const scriptAsset = globals.assets.getAssetForScript(scriptName);
+                        if (!scriptAsset) continue;
+
+                        // go through the script component attribute values
+                        for (const attributeName in scriptComponent.scripts[scriptName].attributes) {
+                            const attributeValue = scriptComponent.scripts[scriptName].attributes[attributeName];
+                            // early out if the value is null
+                            if (!attributeValue || (Array.isArray(attributeValue) && !attributeValue.length)) continue;
+
+                            const attributeDef = scriptAsset.get(`data.scripts.${scriptName}.attributes.${attributeName}`);
+                            if (!attributeDef) continue;
+
+                            const componentAttributePath = `components.script.scripts.${scriptName}.attributes.${attributeName}`;
+
+                            if (attributeDef.type === 'json') {
+                                if (!Array.isArray(attributeDef.schema)) continue;
+
+                                if (attributeDef.array) {
+                                    for (let i = 0; i < attributeValue.length; i++) {
+                                        attributeDef.schema.forEach(field => {
+                                            if (field.type !== 'entity') return;
+
+                                            handleScriptAttribute(entity, `${componentAttributePath}.${i}.${field.name}`, field, attributeValue[i]?.[field.name]);
+                                        });
+                                    }
+                                } else {
+                                    attributeDef.schema.forEach(field => {
+                                        if (field.type !== 'entity') return;
+
+                                        handleScriptAttribute(entity, `${componentAttributePath}.${field.name}`, field, attributeValue[field.name]);
+                                    });
+                                }
+                            } else if (attributeDef.type === 'entity') {
+                                handleScriptAttribute(entity, componentAttributePath, attributeDef, attributeValue);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        return result;
+    }
+
+    /**
+     * Updates entity references to the old entity to point to the new entity
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {object} entityReferences - A map of entity references
+     * @param {string} oldValue - The entity id that we want to replace
+     * @param {string} newValue - The new entity id that we want our references to point to
+     */
+    function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
+        const referencesToEntity = entityReferences[oldValue];
+        if (!referencesToEntity) return;
+
+        referencesToEntity.forEach(reference => {
+            const entity = entitiesApi.get(reference.entityId);
+            if (entity) {
+                const history = entity.history.enabled;
+                entity.history.enabled = false;
+                entity.set(reference.path, newValue);
+                entity.history.enabled = history;
+            }
+        });
+    }
+
+    /**
+     * When an entity that has properties that contain references to some entities
+     * within its subtree is duplicated, update the references to the corresponding entities within
+     * the newly created duplicate subtree.
+     *
+     * @private
+     * @param {Entities} entitiesApi - The Entities API
+     * @param {Entity} newEntity - The new (duplicated) entity
+     * @param {Entity} oldEntity - The old entity
+     * @param {object} duplicatedIdsMap - Map of old id -> new id
+     */
+    function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, duplicatedIdsMap) {
+        // remap template_ent_ids for template instances
+        const templateEntIds = newEntity.get('template_ent_ids');
+        if (templateEntIds) {
+            const newTemplateEntIds = {};
+            for (const oldId in templateEntIds) {
+                if (duplicatedIdsMap[oldId]) {
+                    newTemplateEntIds[duplicatedIdsMap[oldId]] = templateEntIds[oldId];
+                }
+            }
+
+            const history = newEntity.history.enabled;
+            newEntity.history.enabled = false;
+            newEntity.set('template_ent_ids', newTemplateEntIds);
+            newEntity.history.enabled = history;
+        }
+
+        // update entity references
+        const entityReferences = findReferences(newEntity);
+        for (const id in entityReferences) {
+            const prevEntity = entitiesApi.get(id);
+            // only update references to this entity if it is in the old entity's subtree
+            if (!prevEntity || (prevEntity !== oldEntity && !prevEntity.isDescendantOf(oldEntity))) {
+                delete entityReferences[id];
+            }
+        }
+
+        if (Object.keys(entityReferences).length) {
+            for (const oldId in duplicatedIdsMap) {
+                updateReferences(entitiesApi, entityReferences, oldId, duplicatedIdsMap[oldId]);
+            }
+        }
+    }
+
+    function splitEntityNameAndNumber(entityName) {
+        let name = '';
+        let number = 1;
+
+        // step from end of string character by character checking to see if we have a trailing number
+        // stopping when the string we are constructing is no longer a valid number
+        let numberString = '';
+        let foundNumber = true;
+        for (let i = entityName.length - 1; i >= 0; i--) {
+            const char = entityName.charAt(i);
+            if (foundNumber) {
+                numberString = char + numberString;
+                foundNumber = /^\d+$/.test(numberString);
+                if (foundNumber) {
+                    number = parseInt(numberString);
+                }
+            }
+            if (foundNumber === false) {
+                name = char + name;
+            }
+        }
+
+        return {
+            name,
+            number
+        };
+    }
+    function isEntityNameTaken(name, entities) {
+        for (let j = 0; j < entities.length; j++) {
+            const entity = entities[j];
+            const entityName = entities[j].get('name');
+            if (entity && entityName === name) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function getUniqueNameForDuplicatedEntity(entityName, entities) {
+        // if entityName === '1box23' then name === '1box' and number === 23,  if entityName === '1' then name === '' and number === 1
+        const { name, number } = splitEntityNameAndNumber(entityName);
+
+        let startIndex = number + 1;
+        let newUniqueName = name + startIndex;
+        while (isEntityNameTaken(newUniqueName, entities)) {
+            newUniqueName = name + startIndex++;
+        }
+        return newUniqueName;
+    }
+    /**
+     * Duplicates an entity in the scene
+     *
+     * @private
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity} entity - The entity
+     * @param {Entity} parent - The parent of the new entity
+     * @param {number} ind - The index in the parent's children array where we want to insert the new entity
+     * @param {object} duplicatedIdsMap - A guid->guid map that contains references from the source resource ids to the new resource ids
+     * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
+     * @returns {Entity} The new entity
+     */
+    function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, useUniqueName) {
+        const originalResourceId = entity.get('resource_id');
+        const data = entity.json();
+        const children = data.children;
+
+        data.children = [];
+        if (useUniqueName) {
+            data.name = getUniqueNameForDuplicatedEntity(data.name, parent.children);
+        }
+        data.resource_id = pc.guid.create();
+        data.parent = parent.get('resource_id');
+
+        entity = entitiesApi.create(data, {
+            history: false,
+            select: false,
+            index: ind
+        });
+
+        duplicatedIdsMap[originalResourceId] = entity.get('resource_id');
+
+        // add children too
+        children.forEach(function (childId) {
+            duplicateEntity(entitiesApi, entitiesApi.get(childId), entity, undefined, duplicatedIdsMap);
+        });
+
+        return entity;
+    }
+
+    /**
+     * Duplicates entities under the same parent
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity[]} entities - The entities
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
+     * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
+     * @returns {Promise<Entity[]>} The duplicated entities
+     */
+    async function duplicateEntities(entitiesApi, entities, options) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        const root = entitiesApi.root;
+
+        // make sure we are not duplicating the root
+        if (entities.includes(root)) {
+            console.error('Cannot duplicate the root Entity');
+            return;
+        }
+        // build index
+        const records = {};
+        entities.forEach(entity => {
+            const id = entity.get('resource_id');
+            records[id] = {
+                entity: entity,
+                index: entity.parent.children.indexOf(entity)
+            };
+        });
+
+        // only duplicate top level parents
+        let i = entities.length;
+        while (i--) {
+            let parent = entities[i].parent;
+            while (parent && parent !== root) {
+                if (records[parent.get('resource_id')]) {
+                    entities.splice(i, 1);
+                    delete records[entities[i].get('resource_id')];
+                    break;
+                }
+
+                parent = parent.parent;
+            }
+        }
+
+        // original order is a dictionary that contains
+        // resource_id -> [index_before_sort, index_after_sort]
+        // for each entity. It used to return our results in the
+        // original order passed by the user because when we duplicate
+        // we change the order of the entities to their order within their parent
+        const originalOrder = {};
+        entities.forEach((e, i) => {
+            originalOrder[e.get('resource_id')] = [i, null];
+        });
+
+        // sort by order within parent
+        entities.sort((a, b) => {
+            return records[b.get('resource_id')].index - records[a.get('resource_id')].index;
+        });
+
+        entities.forEach((e, i) => {
+            originalOrder[e.get('resource_id')][1] = i;
+        });
+
+        // TODO: If we have a lot of entities duplicate in the backend
+
+
+        // remember previous selection
+        let previousSelection;
+        if (options.history && globals.history && globals.selection && options.select) {
+            previousSelection = globals.selection.items;
+        }
+
+        let newEntities = [];
+
+        // duplicate
+        entities.forEach(entity => {
+            const duplicatedIdsMap = {};
+
+            const newEntity = duplicateEntity(
+                entitiesApi,
+                entity,
+                entity.parent,
+                records[entity.get('resource_id')].index + 1,
+                duplicatedIdsMap,
+                options.rename
+            );
+
+            updateDuplicatedEntityReferences(entitiesApi, newEntity, entity, duplicatedIdsMap);
+
+            newEntities.push(newEntity);
+        });
+
+        // select duplicated
+        if (options.select && globals.selection) {
+            globals.selection.set(newEntities, {
+                history: false
+            });
+        }
+
+        if (options.history && globals.history) {
+            let previous;
+
+            globals.history.add({
+                name: 'duplicate entities',
+                undo: () => {
+                    // remember previous entities
+                    previous = {};
+                    newEntities.forEach(entity => {
+                        entity.depthFirst(e => {
+                            previous[e.get('resource_id')] = e.json();
+                        });
+                    });
+
+                    entitiesApi.delete(newEntities, {
+                        history: false
+                    });
+
+                    if (previousSelection) {
+                        globals.selection.set(previousSelection, {
+                            history: false
+                        });
+                    }
+                },
+                redo: () => {
+                    function recreateEntityData(data) {
+                        data = Object.assign({}, data);
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        return data;
+                    }
+
+                    newEntities = newEntities.map((entity, index) => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                        entity = entitiesApi.create(data, {
+                            history: false,
+                            select: false,
+                            index: records[entities[index].get('resource_id')].index + 1
+                        });
+
+                        return entity;
+                    });
+
+                    if (options.select && globals.selection) {
+                        globals.selection.set(newEntities, { history: false });
+                    }
+
+                    previous = null;
+                }
+            });
+        }
+
+        // return duplicated entities in their original order
+        const result = new Array(newEntities.length);
+        for (const id in originalOrder) {
+            const pair = originalOrder[id];
+            result[pair[0]] = newEntities[pair[1]];
+        }
+
+        return result;
+    }
+
+    /**
+     * Reparents entities under new parent.
+     *
+     * @private
+     * @param {ReparentArguments[]} data - The reparenting data
+     * @param {object} [options] - Options
+     * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
+     * @param {boolean} [options.history] - Whether to record history. Defaults to true
+     */
+    function reparentEntities(data, options = {}) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        const records = data.map(entry => {
+            const parentOld = entry.entity.parent;
+            const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
+            const record = {
+                entity: entry.entity,
+                resourceId: entry.entity.get('resource_id'),
+                parentOld: parentOld,
+                indOld: indexOld,
+                parent: entry.parent,
+                indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
+            };
+
+            if (options.preserveTransform) {
+                record.position = record.entity.viewportEntity.getPosition().clone();
+                record.rotation = record.entity.viewportEntity.getRotation().clone();
+            }
+
+            return record;
+        });
+
+        const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
+            const resourceId = entity.get('resource_id');
+            if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
+                return false;
+
+            // check if not reparenting to own child
+            let deny = false;
+            let checkParent = parent.parent;
+            while (checkParent) {
+                if (checkParent === entity) {
+                    deny = true;
+                    checkParent = null;
+                    break;
+                }
+
+                checkParent = checkParent.parent;
+            }
+
+            if (deny)
+                return false;
+
+            parentOld.history.enabled = false;
+            parentOld.removeValue('children', resourceId);
+            parentOld.history.enabled = true;
+
+            parent.history.enabled = false;
+            let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
+            parent.insert('children', resourceId, indNew + off);
+            parent.history.enabled = true;
+
+            entity.history.enabled = false;
+            entity.set('parent', parent.get('resource_id'));
+
+            if (options.preserveTransform && position && entity.viewportEntity) {
+                entity.viewportEntity.setPosition(position);
+                entity.viewportEntity.setRotation(rotation);
+
+                var localPosition = entity.viewportEntity.getLocalPosition();
+                var localRotation = entity.viewportEntity.getLocalEulerAngles();
+                entity.set('position', [localPosition.x, localPosition.y, localPosition.z]);
+                entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
+            }
+
+            entity.history.enabled = true;
+
+            return true;
+        };
+
+        const redo = () => {
+            let dirty = false;
+            records.forEach((record, i) => {
+                const entity = record.entity.latest();
+                if (!entity) return;
+
+                const parent = record.parent.latest();
+                const parentOld = entity.parent;
+                if (!parentOld || !parent) return;
+
+                if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
+                    dirty = true;
+                }
+            });
+
+            return dirty;
+        };
+
+        let dirty = redo();
+        if (dirty && options.history && globals.history) {
+            const undo = () => {
+                records.forEach((record, i) => {
+                    const entity = record.entity.latest();
+                    if (!entity) return;
+
+                    const parent = entity.parent;
+                    if (!parent) return;
+
+                    const parentOld = record.parentOld.latest();
+                    if (!parentOld) return;
+
+                    doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
+                });
+            };
+
+            globals.history.add({
+                name: 'reparent entities',
+                undo: undo,
+                redo: redo
+            });
+        }
+
+    }
+
+    /**
+     * Delete specified entities
+     *
+     * @private
+     * @typedef {import("../entities").Entities} Entities
+     * @param {Entities} entitiesApi - The entities API
+     * @param {Entity[]|Entity} entities - The entities
+     * @param {object} [options] - Options
+     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+     */
+    function deleteEntities(entitiesApi, entities, options = {}) {
+        if (options.history === undefined) {
+            options.history = true;
+        }
+
+        if (!Array.isArray(entities)) {
+            entities = [entities];
+        }
+
+        // first only gather top level entities
+        const ids = new Set();
+        entities.forEach(entity => ids.add(entity.get('resource_id')));
+
+        entities = entities.filter(entity => {
+            entity = entity.latest();
+            if (!entity) return false;
+
+            let parent = entity.parent;
+            let parentInSelection = false;
+            while (parent) {
+                if (ids.has(parent.get('resource_id'))) {
+                    parentInSelection = true;
+                    break;
+                }
+                parent = parent.parent;
+            }
+
+            return !parentInSelection;
+        });
+
+        // TODO: if we have a lot of entities delete in backend
+
+        // remember previous entities
+        let previous;
+        if (options.history && globals.history) {
+            previous = {};
+            entities.forEach(entity => {
+                entity.depthFirst(e => {
+                    previous[e.get('resource_id')] = e.json();
+                });
+            });
+        }
+
+        // find entity references
+        const entityReferences = findReferences(entitiesApi.root);
+
+        entities.forEach(entity => {
+            entitiesApi.remove(entity, entityReferences);
+        });
+
+        if (previous) {
+            globals.history.add({
+                name: 'delete entities',
+                undo: () => {
+                    function recreateEntityData(data) {
+                        data = Object.assign({}, data);
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        return data;
+                    }
+
+                    entities = entities.map(entity => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                        entity = entitiesApi.create(data, {
+                            history: false
+                        });
+
+                        return entity;
+                    });
+
+                    entities.forEach(entity => {
+                        updateReferences(entitiesApi, entityReferences, entity.get('resource_id'), entity.get('resource_id'));
+                    });
+
+                    if (globals.selection) {
+                        globals.selection.set(entities, {
+                            history: false
+                        });
+                    }
+
+                    previous = null;
+                },
+                redo: () => {
+                    previous = {};
+                    entities = entities.map(e => e.latest()).filter(e => !!e);
+
+                    entities.forEach(entity => {
+                        entity.depthFirst(e => {
+                            previous[e.get('resource_id')] = e.json();
+                        });
+                    });
+
+                    entitiesApi.delete(entities, {
+                        history: false
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * Data to reparent an entity under a new parent
+     *
+     * @typedef {object} ReparentArguments
+     * @property {Entity} entity - The entity to reparent
+     * @property {Entity} parent - The new parent for the entity
+     * @property {number} index - The child index of the entity under the new parent
+     */
+
+    /**
+     * The entities editor API
+     */
+    class Entities extends __webpack_exports__Events {
+        /**
+         * Creates new API instance
+         *
+         * @category Internal
+         */
+        constructor() {
+            super();
+
+            this._root = null;
+
+            this._entities = new ObserverList({
+                index: 'resource_id'
+            });
+        }
+
+        /**
+         * Gets entity by resource id
+         *
+         * @param {string} id - The entity's resource id
+         * @returns {Entity} The entity
+         * @example
+         * ```javascript
+         * const entity = editor.entities.get(resourceId);
+         * ```
+         */
+        get(id) {
+            const e = this._entities.get(id);
+            return e ? e.apiEntity : null;
+        }
+
+        /**
+         * Returns array of all entities
+         *
+         * @returns {Entity[]} The entities
+         * @example
+         * ```javascript
+         * const entities = editor.entities.list();
+         * console.log(entities.length);
+         * ```
+         */
+        list() {
+            return this._entities.array().map(e => e.apiEntity);
+        }
+
+        /**
+         * Adds entity to list
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         */
+        add(entity) {
+            const id = entity.get('resource_id');
+
+            if (this.get(id)) {
+                console.error(`Cannot add duplicate Entity ${id}`);
+                return;
+            }
+
+            this._entities.add(entity._observer);
+            if (!entity.get('parent')) {
+                if (this._root) {
+                    console.error(`More than one root entities in Scene. Current root is Entity "${this._root.get('name')}" [${this._root.get('resource_id')}] but Entity "${entity.get('name')}" [${id}] also has a null parent`);
+                } else {
+                    this._root = entity;
+                }
+            }
+
+            entity._initializeHistory();
+
+            this.emit('add', entity, this._root === entity);
+        }
+
+        /**
+         * Called when an entity is added from the server
+         *
+         * @category Internal
+         * @param {object} entityData - The entity data
+         */
+        serverAdd(entityData) {
+            const entity = new Entity(this, entityData);
+            entity.set('parent', entityData.parent);
+            entity.set('children', entityData.children);
+            this.add(entity);
+        }
+
+        /**
+         * Removes entity from the list
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         * @param {object} entityReferences - A map of entity references to nullify
+         * when this entity is removed
+         */
+        remove(entity, entityReferences = null) {
+            if (entityReferences) {
+                updateReferences(this, entityReferences, entity.get('resource_id'), null);
+            }
+
+            // remove children first
+            entity.children.forEach(child => {
+                this.remove(child, entityReferences);
+            });
+
+            // remove from selection
+            if (globals.selection && globals.selection.has(entity)) {
+                globals.selection.remove(entity, {
+                    history: false
+                });
+            }
+
+            // remove from parent
+            if (entity.parent) {
+                entity.parent.removeChild(entity);
+            }
+
+            // remove from observer list
+            this._entities.remove(entity._observer);
+            entity._observer.destroy();
+
+            // reset root
+            if (this._root === entity) {
+                this._root = null;
+            }
+
+            // sharedb
+            if (globals.realtime && globals.realtime.scenes.current) {
+                globals.realtime.scenes.current.removeEntity(entity);
+            }
+
+            this.emit('remove', entity);
+        }
+
+        /**
+         * Called when an entity is removed from the server
+         *
+         * @category Internal
+         * @param {Entity} entity - The entity
+         */
+        serverRemove(entity) {
+            if (globals.selection && globals.selection.has(entity)) {
+                globals.selection.remove(entity, {
+                    history: false
+                });
+            }
+
+            this._entities.remove(entity._observer);
+            entity._observer.destroy();
+
+            if (this._root === entity) {
+                this._root = null;
+            }
+
+            this.emit('remove', entity);
+        }
+
+        /**
+         * Removes all entities from the list
+         *
+         * @category Internal
+         */
+        clear() {
+            this._root = null;
+            const entities = this.list();
+            this._entities.clear();
+
+            if (globals.selection) {
+                if (globals.selection.items[0] instanceof Entity)  {
+                    const history = globals.selection.history.enabled;
+                    globals.selection.history.enabled = false;
+                    globals.selection.clear();
+                    globals.selection.history.enabled = history;
+                }
+            }
+
+            entities.forEach(entity => {
+                entity._observer.destroy();
+                this.emit('remove', entity);
+            });
+
+            this.emit('clear');
+        }
+
+        /**
+         * Creates new entity and adds it to the hierarchy
+         *
+         * @param {object} data - Optional initial data for the entity
+         * @param {object} options - Options
+         * @param {number} options.index - The child index that this entity will have under its parent.
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @param {boolean} options.select - Whether to select new Entity. Defaults to false.
+         * @returns {Entity} The new entity
+         *
+         * @example
+         * ```javascript
+         * const root = editor.entities.create({
+         *     name: 'parent',
+         * });
+         *
+         * const child = editor.entities.create({
+         *     name: 'child',
+         *     parent: root,
+         * });
+         *```
+         */
+        create(data = null, options = {}) {
+            return createEntity(this, data, options);
+        }
+
+        /**
+         * Delete specified entities
+         *
+         * @param {Entity[]|Entity} entities - The entities
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         *
+         * @example
+         * ```javascript
+         * editor.entities.delete([entity1, entity2]);
+         * ```
+         */
+        delete(entities, options = {}) {
+            return deleteEntities(this, entities, options);
+        }
+
+        /**
+         * Reparents entities under new parent.
+         *
+         * @param {ReparentArguments[]} data - The reparenting data
+         * @param {object} options - Options
+         * @param {boolean} options.preserveTransform - Whether to preserve the transform of the entities. Defaults to false.
+         * @param {boolean} options.history - Whether to record history. Defaults to true
+         * @example
+         * ```javascript
+         * const child = editor.entities.create();
+         * const parent = editor.entities.create();
+         * editor.entities.reparent([{
+         *     entity: child,
+         *     parent: parent
+         * }])
+         * ```
+         */
+        reparent(data, options = {}) {
+            return reparentEntities(data, options);
+        }
+
+        /**
+         * Duplicates the specified entities under the same parent
+         *
+         * @param {Entitiy[]} entities - The entities
+         * @param {object} [options] - Options
+         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
+         * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
+         * @returns {Promise<Entity[]>} The duplicated entities
+         */
+        async duplicate(entities, options = {}) {
+            const result = await duplicateEntities(this, entities, options);
+            return result;
+
+        }
+
+        /**
+         * @type {Entity}
+         * Gets the root Entity
+         */
+        get root() {
+            return this._root;
+        }
+    }
+
+    /**
+     * Represents an Asset
+     */
+    class Asset extends __webpack_exports__Events {
+        /**  @typedef {import("./assets").Assets} Assets */
+
+        /**
+         * Constructor
+         *
+         * @param {Assets} assetsApi - The asset api
+         * @param {object} data - The asset data
+         */
+        constructor(assetsApi, data = {}) {
+            super();
+            this._assets = assetsApi;
+
+            // allow duplicate values in data.frameKeys of sprite asset
+            let options = null;
+            if (data.type === 'sprite') {
+                options = {
+                    pathsWithDuplicates: ['data.frameKeys']
+                };
+            }
+
+            data = Object.assign({
+                name: 'New Asset',
+                tags: [],
+                meta: null,
+                data: null,
+                file: null,
+                path: []
+            }, data);
+
+            this._observer = new Observer(data, options);
+            this._observer.apiAsset = this;
+            this._observer.addEmitter(this);
+
+            this._observer.latestFn = () => {
+                const latest = this._assets.get(this.get('id'));
+                return latest && latest._observer;
+            };
+
+            this._resetThumbnailUrls();
+
+            this._observer.on('has_thumbnail:set', this._resetThumbnailUrls.bind(this));
+
+            this._suspendOnSet = false;
+            this._observer.on('*:set', this._onSet.bind(this));
+
+            this._history = {};
+        }
+
+        _initializeHistory() {
+            if (this._observer.history) return;
+
+            this._history = new ObserverHistory({
+                item: this._observer,
+                prefix: 'asset.' + this.get('id') + '.',
+                history: globals.history
+            });
+
+            this._observer.history = this._history;
+        }
+
+        _resetThumbnailUrls() {
+            const type = this.get('type') || '';
+            if (!type.startsWith('texture')) return;
+
+            if (this.get('has_thumbnail')) {
+                const id = this.get('id');
+                this.set('thumbnails', {
+                    's': `/api/assets/${id}/thumbnail/small?branchId=${globals.branchId}`,
+                    'm': `/api/assets/${id}/thumbnail/medium?branchId=${globals.branchId}`,
+                    'l': `/api/assets/${id}/thumbnail/large?branchId=${globals.branchId}`,
+                    'xl': `/api/assets/${id}/thumbnail/xlarge?branchId=${globals.branchId}`
+                });
+            } else {
+                this.unset('thumbnails');
+            }
+        }
+
+        _onSet(path, value) {
+            if (this._suspendOnSet || ! path.startsWith('file') || path.endsWith('.url') || ! this.get('file'))
+                return;
+
+            this._suspendOnSet = true;
+
+            const parts = path.split('.');
+
+            if ((parts.length === 1 || parts.length === 2) && parts[1] !== 'variants') {
+                // reset file url
+                this.set('file.url', Asset.getFileUrl(this.get('id'), this.get('file.filename')));
+                // reset thumbnails
+                this._resetThumbnailUrls();
+            } else if (parts.length >= 3 && parts[1] === 'variants') {
+                const format = parts[2];
+                this.set(`file.variants.${format}.url`, Asset.getFileUrl(this.get('id'), this.get(`file.variants.${format}.filename`)));
+            }
+
+            this._suspendOnSet = false;
         }
 
         /**
@@ -3245,40 +4895,147 @@
         }
 
         /**
-         * Finds first entity by name using depth-first search
+         * Returns the latest version of the Asset from the Assets API.
          *
-         * @param {string} name - The name
-         * @returns {Entity} The entity
+         * @returns {Asset} The asset
          */
-        findByName(name) {
-            if (this.get('name') === name) {
-                return this;
-            }
-
-            const children = this.children;
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                if (child) {
-                    const found = child.findByName(name);
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
-
-            return null;
+        latest() {
+            return this._assets.get(this._observer.get('id'));
         }
 
         /**
-         * Finds all entities with specified tags
+         * Loads the asset's data from sharedb and subscribes to changes
+         */
+        async loadAndSubscribe() {
+            if (!globals.realtime) return;
+
+            const uniqueId = this.get('uniqueId');
+            const a = globals.realtime.assets.load(uniqueId);
+            return new Promise((resolve, reject) => {
+                a.once('load', () => {
+                    const data = a.data;
+
+                    data.id = parseInt(data.item_id, 10);
+                    data.uniqueId = uniqueId;
+                    data.createdAt = this.get('createdAt');
+
+                    // delete unnecessary fields
+                    delete data.item_id;
+                    delete data.branch_id;
+
+                    if (data.file) {
+                        data.file.url = Asset.getFileUrl(data.id, data.file.filename);
+
+                        if (data.file.variants) {
+                            for (const key in data.file.variants) {
+                                data.file.variants[key].url = Asset.getFileUrl(data.id, data.file.variants[key].filename);
+                            }
+                        }
+                    }
+
+                    for (const field in a.data) {
+                        this.set(field, a.data[field]);
+                    }
+
+                    resolve();
+                });
+
+                a.once('error:load', () => {
+                    reject();
+                });
+            });
+        }
+
+        /**
+         * Gets observer history for this assset
          *
-         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
-         * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
-         * @returns {Entity[]} The entities
+         * @type {ObserverHistory}
+         */
+        get history() {
+            return this._history;
+        }
+
+        /**
+         * Gets the file URL for an asset file
+         *
+         * @param {number} id - The asset id
+         * @param {string} filename - The desired filename
+         * @returns {string} The file URL
+         */
+        static getFileUrl(id, filename) {
+            return `/api/assets/${id}/file/${filename}?branchId=${globals.branchId}`;
+        }
+    }
+
+    /**
+     * The Assets Editor API
+     */
+    class Assets extends __webpack_exports__Events {
+        /**
+         * Constructor
+         */
+        constructor() {
+            super();
+
+            this._uniqueIdToItemId = {};
+
+            this._assets = new ObserverList({
+                index: 'id',
+                sorted: (a, b) => {
+                    const f = (b._data.type === 'folder') - (a._data.type === 'folder');
+                    if (f !== 0)
+                        return f;
+                    if (a._data.name.toLowerCase() > b._data.name.toLowerCase()) {
+                        return 1;
+                    } else if (a._data.name.toLowerCase() < b._data.name.toLowerCase()) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+        }
+
+        /**
+         * Gets asset by id
+         *
+         * @param {number} id - The asset id
+         * @returns {Asset} The asset
+         */
+        get(id) {
+            const a = this._assets.get(id);
+            return a ? a.apiAsset : null;
+        }
+
+        /**
+         * Gets asset by its unique id
+         *
+         * @param {number} uniqueId - The unique id
+         * @returns {Asset} The asset
+         */
+        getUnique(uniqueId) {
+            const id = this._uniqueIdToItemId[uniqueId];
+            return id ? this.get(id) : null;
+        }
+
+        /**
+         * Returns array of all assets
+         *
+         * @returns {Array[]} The assets
+         */
+        list() {
+            return this._assets.array().map(a => a.apiAsset);
+        }
+
+        /**
+         * Finds all assets with specified tags
+         *
+         * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
+         * tags will be included. If an argument is an array of tags then assets that contain ALL of the tags in the array will be included.
+         * @returns {Asset[]} The assets
          */
         listByTag(...tags) {
-            return this.filter(entity => {
-                const t = entity.get('tags');
+            return this.filter(asset => {
+                const t = asset.get('tags');
                 for (let i = 0; i < tags.length; i++) {
                     if (Array.isArray(tags[i])) {
                         let countTags = 0;
@@ -3305,773 +5062,183 @@
         }
 
         /**
-         * Returns the entity and children that satisfy the function
+         * Adds asset to the list
          *
-         * @param {Function} fn - A function that takes an Entity and returns whether it should be included
-         * in the result
-         * @returns {Entity[]} The result
+         * @param {Asset} asset - The asset
          */
-        filter(fn) {
-            let result = [];
+        add(asset) {
+            asset._initializeHistory();
 
-            if (fn(this)) {
-                result.push(this);
-            }
+            const pos = this._assets.add(asset._observer);
+            if (pos === null) return;
 
-            const children = this.children;
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                if (child) {
-                    result = result.concat(child.filter(fn));
-                }
-            }
+            const id = asset.get('id');
+            this._uniqueIdToItemId[asset.get('uniqueId')] = id;
 
-            return result;
-        }
+            asset._observer.on('name:set', (name, oldName) => {
+                name = name.toLowerCase();
+                oldName = oldName.toLowerCase();
 
-        /**
-         * Executes function for this entity and its children
-         * in depth first order.
-         *
-         * @param {Function} fn - A function that takes an entity as an argument
-         */
-        depthFirst(fn) {
-            fn(this);
+                const ind = this._assets.data.indexOf(asset._observer);
+                let pos = this._assets.positionNextClosest(asset._observer, (a, b) => {
+                    const f = (b._data.type === 'folder') - (a._data.type === 'folder');
 
-            const children = this.children;
-            children.forEach(child => {
-                child.depthFirst(fn);
-            });
-        }
+                    if (f !== 0)
+                        return f;
 
-        /**
-         * Adds a component to this Entity
-         *
-         * @param {string} component - The component name
-         * @param {object} [data] - Default component data
-         */
-        addComponent(component, data) {
-            const defaultData = globals.schema.components.getDefaultData(component);
-            const componentData = Object.assign(defaultData, data);
-            this.set(`components.${component}`, componentData);
-        }
-
-        /**
-         * Removes a component from this Entity
-         *
-         * @param {string} component - The component name
-         */
-        removeComponent(component) {
-            this.unset(`components.${component}`);
-        }
-
-        /**
-         * Adds entity as a child
-         *
-         * @param {Entity} entity - The entity
-         * @returns {boolean} Whether the child was added
-         */
-        addChild(entity) {
-            return this.insertChild(entity);
-        }
-
-        /**
-         * Inserts entity as a child at specified index.
-         *
-         * @param {Entity} entity - The entity
-         * @param {number} [index] - The index. If undefined the child will be added in the end.
-         * @returns {boolean} Whether the child was added
-         */
-        insertChild(entity, index) {
-            let history = this.history.enabled;
-            this.history.enabled = false;
-            const result = this.insert('children', entity.get('resource_id'), index);
-            this.history.enabled = history;
-
-            if (result) {
-                history = entity.history.enabled;
-                entity.history.enabled = false;
-                entity.set('parent', this.get('resource_id'));
-                entity.history.enabled = history;
-                return true;
-            }
-
-            console.error(`Cannot add duplicate child ${entity.get('resource_id')} under parent ${this.get('resource_id')}`);
-            return false;
-        }
-
-        /**
-         * Removes entity from children
-         *
-         * @param {Entity} entity - The entity
-         */
-        removeChild(entity) {
-            let history = entity.history.enabled;
-            entity.history.enabled = false;
-            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
-            entity.history.enabled = history;
-
-            history = this.history.enabled;
-            this.history.enabled = false;
-            this.removeValue('children', entity.get('resource_id'));
-            this.history.enabled = history;
-        }
-
-        /**
-         * Deletes entity (and its children)
-         *
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         */
-        delete(options = {}) {
-            this._entitiesApi.delete([this], options);
-        }
-
-        /**
-         * Reparents entity under new parent
-         *
-         * @param {Entity} parent - The new parent
-         * @param {number} [index] - The desired index. If undefined the entity will be added at the end of the parent's children.
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.preserverTransform] - Whether to preserve the original transform after reparenting
-         */
-        reparent(parent, index, options = {}) {
-            this._entitiesApi.reparent([{
-                entity: this,
-                parent: parent,
-                index: index
-            }], options);
-        }
-
-        /**
-         * Returns the latest version of the Entity from the Entities API.
-         *
-         * @returns {Entity} The entity
-         */
-        latest() {
-            return this._entitiesApi.get(this._observer.get('resource_id'));
-        }
-
-        /**
-         * @type {Entity}
-         * @description The parent entity
-         */
-        get parent() {
-            const id = this.get('parent');
-            return id ? this._entitiesApi.get(id) : null;
-        }
-
-        /**
-         * @type {Entity[]}
-         * @description The children entities. Warning: this creates a new array every time it's called.
-         */
-        get children() {
-            return this.get('children').map(id => this._entitiesApi.get(id));
-        }
-
-        /**
-         * @type {ObserverHistory}
-         * @description The history object for this entity
-         */
-        get history() {
-            return this._history;
-        }
-
-        /**
-         * @type {pc.Entity}
-         * @description The entity in the 3D viewport of the Editor
-         */
-        get viewportEntity() {
-            return this._observer ? this._observer.entity : null;
-        }
-    }
-
-    /**
-     * Data to reparent an entity under a new parent
-     *
-     * @typedef {object} ReparentArguments
-     * @property {Entity} entity - The entity to reparent
-     * @property {Entity} parent - The new parent for the entity
-     * @property {number} index - The child index of the entity under the new parent
-     */
-
-    /**
-     * The entities editor API
-     */
-    class Entities extends __webpack_exports__Events {
-        /**
-         * Creates new API instance
-         */
-        constructor() {
-            super();
-
-            this._root = null;
-
-            this._entities = new __webpack_exports__ObserverList({
-                index: 'resource_id'
-            });
-        }
-
-        /**
-         * Return a map of all entity reference properties in the graph. This will
-         * include references of the entity and also references of its children
-         *
-         * @private
-         * @param {Entity} entity - The entity
-         * @returns {object} The entity references
-         */
-        _findReferences(entity) {
-            const result = {};
-
-            const entityFieldsCache = {};
-
-            entity.depthFirst(entity => {
-                const componentNames = Object.keys(entity.get('components') || {});
-                componentNames.forEach(component => {
-                    if (!entityFieldsCache[component]) {
-                        entityFieldsCache[component] = globals.schema.components.getFieldsOfType(component, 'entity');
+                    if ((a === b ? oldName : a._data.name.toLowerCase()) > name) {
+                        return 1;
+                    } else if ((a === b ? oldName : a._data.name.toLowerCase()) < name) {
+                        return -1;
                     }
+                    return 0;
 
-                    entityFieldsCache[component].forEach(field => {
-                        const path = `components.${component}.${field}`;
-                        const id = entity.get(path);
-                        if (!result[id]) {
-                            result[id] = [];
-                        }
-                        result[id].push({
-                            entityId: entity.get('resource_id'),
-                            path: path
-                        });
-                    });
                 });
+
+                if (pos === -1 && (ind + 1) === this._assets.data.length)
+                    return;
+
+                if (ind !== -1 && (ind + 1 === pos) || (ind === pos))
+                    return;
+
+                if (ind < pos)
+                    pos--;
+
+                this._assets.move(asset._observer, pos);
+                this.emit('move', asset, pos);
             });
 
-            return result;
+            this.emit(`add:[${id}]`, asset, pos);
+            this.emit('add', asset, pos);
         }
 
         /**
-         * Updates entity references to the old entity to point to the new entity
+         * Removes asset from the list
          *
-         * @private
-         * @param {object} entityReferences - A map of entity references
-         * @param {string} oldValue - The entity id that we want to replace
-         * @param {string} newValue - The new entity id that we want our references to point to
+         * @param {Asset} asset - The asset
          */
-        _updateReferences(entityReferences, oldValue, newValue) {
-            const referencesToEntity = entityReferences[oldValue];
-            if (!referencesToEntity) return;
+        remove(asset) {
+            if (!this._assets.has(asset._observer)) return;
 
-            referencesToEntity.forEach(reference => {
-                const entity = this.get(reference.entityId);
-                if (entity) {
-                    entity.set(reference.path, newValue);
-                }
-            });
+            this._assets.remove(asset._observer);
+
+            delete this._uniqueIdToItemId[asset.get('uniqueId')];
+            asset._observer.destroy();
+
+            if (globals.realtime) {
+                globals.realtime.assets.unload(asset.get('uniqueId'));
+            }
+
+            this.emit(`remove`, asset);
+            this.emit(`remove[${asset.get('id')}]`);
         }
 
         /**
-         * Gets entity by resource id
-         *
-         * @param {string} id - The entity's resource id
-         * @returns {Entity} The entity
-         */
-        get(id) {
-            const e = this._entities.get(id);
-            return e ? e.apiEntity : null;
-        }
-
-        /**
-         * Returns array of all entities
-         *
-         * @returns {Entity[]} The entities
-         */
-        list() {
-            return this._entities.array().map(e => e.apiEntity);
-        }
-
-        /**
-         * Adds entity to list
-         *
-         * @param {Entity} entity - The entity
-         */
-        add(entity) {
-            const id = entity.get('resource_id');
-
-            if (this.get(id)) {
-                console.error(`Cannot add duplicate Entity ${id}`);
-                return;
-            }
-
-            this._entities.add(entity._observer);
-            if (!entity.get('parent')) {
-                if (this._root) {
-                    console.error(`More than one root entities in Scene. Current root is Entity "${this._root.get('name')}" [${this._root.get('resource_id')}] but Entity "${entity.get('name')}" [${id}] also has a null parent`);
-                } else {
-                    this._root = entity;
-                }
-            }
-
-            this.emit('add', entity, this._root === entity);
-        }
-
-        /**
-         * Called when an entity is added from the server
-         *
-         * @param {object} entityData - The entity data
-         */
-        serverAdd(entityData) {
-            const entity = new Entity(this, entityData);
-            entity.set('parent', entityData.parent);
-            entity.set('children', entityData.children);
-            this.add(entity);
-        }
-
-        /**
-         * Removes entity from the list
-         *
-         * @param {Entity} entity - The entity
-         * @param {object} [entityReferences] - A map of entity references to nullify
-         * when this entity is removed
-         */
-        remove(entity, entityReferences) {
-            if (entityReferences) {
-                this._updateReferences(entityReferences, entity.get('resource_id'), null);
-            }
-
-            // remove children first
-            entity.children.forEach(child => {
-                this.remove(child, entityReferences);
-            });
-
-            // remove from selection
-            if (globals.selection && globals.selection.has(entity)) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.remove(entity);
-                globals.selection.history.enabled = history;
-            }
-
-            // remove from parent
-            if (entity.parent) {
-                entity.parent.removeChild(entity);
-            }
-
-            // remove from observer list
-            this._entities.remove(entity._observer);
-            entity._observer.destroy();
-
-            // reset root
-            if (this._root === entity) {
-                this._root = null;
-            }
-
-            // sharedb
-            if (globals.realtime && globals.realtime.scenes.current) {
-                globals.realtime.scenes.current.removeEntity(entity);
-            }
-
-            this.emit('remove', entity);
-        }
-
-        /**
-         * Called when an entity is removed from the server
-         *
-         * @param {Entity} entity - The entity
-         */
-        serverRemove(entity) {
-            if (globals.selection && globals.selection.has(entity)) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.remove(entity);
-                globals.selection.history.enabled = history;
-            }
-
-            this._entities.remove(entity._observer);
-            entity._observer.destroy();
-
-            if (this._root === entity) {
-                this._root = null;
-            }
-
-            this.emit('remove', entity);
-        }
-
-        /**
-         * Removes all entities from the list
+         * Removes all assets from the list
          */
         clear() {
-            this._root = null;
-            const entities = this.list();
-            this._entities.clear();
+            const assets = this.list();
+            if (!assets.length) return;
 
-            if (globals.selection) {
-                if (globals.selection.items[0] instanceof Entity)  {
-                    const history = globals.selection.history.enabled;
-                    globals.selection.history.enabled = false;
-                    globals.selection.clear();
-                    globals.selection.history.enabled = history;
-                }
+            this._assets.clear();
+
+            let i = assets.length;
+            while (i--) {
+                this.remove(assets[i]);
             }
-
-            entities.forEach(entity => {
-                entity._observer.destroy();
-                this.emit('remove', entity);
-            });
 
             this.emit('clear');
         }
 
         /**
-         * Creates new entity and adds it to the hierarchy
+         * Gets assets that satisfy function
          *
-         * @param {object} [data] - Optional initial data for the entity
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-         * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
-         * @returns {Entity} The new entity
+         * @param {Function} fn - The function (takes an asset as an argument and returns boolean).
+         * @returns {Asset[]} The assets
          */
-        create(data, options = {}) {
-            data = data || {};
-
-            if (options.history === undefined) {
-                options.history = true;
-            }
-
-            if (!data.parent) {
-                data.parent = this._root ? this._root.get('resource_id') : null;
-            }
-
-            if (data.parent instanceof Entity) {
-                data.parent = data.parent.get('resource_id');
-            }
-
-
-            if (data.parent && !this.get(data.parent)) {
-                console.error(`Cannot create entity because parent ${data.parent} was not found`);
-                return null;
-            }
-
-            let entity = new Entity(this, data);
-
-            this.add(entity);
-
-            // sharedb
-            if (globals.realtime && globals.realtime.scenes.current) {
-                globals.realtime.scenes.current.addEntity(entity);
-            }
-
-            const parent = this.get(data.parent);
-            if (parent) {
-                parent.addChild(entity);
-            }
-
-            // use same resource id in redo's
-            data.resource_id = entity.get('resource_id');
-
-            // add children
-            if (data.children) {
-                data.children.forEach(childData => {
-                    childData.parent = entity;
-                    const child = this.create(childData, {
-                        history: false,
-                        select: false
-                    });
-
-                    // use same resource_id in subsequent redo's
-                    childData.resource_id = child.get('resource_id');
-                });
-            }
-
-            let prevSelection;
-
-            // remember previous selection
-            if (options.history && globals.history) {
-                if (options.select && globals.selection) {
-                    prevSelection = globals.selection.items;
-                }
-            }
-
-            // select new entity
-            if (options.select && globals.selection) {
-                const history = globals.selection.history.enabled;
-                globals.selection.history.enabled = false;
-                globals.selection.items = [entity];
-                globals.selection.history.enabled = history;
-            }
-
-            if (options.history && globals.history) {
-                globals.history.add({
-                    name: 'new entity ' + entity.get('resource_id'),
-                    // undo new entity
-                    undo: () => {
-                        entity = entity.latest();
-                        if (!entity) return;
-
-                        this.delete([entity], {
-                            history: false
-                        });
-
-                        if (prevSelection) {
-                            const history = globals.selection.history.enabled;
-                            globals.selection.history.enabled = false;
-                            globals.selection.items = prevSelection;
-                            globals.selection.history.enabled = history;
-                        }
-                    },
-                    // redo new entity
-                    redo: () => {
-                        entity = this.create(data, {
-                            history: false,
-                            select: options.select
-                        });
-                    }
-                });
-            }
-
-            // TODO: post creation callaback
-
-            return entity;
+        filter(fn) {
+            return this._assets.data
+            .filter(observer => fn(observer.apiAsset))
+            .map(observer => observer.apiAsset);
         }
 
         /**
-         * Delete specified entities
+         * Finds first asset that satisfies function
          *
-         * @param {Entity[]|Entity} entities - The entities
-         * @param {object} [options] - Options
-         * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+         * @param {Function} fn - A function that takes an asset as an argument and returns boolean.
+         * @returns {Asset} The asset
          */
-        delete(entities, options = {}) {
-            if (options.history === undefined) {
-                options.history = true;
-            }
-
-            if (!Array.isArray(entities)) {
-                entities = [entities];
-            }
-
-            // first only gather top level entities
-            const ids = new Set();
-            entities.forEach(entity => ids.add(entity.get('resource_id')));
-
-            entities = entities.filter(entity => {
-                entity = entity.latest();
-                if (!entity) return false;
-
-                let parent = entity.parent;
-                let parentInSelection = false;
-                while (parent) {
-                    if (ids.has(parent.get('resource_id'))) {
-                        parentInSelection = true;
-                        break;
-                    }
-                    parent = parent.parent;
-                }
-
-                return !parentInSelection;
-            });
-
-            // TODO: if we have a lot of entities delete in backend
-
-            // remember previous entities
-            let previous;
-            if (options.history && globals.history) {
-                previous = {};
-                entities.forEach(entity => {
-                    entity.depthFirst(e => {
-                        previous[e.get('resource_id')] = e.json();
-                    });
-                });
-            }
-
-            // find entity references
-            const entityReferences = this._findReferences(this.root);
-
-            entities.forEach(entity => {
-                this.remove(entity, entityReferences);
-            });
-
-            if (previous) {
-                globals.history.add({
-                    name: 'delete entities',
-                    undo: () => {
-                        function recreateEntityData(data) {
-                            data = Object.assign({}, data);
-                            data.children = data.children.map(id => recreateEntityData(previous[id]));
-                            return data;
-                        }
-
-                        entities = entities.map(entity => {
-                            const data = recreateEntityData(previous[entity.get('resource_id')]);
-                            entity = this.create(data, {
-                                history: false
-                            });
-
-                            return entity;
-                        });
-
-                        entities.forEach(entity => {
-                            this._updateReferences(entityReferences, entity.get('resource_id'), entity.get('resource_id'));
-
-                        });
-
-                        if (globals.selection) {
-                            const history = globals.selection.history.enabled;
-                            globals.selection.history.enabled = false;
-                            globals.selection.items = entities;
-                            globals.selection.history.enabled = history;
-                        }
-
-                        previous = null;
-                    },
-                    redo: () => {
-                        previous = {};
-                        entities = entities.map(e => e.latest()).filter(e => !!e);
-
-                        entities.forEach(entity => {
-                            entity.depthFirst(e => {
-                                previous[e.get('resource_id')] = e.json();
-                            });
-                        });
-
-                        this.delete(entities, {
-                            history: false
-                        });
-                    }
-                });
-            }
+        findOne(fn) {
+            const result = this._assets.data.find(observer => fn(observer.apiAsset));
+            return result ? result.apiAsset : null;
         }
 
         /**
-         * Reparents entities under new parent.
-         *
-         * @param {ReparentArguments[]} data - The reparenting data
-         * @param {object} [options] - Options
-         * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
-         * @param {boolean} [options.history] - Whether to record history. Defaults to true
+         * Loads all assets in the current project / branch
+         * and subscribes to changes
          */
-        reparent(data, options = {}) {
-            if (options.history === undefined) {
-                options.history = true;
+        async loadAllAndSubscribe() {
+            this.clear();
+
+            this.emit('load:progress', 0.1);
+
+            const response = await fetch(`/api/projects/${globals.projectId}/assets?branchId=${globals.branchId}&view=designer`);
+            if (!response.ok) {
+                console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
+                return;
             }
 
-            const records = data.map(entry => {
-                const parentOld = entry.entity.parent;
-                const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
-                const record = {
-                    entity: entry.entity,
-                    resourceId: entry.entity.get('resource_id'),
-                    parentOld: parentOld,
-                    indOld: indexOld,
-                    parent: entry.parent,
-                    indNew: entry.index !== undefined && entry.index !== null ? entry.index : entry.parent.get('children').length
-                };
+            const assets = await response.json();
+            this.emit('load:progress', 0.5);
 
-                if (options.preserveTransform) {
-                    record.position = record.entity.viewportEntity.getPosition().clone();
-                    record.rotation = record.entity.viewportEntity.getRotation().clone();
+            const total = assets.length;
+            if (!total) {
+                this.emit('load:progress', 1);
+                this.emit('load:all');
+                return;
+            }
+
+            const batchSize = 256;
+            let loaded = 0;
+            let startBatch = 0;
+
+            const onProgress = () => {
+                loaded++;
+                this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
+                if (loaded === total) {
+                    this.emit('load:progress', 1);
+                    this.emit('load:all');
                 }
-
-                return record;
-            });
-
-            const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
-                const resourceId = entity.get('resource_id');
-                if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
-                    return false;
-
-                // check if not reparenting to own child
-                let deny = false;
-                let checkParent = parent.parent;
-                while (checkParent) {
-                    if (checkParent === entity) {
-                        deny = true;
-                        checkParent = null;
-                        break;
-                    }
-
-                    checkParent = checkParent.parent;
-                }
-
-                if (deny)
-                    return false;
-
-                parentOld.history.enabled = false;
-                parentOld.removeValue('children', resourceId);
-                parentOld.history.enabled = true;
-
-                parent.history.enabled = false;
-                let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
-                parent.insert('children', resourceId, indNew + off);
-                parent.history.enabled = true;
-
-                entity.history.enabled = false;
-                entity.set('parent', parent.get('resource_id'));
-
-                if (options.preserveTransform && position && entity.viewportEntity) {
-                    entity.viewportEntity.setPosition(position);
-                    entity.viewportEntity.setRotation(rotation);
-
-                    var localPosition = entity.viewportEntity.getLocalPosition();
-                    var localRotation = entity.viewportEntity.getLocalEulerAngles();
-                    entity.set('position', [localPosition.x, localPosition.y, localPosition.z]);
-                    entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
-                }
-
-                entity.history.enabled = true;
-
-                return true;
             };
 
-            const redo = () => {
-                let dirty = false;
-                records.forEach((record, i) => {
-                    const entity = record.entity.latest();
-                    if (!entity) return;
-
-                    const parent = record.parent.latest();
-                    const parentOld = entity.parent;
-                    if (!parentOld || !parent) return;
-
-                    if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
-                        dirty = true;
-                    }
-                });
-
-                return dirty;
-            };
-
-            let dirty = redo();
-            if (dirty && options.history && globals.history) {
-                const undo = () => {
-                    records.forEach((record, i) => {
-                        const entity = record.entity.latest();
-                        if (! entity) return;
-
-                        const parent = entity.parent;
-                        if (!parent) return;
-
-                        const parentOld = record.parentOld.latest();
-                        if (!parentOld) return;
-
-                        doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
+            while (startBatch < total) {
+                globals.realtime.connection.startBulkSubscribe();
+                for (let i = startBatch; i < startBatch + batchSize && i < total; i++) {
+                    const asset = new Asset(this, assets[i]);
+                    asset.loadAndSubscribe().then(() => {
+                        onProgress();
+                        this.add(asset);
+                    }).catch(err => {
+                        onProgress();
                     });
-                };
+                }
+                globals.realtime.connection.endBulkSubscribe();
 
-                globals.history.add({
-                    name: 'reparent entities',
-                    undo: undo,
-                    redo: redo
-                });
+                startBatch += batchSize;
             }
         }
 
         /**
-         * @type {Entity}
-         * Gets the root Entity
+         * Gets the first script asset that contains the specified script
+         *
+         * @param {string} script - The script name
+         * @returns {Asset} The script asset
          */
-        get root() {
-            return this._root;
+        getAssetForScript(script) {
+            return this.findOne(asset => {
+                return asset.get('type') === 'script' &&
+                       asset.has('data.scripts.' + script);
+            });
         }
     }
 
@@ -4090,6 +5257,8 @@
     class History extends __webpack_exports__Events {
         /**
          * Creates new instance of the API
+         *
+         * @category Internal
          */
         constructor() {
             super();
@@ -4105,6 +5274,15 @@
          * Adds history action
          *
          * @param {HistoryAction} action - The action
+         * @example
+         * ```javascript
+         * const prevSelection = editor.selection.items;
+         * editor.history.add({
+         *     name: 'clear selection',
+         *     redo: () => { editor.selection.clear({ history: false }); },
+         *     undo: () => { editor.selection.set(prevSelection, { history: false }); },
+         * });
+         * ```
          */
         add(action) {
             this._history.add(action);
@@ -4112,6 +5290,11 @@
 
         /**
          * Undo last action
+         *
+         * @example
+         * ```javascript
+         * editor.history.undo();
+         * ```
          */
         undo() {
             this._history.undo();
@@ -4119,6 +5302,11 @@
 
         /**
          * Redo last action
+         *
+         * @example
+         * ```javascript
+         * editor.history.redo();
+         * ```
          */
         redo() {
             this._history.redo();
@@ -4126,6 +5314,11 @@
 
         /**
          * Clear history
+         *
+         * @example
+         * ```javascript
+         * editor.history.clear();
+         * ```
          */
         clear() {
             this._history.clear();
@@ -4180,6 +5373,12 @@
      * Enables undo / redo of selection changes
      */
     class SelectionHistory {
+        /**
+         * Constructor
+         *
+         * @param {Selection} selection - The selection API
+         * @category Internal
+         */
         constructor(selection) {
             this._selection = selection;
             this._enabled = true;
@@ -4223,17 +5422,15 @@
                 name: name,
                 undo: () => {
                     // set previous selection making sure every item still exists
-                    const enabled = this._enabled;
-                    this._enabled = false;
-                    this._selection.items = previousSelection.map(item => item.latest()).filter(item => !!item);
-                    this._enabled = enabled;
+                    this._selection.set(previousSelection.map(item => item.latest()).filter(item => !!item), {
+                        history: false
+                    });
                 },
                 redo: () => {
                     // set new selection making sure every item still exists
-                    const enabled = this._enabled;
-                    this._enabled = false;
-                    this._selection.items = newSelection.map(item => item.latest()).filter(item => !!item);
-                    this._enabled = enabled;
+                    this._selection.set(newSelection.map(item => item.latest()).filter(item => !!item), {
+                        history: false
+                    });
                 }
             });
         }
@@ -4244,7 +5441,9 @@
      */
     class Selection extends __webpack_exports__Events {
         /**
-         * Creates new instance of API
+         * Constructor
+         *
+         * @category Internal
          */
         constructor() {
             super();
@@ -4272,11 +5471,26 @@
          * Add item to selection
          *
          * @param {any} item - The item
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * // add root entity to selection
+         * editor.selection.add(editor.entities.root);
+         * ```
          */
-        add(item) {
+        add(item, options = {}) {
             if (!this.enabled) return;
             if (this.has(item)) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('select', () => {
                 if (this._items[0] && this._items[0].constructor !== item.constructor) {
                     this.clear();
@@ -4286,33 +5500,66 @@
                 this.emit('add', item);
                 this._deferChangeEvt();
             });
+            this._history.enabled = history;
         }
 
         /**
          * Remove item from selection
          *
          * @param {any} item - The item
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * * @example
+         * ```javascript
+         * // remove root entity from selection
+         * editor.selection.remove(editor.entities.root);
+         * ```
          */
-        remove(item) {
+        remove(item, options = {}) {
             if (!this.enabled) return;
+
+            if (options.history === undefined) {
+                options.history = true;
+            }
 
             const index = this._items.indexOf(item);
             if (index !== -1) {
+
+                let history = this._history.enabled;
+                if (!options.history) {
+                    this._history.enabled = false;
+                }
                 this._history.wrapAction('deselect', () => {
                     this._items.splice(index, 1);
                     this.emit('remove', item);
                     this._deferChangeEvt();
-                });        }
+                });            this._history.enabled = history;
+            }
         }
 
         /**
          * Toggle item selection
          *
          * @param {any} item
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * // toggle root entity selection
+         * editor.selection.toogle(editor.entities.root);
+         * ```
          */
-        toggle(item) {
+        toggle(item, options = {}) {
             if (!this.enabled) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('toggle selection', () => {
                 if (this._items[0] && this._items[0].constructor !== item.constructor) {
                     this.clear();
@@ -4324,6 +5571,8 @@
                     this.add(item);
                 }
             });
+
+            this._history.enabled = history;
         }
 
         /**
@@ -4331,6 +5580,10 @@
          *
          * @param {any} item - The item
          * @returns {boolean} If item is in selection
+         * @example
+         * ```javascript
+         * const isRootSelected = editor.selection.has(editor.entities.root);
+         * ```
          */
         has(item) {
             return this._items.includes(item);
@@ -4338,13 +5591,28 @@
 
         /**
          * Clears selection
+         *
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+         * @example
+         * ```javascript
+         * editor.selection.clear();
+         * ```
          */
-        clear() {
+        clear(options = {}) {
             if (!this.enabled) return;
 
             const length = this._items.length;
             if (!length) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('deselect', () => {
                 let i = length;
                 const changed = (i > 0);
@@ -4358,30 +5626,53 @@
                     this._deferChangeEvt();
                 }
             });
+            this._history.enabled = history;
         }
 
         /**
-         * Gets / sets the selected items
+         * Sets current selection
          *
+         * @param {any[]} items - The items to select
+         * @param {object} options - Options
+         * @param {boolean} options.history - Whether to record a history action. Defaults to true.
          * @type {any[]}
+         * @example
+         * ```javascript
+         * editor.selection.items.add(editor.entities.root);
+         * const selectedEntities = editor.selection.items;
+         * ```
          */
-        get items() {
-            return this._items.slice();
-        }
-
-        set items(value) {
+        set(items, options = {}) {
             if (!this.enabled) return;
 
+            if (options.history === undefined) {
+                options.history = true;
+            }
+
+            let history = this._history.enabled;
+            if (!options.history) {
+                this._history.enabled = false;
+            }
             this._history.wrapAction('modify selection', () => {
                 // remove items no longer selected
-                const removed = this._items.filter(item => !value.includes(item));
+                const removed = this._items.filter(item => !items.includes(item));
                 removed.forEach(item => {
                     this.remove(item);
                 });
 
                 // add new items
-                value.forEach(item => this.add(item));
+                items.forEach(item => this.add(item));
             });
+            this._history.enabled = history;
+        }
+
+        /**
+         * Gets the selected items. This creates a new array every time it is called.
+         *
+         * @type {any[]}
+         */
+        get items() {
+            return this._items.slice();
         }
 
         /**
@@ -4425,6 +5716,7 @@
         /**
          * Creates new instance of API
          *
+         * @category Internal
          * @param {Schema} schema - The schema API
          */
         constructor(schema) {
@@ -4449,6 +5741,10 @@
          *
          * @param {string} component - The component name
          * @returns {object} The default data
+         * @example
+         * ```javascript
+         * const modelData = editor.schema.components.getDefaultData('model');
+         * ```
          */
         getDefaultData(component) {
             const result = {};
@@ -4471,6 +5767,10 @@
          * @param {string} componentName - The component name
          * @param {string} type - The desired type
          * @returns {string[]} A list of fields
+         * @example
+         * ```javascript
+         * const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
+         * ```
          */
         getFieldsOfType(componentName, type) {
             const result = [];
@@ -4514,6 +5814,8 @@
 
     /**
      * Handles connecting and communicating with the Realtime server.
+     *
+     * @category Internal
      */
     class RealtimeConnection extends __webpack_exports__Events {
         /** @typedef {import("../realtime").Realtime} Realtime */
@@ -4522,7 +5824,6 @@
          * Constructor
          *
          * @param {Realtime} realtime - The realtime API
-         *
          */
         constructor(realtime) {
             super();
@@ -4789,6 +6090,8 @@
 
     /**
      * Represents a scene in sharedb
+     *
+     * @category Internal
      */
     class RealtimeScene extends __webpack_exports__Events {
         /** @typedef {import("../entity").Entity} Entity */
@@ -4935,7 +6238,7 @@
          * @type {object}
          */
         get data() {
-            return this._loaded?._document?.data || null;
+            return (this._loaded && this._document) ? this._document.data : null;
         }
 
         /**
@@ -4959,6 +6262,8 @@
 
     /**
      * Provides methods to load scenes from sharedb
+     *
+     * @category Internal
      */
     class RealtimeScenes extends __webpack_exports__Events {
         /** @typedef {import("../realtime").Realtime} Realtime */
@@ -5029,13 +6334,238 @@
     }
 
     /**
+     * Represents an asset in sharedb
+     */
+    class RealtimeAsset extends __webpack_exports__Events {
+
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("./connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {number} uniqueId - The unique asset id
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         *
+         */
+        constructor(uniqueId, realtime, connection) {
+            super();
+            this._uniqueId = uniqueId;
+            this._realtime = realtime;
+            this._connection = connection;
+            this._document = null;
+            this._loaded = false;
+
+            this._evtConnection = null;
+        }
+
+        /**
+         * Loads asset from sharedb and subscribes to changes.
+         */
+        load() {
+            if (this._document) return;
+
+            this._document = this._connection.getDocument('assets', this._uniqueId);
+            this._document.on('error', this._onError.bind(this));
+            this._document.on('load', this._onLoad.bind(this));
+
+            this._evtConnection = this._realtime.on('disconnect', this.unload.bind(this));
+
+            this._document.subscribe();
+        }
+
+        /**
+         * Unloads scene from sharedb and unsubscribes from changes.
+         */
+        unload() {
+            if (!this._document) return;
+
+            this._document.unsubscribe();
+            this._document.destroy();
+            this._document = null;
+            this._loaded = false;
+
+            this._connection.send('close:scene:' + this._uniqueId);
+
+            this._evtConnection.unbind();
+            this._evtConnection = null;
+
+            this.emit('unload');
+        }
+
+        /**
+         * Submits sharedb operation
+         *
+         * @param {object} op - The operation
+         */
+        submitOp(op) {
+            if (!this._loaded) return;
+
+            try {
+                this._document.submitOp([op]);
+            } catch (err) {
+                console.error(err);
+                this._realtime.emit('error:asset', err, this._uniqueId);
+            }
+        }
+
+        /**
+         * Calls the callback when there are no changes pending to be
+         * sent to the server
+         *
+         * @param {Function} callback - The callback
+         */
+        whenNothingPending(callback) {
+            if (this._document) {
+                this._document.whenNothingPending(callback);
+            }
+        }
+
+        _onError(err) {
+            if (this._connection.connected) {
+                console.log(err);
+            } else {
+                this._realtime.emit('error:asset', err, this._uniqueId);
+            }
+        }
+
+        _onLoad() {
+            const assetData = this._document.data;
+            if (!assetData) {
+                this._onError('Could not load asset: ' + this._uniqueId);
+                this.unload();
+                this.emit('error:load');
+                return;
+            }
+
+            // notify of operations
+            this._document.on('op', this._onOp.bind(this));
+            this._loaded = true;
+            this.emit('load');
+        }
+
+        _onOp(ops, local) {
+            if (local) return;
+
+            for (let i = 0; i < ops.length; i++) {
+                if (ops[i].p[0]) {
+                    this._realtime.emit('asset:op', ops[i], this._uniqueId);
+                }
+            }
+        }
+
+
+        /**
+         * Whether the asset is loaded
+         *
+         * @type {boolean}
+         */
+        get loaded() {
+            return this._loaded;
+        }
+
+        /**
+         * The asset data
+         *
+         * @type {object}
+         */
+        get data() {
+            return (this._loaded && this._document) ? this._document.data : null;
+        }
+
+        /**
+         * The asset id - used in combination with branch id
+         *
+         * @type {number}
+         */
+        get id() {
+            return this.data?.item_id;
+        }
+
+        /**
+         * The asset's unique id
+         *
+         * @type {number}
+         */
+        get uniqueId() {
+            return this._uniqueId;
+        }
+    }
+
+    /**
+     * Provides methods to load assets from sharedb
+     */
+    class RealtimeAssets extends __webpack_exports__Events {
+        /** @typedef {import("../realtime").Realtime} Realtime */
+        /** @typedef {import("../realtime/connection").RealtimeConnection} RealtimeConnection */
+
+        /**
+         * Constructor
+         *
+         * @param {Realtime} realtime - The realtime API
+         * @param {RealtimeConnection} connection - The realtime connection
+         */
+        constructor(realtime, connection) {
+            super();
+            this._realtime = realtime;
+            this._connection = connection;
+            this._assets = {};
+        }
+
+        /**
+         * Loads an asset
+         *
+         * @param {number} id - The asset's unique id
+         * @returns {RealtimeAsset} The asset
+         */
+        load(id) {
+            let asset = this._assets[id];
+            if (!asset) {
+                asset = new RealtimeAsset(id, this._realtime, this._connection);
+            }
+
+            if (!asset.loaded) {
+                asset.load();
+            }
+
+            return asset;
+        }
+
+        /**
+         * Gets an already loaded asset
+         *
+         * @param {number} id - The asset's unique id
+         * @returns {RealtimeAsset} The asset
+         */
+        get(id) {
+            return this._assets[id] || null;
+        }
+
+        /**
+         * Unloads an asset
+         *
+         * @param {number} id - The asset's unique id
+         */
+        unload(id) {
+            if (this._assets[id]) {
+                this._assets[id].unload();
+                delete this._scenes[id];
+            }
+        }
+    }
+
+    /**
      * Provides methods to communicate and load / save data to the realtime server
+     *
+     * @category Internal
      */
     class Realtime extends __webpack_exports__Events {
         constructor() {
             super();
             this._connection = new RealtimeConnection(this);
             this._scenes = new RealtimeScenes(this, this.connection);
+            this._assets = new RealtimeAssets(this, this.connection);
         }
 
         /**
@@ -5055,13 +6585,27 @@
         get scenes() {
             return this._scenes;
         }
+
+        /**
+         * Gets the realtime assets API
+         *
+         * @type {RealtimeAssets}
+         */
+        get assets() {
+            return this._assets;
+        }
     }
 
+    exports.Asset = Asset;
+    exports.Assets = Assets;
     exports.ComponentSchema = ComponentSchema;
     exports.Entities = Entities;
     exports.Entity = Entity;
+    exports.Events = __webpack_exports__Events;
     exports.History = History;
     exports.Realtime = Realtime;
+    exports.RealtimeAsset = RealtimeAsset;
+    exports.RealtimeAssets = RealtimeAssets;
     exports.RealtimeConnection = RealtimeConnection;
     exports.RealtimeScene = RealtimeScene;
     exports.RealtimeScenes = RealtimeScenes;

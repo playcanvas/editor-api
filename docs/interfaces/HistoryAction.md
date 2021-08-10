@@ -20,7 +20,7 @@ The action name
 
 #### Defined in
 
-[src/history.js:7](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L7)
+[src/history.js:7](https://github.com/playcanvas/editor-api/blob/28bcf74/src/history.js#L7)
 
 ___
 
@@ -32,7 +32,7 @@ The undo function
 
 #### Defined in
 
-[src/history.js:8](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L8)
+[src/history.js:8](https://github.com/playcanvas/editor-api/blob/28bcf74/src/history.js#L8)
 
 ___
 
@@ -44,4 +44,4 @@ The redo function
 
 #### Defined in
 
-[src/history.js:9](https://github.com/playcanvas/editor-api/blob/867701a/src/history.js#L9)
+[src/history.js:9](https://github.com/playcanvas/editor-api/blob/28bcf74/src/history.js#L9)
