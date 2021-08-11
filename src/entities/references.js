@@ -2,15 +2,17 @@ import { globals as api } from '../globals';
 
 const entityFieldsCache = {};
 
+
 /**
  * Return a map of all entity reference properties in the graph. This will
  * include references of the entity and also references of its children
  *
  * @private
+ * @typedef {import("../entity").Entity} Entity
  * @param {Entity} entity - The entity
  * @returns {object} The entity references
  */
-function findReferences(entity) {
+function findEntityReferencesInComponents(entity) {
     const result = {};
 
     function addReference(entity, path, value) {
@@ -102,18 +104,16 @@ function findReferences(entity) {
  * Updates entity references to the old entity to point to the new entity
  *
  * @private
- * @typedef {import("../entities").Entities} Entities
- * @param {Entities} entitiesApi - The entities API
  * @param {object} entityReferences - A map of entity references
  * @param {string} oldValue - The entity id that we want to replace
  * @param {string} newValue - The new entity id that we want our references to point to
  */
-function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
+function updateReferences(entityReferences, oldValue, newValue) {
     const referencesToEntity = entityReferences[oldValue];
     if (!referencesToEntity) return;
 
     referencesToEntity.forEach(reference => {
-        const entity = entitiesApi.get(reference.entityId);
+        const entity = api.entities.get(reference.entityId);
         if (entity) {
             const history = entity.history.enabled;
             entity.history.enabled = false;
@@ -125,6 +125,6 @@ function updateReferences(entitiesApi, entityReferences, oldValue, newValue) {
 
 
 export {
-    findReferences,
+    findEntityReferencesInComponents,
     updateReferences
-}
+};

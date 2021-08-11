@@ -1,0 +1,51 @@
+{
+    "extends": [
+        "@playcanvas/eslint-config"
+    ],
+    "env": {
+        "node": true,
+        "browser": true,
+        "es6": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "globals": {
+        "Observer": false,
+        "ObserverHistory": false,
+        "ObserverList": false,
+        "ObserverSync": false,
+        "Events": false
+    },
+    "rules": {
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "indent": [
+            "error",
+            4,
+            {
+                "FunctionExpression": {
+                    "body": 1,
+                    "parameters": 2
+                },
+                "MemberExpression": 0,
+                "SwitchCase": 1
+            }
+        ],
+        "prefer-const": "error",
+        "jsdoc/check-tag-names": ["error", {
+            "definedTags": ["category"]
+        }],
+        "jsdoc/check-examples": "off"
+    }
+}

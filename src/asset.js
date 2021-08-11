@@ -10,12 +10,10 @@ class Asset extends Events {
     /**
      * Constructor
      *
-     * @param {Assets} assetsApi - The asset api
      * @param {object} data - The asset data
      */
-    constructor(assetsApi, data = {}) {
+    constructor(data = {}) {
         super();
-        this._assets = assetsApi;
 
         // allow duplicate values in data.frameKeys of sprite asset
         let options = null;
@@ -39,7 +37,7 @@ class Asset extends Events {
         this._observer.addEmitter(this);
 
         this._observer.latestFn = () => {
-            const latest = this._assets.get(this.get('id'));
+            const latest = api.assets.get(this.get('id'));
             return latest && latest._observer;
         };
 
@@ -182,7 +180,7 @@ class Asset extends Events {
      * @returns {Asset} The asset
      */
     latest() {
-        return this._assets.get(this._observer.get('id'));
+        return api.assets.get(this._observer.get('id'));
     }
 
     /**
@@ -193,7 +191,7 @@ class Asset extends Events {
 
         const uniqueId = this.get('uniqueId');
         const a = api.realtime.assets.load(uniqueId);
-        return new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             a.once('load', () => {
                 const data = a.data;
 
@@ -222,10 +220,14 @@ class Asset extends Events {
                 resolve();
             });
 
-            a.once('error:load', () => {
-                reject();
+            a.once('error:load', (err) => {
+                reject(err);
             });
         });
+    }
+
+    async parseScript() {
+        // TODD
     }
 
     /**

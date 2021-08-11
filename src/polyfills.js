@@ -1,7 +1,7 @@
 if (!Array.prototype.equals) {
     Object.defineProperty(Array.prototype, 'equals', {
         enumerable: false,
-        value: function(array) {
+        value: function (array) {
             if (! array)
                 return false;
 

@@ -13,6 +13,7 @@
 - [globals](classes/globals.md)
 - [History](classes/History.md)
 - [Schema](classes/Schema.md)
+- [AssetsSchema](classes/AssetsSchema.md)
 - [ComponentSchema](classes/ComponentSchema.md)
 - [SelectionHistory](classes/SelectionHistory.md)
 - [Selection](classes/Selection.md)
