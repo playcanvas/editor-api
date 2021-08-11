@@ -15,5 +15,17 @@ window.schema = {
                 }
             }
         }
+    },
+    animStateGraphData: {
+        testData: {
+            type: 'number',
+            $default: 0
+        }
+    },
+    materialData: {
+        diffuse: {
+            type: ["number"],
+            $default: [0, 0, 0]
+        }
     }
-}
+};

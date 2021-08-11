@@ -377,14 +377,20 @@ class Assets extends Events {
      * @param {string} name - The asset name
      * @param {Asset[]} textures - The textures for each cubemap face in this order:
      * right, left, up, down, front, back
+     * @param {object} settings - Cubemap settings
+     * @param {number} settings.minFilter - Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR.
+     * @param {number} settings.magFilter - Cubemap magFilter value. Defaults to pc.FILTER_LINEAR.
+     * @param {number} settings.anisotropy - Cubemap anisotropy value. Defaults to 1.
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
-    createCubemap(name, textures = [], folder = null) {
+    createCubemap(name, textures = [], settings = null, folder = null) {
         textures = textures.slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
         }
+
+        settings = settings || {};
 
         return this._create({
             name: name || 'New Cubemap',
@@ -393,9 +399,9 @@ class Assets extends Events {
             data: {
                 name: name || 'New Cubemap',
                 textures: textures,
-                minFilter: 5, // linear mipmap linear
-                magFilter: 1, // linear
-                anisotropy: 1
+                minFilter: settings.minFilter !== undefined ? settings.minFilter : 5, // linear mipmap linear
+                magFilter: settings.magFilter !== undefined ? settings.magFilter : 1, // linear
+                anisotropy: settings.anisotropy !== undefined ? settings.anisotropy : 1
             }
         });
     }
@@ -460,7 +466,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createI18n(name, localizationData = null, folder = null) {
-        return this.createJson(name, folder, localizationData || {
+        return this.createJson(name, localizationData || {
             "header": {
                 "version": 1
             },
@@ -473,7 +479,7 @@ class Assets extends Events {
                     "key plural": ["One key translation", "Translation for {number} keys"]
                 }
             }]
-        });
+        }, folder);
     }
 
     /**
@@ -525,6 +531,10 @@ class Assets extends Events {
      *
      * @param {string} name - The asset name
      * @param {object} data - The sprite data
+     * @param {number} data.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
+     * @param {number[]} data.frameKeys - The sprite's frame keys
+     * @param {Asset} data.textureAtlas - The sprite's texture atlas asset
+     * @param {number} data.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
