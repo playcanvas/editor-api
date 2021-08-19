@@ -21,6 +21,14 @@ function createTemplate(rootEntity) {
             delete json.template_ent_ids;
         }
 
+        if (json.template_ent_ids) {
+            for (const key in json.template_ent_ids) {
+                if (!oldToNewIds[key] && !api.entities.get(key)) {
+                    oldToNewIds[key] = pc.guid.create();
+                }
+            }
+        }
+
         const newEntity =  new Entity(json);
         newEntity.set('children', entity.get('children'));
         entities[newId] = newEntity;
@@ -69,7 +77,6 @@ function createTemplate(rootEntity) {
     for (const id in entities) {
         entities[id] = entities[id].json();
     }
-
 
     return {
         entities,

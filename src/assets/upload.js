@@ -75,28 +75,12 @@ function appendCreateFields(form, data) {
 }
 
 /**
- * Arguments to create a new Asset
- *
- * @typedef {object} CreateAssetArguments
- * @property {string} name - The asset name
- * @property {number} folderId  - The folder id that we want the asset to be created in
- * @property {File} file - The file we are uploading
- * @property {string} type - The asset type
- * @property {string[]} tags - The asset tags
- * @property {number} sourceAssetId - The asset's source asset id
- * @property {object} data - The asset data
- * @property {object} meta - The asset meta data
- * @property {boolean} preload - Whether to mark this asset as preloaded
- */
-
-
-/**
  * Uploads an asset file in order to create a new asset
  * or update an existing asset.
  *
- * @param {CreateAssetArguments|UpdateAssetArguments} data - The data
- * @param {ImportSettings} settings - Import settings
- * @returns
+ * @param {object} data - The data
+ * @param {object} settings - Import settings
+ * @returns {object} The JSON response from the server
  */
 async function uploadFile(data, settings = {}) {
     let method;

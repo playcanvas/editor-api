@@ -2,10 +2,6 @@ describe('Assets API tests', function () {
     let assets;
     let sandbox;
 
-    function validateCreateAsset(formData)  {
-
-    }
-
     beforeEach(function () {
         api.globals.schema = null;
         api.globals.assets = new api.Assets();
@@ -484,5 +480,170 @@ describe('Assets API tests', function () {
         expect(data.get('name')).to.equal('name');
         expect(data.get('parent')).to.equal('10');
         expect(data.get('preload')).to.equal('true');
+    });
+
+    it('creates template asset', function () {
+        sandbox.stub(window, 'fetch');
+
+        api.globals.schema = new api.Schema(schema);
+        api.globals.entities = new api.Entities();
+
+        api.globals.branchId = 'branch';
+        api.globals.projectId = 1;
+
+        const root = api.globals.entities.create({ name: 'root' });
+        const child = api.globals.entities.create({ name: 'child', parent: root });
+
+        const folder = new api.Asset({ id: 10 });
+
+        const guids = [
+            'root_guid',
+            'child_guid'
+        ];
+        let guidIndex = 0;
+        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+
+        api.globals.assets.createTemplate(null, root, folder);
+
+        const fetchArgs = window.fetch.getCall(0).args;
+        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
+        const data = fetchArgs[1].body;
+        expect(data.get('branchId')).to.equal('branch');
+        expect(data.get('projectId')).to.equal('1');
+        expect(data.get('type')).to.equal('template');
+        expect(data.get('name')).to.equal('root');
+        expect(data.get('parent')).to.equal('10');
+        expect(data.get('preload')).to.equal('true');
+
+        const expected = { entities: {} };
+
+        expected.entities[guids[0]] = root.json();
+        expected.entities[guids[0]].resource_id = guids[0];
+        expected.entities[guids[0]].children = [guids[1]];
+
+        expected.entities[guids[1]] = child.json();
+        expected.entities[guids[1]].resource_id = guids[1];
+        expected.entities[guids[1]].parent = guids[0];
+
+        expect(data.get('data')).to.equal(JSON.stringify(expected));
+    });
+
+    it('template asset remaps entity references', function () {
+        sandbox.stub(window, 'fetch');
+
+        api.globals.schema = new api.Schema(schema);
+        api.globals.entities = new api.Entities();
+
+        const root = api.globals.entities.create({ name: 'root' });
+        const child = api.globals.entities.create({ name: 'child', parent: root });
+
+        root.addComponent('testcomponent', {
+            entityRef: child.get('resource_id')
+        });
+
+        const guids = [
+            'root_guid',
+            'child_guid'
+        ];
+        let guidIndex = 0;
+        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+
+        api.globals.assets.createTemplate(null, root);
+
+        const fetchArgs = window.fetch.getCall(0).args;
+        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
+        const data = fetchArgs[1].body;
+
+        const expected = { entities: {} };
+
+        expected.entities[guids[0]] = root.json();
+        expected.entities[guids[0]].resource_id = guids[0];
+        expected.entities[guids[0]].children = [guids[1]];
+        expected.entities[guids[0]].components.testcomponent.entityRef = guids[1];
+
+        expected.entities[guids[1]] = child.json();
+        expected.entities[guids[1]].resource_id = guids[1];
+        expected.entities[guids[1]].parent = guids[0];
+
+        expect(data.get('data')).to.equal(JSON.stringify(expected));
+    });
+
+    it('template asset remaps template_ent_ids', function () {
+        sandbox.stub(window, 'fetch');
+
+        api.globals.schema = new api.Schema(schema);
+        api.globals.entities = new api.Entities();
+
+        const templateGuids = [
+            pc.guid.create(),
+            pc.guid.create(),
+            pc.guid.create(),
+            pc.guid.create()
+        ];
+
+        const root = api.globals.entities.create({ name: 'root' });
+        const child = api.globals.entities.create({ name: 'child', parent: root });
+        const child2 = api.globals.entities.create({ name: 'child2', parent: child });
+        const missing = pc.guid.create();
+
+        root.set('template_ent_ids', {
+            [root.get('resource_id')]: templateGuids[0],
+            [child.get('resource_id')]: templateGuids[1],
+            [child2.get('resource_id')]: templateGuids[2],
+            [missing]: templateGuids[3]
+        });
+
+        child.set('template_ent_ids', {
+            [child.get('resource_id')]: templateGuids[1],
+            [child2.get('resource_id')]: templateGuids[2],
+            [missing]: templateGuids[3]
+        });
+
+        child2.set('template_ent_ids', {
+            [child2.get('resource_id')]: templateGuids[2],
+            [missing]: templateGuids[3]
+        });
+
+        const guids = [
+            'root_guid',
+            'child_guid',
+            'missing',
+            'child_2_guid'
+        ];
+        let guidIndex = 0;
+        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+
+        api.globals.assets.createTemplate(null, root);
+
+        const fetchArgs = window.fetch.getCall(0).args;
+        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
+        const data = fetchArgs[1].body;
+
+        const expected = { entities: {} };
+
+        expected.entities[guids[0]] = root.json();
+        expected.entities[guids[0]].resource_id = guids[0];
+        expected.entities[guids[0]].children = [guids[1]];
+        delete expected.entities[guids[0]].template_ent_ids;
+
+        expected.entities[guids[1]] = child.json();
+        expected.entities[guids[1]].resource_id = guids[1];
+        expected.entities[guids[1]].parent = guids[0];
+        expected.entities[guids[1]].children = [guids[3]];
+        expected.entities[guids[1]].template_ent_ids = {
+            [guids[1]]: templateGuids[1],
+            [guids[3]]: templateGuids[2],
+            [guids[2]]: templateGuids[3]
+        };
+
+        expected.entities[guids[3]] = child2.json();
+        expected.entities[guids[3]].resource_id = guids[3];
+        expected.entities[guids[3]].parent = guids[1];
+        expected.entities[guids[3]].template_ent_ids = {
+            [guids[3]]: templateGuids[2],
+            [guids[2]]: templateGuids[3]
+        };
+
+        expect(data.get('data')).to.equal(JSON.stringify(expected));
     });
 });
