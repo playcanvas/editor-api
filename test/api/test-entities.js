@@ -712,4 +712,29 @@ describe('api.Entities tests', function () {
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
     });
+
+    it('duplicate updates template_ent_ids', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = api.globals.entities.create();
+        const entity = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: entity });
+        const templateEntIds = {};
+        templateEntIds[entity.get('resource_id')] = pc.guid.create();
+        templateEntIds[child.get('resource_id')] = pc.guid.create();
+        // create a missing reference as well
+        const missing = pc.guid.create();
+        templateEntIds[missing] = pc.guid.create();
+        entity.set('template_ent_ids', templateEntIds);
+
+        const dup = await entity.duplicate();
+        const newTemplateEntIds = dup.get('template_ent_ids');
+        expect(Object.keys(newTemplateEntIds).length).to.equal(3);
+        expect(newTemplateEntIds[dup.get('resource_id')]).to.equal(templateEntIds[entity.get('resource_id')]);
+        expect(newTemplateEntIds[dup.children[0].get('resource_id')]).to.equal(templateEntIds[child.get('resource_id')]);
+
+        delete newTemplateEntIds[dup.get('resource_id')];
+        delete newTemplateEntIds[dup.children[0].get('resource_id')];
+        expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
+    });
 });

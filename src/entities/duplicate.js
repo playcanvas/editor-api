@@ -129,6 +129,15 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
 
     duplicatedIdsMap[originalResourceId] = entity.get('resource_id');
 
+    const templateEntIds = entity.get('template_ent_ids');
+    if (templateEntIds) {
+        for (const key in templateEntIds) {
+            if (!api.entities.get(key)) {
+                duplicatedIdsMap[key] = pc.guid.create();
+            }
+        }
+    }
+
     // add children too
     children.forEach(function (childId) {
         duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap);
