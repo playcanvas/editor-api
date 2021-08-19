@@ -3,6 +3,7 @@ import { globals as api } from './globals';
 import { Events } from './pcui';
 import { uploadFile } from './assets/upload';
 import { createTemplate } from './assets/createTemplate';
+import { createScript } from './assets/createScript';
 
 /**
  * The Assets Editor API
@@ -505,6 +506,37 @@ class Assets extends Events {
             type: 'material',
             folder: folder,
             data: defaultData
+        });
+    }
+
+    /**
+     * Creates new script asset
+     *
+     * @param {string} name - The name of the script. This will be the name of the class inside the script if boilerplate code is used.
+     * @param {string} filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
+     * from the name of the script.
+     * @param {string} text - The contents of the script. If none then boilerplate code will be used.
+     * @param {Asset} folder - The parent folder asset
+     * @returns {Promise<Asset>} The new asset
+     */
+    createScript(name, filename, text = null, folder = null) {
+        if (!name) {
+            throw new Error('createScript: missing required name');
+        }
+
+        const result = createScript(name, filename, text);
+
+        return this._create({
+            name: result.filename,
+            type: 'script',
+            folder: folder,
+            filename: result.filename,
+            file: new Blob([result.content], { type: 'text/javascript' }),
+            data: {
+                scripts: { },
+                loading: false,
+                loadingType: 0 // load script as asset
+            }
         });
     }
 

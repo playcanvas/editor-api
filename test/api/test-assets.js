@@ -13,6 +13,29 @@ describe('Assets API tests', function () {
         sandbox.restore();
     });
 
+    function boilerplate(className, scriptName) {
+        return `
+var ${className} = pc.createScript('${scriptName}');
+
+// initialize code called once per entity
+${className}.prototype.initialize = function() {
+
+};
+
+// update code called every frame
+${className}.prototype.update = function(dt) {
+
+};
+
+// swap method called for script hot-reloading
+// inherit your script state here
+// ${className}.prototype.swap = function(old) { };
+
+// to learn more about script anatomy, please read:
+// https://developer.playcanvas.com/en/user-manual/scripting/
+        `.trim();
+    }
+
     it('lists assets', function () {
         const asset = new api.Asset({ type: 'material' });
         assets.add(asset);
@@ -645,5 +668,50 @@ describe('Assets API tests', function () {
         };
 
         expect(data.get('data')).to.equal(JSON.stringify(expected));
+    });
+
+    it('creates script asset', async function () {
+        sandbox.stub(window, 'fetch');
+
+        api.globals.branchId = 'branch';
+        api.globals.projectId = 1;
+
+        const folder = new api.Asset({ id: 10 });
+        api.globals.assets.createScript('name', null, null, folder);
+
+        const fetchArgs = window.fetch.getCall(0).args;
+        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
+        const data = fetchArgs[1].body;
+        expect(data.get('branchId')).to.equal('branch');
+        expect(data.get('projectId')).to.equal('1');
+        expect(data.get('filename')).to.equal('name.js');
+        expect(data.get('type')).to.equal('script');
+        expect(data.get('name')).to.equal('name.js');
+        expect(data.get('parent')).to.equal('10');
+        expect(data.get('preload')).to.equal('true');
+        expect(data.get('file') instanceof Blob).to.equal(true);
+        expect(await data.get('file').text()).to.equal(boilerplate('Name', 'name'));
+    });
+
+    it('creates valid script names', async function () {
+        sandbox.stub(window, 'fetch');
+
+        // row format is desired name, expected class name, expected script name
+        const names = [
+            'name-1', 'Name1', 'name1',
+            'name-$', 'Script', 'name$',
+            'name.js', 'NameJs', 'nameJs',
+            'NameName', 'NameName', 'nameName'
+        ];
+
+        for (let i = 0; i < names.length; i += 3) {
+            api.globals.assets.createScript(names[i]);
+
+            const fetchArgs = window.fetch.getCall(i / 3).args;
+            expect(fetchArgs[1].body instanceof FormData).to.equal(true);
+            const data = fetchArgs[1].body;
+            expect(await data.get('file').text()).to.equal(boilerplate(names[i + 1], names[i + 2])); // eslint-disable-line no-await-in-loop
+        }
+
     });
 });
