@@ -7,6 +7,7 @@ function createTemplate(rootEntity) {
     const oldToNewIds = {};
     const rootId = rootEntity.get('resource_id');
 
+    // go through each entity and generate new resource_ids
     rootEntity.depthFirst(entity => {
         const id = entity.get('resource_id');
         const newId = pc.guid.create();
@@ -15,12 +16,16 @@ function createTemplate(rootEntity) {
         const json = entity.json();
         json.resource_id = newId;
 
+        // delete template_id and template_ent_ids
+        // from root
         if (id === rootId) {
             json.parent = null;
             delete json.template_id;
             delete json.template_ent_ids;
         }
 
+        // if we have any missing references in template_ent_ids
+        // then generate new resource_ids for those
         if (json.template_ent_ids) {
             for (const key in json.template_ent_ids) {
                 if (!oldToNewIds[key] && !api.entities.get(key)) {
@@ -34,15 +39,18 @@ function createTemplate(rootEntity) {
         entities[newId] = newEntity;
     });
 
+    // find component entity references
     const newRootEntity = entities[oldToNewIds[rootId]];
     const references = findEntityReferencesInComponents(newRootEntity);
     for (const id in references) {
         const prevEntity = api.entities.get(id);
+        // do not update references to entities outside the rootEntity
         if (!prevEntity || (prevEntity !== rootEntity && !prevEntity.isDescendantOf(rootEntity))) {
             delete references[id];
         }
     }
 
+    // update references
     if (Object.keys(references).length) {
         for (const oldId in oldToNewIds) {
             const referencesToEntity = references[oldId];
