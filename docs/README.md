@@ -28,6 +28,8 @@ npm run build:docs
 
 The resulting .md file will be under docs/modules.md.
 
+NOTE: Build the docs after you commit any API changes, otherwise the code links in the docs might point to the wrong lines.
+
 # Tests
 
 To run tests run:

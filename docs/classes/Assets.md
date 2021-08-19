@@ -60,7 +60,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:14](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L14)
+[src/assets.js:14](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L14)
 
 ## Public Methods
 
@@ -84,7 +84,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:41](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L41)
+[src/assets.js:41](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L41)
 
 ___
 
@@ -108,7 +108,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:52](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L52)
+[src/assets.js:52](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L52)
 
 ___
 
@@ -126,7 +126,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:62](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L62)
+[src/assets.js:62](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L62)
 
 ___
 
@@ -150,7 +150,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:73](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L73)
+[src/assets.js:73](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L73)
 
 ___
 
@@ -174,7 +174,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:200](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L200)
+[src/assets.js:200](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L200)
 
 ___
 
@@ -198,7 +198,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:212](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L212)
+[src/assets.js:212](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L212)
 
 ___
 
@@ -222,7 +222,7 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:280](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L280)
+[src/assets.js:280](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L280)
 
 ___
 
@@ -248,7 +248,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:328](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L328)
+[src/assets.js:328](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L328)
 
 ___
 
@@ -274,7 +274,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:345](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L345)
+[src/assets.js:345](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L345)
 
 ___
 
@@ -300,13 +300,13 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:364](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L364)
+[src/assets.js:364](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L364)
 
 ___
 
 ### createCubemap
 
-▸ **createCubemap**(`name`, `textures?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createCubemap**(`name`, `textures?`, `settings?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new cubemap asset
 
@@ -316,6 +316,10 @@ Creates new cubemap asset
 | :------ | :------ | :------ | :------ |
 | `name` | `string` | `undefined` | The asset name |
 | `textures` | [`Asset`](Asset.md)[] | `[]` | The textures for each cubemap face in this order: right, left, up, down, front, back |
+| `settings` | `Object` | `null` | Cubemap settings |
+| `settings.minFilter` | `number` | `undefined` | Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR. |
+| `settings.magFilter` | `number` | `undefined` | Cubemap magFilter value. Defaults to pc.FILTER_LINEAR. |
+| `settings.anisotropy` | `number` | `undefined` | Cubemap anisotropy value. Defaults to 1. |
 | `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
 
 #### Returns
@@ -326,7 +330,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:383](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L383)
+[src/assets.js:387](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L387)
 
 ___
 
@@ -351,7 +355,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:410](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L410)
+[src/assets.js:416](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L416)
 
 ___
 
@@ -377,7 +381,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:426](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L426)
+[src/assets.js:432](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L432)
 
 ___
 
@@ -403,7 +407,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:444](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L444)
+[src/assets.js:450](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L450)
 
 ___
 
@@ -429,7 +433,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:462](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L462)
+[src/assets.js:468](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L468)
 
 ___
 
@@ -455,7 +459,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:487](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L487)
+[src/assets.js:493](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L493)
 
 ___
 
@@ -481,7 +485,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:513](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L513)
+[src/assets.js:519](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L519)
 
 ___
 
@@ -496,7 +500,11 @@ Creates new sprite asset
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `name` | `string` | `undefined` | The asset name |
-| `data` | `any` | `{}` | The sprite data |
+| `data` | `Object` | `{}` | The sprite data |
+| `data.pixelsPerUnit` | `number` | `undefined` | The sprite's pixels per unit value. Defaults to 100. |
+| `data.frameKeys` | `number`[] | `undefined` | The sprite's frame keys |
+| `data.textureAtlas` | [`Asset`](Asset.md) | `undefined` | The sprite's texture atlas asset |
+| `data.renderMode` | `number` | `undefined` | The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE. |
 | `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
 
 #### Returns
@@ -507,7 +515,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:531](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L531)
+[src/assets.js:541](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L541)
 
 ___
 
@@ -533,7 +541,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:554](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L554)
+[src/assets.js:564](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L564)
 
 ___
 
@@ -559,7 +567,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:573](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L573)
+[src/assets.js:583](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L583)
 
 ___
 
@@ -583,7 +591,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:107](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L107)
+[src/assets.js:107](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L107)
 
 ___
 
@@ -605,7 +613,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:159](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L159)
+[src/assets.js:159](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L159)
 
 ___
 
@@ -621,7 +629,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:180](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L180)
+[src/assets.js:180](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L180)
 
 ___
 
@@ -638,4 +646,4 @@ and subscribes to changes
 
 #### Defined in
 
-[src/assets.js:223](https://github.com/playcanvas/editor-api/blob/1a93a80/src/assets.js#L223)
+[src/assets.js:223](https://github.com/playcanvas/editor-api/blob/daa97d2/src/assets.js#L223)

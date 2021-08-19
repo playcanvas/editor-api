@@ -43,7 +43,7 @@ Events.constructor
 
 #### Defined in
 
-[src/realtime/assets.js:19](https://github.com/playcanvas/editor-api/blob/1a93a80/src/realtime/assets.js#L19)
+[src/realtime/assets.js:19](https://github.com/playcanvas/editor-api/blob/daa97d2/src/realtime/assets.js#L19)
 
 ## Methods
 
@@ -67,7 +67,7 @@ The asset
 
 #### Defined in
 
-[src/realtime/assets.js:32](https://github.com/playcanvas/editor-api/blob/1a93a80/src/realtime/assets.js#L32)
+[src/realtime/assets.js:32](https://github.com/playcanvas/editor-api/blob/daa97d2/src/realtime/assets.js#L32)
 
 ___
 
@@ -91,7 +91,7 @@ The asset
 
 #### Defined in
 
-[src/realtime/assets.js:51](https://github.com/playcanvas/editor-api/blob/1a93a80/src/realtime/assets.js#L51)
+[src/realtime/assets.js:51](https://github.com/playcanvas/editor-api/blob/daa97d2/src/realtime/assets.js#L51)
 
 ___
 
@@ -113,4 +113,4 @@ Unloads an asset
 
 #### Defined in
 
-[src/realtime/assets.js:60](https://github.com/playcanvas/editor-api/blob/1a93a80/src/realtime/assets.js#L60)
+[src/realtime/assets.js:60](https://github.com/playcanvas/editor-api/blob/daa97d2/src/realtime/assets.js#L60)
