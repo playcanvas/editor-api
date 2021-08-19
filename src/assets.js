@@ -306,15 +306,6 @@ class Assets extends Events {
             });
         }
 
-        if (asset.get('type') === 'script') {
-            const url = asset.get('file.url');
-            if (url) {
-                asset.parseScript();
-            } else {
-                asset.once('file.url:set', url => asset.parseScript());
-            }
-        }
-
         return asset;
     }
 
@@ -519,14 +510,14 @@ class Assets extends Events {
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
-    createScript(name, filename, text = null, folder = null) {
+    async createScript(name, filename, text = null, folder = null) {
         if (!name) {
             throw new Error('createScript: missing required name');
         }
 
         const result = createScript(name, filename, text);
 
-        return this._create({
+        const asset = await this._create({
             name: result.filename,
             type: 'script',
             folder: folder,
@@ -538,6 +529,13 @@ class Assets extends Events {
                 loadingType: 0 // load script as asset
             }
         });
+
+        const url = asset.get('file.url');
+        if (url) {
+            asset.parseScript();
+        } else {
+            asset.once('file.url:set', url => asset.parseScript());
+        }
     }
 
     /**

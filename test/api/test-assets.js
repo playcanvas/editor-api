@@ -691,6 +691,12 @@ ${className}.prototype.update = function(dt) {
         expect(data.get('preload')).to.equal('true');
         expect(data.get('file') instanceof Blob).to.equal(true);
         expect(await data.get('file').text()).to.equal(boilerplate('Name', 'name'));
+        expect(data.get('data')).to.equal(JSON.stringify({
+            scripts: { },
+            loading: false,
+            loadingType: 0
+        }));
+
     });
 
     it('creates valid script names', async function () {
