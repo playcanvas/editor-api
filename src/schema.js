@@ -1,4 +1,5 @@
 import { ComponentSchema } from './schema/components';
+import { AssetsSchema } from './schema/assets';
 
 /**
  * Provides methods to access the Editor schema.
@@ -12,6 +13,7 @@ class Schema {
     constructor(schema) {
         this._schema = schema;
         this._componentSchema = new ComponentSchema(schema);
+        this._assetsSchema = new AssetsSchema(schema);
     }
 
     /**
@@ -21,6 +23,15 @@ class Schema {
      */
     get components() {
         return this._componentSchema;
+    }
+
+    /**
+     * Gets the assets schema
+     *
+     * @type {AssetsSchema}
+     */
+    get assets() {
+        return this._assetsSchema;
     }
 }
 

@@ -99,7 +99,7 @@ class Entities extends Events {
      * @param {object} entityData - The entity data
      */
     serverAdd(entityData) {
-        const entity = new Entity(this, entityData);
+        const entity = new Entity(entityData);
         entity.set('parent', entityData.parent);
         entity.set('children', entityData.children);
         this.add(entity);
@@ -115,7 +115,7 @@ class Entities extends Events {
      */
     remove(entity, entityReferences = null) {
         if (entityReferences) {
-            updateReferences(this, entityReferences, entity.get('resource_id'), null);
+            updateReferences(entityReferences, entity.get('resource_id'), null);
         }
 
         // remove children first
@@ -225,7 +225,7 @@ class Entities extends Events {
      *```
      */
     create(data = null, options = {}) {
-        return createEntity(this, data, options);
+        return createEntity(data, options);
     }
 
     /**
@@ -241,7 +241,7 @@ class Entities extends Events {
      * ```
      */
     delete(entities, options = {}) {
-        return deleteEntities(this, entities, options);
+        deleteEntities(entities, options);
     }
 
     /**
@@ -262,13 +262,13 @@ class Entities extends Events {
      * ```
      */
     reparent(data, options = {}) {
-        return reparentEntities(data, options);
+        reparentEntities(data, options);
     }
 
     /**
      * Duplicates the specified entities under the same parent
      *
-     * @param {Entitiy[]} entities - The entities
+     * @param {Entity[]} entities - The entities
      * @param {object} [options] - Options
      * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
      * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
@@ -276,7 +276,7 @@ class Entities extends Events {
      * @returns {Promise<Entity[]>} The duplicated entities
      */
     async duplicate(entities, options = {}) {
-        const result = await duplicateEntities(this, entities, options);
+        const result = await duplicateEntities(entities, options);
         return result;
 
     }

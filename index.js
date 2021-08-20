@@ -9,6 +9,7 @@ export * from './src/history';
 export * from './src/selection';
 export * from './src/schema';
 export * from './src/schema/components';
+export * from './src/schema/assets';
 export * from './src/realtime/connection';
 export * from './src/realtime/scene';
 export * from './src/realtime/scenes';

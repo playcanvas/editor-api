@@ -102,9 +102,10 @@ class RealtimeAsset extends Events {
     _onLoad() {
         const assetData = this._document.data;
         if (!assetData) {
-            this._onError('Could not load asset: ' + this._uniqueId);
+            const err = 'Could not load asset: ' + this._uniqueId;
+            this._onError(err);
             this.unload();
-            this.emit('error:load');
+            this.emit('error:load', err);
             return;
         }
 

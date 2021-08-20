@@ -1,17 +1,16 @@
 import { globals as api } from '../globals';
-import { findReferences, updateReferences } from './references';
+import { findEntityReferencesInComponents, updateReferences } from './references';
 
 /**
  * Delete specified entities
  *
  * @private
- * @typedef {import("../entities").Entities} Entities
- * @param {Entities} entitiesApi - The entities API
+ * @typedef {import("../entity").Entity} Entity
  * @param {Entity[]|Entity} entities - The entities
  * @param {object} [options] - Options
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
  */
-function deleteEntities(entitiesApi, entities, options = {}) {
+function deleteEntities(entities, options = {}) {
     if (options.history === undefined) {
         options.history = true;
     }
@@ -55,10 +54,10 @@ function deleteEntities(entitiesApi, entities, options = {}) {
     }
 
     // find entity references
-    const entityReferences = findReferences(entitiesApi.root);
+    const entityReferences = findEntityReferencesInComponents(api.entities.root);
 
     entities.forEach(entity => {
-        entitiesApi.remove(entity, entityReferences);
+        api.entities.remove(entity, entityReferences);
     });
 
     if (previous) {
@@ -73,7 +72,7 @@ function deleteEntities(entitiesApi, entities, options = {}) {
 
                 entities = entities.map(entity => {
                     const data = recreateEntityData(previous[entity.get('resource_id')]);
-                    entity = entitiesApi.create(data, {
+                    entity = api.entities.create(data, {
                         history: false
                     });
 
@@ -81,7 +80,7 @@ function deleteEntities(entitiesApi, entities, options = {}) {
                 });
 
                 entities.forEach(entity => {
-                    updateReferences(entitiesApi, entityReferences, entity.get('resource_id'), entity.get('resource_id'));
+                    updateReferences(entityReferences, entity.get('resource_id'), entity.get('resource_id'));
                 });
 
                 if (api.selection) {
@@ -102,11 +101,11 @@ function deleteEntities(entitiesApi, entities, options = {}) {
                     });
                 });
 
-                entitiesApi.delete(entities, {
+                api.entities.delete(entities, {
                     history: false
                 });
             }
-        })
+        });
     }
 }
 

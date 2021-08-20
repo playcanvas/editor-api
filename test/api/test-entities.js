@@ -1,8 +1,6 @@
 describe('api.Entities tests', function () {
-    let entitiesApi;
-
     function makeScriptAsset() {
-        return new api.Asset(api.globals.assets, {
+        return new api.Asset({
             id: 1,
             uniqueId: 1,
             type: 'script',
@@ -53,65 +51,65 @@ describe('api.Entities tests', function () {
         api.globals.selection = null;
         api.globals.schema = null;
         api.globals.assets = null;
-        entitiesApi = new api.Entities();
+        api.globals.entities = new api.Entities();
     });
 
     it('add adds entity and get returns entity', function () {
-        const e = new api.Entity(entitiesApi);
-        entitiesApi.add(e);
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(e);
+        const e = new api.Entity();
+        api.globals.entities.add(e);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(e);
     });
 
     it('add does not add duplicate entity', function () {
-        const e = new api.Entity(entitiesApi);
-        entitiesApi.add(e);
-        entitiesApi.add(e);
-        expect(entitiesApi.list()).to.deep.equal([e]);
+        const e = new api.Entity();
+        api.globals.entities.add(e);
+        api.globals.entities.add(e);
+        expect(api.globals.entities.list()).to.deep.equal([e]);
     });
 
     it('list returns array of entities', function () {
-        const e = new api.Entity(entitiesApi);
-        entitiesApi.add(e);
-        expect(entitiesApi.list()).to.deep.equal([e]);
+        const e = new api.Entity();
+        api.globals.entities.add(e);
+        expect(api.globals.entities.list()).to.deep.equal([e]);
     });
 
     it('returns root', function () {
-        const p = new api.Entity(entitiesApi);
-        const c = new api.Entity(entitiesApi);
+        const p = new api.Entity();
+        const c = new api.Entity();
         c.set('parent', p.get('resource_id'));
         p.insert('children', c.get('resource_id'));
-        entitiesApi.add(p);
-        entitiesApi.add(c);
-        expect(entitiesApi.root).to.equal(p);
+        api.globals.entities.add(p);
+        api.globals.entities.add(c);
+        expect(api.globals.entities.root).to.equal(p);
     });
 
     it('creates entity', function () {
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'name'
         });
 
         expect(e).to.not.equal(null);
         expect(e.get('name')).to.equal('name');
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(e);
-        expect(entitiesApi.root).to.equal(e);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(e);
+        expect(api.globals.entities.root).to.equal(e);
     });
 
     it('creates child entity', function () {
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'name'
         });
-        const c = entitiesApi.create({
+        const c = api.globals.entities.create({
             name: 'child',
             parent: e
         });
 
         expect(e.children).to.deep.equal([c]);
-        expect(entitiesApi.root).to.equal(e);
+        expect(api.globals.entities.root).to.equal(e);
     });
 
     it('creates entity with component', function () {
         api.globals.schema = new api.Schema(schema);
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             components: {
                 testcomponent: {
                     entityRef: 'test'
@@ -125,27 +123,27 @@ describe('api.Entities tests', function () {
     it('undo create removes entity', function () {
         api.globals.history = new api.History();
 
-        const e = entitiesApi.create(null, {
+        const e = api.globals.entities.create(null, {
             history: true
         });
         api.globals.history.undo();
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
     it('redo create adds new entity with same id', function () {
         api.globals.history = new api.History();
 
-        const e = entitiesApi.create(null, {
+        const e = api.globals.entities.create(null, {
             history: true
         });
         api.globals.history.undo();
         api.globals.history.redo();
 
-        expect(entitiesApi.get(e.get('resource_id'))).to.not.equal(null);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.not.equal(null);
     });
 
     it('create adds children too', function () {
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'parent',
             children: [{
                 name: 'child',
@@ -163,13 +161,13 @@ describe('api.Entities tests', function () {
     });
 
     it('delete removes entity', function () {
-        const e = entitiesApi.create();
-        entitiesApi.delete([e]);
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(null);
+        const e = api.globals.entities.create();
+        api.globals.entities.delete([e]);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
     it('delete removes children', function () {
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'parent',
             children: [{
                 name: 'child'
@@ -178,14 +176,14 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        entitiesApi.delete([e]);
+        api.globals.entities.delete([e]);
 
-        expect(entitiesApi.get(c.get('resource_id'))).to.equal(null);
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
     it('delete works when children are passed along with parents', function () {
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'parent',
             children: [{
                 name: 'child'
@@ -194,16 +192,16 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        entitiesApi.delete([c, e]);
+        api.globals.entities.delete([c, e]);
 
-        expect(entitiesApi.get(c.get('resource_id'))).to.equal(null);
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
     it('undo delete brings back entities with same data as before', function () {
         api.globals.history = new api.History();
 
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'parent',
             children: [{
                 name: 'child'
@@ -215,24 +213,24 @@ describe('api.Entities tests', function () {
         const eJson = e.json();
         const cJson = c.json();
 
-        entitiesApi.delete([e]);
+        api.globals.entities.delete([e]);
 
         api.globals.history.undo();
 
-        expect(entitiesApi.get(e.get('resource_id')).json()).to.deep.equal(eJson);
-        expect(entitiesApi.get(c.get('resource_id')).json()).to.deep.equal(cJson);
+        expect(api.globals.entities.get(e.get('resource_id')).json()).to.deep.equal(eJson);
+        expect(api.globals.entities.get(c.get('resource_id')).json()).to.deep.equal(cJson);
 
         api.globals.history.redo();
         api.globals.history.undo();
 
-        expect(entitiesApi.get(e.get('resource_id')).json()).to.deep.equal(eJson);
-        expect(entitiesApi.get(c.get('resource_id')).json()).to.deep.equal(cJson);
+        expect(api.globals.entities.get(e.get('resource_id')).json()).to.deep.equal(eJson);
+        expect(api.globals.entities.get(c.get('resource_id')).json()).to.deep.equal(cJson);
     });
 
     it('redo delete deletes entities', function () {
         api.globals.history = new api.History();
 
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'parent',
             children: [{
                 name: 'child'
@@ -241,25 +239,25 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        entitiesApi.delete([e]);
+        api.globals.entities.delete([e]);
 
         api.globals.history.undo();
         api.globals.history.redo();
 
-        expect(entitiesApi.get(e.get('resource_id'))).to.equal(null);
-        expect(entitiesApi.get(c.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
     });
 
     it('delete removes from selection', function () {
         api.globals.history = new api.History();
         api.globals.selection = new api.Selection();
 
-        const e = entitiesApi.create(null, {
+        const e = api.globals.entities.create(null, {
             select: true
         });
 
         expect(api.globals.selection.items).to.deep.equal([e]);
-        entitiesApi.delete([e]);
+        api.globals.entities.delete([e]);
         expect(api.globals.selection.items).to.deep.equal([]);
 
         // check undo brings back selection
@@ -275,7 +273,7 @@ describe('api.Entities tests', function () {
         const script = makeScriptAsset();
         api.globals.assets.add(script);
 
-        const root = entitiesApi.create({
+        const root = api.globals.entities.create({
             name: 'root',
             children: [{
                 name: 'child 1'
@@ -323,7 +321,7 @@ describe('api.Entities tests', function () {
             expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
 
-        entitiesApi.delete([c1]);
+        api.globals.entities.delete([c1]);
 
         [root, c1, c2, c3].forEach(e => {
             expect(e.get('components.testcomponent.entityRef')).to.equal(null);
@@ -354,7 +352,7 @@ describe('api.Entities tests', function () {
     it('create selects entity', function () {
         api.globals.selection = new api.Selection();
 
-        const e = entitiesApi.create(null, {
+        const e = api.globals.entities.create(null, {
             select: true
         });
 
@@ -365,12 +363,12 @@ describe('api.Entities tests', function () {
         api.globals.selection = new api.Selection();
         api.globals.history = new api.History();
 
-        const e = entitiesApi.create({
+        const e = api.globals.entities.create({
             name: 'e'
         });
         api.globals.selection.add(e);
 
-        const e2 = entitiesApi.create({
+        const e2 = api.globals.entities.create({
             name: 'e2'
         }, {
             select: true,
@@ -388,26 +386,26 @@ describe('api.Entities tests', function () {
     });
 
     it('reparent reparents entities', function () {
-        const root = entitiesApi.create({
+        const root = api.globals.entities.create({
             name: 'root'
         });
 
-        const parent1 = entitiesApi.create({
+        const parent1 = api.globals.entities.create({
             name: 'parent 1',
             parent: root
         });
 
-        const parent2 = entitiesApi.create({
+        const parent2 = api.globals.entities.create({
             name: 'parent 2',
             parent: root
         });
 
-        const child = entitiesApi.create({
+        const child = api.globals.entities.create({
             name: 'child',
             parent: parent1
         });
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: child,
             parent: parent2,
             index: 0
@@ -417,12 +415,12 @@ describe('api.Entities tests', function () {
         expect(parent2.children).to.deep.equal([child]);
         expect(child.parent).to.equal(parent2);
 
-        const child2 = entitiesApi.create({
+        const child2 = api.globals.entities.create({
             name: 'child 2',
             parent: parent1
         });
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: child2,
             parent: parent2,
             index: 0
@@ -432,7 +430,7 @@ describe('api.Entities tests', function () {
         expect(parent2.children).to.deep.equal([child2, child]);
         expect(child2.parent).to.equal(parent2);
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: child2,
             parent: parent2,
             index: 1
@@ -442,11 +440,11 @@ describe('api.Entities tests', function () {
     });
 
     it('reparent child to one of its children is not allowed', function () {
-        const root = entitiesApi.create();
-        const parent = entitiesApi.create({ parent: root });
-        const child = entitiesApi.create({ parent: parent });
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: parent });
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: parent,
             parent: child
         }]);
@@ -459,26 +457,26 @@ describe('api.Entities tests', function () {
     it('undo / redo reparent', function () {
         api.globals.history = new api.History();
 
-        const root = entitiesApi.create({
+        const root = api.globals.entities.create({
             name: 'root'
         });
 
-        const parent1 = entitiesApi.create({
+        const parent1 = api.globals.entities.create({
             name: 'parent 1',
             parent: root
         });
 
-        const parent2 = entitiesApi.create({
+        const parent2 = api.globals.entities.create({
             name: 'parent 2',
             parent: root
         });
 
-        const child = entitiesApi.create({
+        const child = api.globals.entities.create({
             name: 'child',
             parent: parent1
         });
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: child,
             parent: parent2,
             index: 0
@@ -503,17 +501,17 @@ describe('api.Entities tests', function () {
 
     it('reparent multiple children preserves order', function () {
         api.globals.history = new api.History()
-        const root = entitiesApi.create();
-        const parent1 = entitiesApi.create({ parent: root });
-        const parent2 = entitiesApi.create({ parent: root });
-        const child1 = entitiesApi.create({ parent: parent1 });
-        const child2 = entitiesApi.create({ parent: parent1 });
-        const child3 = entitiesApi.create({ parent: parent1 });
-        const child4 = entitiesApi.create({ parent: parent1 });
+        const root = api.globals.entities.create();
+        const parent1 = api.globals.entities.create({ parent: root });
+        const parent2 = api.globals.entities.create({ parent: root });
+        const child1 = api.globals.entities.create({ parent: parent1 });
+        const child2 = api.globals.entities.create({ parent: parent1 });
+        const child3 = api.globals.entities.create({ parent: parent1 });
+        const child4 = api.globals.entities.create({ parent: parent1 });
 
         expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
 
-        entitiesApi.reparent([{
+        api.globals.entities.reparent([{
             entity: child1,
             parent: parent2,
             index: 0
@@ -537,14 +535,14 @@ describe('api.Entities tests', function () {
         api.globals.history = new api.History();
         api.globals.schema = new api.Schema(schema);
 
-        const root = entitiesApi.create();
+        const root = api.globals.entities.create();
 
-        const parent = entitiesApi.create({
+        const parent = api.globals.entities.create({
             name: 'parent',
             parent: root
         });
 
-        const child = entitiesApi.create({
+        const child = api.globals.entities.create({
             name: 'child',
             parent: parent
         });
@@ -553,7 +551,7 @@ describe('api.Entities tests', function () {
             entityRef: child.get('resource_id')
         });
 
-        const duplicated = await entitiesApi.duplicate([parent], {
+        const duplicated = await api.globals.entities.duplicate([parent], {
             history: true
         });
         expect(duplicated.length).to.equal(1);
@@ -568,7 +566,7 @@ describe('api.Entities tests', function () {
 
         // test undo / redo
         api.globals.history.undo();
-        expect(entitiesApi.get(duplicated[0].get('resource_id'))).to.equal(null);
+        expect(api.globals.entities.get(duplicated[0].get('resource_id'))).to.equal(null);
         expect(root.children).to.deep.equal([parent]);
 
         api.globals.history.redo();
@@ -582,14 +580,14 @@ describe('api.Entities tests', function () {
     it('duplicate resolves entity references', async function () {
         api.globals.schema = new api.Schema(schema);
 
-        const root = entitiesApi.create();
-        const parent = entitiesApi.create({ name: 'parent' });
-        const child = entitiesApi.create({
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ name: 'parent' });
+        const child = api.globals.entities.create({
             name: 'child',
             parent: parent
         });
-        const parent2 = entitiesApi.create({ name: 'parent2' });
-        const parent3 = entitiesApi.create({ name: 'parent3' });
+        const parent2 = api.globals.entities.create({ name: 'parent2' });
+        const parent3 = api.globals.entities.create({ name: 'parent3' });
 
         parent.addComponent('testcomponent', {
             entityRef: child.get('resource_id')
@@ -604,7 +602,7 @@ describe('api.Entities tests', function () {
             entityRef: root.get('resource_id')
         });
 
-        const dups = await entitiesApi.duplicate([parent, parent2, parent3]);
+        const dups = await api.globals.entities.duplicate([parent, parent2, parent3]);
         expect(dups[0].children[0].get('components.testcomponent.entityRef')).to.equal(dups[0].get('resource_id'));
         expect(dups[0].get('components.testcomponent.entityRef')).to.equal(dups[0].children[0].get('resource_id'));
         expect(dups[1].get('components.testcomponent.entityRef')).to.equal(dups[1].get('resource_id'));
@@ -615,14 +613,14 @@ describe('api.Entities tests', function () {
         api.globals.selection = new api.Selection();
         api.globals.history = new api.History();
 
-        const root = entitiesApi.create();
+        const root = api.globals.entities.create();
 
-        const parent = entitiesApi.create({
+        const parent = api.globals.entities.create({
             name: 'parent',
             parent: root
         });
 
-        const dups = await entitiesApi.duplicate([parent], {
+        const dups = await api.globals.entities.duplicate([parent], {
             history: true,
             select: true
         });
@@ -638,14 +636,14 @@ describe('api.Entities tests', function () {
     });
 
     it('renames duplicated entities', async function () {
-        const root = entitiesApi.create();
+        const root = api.globals.entities.create();
 
-        const parent = entitiesApi.create({
+        const parent = api.globals.entities.create({
             name: 'parent',
             parent: root
         });
 
-        const dups = await entitiesApi.duplicate([parent], {
+        const dups = await api.globals.entities.duplicate([parent], {
             rename: true
         });
 
@@ -657,7 +655,7 @@ describe('api.Entities tests', function () {
 
         expect(dups[0].get('name')).to.equal('parent3');
 
-        const child = entitiesApi.create({
+        const child = api.globals.entities.create({
             name: 'child',
             parent: dups[0]
         });
@@ -682,8 +680,8 @@ describe('api.Entities tests', function () {
 
         api.globals.assets.add(script);
 
-        const root = entitiesApi.create();
-        const entity = entitiesApi.create({ parent: root });
+        const root = api.globals.entities.create();
+        const entity = api.globals.entities.create({ parent: root });
         const id = entity.get('resource_id');
 
         entity.addComponent('script', {
@@ -713,5 +711,30 @@ describe('api.Entities tests', function () {
         expect(dup.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newId, newId]);
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
+    });
+
+    it('duplicate updates template_ent_ids', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = api.globals.entities.create();
+        const entity = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: entity });
+        const templateEntIds = {};
+        templateEntIds[entity.get('resource_id')] = pc.guid.create();
+        templateEntIds[child.get('resource_id')] = pc.guid.create();
+        // create a missing reference as well
+        const missing = pc.guid.create();
+        templateEntIds[missing] = pc.guid.create();
+        entity.set('template_ent_ids', templateEntIds);
+
+        const dup = await entity.duplicate();
+        const newTemplateEntIds = dup.get('template_ent_ids');
+        expect(Object.keys(newTemplateEntIds).length).to.equal(3);
+        expect(newTemplateEntIds[dup.get('resource_id')]).to.equal(templateEntIds[entity.get('resource_id')]);
+        expect(newTemplateEntIds[dup.children[0].get('resource_id')]).to.equal(templateEntIds[child.get('resource_id')]);
+
+        delete newTemplateEntIds[dup.get('resource_id')];
+        delete newTemplateEntIds[dup.children[0].get('resource_id')];
+        expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
     });
 });

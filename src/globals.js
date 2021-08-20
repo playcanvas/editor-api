@@ -45,6 +45,13 @@ class globals {
     static assets;
 
     /**
+     * The entities API
+     *
+     * @type {import("./entities").Entities}
+     */
+    static entities;
+
+    /**
      * Global URLs
      *
      * @category Internal

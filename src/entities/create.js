@@ -6,7 +6,6 @@ import { Entity } from '../entity';
  *
  * @private
  * @typedef {import("../entities").Entities} Entities
- * @param {Entities} entitiesApi - The entities API
  * @param {object} [data] - Optional initial data for the entity
  * @param {object} [options] - Options
  * @param {number} [options.index] - The child index that this entity will have under its parent.
@@ -14,7 +13,7 @@ import { Entity } from '../entity';
  * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
  * @returns {Entity} The new entity
  */
-function createEntity(entitiesApi, data, options = {}) {
+function createEntity(data, options = {}) {
     data = data || {};
 
     if (options.history === undefined) {
@@ -22,7 +21,7 @@ function createEntity(entitiesApi, data, options = {}) {
     }
 
     if (!data.parent) {
-        data.parent = entitiesApi.root ? entitiesApi.root.get('resource_id') : null;
+        data.parent = api.entities.root ? api.entities.root.get('resource_id') : null;
     }
 
     if (data.parent instanceof Entity) {
@@ -30,21 +29,21 @@ function createEntity(entitiesApi, data, options = {}) {
     }
 
 
-    if (data.parent && !entitiesApi.get(data.parent)) {
+    if (data.parent && !api.entities.get(data.parent)) {
         console.error(`Cannot create entity because parent ${data.parent} was not found`);
         return null;
     }
 
-    let entity = new Entity(entitiesApi, data);
+    let entity = new Entity(data);
 
-    entitiesApi.add(entity);
+    api.entities.add(entity);
 
     // sharedb
     if (api.realtime && api.realtime.scenes.current) {
         api.realtime.scenes.current.addEntity(entity);
     }
 
-    const parent = entitiesApi.get(data.parent);
+    const parent = api.entities.get(data.parent);
     if (parent) {
         if (options.index === undefined) {
             parent.addChild(entity);
@@ -60,7 +59,7 @@ function createEntity(entitiesApi, data, options = {}) {
     if (data.children) {
         data.children.forEach(childData => {
             childData.parent = entity;
-            const child = createEntity(entitiesApi, childData, {
+            const child = createEntity(childData, {
                 history: false,
                 select: false
             });
@@ -94,7 +93,7 @@ function createEntity(entitiesApi, data, options = {}) {
                 entity = entity.latest();
                 if (!entity) return;
 
-                entitiesApi.delete([entity], {
+                api.entities.delete([entity], {
                     history: false
                 });
 
@@ -106,12 +105,10 @@ function createEntity(entitiesApi, data, options = {}) {
             },
             // redo new entity
             redo: () => {
-                entity = createEntity(
-                    entitiesApi,
-                    data, {
-                        history: false,
-                        select: options.select
-                    }
+                entity = createEntity(data, {
+                    history: false,
+                    select: options.select
+                }
                 );
             }
         });

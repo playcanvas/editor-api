@@ -11,14 +11,12 @@ class Entity extends Events {
      * Creates new Entity
      *
      * @category Internal
-     * @param {Entities} entitiesApi - The Entities API
      * @param {object} data - Optional entity data
      */
-    constructor(entitiesApi, data = {}) {
+    constructor(data = {}) {
         super();
-        this._entitiesApi = entitiesApi;
 
-        this._observer = new Observer({
+        const observerData = {
             name: data.name || 'New Entity',
             tags: data.tags || [],
             enabled: data.enabled || true,
@@ -29,14 +27,23 @@ class Entity extends Events {
             rotation: data.rotation || [0, 0, 0],
             scale: data.scale || [1, 1, 1],
             components: {}
-        });
+        };
+
+        if (data.template_id) {
+            observerData.template_id = data.template_id;
+        }
+        if (data.template_ent_ids) {
+            observerData.template_ent_ids = data.template_ent_ids;
+        }
+
+        this._observer = new Observer(observerData);
 
         this._observer.addEmitter(this);
 
         const id = this._observer.get('resource_id');
 
         this._observer.latestFn = () => {
-            const latest = this._entitiesApi.get(id);
+            const latest = api.entities.get(id);
             return latest && latest._observer;
         };
 
@@ -386,7 +393,7 @@ class Entity extends Events {
 
         history = this.history.enabled;
         this.history.enabled = false;
-        this.removeValue('children', entity.get('resource_id'))
+        this.removeValue('children', entity.get('resource_id'));
         this.history.enabled = history;
     }
 
@@ -402,7 +409,7 @@ class Entity extends Events {
      *
      */
     delete(options = {}) {
-        this._entitiesApi.delete([this], options);
+        api.entities.delete([this], options);
     }
 
     /**
@@ -422,7 +429,7 @@ class Entity extends Events {
      * ```
      */
     reparent(parent, index = null, options = {}) {
-        this._entitiesApi.reparent([{
+        api.entities.reparent([{
             entity: this,
             parent: parent,
             index: index
@@ -439,7 +446,7 @@ class Entity extends Events {
      * @returns {Promise<Entity>} The new entity
      */
     async duplicate(options = {}) {
-        const result = await this._entitiesApi.duplicate([this], options);
+        const result = await api.entities.duplicate([this], options);
         return result[0];
     }
 
@@ -449,7 +456,7 @@ class Entity extends Events {
      * @returns {Entity} The entity
      */
     latest() {
-        return this._entitiesApi.get(this._observer.get('resource_id'));
+        return api.entities.get(this._observer.get('resource_id'));
     }
 
     /**
@@ -458,7 +465,7 @@ class Entity extends Events {
      */
     get parent() {
         const id = this.get('parent');
-        return id ? this._entitiesApi.get(id) : null;
+        return id ? api.entities.get(id) : null;
     }
 
     /**
@@ -466,7 +473,7 @@ class Entity extends Events {
      * @description The children entities. Warning: this creates a new array every time it's called.
      */
     get children() {
-        return this.get('children').map(id => this._entitiesApi.get(id));
+        return this.get('children').map(id => api.entities.get(id));
     }
 
     /**

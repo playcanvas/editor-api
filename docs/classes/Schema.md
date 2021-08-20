@@ -13,6 +13,7 @@ Provides methods to access the Editor schema.
 ### Accessors
 
 - [components](Schema.md#components)
+- [assets](Schema.md#assets)
 
 ## Constructors
 
@@ -30,7 +31,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema.js:12](https://github.com/playcanvas/editor-api/blob/28bcf74/src/schema.js#L12)
+[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/f0df60d/src/schema.js#L13)
 
 ## Accessors
 
@@ -46,4 +47,20 @@ Gets the component schema
 
 #### Defined in
 
-[src/schema.js:22](https://github.com/playcanvas/editor-api/blob/28bcf74/src/schema.js#L22)
+[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/f0df60d/src/schema.js#L24)
+
+___
+
+### assets
+
+• `get` **assets**(): [`AssetsSchema`](AssetsSchema.md)
+
+Gets the assets schema
+
+#### Returns
+
+[`AssetsSchema`](AssetsSchema.md)
+
+#### Defined in
+
+[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/f0df60d/src/schema.js#L33)

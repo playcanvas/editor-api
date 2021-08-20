@@ -4,6 +4,7 @@ import { globals as api } from '../globals';
  * Reparents entities under new parent.
  *
  * @private
+ * @typedef {import("../entities").ReparentArguments} ReparentArguments
  * @param {ReparentArguments[]} data - The reparenting data
  * @param {object} [options] - Options
  * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
@@ -60,7 +61,7 @@ function reparentEntities(data, options = {}) {
         parentOld.history.enabled = true;
 
         parent.history.enabled = false;
-        let off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
+        const off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
         parent.insert('children', resourceId, indNew + off);
         parent.history.enabled = true;
 
@@ -100,7 +101,7 @@ function reparentEntities(data, options = {}) {
         return dirty;
     };
 
-    let dirty = redo();
+    const dirty = redo();
     if (dirty && options.history && api.history) {
         const undo = () => {
             records.forEach((record, i) => {

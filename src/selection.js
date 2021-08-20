@@ -119,7 +119,7 @@ class Selection extends Events {
             options.history = true;
         }
 
-        let history = this._history.enabled;
+        const history = this._history.enabled;
         if (!options.history) {
             this._history.enabled = false;
         }
@@ -157,7 +157,7 @@ class Selection extends Events {
         const index = this._items.indexOf(item);
         if (index !== -1) {
 
-            let history = this._history.enabled;
+            const history = this._history.enabled;
             if (!options.history) {
                 this._history.enabled = false;
             }
@@ -165,7 +165,7 @@ class Selection extends Events {
                 this._items.splice(index, 1);
                 this.emit('remove', item);
                 this._deferChangeEvt();
-            });;
+            });
             this._history.enabled = history;
         }
     }
@@ -173,7 +173,7 @@ class Selection extends Events {
     /**
      * Toggle item selection
      *
-     * @param {any} item
+     * @param {any} item - The item
      * @param {object} options - Options
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
      * @example
@@ -189,7 +189,7 @@ class Selection extends Events {
             options.history = true;
         }
 
-        let history = this._history.enabled;
+        const history = this._history.enabled;
         if (!options.history) {
             this._history.enabled = false;
         }
@@ -242,7 +242,7 @@ class Selection extends Events {
             options.history = true;
         }
 
-        let history = this._history.enabled;
+        const history = this._history.enabled;
         if (!options.history) {
             this._history.enabled = false;
         }
@@ -271,8 +271,8 @@ class Selection extends Events {
      * @type {any[]}
      * @example
      * ```javascript
-     * editor.selection.items.add(editor.entities.root);
-     * const selectedEntities = editor.selection.items;
+     * // select root entity
+     * editor.selection.set([editor.entities.root]);
      * ```
      */
     set(items, options = {}) {
@@ -282,7 +282,7 @@ class Selection extends Events {
             options.history = true;
         }
 
-        let history = this._history.enabled;
+        const history = this._history.enabled;
         if (!options.history) {
             this._history.enabled = false;
         }
@@ -303,6 +303,11 @@ class Selection extends Events {
      * Gets the selected items. This creates a new array every time it is called.
      *
      * @type {any[]}
+     * * @example
+     * ```javascript
+     * editor.selection.items.add(editor.entities.root);
+     * const selectedEntities = editor.selection.items;
+     * ```
      */
     get items() {
         return this._items.slice();

@@ -1,5 +1,7 @@
 import { globals as api } from '../globals';
-import { findReferences, updateReferences } from './references';
+import { findEntityReferencesInComponents, updateReferences } from './references';
+
+/** @typedef {import("../entity").Entity} Entity */
 
 /**
  * When an entity that has properties that contain references to some entities
@@ -7,12 +9,11 @@ import { findReferences, updateReferences } from './references';
  * the newly created duplicate subtree.
  *
  * @private
- * @param {Entities} entitiesApi - The Entities API
  * @param {Entity} newEntity - The new (duplicated) entity
  * @param {Entity} oldEntity - The old entity
  * @param {object} duplicatedIdsMap - Map of old id -> new id
  */
-function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, duplicatedIdsMap) {
+function updateDuplicatedEntityReferences(newEntity, oldEntity, duplicatedIdsMap) {
     // remap template_ent_ids for template instances
     const templateEntIds = newEntity.get('template_ent_ids');
     if (templateEntIds) {
@@ -30,9 +31,9 @@ function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, dup
     }
 
     // update entity references
-    const entityReferences = findReferences(newEntity);
+    const entityReferences = findEntityReferencesInComponents(newEntity);
     for (const id in entityReferences) {
-        const prevEntity = entitiesApi.get(id);
+        const prevEntity = api.entities.get(id);
         // only update references to this entity if it is in the old entity's subtree
         if (!prevEntity || (prevEntity !== oldEntity && !prevEntity.isDescendantOf(oldEntity))) {
             delete entityReferences[id];
@@ -41,7 +42,7 @@ function updateDuplicatedEntityReferences(entitiesApi, newEntity, oldEntity, dup
 
     if (Object.keys(entityReferences).length) {
         for (const oldId in duplicatedIdsMap) {
-            updateReferences(entitiesApi, entityReferences, oldId, duplicatedIdsMap[oldId]);
+            updateReferences(entityReferences, oldId, duplicatedIdsMap[oldId]);
         }
     }
 }
@@ -60,7 +61,7 @@ function splitEntityNameAndNumber(entityName) {
             numberString = char + numberString;
             foundNumber = /^\d+$/.test(numberString);
             if (foundNumber) {
-                number = parseInt(numberString);
+                number = parseInt(numberString, 10);
             }
         }
         if (foundNumber === false) {
@@ -72,7 +73,7 @@ function splitEntityNameAndNumber(entityName) {
         name,
         number
     };
-};
+}
 
 function isEntityNameTaken(name, entities) {
     for (let j = 0; j < entities.length; j++) {
@@ -83,7 +84,7 @@ function isEntityNameTaken(name, entities) {
         }
     }
     return false;
-};
+}
 
 function getUniqueNameForDuplicatedEntity(entityName, entities) {
     // if entityName === '1box23' then name === '1box' and number === 23,  if entityName === '1' then name === '' and number === 1
@@ -95,13 +96,12 @@ function getUniqueNameForDuplicatedEntity(entityName, entities) {
         newUniqueName = name + startIndex++;
     }
     return newUniqueName;
-};
+}
 
 /**
  * Duplicates an entity in the scene
  *
  * @private
- * @param {Entities} entitiesApi - The entities API
  * @param {Entity} entity - The entity
  * @param {Entity} parent - The parent of the new entity
  * @param {number} ind - The index in the parent's children array where we want to insert the new entity
@@ -109,7 +109,7 @@ function getUniqueNameForDuplicatedEntity(entityName, entities) {
  * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
  * @returns {Entity} The new entity
  */
-function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, useUniqueName) {
+function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     const originalResourceId = entity.get('resource_id');
     const data = entity.json();
     const children = data.children;
@@ -121,7 +121,7 @@ function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, use
     data.resource_id = pc.guid.create();
     data.parent = parent.get('resource_id');
 
-    entity = entitiesApi.create(data, {
+    entity = api.entities.create(data, {
         history: false,
         select: false,
         index: ind
@@ -129,9 +129,18 @@ function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, use
 
     duplicatedIdsMap[originalResourceId] = entity.get('resource_id');
 
+    const templateEntIds = entity.get('template_ent_ids');
+    if (templateEntIds) {
+        for (const key in templateEntIds) {
+            if (!api.entities.get(key)) {
+                duplicatedIdsMap[key] = pc.guid.create();
+            }
+        }
+    }
+
     // add children too
     children.forEach(function (childId) {
-        duplicateEntity(entitiesApi, entitiesApi.get(childId), entity, undefined, duplicatedIdsMap);
+        duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap);
     });
 
     return entity;
@@ -142,7 +151,6 @@ function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, use
  *
  * @private
  * @typedef {import("../entities").Entities} Entities
- * @param {Entities} entitiesApi - The entities API
  * @param {Entity[]} entities - The entities
  * @param {object} [options] - Options
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
@@ -150,18 +158,18 @@ function duplicateEntity(entitiesApi, entity, parent, ind, duplicatedIdsMap, use
  * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
  * @returns {Promise<Entity[]>} The duplicated entities
  */
-async function duplicateEntities(entitiesApi, entities, options) {
+async function duplicateEntities(entities, options) {
     if (options.history === undefined) {
         options.history = true;
     }
 
-    const root = entitiesApi.root;
+    const root = api.entities.root;
 
     // make sure we are not duplicating the root
     if (entities.includes(root)) {
         console.error('Cannot duplicate the root Entity');
         return;
-    };
+    }
 
     // build index
     const records = {};
@@ -209,7 +217,6 @@ async function duplicateEntities(entitiesApi, entities, options) {
 
     // TODO: If we have a lot of entities duplicate in the backend
 
-
     // remember previous selection
     let previousSelection;
     if (options.history && api.history && api.selection && options.select) {
@@ -223,7 +230,6 @@ async function duplicateEntities(entitiesApi, entities, options) {
         const duplicatedIdsMap = {};
 
         const newEntity = duplicateEntity(
-            entitiesApi,
             entity,
             entity.parent,
             records[entity.get('resource_id')].index + 1,
@@ -231,7 +237,7 @@ async function duplicateEntities(entitiesApi, entities, options) {
             options.rename
         );
 
-        updateDuplicatedEntityReferences(entitiesApi, newEntity, entity, duplicatedIdsMap);
+        updateDuplicatedEntityReferences(newEntity, entity, duplicatedIdsMap);
 
         newEntities.push(newEntity);
     });
@@ -257,7 +263,7 @@ async function duplicateEntities(entitiesApi, entities, options) {
                     });
                 });
 
-                entitiesApi.delete(newEntities, {
+                api.entities.delete(newEntities, {
                     history: false
                 });
 
@@ -276,7 +282,7 @@ async function duplicateEntities(entitiesApi, entities, options) {
 
                 newEntities = newEntities.map((entity, index) => {
                     const data = recreateEntityData(previous[entity.get('resource_id')]);
-                    entity = entitiesApi.create(data, {
+                    entity = api.entities.create(data, {
                         history: false,
                         select: false,
                         index: records[entities[index].get('resource_id')].index + 1

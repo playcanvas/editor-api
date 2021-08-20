@@ -7,7 +7,8 @@
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "build:docs": "rm -rf docs; typedoc --options typedoc.json"
+    "build:docs": "rm -rf docs; typedoc --options typedoc.json",
+    "lint": "eslint --ext .js src"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,6 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@playcanvas/pcui": "^1.1.22"
+    "@playcanvas/pcui": "^1.1.23"
   }
 }
