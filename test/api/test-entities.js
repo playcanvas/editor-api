@@ -737,4 +737,42 @@ describe('api.Entities tests', function () {
         delete newTemplateEntIds[dup.children[0].get('resource_id')];
         expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
     });
+
+    it('waitToExist waits for entities to be added', async function () {
+        const e = api.globals.entities.create();
+        api.globals.entities.remove(e);
+
+        const promise = new Promise((resolve) => {
+            api.globals.entities.waitToExist([e.get('resource_id')], 5000, (entities) => {
+                expect(entities).to.deep.equal([e]);
+                resolve();
+            });
+        });
+
+        api.globals.entities.add(e);
+
+        await promise;
+    });
+
+    it('cancel waitToExist stops waiting for entities to be added', async function () {
+        const e = api.globals.entities.create();
+        api.globals.entities.remove(e);
+
+        let cancel;
+        const promise = new Promise((resolve, reject) => {
+            cancel = api.globals.entities.waitToExist([e.get('resource_id')], 200, (entities) => {
+                // we should never get here
+                reject(new Error('Wait to exist should have been canceled'));
+            });
+
+            setTimeout(() => {
+                resolve();
+            }, 300);
+        });
+
+        cancel();
+        api.globals.entities.add(e);
+
+        await promise;
+    });
 });
