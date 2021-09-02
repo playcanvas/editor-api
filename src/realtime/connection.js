@@ -19,6 +19,8 @@ class RealtimeConnection extends Events {
      */
     constructor(realtime) {
         super();
+
+        this._url = null;
         this._realtime = realtime;
         this._socket = null;
         this._sharedb = null;
@@ -31,8 +33,12 @@ class RealtimeConnection extends Events {
 
     /**
      * Connect to the realtime server
+     *
+     * @param {string} url - The server URL
      */
-    connect() {
+    connect(url) {
+        this._url = url;
+
         if (this._reconnectAttempts > MAX_ATTEMPTS) {
             this._realtime.emit('cannotConnect');
             return;
@@ -42,7 +48,7 @@ class RealtimeConnection extends Events {
         this._realtime.emit('connecting', this._reconnectAttempts);
 
         // create new socket
-        this._socket = new WebSocket(api.url.realtime);
+        this._socket = new WebSocket(url);
         // create new sharedb connection
         this._sharedb = new share.Connection(this._socket);
 
@@ -124,8 +130,8 @@ class RealtimeConnection extends Events {
 
     _onVisibilityChange() {
         if (document.hidden) return;
-        if (!this.connected) {
-            this.connect();
+        if (!this.connected && this._url) {
+            this.connect(this._url);
         }
     }
 
@@ -157,7 +163,7 @@ class RealtimeConnection extends Events {
 
         if (!document.hidden) {
             setTimeout(() => {
-                this.connect();
+                this.connect(this._url);
             }, this._reconnectInterval * 1000);
         }
     }
