@@ -16,3 +16,4 @@ export * from './src/realtime/scenes';
 export * from './src/realtime/asset';
 export * from './src/realtime/assets';
 export * from './src/realtime';
+export * from './src/messenger';

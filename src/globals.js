@@ -52,15 +52,11 @@ class globals {
     static entities;
 
     /**
-     * Global URLs
+     * The messenger API
      *
-     * @category Internal
-     * @type {object}
-     * @property {string} realtime - The realtime server URL
+     * @type {import("./messenger").Messenger}
      */
-    static url = {
-        realtime: null
-    };
+    static messenger;
 
     /**
      * The user's access token
