@@ -6,6 +6,7 @@ import { duplicateEntities } from './entities/duplicate';
 import { reparentEntities } from './entities/reparent';
 import { deleteEntities } from './entities/delete';
 import { updateReferences } from './entities/references';
+import { wait } from './entities/wait';
 
 /**
  * Data to reparent an entity under a new parent
@@ -279,6 +280,21 @@ class Entities extends Events {
         const result = await duplicateEntities(entities, options);
         return result;
 
+    }
+
+    /**
+     * Waits for specified entity ids to be added to the scene.
+     * Once they are the callback is called with the entities as its argument.
+     *
+     * @param {string[]} entityIds - The ids of the entities to wait for
+     * @param {number} timeoutMs - Number of ms to wait before stopping to wait
+     * @param {Function} callback - The callback to call when all entities have been added.
+     * The signature is (Entity[]) => void.
+     * @returns {Function} Returns a cancel function which can be called to cancel calling the
+     * callback when the entities are added.
+     */
+    waitToExist(entityIds, timeoutMs, callback) {
+        return wait(entityIds, timeoutMs, callback);
     }
 
     /**
