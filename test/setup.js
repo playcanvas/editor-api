@@ -1,5 +1,3 @@
-import { Observer, ObserverList, ObserverHistory } from '/base/node_modules/@playcanvas/pcui/pcui-binding.mjs';
-
 // move chai methods to window
 for (const member in chai) {
     window[member] = chai[member];
@@ -7,9 +5,6 @@ for (const member in chai) {
 
 // create pcui namespace
 window.pcui = {};
-window.Observer = Observer;
-window.ObserverList = ObserverList;
-window.ObserverHistory = ObserverHistory;
 
 // create pc namespace
 window.pc = {};

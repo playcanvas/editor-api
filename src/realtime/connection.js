@@ -1,5 +1,5 @@
 import { globals as api } from '../globals';
-import { Events } from '../pcui';
+import { Events } from '@playcanvas/observer';
 
 const RECONNECT_INTERVAL = 3;
 const MAX_ATTEMPTS = 3;

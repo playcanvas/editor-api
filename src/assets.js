@@ -1,6 +1,6 @@
 import { Asset } from './asset';
 import { globals as api } from './globals';
-import { Events } from './pcui';
+import { Events, ObserverList } from '@playcanvas/observer';
 import { uploadFile } from './assets/upload';
 import { createTemplate } from './assets/createTemplate';
 import { createScript } from './assets/createScript';

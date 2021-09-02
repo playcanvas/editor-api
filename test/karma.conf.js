@@ -14,12 +14,8 @@ module.exports = function (config) {
             'node_modules/chai/chai.js',
 
             'test/lib/schema.js',
-            'dist/api.js',
-            {
-                pattern: 'node_modules/@playcanvas/pcui/pcui-binding.mjs',
-                type: 'module',
-                nocache : true
-            },
+            'node_modules/@playcanvas/observer/index.js',
+            'dist/index.js',
 
             {
                 pattern: 'test/setup.js',

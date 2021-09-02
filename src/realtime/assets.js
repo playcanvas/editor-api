@@ -1,5 +1,6 @@
-import { Events } from '../pcui';
 import { RealtimeAsset } from './asset';
+import { globals as api } from '../globals';
+import { Events } from '@playcanvas/observer';
 
 /**
  * Provides methods to load assets from sharedb

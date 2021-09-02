@@ -1,5 +1,5 @@
 import { RealtimeScene } from './scene';
-import { Events } from '../pcui';
+import { Events } from '@playcanvas/observer';
 
 /**
  * Provides methods to load scenes from sharedb

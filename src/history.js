@@ -1,4 +1,4 @@
-import { Events, History as pcuiHistory } from './pcui';
+import { Events, History as apiHistory } from '@playcanvas/observer';
 
 /**
  * A history action
@@ -20,7 +20,7 @@ class History extends Events {
      */
     constructor() {
         super();
-        this._history = new pcuiHistory();
+        this._history = new apiHistory();
         this._history.on('add', name => this.emit('add', name));
         this._history.on('undo', name => this.emit('undo', name));
         this._history.on('redo', name => this.emit('redo', name));
