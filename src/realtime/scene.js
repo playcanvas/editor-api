@@ -1,4 +1,4 @@
-import { Events } from '../pcui';
+import { Events } from '@playcanvas/observer';
 
 /**
  * Represents a scene in sharedb

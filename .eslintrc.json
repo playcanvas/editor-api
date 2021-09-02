@@ -7,20 +7,14 @@
         "browser": true,
         "es6": true
     },
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
         "ecmaVersion": 11,
         "ecmaFeatures": {
             "jsx": true
         },
-        "sourceType": "module"
-    },
-    "globals": {
-        "Observer": false,
-        "ObserverHistory": false,
-        "ObserverList": false,
-        "ObserverSync": false,
-        "Events": false
+        "sourceType": "module",
+        "requireConfigFile": false
     },
     "rules": {
         "brace-style": [

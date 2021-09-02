@@ -1,5 +1,5 @@
 import { globals as api } from './globals';
-import { Events } from './pcui';
+import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
 
 /**
  * Represents an Entity

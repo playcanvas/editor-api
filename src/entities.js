@@ -1,6 +1,6 @@
 import { globals as api } from './globals';
 import { Entity } from './entity';
-import { Events } from './pcui';
+import { Events, ObserverList } from '@playcanvas/observer';
 import { createEntity } from './entities/create';
 import { duplicateEntities } from './entities/duplicate';
 import { reparentEntities } from './entities/reparent';

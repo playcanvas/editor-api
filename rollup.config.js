@@ -1,14 +1,26 @@
-const api = {
+const umd = {
+    external: ['@playcanvas/observer'],
     input: 'index.js',
     output: {
-        file: 'dist/api.js',
+        file: 'dist/index.js',
         format: 'umd',
-        name: 'api'
+        name: 'api',
+        globals: {
+            '@playcanvas/observer': 'observer'
+        }
     }
 };
 
-let targets = [
-    api
-];
+const module = {
+    external: ['@playcanvas/observer'],
+    input: 'index.js',
+    output: {
+        file: 'dist/index.mjs',
+        format: 'module',
+        globals: {
+            '@playcanvas/observer': 'observer'
+        }
+    }
+};
 
-export default targets;
+export default [umd, module];

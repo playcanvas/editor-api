@@ -1,7 +1,7 @@
 import { RealtimeConnection } from './realtime/connection';
 import { RealtimeScenes } from './realtime/scenes';
 import { RealtimeAssets } from './realtime/assets';
-import { Events } from './pcui';
+import { Events } from '@playcanvas/observer';
 
 /**
  * Provides methods to communicate and load / save data to the realtime server
