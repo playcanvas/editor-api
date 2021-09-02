@@ -4,6 +4,8 @@ import { Events } from '@playcanvas/observer';
 /**
  * The Messenger API. The messenger receives messages
  * when various things happen e.g. an asset is created etc.
+ *
+ * @category Internal
  */
 class Messenger extends Events {
     /**

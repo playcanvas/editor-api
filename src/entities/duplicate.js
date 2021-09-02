@@ -4,8 +4,9 @@ import { findEntityReferencesInComponents, updateReferences } from './references
 /** @typedef {import("../entity").Entity} Entity */
 
 const TIME_WAIT_ENTITIES = 5000;
-const jobsInProgress = {};
 let evtMessenger = null;
+
+const USE_BACKEND_LIMIT = 500;
 
 /**
  * When an entity that has properties that contain references to some entities
@@ -166,23 +167,16 @@ function duplicateInBackend(entities, options) {
 
     if (!evtMessenger) {
         evtMessenger = api.messenger.on('entity.copy', data => {
-            if (jobsInProgress.hasOwnProperty(data.job_id)) {
-                const callback = jobsInProgress[data.job_id];
+            const callback = api.jobs.finish(data.job_id);
+            if (!callback) return;
 
-                // clear pending job
-                editor.call('status:job', data.job_id);
-                delete jobsInProgress[data.job_id];
-
-                const result = data.multTaskResults.map(d => d.newRootId);
-                callback(result);
-            }
+            const result = data.multTaskResults.map(d => d.newRootId);
+            callback(result);
         });
     }
 
     function redo() {
-        const jobId = pc.guid.create().substring(0, 8);
-
-        jobsInProgress[jobId] = (newEntityIds) => {
+        const jobId = api.jobs.start((newEntityIds) => {
             const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, newEntities => {
                 entities = newEntities;
 
@@ -199,7 +193,7 @@ function duplicateInBackend(entities, options) {
                     deferred = null;
                 }
             };
-        };
+        });
 
         api.realtime.connection.sendMessage('pipeline', {
             name: 'entities-duplicate',
@@ -211,8 +205,6 @@ function duplicateInBackend(entities, options) {
                 entities: originalEntities.map(e => e.get('resource_id'))
             }
         });
-
-        editor.call('status:job', jobId, 1);
     }
 
     redo();
@@ -310,7 +302,7 @@ async function duplicateEntities(entities, options) {
     let newEntities = [];
 
     // If we have a lot of entities duplicate in the backend
-    if (entities.length > 500 && api.messenger) {
+    if (entities.length > USE_BACKEND_LIMIT && api.messenger) {
         newEntities = await duplicateInBackend(entities, options);
     } else {
         // remember previous selection
