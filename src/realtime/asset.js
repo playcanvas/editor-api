@@ -55,8 +55,6 @@ class RealtimeAsset extends Events {
         this._document = null;
         this._loaded = false;
 
-        this._connection.send('close:scene:' + this._uniqueId);
-
         this._evtConnection.unbind();
         this._evtConnection = null;
 

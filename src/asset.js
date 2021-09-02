@@ -231,6 +231,13 @@ class Asset extends Events {
     }
 
     /**
+     * Deletes this asset
+     */
+    async delete() {
+        await api.assets.delete([this]);
+    }
+
+    /**
      * Gets observer history for this assset
      *
      * @type {ObserverHistory}

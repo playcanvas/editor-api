@@ -34,6 +34,7 @@ class RealtimeAssets extends Events {
         let asset = this._assets[id];
         if (!asset) {
             asset = new RealtimeAsset(id, this._realtime, this._connection);
+            this._assets[id] = asset;
         }
 
         if (!asset.loaded) {
@@ -61,7 +62,7 @@ class RealtimeAssets extends Events {
     unload(id) {
         if (this._assets[id]) {
             this._assets[id].unload();
-            delete this._scenes[id];
+            delete this._assets[id];
         }
     }
 }

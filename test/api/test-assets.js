@@ -720,4 +720,29 @@ ${className}.prototype.update = function(dt) {
         }
 
     });
+
+    it('deletes assets', async function () {
+        sandbox.stub(window, 'fetch').resolves({ ok: true });
+        const asset = new api.Asset({
+            id: 1,
+            type: 'material'
+        });
+        api.globals.assets.add(asset);
+        expect(api.globals.assets.list()).to.deep.equal([asset]);
+
+        api.globals.branchId = 'branch';
+        await api.globals.assets.delete([asset]);
+
+        const fetchArgs = window.fetch.getCall(0).args;
+        expect(fetchArgs[0]).to.equal('/api/assets');
+        expect(fetchArgs[1].method).to.equal('DELETE');
+        expect(fetchArgs[1].headers).to.deep.equal({
+            'Content-Type': 'application/json'
+        });
+        const data = JSON.parse(fetchArgs[1].body);
+        expect(data.assets).to.deep.equal([1]);
+        expect(data.branchId).to.equal('branch');
+
+        expect(api.globals.assets.list()).to.deep.equal([]);
+    });
 });

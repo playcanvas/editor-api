@@ -629,6 +629,30 @@ class Assets extends Events {
         entity.set('template_ent_ids', oldToNewIds);
         entity.history.enabled = history;
     }
+
+    /**
+     * Deletes specified assets
+     *
+     * @param {Asset[]} assets - The assets
+     */
+    async delete(assets) {
+        const response = await fetch('/api/assets', {
+            body: JSON.stringify({
+                assets: assets.map(a => a.get('id')),
+                branchId: api.branchId
+            }),
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(response.status + ': ' + response.statusText);
+        }
+
+        assets.forEach(a => this.remove(a));
+    }
 }
 
 export { Assets };
