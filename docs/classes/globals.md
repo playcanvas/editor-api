@@ -15,13 +15,14 @@ Global variables
 - [entities](globals.md#entities)
 - [projectId](globals.md#projectid)
 - [branchId](globals.md#branchid)
-- [hasLegacyScripts](globals.md#haslegacyscripts)
 
 ### Internal Properties
 
 - [realtime](globals.md#realtime)
-- [url](globals.md#url)
+- [messenger](globals.md#messenger)
+- [jobs](globals.md#jobs)
 - [accessToken](globals.md#accesstoken)
+- [hasLegacyScripts](globals.md#haslegacyscripts)
 
 ## Public Properties
 
@@ -33,7 +34,7 @@ The history API
 
 #### Defined in
 
-[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L16)
+[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L16)
 
 ___
 
@@ -45,7 +46,7 @@ The selection API
 
 #### Defined in
 
-[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L23)
+[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L23)
 
 ___
 
@@ -57,7 +58,7 @@ The schema API
 
 #### Defined in
 
-[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L30)
+[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L30)
 
 ___
 
@@ -69,7 +70,7 @@ The assets API
 
 #### Defined in
 
-[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L45)
+[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L45)
 
 ___
 
@@ -81,7 +82,7 @@ The entities API
 
 #### Defined in
 
-[src/globals.js:52](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L52)
+[src/globals.js:52](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L52)
 
 ___
 
@@ -93,7 +94,7 @@ The current project id
 
 #### Defined in
 
-[src/globals.js:78](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L78)
+[src/globals.js:83](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L83)
 
 ___
 
@@ -105,19 +106,7 @@ The current branch id
 
 #### Defined in
 
-[src/globals.js:85](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L85)
-
-___
-
-### hasLegacyScripts
-
-▪ `Static` **hasLegacyScripts**: `boolean`
-
-Whether this project is using legacy scripts
-
-#### Defined in
-
-[src/globals.js:92](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L92)
+[src/globals.js:90](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L90)
 
 ___
 
@@ -131,21 +120,31 @@ The realtime API
 
 #### Defined in
 
-[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L38)
+[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L38)
 
 ___
 
-### url
+### messenger
 
-▪ `Static` **url**: `any`
+▪ `Static` **messenger**: [`Messenger`](Messenger.md)
 
-Global URLs
-
-**`property`** {string} realtime - The realtime server URL
+The messenger API
 
 #### Defined in
 
-[src/globals.js:61](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L61)
+[src/globals.js:60](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L60)
+
+___
+
+### jobs
+
+▪ `Static` **jobs**: [`Jobs`](Jobs.md)
+
+The jobs API
+
+#### Defined in
+
+[src/globals.js:68](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L68)
 
 ___
 
@@ -157,4 +156,16 @@ The user's access token
 
 #### Defined in
 
-[src/globals.js:71](https://github.com/playcanvas/editor-api/blob/f0df60d/src/globals.js#L71)
+[src/globals.js:76](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L76)
+
+___
+
+### hasLegacyScripts
+
+▪ `Static` **hasLegacyScripts**: `boolean`
+
+Whether this project is using legacy scripts
+
+#### Defined in
+
+[src/globals.js:98](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L98)

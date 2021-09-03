@@ -24,6 +24,7 @@ The entities editor API
 - [delete](Entities.md#delete)
 - [reparent](Entities.md#reparent)
 - [duplicate](Entities.md#duplicate)
+- [waitToExist](Entities.md#waittoexist)
 
 ### Internal Methods
 
@@ -49,7 +50,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:28](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L28)
+[src/entities.js:29](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L29)
 
 ## Public Methods
 
@@ -78,7 +79,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:48](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L48)
+[src/entities.js:49](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L49)
 
 ___
 
@@ -102,7 +103,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:63](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L63)
+[src/entities.js:64](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L64)
 
 ___
 
@@ -142,7 +143,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:227](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L227)
+[src/entities.js:228](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L228)
 
 ___
 
@@ -171,7 +172,7 @@ editor.entities.delete([entity1, entity2]);
 
 #### Defined in
 
-[src/entities.js:243](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L243)
+[src/entities.js:244](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L244)
 
 ___
 
@@ -206,7 +207,7 @@ editor.entities.reparent([{
 
 #### Defined in
 
-[src/entities.js:264](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L264)
+[src/entities.js:265](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L265)
 
 ___
 
@@ -234,7 +235,35 @@ The duplicated entities
 
 #### Defined in
 
-[src/entities.js:278](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L278)
+[src/entities.js:279](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L279)
+
+___
+
+### waitToExist
+
+▸ **waitToExist**(`entityIds`, `timeoutMs`, `callback`): `Function`
+
+Waits for specified entity ids to be added to the scene.
+Once they are the callback is called with the entities as its argument.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entityIds` | `string`[] | The ids of the entities to wait for |
+| `timeoutMs` | `number` | Number of ms to wait before stopping to wait |
+| `callback` | `Function` | The callback to call when all entities have been added. The signature is (Entity[]) => void. |
+
+#### Returns
+
+`Function`
+
+Returns a cancel function which can be called to cancel calling the
+callback when the entities are added.
+
+#### Defined in
+
+[src/entities.js:296](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L296)
 
 ___
 
@@ -258,7 +287,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:73](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L73)
+[src/entities.js:74](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L74)
 
 ___
 
@@ -280,7 +309,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:101](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L101)
+[src/entities.js:102](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L102)
 
 ___
 
@@ -303,7 +332,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:116](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L116)
+[src/entities.js:117](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L117)
 
 ___
 
@@ -325,7 +354,7 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:161](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L161)
+[src/entities.js:162](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L162)
 
 ___
 
@@ -341,4 +370,4 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:183](https://github.com/playcanvas/editor-api/blob/f0df60d/src/entities.js#L183)
+[src/entities.js:184](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L184)
