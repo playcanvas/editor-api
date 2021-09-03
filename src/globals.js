@@ -96,6 +96,24 @@ class globals {
      * @category Internal
      */
     static hasLegacyScripts;
+
+    /**
+     * Alert function called when user confirmation is needed
+     * for an action. Defaults to the default browser popup but
+     * can be overriden to show your custom popup instead.
+     *
+     * @param {string} text - The confirm dialog text
+     * @param {object} options - Options for the popup
+     * @param {string} options.yesText - Text for 'yes' option
+     * @param {string} options.noText - Text for 'no' option
+     * @param {boolean} options.noDismiss - If true then user cannot dismiss the popup and will have to click yes or no
+     * @returns {Promise<boolean>} True if the user confirmed, false otherwise
+     */
+    static confirmFn(text, options = {}) {
+        return new Promise((resolve) => {
+            resolve(confirm(text)); // eslint-disable-line
+        });
+    }
 }
 
 export { globals };

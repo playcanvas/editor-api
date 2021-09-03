@@ -302,7 +302,7 @@ async function duplicateEntities(entities, options) {
     let newEntities = [];
 
     // If we have a lot of entities duplicate in the backend
-    if (entities.length > USE_BACKEND_LIMIT && api.messenger) {
+    if (api.messenger && api.jobs && entities.length > USE_BACKEND_LIMIT) {
         newEntities = await duplicateInBackend(entities, options);
     } else {
         // remember previous selection

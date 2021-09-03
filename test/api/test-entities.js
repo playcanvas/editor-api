@@ -160,13 +160,13 @@ describe('api.Entities tests', function () {
         expect(e.children[0].children[0].get('name')).to.equal('subchild');
     });
 
-    it('delete removes entity', function () {
+    it('delete removes entity', async function () {
         const e = api.globals.entities.create();
-        api.globals.entities.delete([e]);
+        await api.globals.entities.delete([e]);
         expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
-    it('delete removes children', function () {
+    it('delete removes children', async function () {
         const e = api.globals.entities.create({
             name: 'parent',
             children: [{
@@ -176,13 +176,13 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        api.globals.entities.delete([e]);
+        await api.globals.entities.delete([e]);
 
         expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
         expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
-    it('delete works when children are passed along with parents', function () {
+    it('delete works when children are passed along with parents', async function () {
         const e = api.globals.entities.create({
             name: 'parent',
             children: [{
@@ -192,13 +192,13 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        api.globals.entities.delete([c, e]);
+        await api.globals.entities.delete([c, e]);
 
         expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
         expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
-    it('undo delete brings back entities with same data as before', function () {
+    it('undo delete brings back entities with same data as before', async function () {
         api.globals.history = new api.History();
 
         const e = api.globals.entities.create({
@@ -213,7 +213,7 @@ describe('api.Entities tests', function () {
         const eJson = e.json();
         const cJson = c.json();
 
-        api.globals.entities.delete([e]);
+        await api.globals.entities.delete([e]);
 
         api.globals.history.undo();
 
@@ -227,7 +227,7 @@ describe('api.Entities tests', function () {
         expect(api.globals.entities.get(c.get('resource_id')).json()).to.deep.equal(cJson);
     });
 
-    it('redo delete deletes entities', function () {
+    it('redo delete deletes entities', async function () {
         api.globals.history = new api.History();
 
         const e = api.globals.entities.create({
@@ -239,7 +239,7 @@ describe('api.Entities tests', function () {
 
         const c = e.children[0];
 
-        api.globals.entities.delete([e]);
+        await api.globals.entities.delete([e]);
 
         api.globals.history.undo();
         api.globals.history.redo();
@@ -248,7 +248,7 @@ describe('api.Entities tests', function () {
         expect(api.globals.entities.get(c.get('resource_id'))).to.equal(null);
     });
 
-    it('delete removes from selection', function () {
+    it('delete removes from selection', async function () {
         api.globals.history = new api.History();
         api.globals.selection = new api.Selection();
 
@@ -257,7 +257,7 @@ describe('api.Entities tests', function () {
         });
 
         expect(api.globals.selection.items).to.deep.equal([e]);
-        api.globals.entities.delete([e]);
+        await api.globals.entities.delete([e]);
         expect(api.globals.selection.items).to.deep.equal([]);
 
         // check undo brings back selection
@@ -265,7 +265,7 @@ describe('api.Entities tests', function () {
         expect(api.globals.selection.items[0].get('resource_id')).to.equal(e.get('resource_id'));
     });
 
-    it('delete removes entity references', function () {
+    it('delete removes entity references', async function () {
         api.globals.schema = new api.Schema(schema);
         api.globals.history = new api.History();
         api.globals.assets = new api.Assets();
@@ -321,7 +321,7 @@ describe('api.Entities tests', function () {
             expect(e.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([reference, reference]);
         });
 
-        api.globals.entities.delete([c1]);
+        await api.globals.entities.delete([c1]);
 
         [root, c1, c2, c3].forEach(e => {
             expect(e.get('components.testcomponent.entityRef')).to.equal(null);
