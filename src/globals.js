@@ -52,15 +52,20 @@ class globals {
     static entities;
 
     /**
-     * Global URLs
+     * The messenger API
      *
+     * @type {import("./messenger").Messenger}
      * @category Internal
-     * @type {object}
-     * @property {string} realtime - The realtime server URL
      */
-    static url = {
-        realtime: null
-    };
+    static messenger;
+
+    /**
+     * The jobs API
+     *
+     * @type {import("./jobs").Jobs}
+     * @category Internal
+     */
+    static jobs;
 
     /**
      * The user's access token
@@ -88,6 +93,7 @@ class globals {
      * Whether this project is using legacy scripts
      *
      * @type {boolean}
+     * @category Internal
      */
     static hasLegacyScripts;
 }

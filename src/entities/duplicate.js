@@ -3,6 +3,11 @@ import { findEntityReferencesInComponents, updateReferences } from './references
 
 /** @typedef {import("../entity").Entity} Entity */
 
+const TIME_WAIT_ENTITIES = 5000;
+let evtMessenger = null;
+
+const USE_BACKEND_LIMIT = 500;
+
 /**
  * When an entity that has properties that contain references to some entities
  * within its subtree is duplicated, update the references to the corresponding entities within
@@ -146,6 +151,85 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     return entity;
 }
 
+function duplicateInBackend(entities, options) {
+    const originalEntities = entities;
+    let cancelWaitForEntities;
+
+    let deferred = {
+        resolve: null,
+        reject: null
+    };
+
+    const promise = new Promise((resolve, reject) => {
+        deferred.resolve = resolve;
+        deferred.reject = reject;
+    });
+
+    if (!evtMessenger) {
+        evtMessenger = api.messenger.on('entity.copy', data => {
+            const callback = api.jobs.finish(data.job_id);
+            if (!callback) return;
+
+            const result = data.multTaskResults.map(d => d.newRootId);
+            callback(result);
+        });
+    }
+
+    function redo() {
+        const jobId = api.jobs.start((newEntityIds) => {
+            const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, newEntities => {
+                entities = newEntities;
+
+                if (deferred) {
+                    deferred.resolve(newEntities);
+                    deferred = null;
+                }
+            });
+
+            cancelWaitForEntities = () => {
+                cancel();
+                if (deferred) {
+                    deferred.reject();
+                    deferred = null;
+                }
+            };
+        });
+
+        api.realtime.connection.sendMessage('pipeline', {
+            name: 'entities-duplicate',
+            data: {
+                projectId: api.projectId,
+                branchId: api.branchId,
+                sceneId: api.realtime.scenes.current.uniqueId,
+                jobId: jobId,
+                entities: originalEntities.map(e => e.get('resource_id'))
+            }
+        });
+    }
+
+    redo();
+
+    // add history
+    if (options.history && api.history) {
+        api.history.add({
+            name: 'duplicate entities',
+            redo: redo,
+            undo: () => {
+                if (cancelWaitForEntities) {
+                    cancelWaitForEntities();
+                    cancelWaitForEntities = null;
+                }
+
+                api.entities.delete(entities, {
+                    history: false
+                });
+            }
+        });
+    }
+
+    return promise;
+}
+
 /**
  * Duplicates entities under the same parent
  *
@@ -215,88 +299,91 @@ async function duplicateEntities(entities, options) {
         originalOrder[e.get('resource_id')][1] = i;
     });
 
-    // TODO: If we have a lot of entities duplicate in the backend
-
-    // remember previous selection
-    let previousSelection;
-    if (options.history && api.history && api.selection && options.select) {
-        previousSelection = api.selection.items;
-    }
-
     let newEntities = [];
 
-    // duplicate
-    entities.forEach(entity => {
-        const duplicatedIdsMap = {};
+    // If we have a lot of entities duplicate in the backend
+    if (entities.length > USE_BACKEND_LIMIT && api.messenger) {
+        newEntities = await duplicateInBackend(entities, options);
+    } else {
+        // remember previous selection
+        let previousSelection;
+        if (options.history && api.history && api.selection && options.select) {
+            previousSelection = api.selection.items;
+        }
 
-        const newEntity = duplicateEntity(
-            entity,
-            entity.parent,
-            records[entity.get('resource_id')].index + 1,
-            duplicatedIdsMap,
-            options.rename
-        );
+        // duplicate
+        entities.forEach(entity => {
+            const duplicatedIdsMap = {};
 
-        updateDuplicatedEntityReferences(newEntity, entity, duplicatedIdsMap);
+            const newEntity = duplicateEntity(
+                entity,
+                entity.parent,
+                records[entity.get('resource_id')].index + 1,
+                duplicatedIdsMap,
+                options.rename
+            );
 
-        newEntities.push(newEntity);
-    });
+            updateDuplicatedEntityReferences(newEntity, entity, duplicatedIdsMap);
+
+            newEntities.push(newEntity);
+        });
+
+        if (options.history && api.history) {
+            let previous;
+
+            api.history.add({
+                name: 'duplicate entities',
+                undo: () => {
+                    // remember previous entities
+                    previous = {};
+                    newEntities.forEach(entity => {
+                        entity.depthFirst(e => {
+                            previous[e.get('resource_id')] = e.json();
+                        });
+                    });
+
+                    api.entities.delete(newEntities, {
+                        history: false
+                    });
+
+                    if (previousSelection) {
+                        api.selection.set(previousSelection, {
+                            history: false
+                        });
+                    }
+                },
+                redo: () => {
+                    function recreateEntityData(data) {
+                        data = Object.assign({}, data);
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        return data;
+                    }
+
+                    newEntities = newEntities.map((entity, index) => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                        entity = api.entities.create(data, {
+                            history: false,
+                            select: false,
+                            index: records[entities[index].get('resource_id')].index + 1
+                        });
+
+                        return entity;
+                    });
+
+                    if (options.select && api.selection) {
+                        api.selection.set(newEntities, { history: false });
+                    }
+
+                    previous = null;
+                }
+            });
+        }
+    }
 
     // select duplicated
     if (options.select && api.selection) {
         api.selection.set(newEntities, {
             history: false
-        });
-    }
-
-    if (options.history && api.history) {
-        let previous;
-
-        api.history.add({
-            name: 'duplicate entities',
-            undo: () => {
-                // remember previous entities
-                previous = {};
-                newEntities.forEach(entity => {
-                    entity.depthFirst(e => {
-                        previous[e.get('resource_id')] = e.json();
-                    });
-                });
-
-                api.entities.delete(newEntities, {
-                    history: false
-                });
-
-                if (previousSelection) {
-                    api.selection.set(previousSelection, {
-                        history: false
-                    });
-                }
-            },
-            redo: () => {
-                function recreateEntityData(data) {
-                    data = Object.assign({}, data);
-                    data.children = data.children.map(id => recreateEntityData(previous[id]));
-                    return data;
-                }
-
-                newEntities = newEntities.map((entity, index) => {
-                    const data = recreateEntityData(previous[entity.get('resource_id')]);
-                    entity = api.entities.create(data, {
-                        history: false,
-                        select: false,
-                        index: records[entities[index].get('resource_id')].index + 1
-                    });
-
-                    return entity;
-                });
-
-                if (options.select && api.selection) {
-                    api.selection.set(newEntities, { history: false });
-                }
-
-                previous = null;
-            }
         });
     }
 

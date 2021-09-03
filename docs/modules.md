@@ -20,6 +20,8 @@
 
 ### Internal Classes
 
+- [Jobs](classes/Jobs.md)
+- [Messenger](classes/Messenger.md)
 - [Realtime](classes/Realtime.md)
 - [RealtimeAsset](classes/RealtimeAsset.md)
 - [RealtimeAssets](classes/RealtimeAssets.md)

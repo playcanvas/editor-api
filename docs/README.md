@@ -2,7 +2,7 @@ PlayCanvas Editor API / [Exports](modules.md)
 
 # Overview
 
-This is the PlayCanvas Editor API. You can find API documentation [here](modules.md).
+This is the PlayCanvas Editor API. You can find API documentation [here](docs/modules.md).
 
 # Installing
 Run:
@@ -17,7 +17,7 @@ Run:
 npm run build
 ```
 
-The built file will be under dist/api.js.
+This will create a UMD build under `dist/index.js` and an ES6 module under `dist/index.mjs`.
 
 # Docs
 
