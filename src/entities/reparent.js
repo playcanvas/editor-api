@@ -35,7 +35,14 @@ function reparentEntities(data, options = {}) {
         return record;
     });
 
-    const doReparent = (entity, parent, indNew, parentOld, indOld, recordIndex, position, rotation) => {
+    // sort records by a field
+    const sortRecords = (by) => {
+        records.sort((a, b) => {
+            return a[by] - b[by];
+        });
+    };
+
+    const isValidRecord = (entity, parentOld, parent) => {
         const resourceId = entity.get('resource_id');
         if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
             return false;
@@ -53,17 +60,23 @@ function reparentEntities(data, options = {}) {
             checkParent = checkParent.parent;
         }
 
-        if (deny)
-            return false;
+        return !deny;
+    };
 
-        parentOld.history.enabled = false;
-        parentOld.removeValue('children', resourceId);
-        parentOld.history.enabled = true;
+
+    const doReparent = (entity, parent, indNew, position, rotation) => {
+        const history = {
+            parent: parent.history.enabled,
+            entity: entity.history.enabled
+        };
 
         parent.history.enabled = false;
-        const off = parent !== parentOld ? 0 : ((indNew > indOld) ? (records.length - 1 - recordIndex) : 0);
-        parent.insert('children', resourceId, indNew + off);
-        parent.history.enabled = true;
+        if (indNew !== -1 && indNew <= parent.get('children').length) {
+            parent.insert('children', entity.get('resource_id'), indNew);
+        } else {
+            parent.insert('children', entity.get('resource_id'));
+        }
+        parent.history.enabled = history.parent;
 
         entity.history.enabled = false;
         entity.set('parent', parent.get('resource_id'));
@@ -78,14 +91,13 @@ function reparentEntities(data, options = {}) {
             entity.set('rotation', [localRotation.x, localRotation.y, localRotation.z]);
         }
 
-        entity.history.enabled = true;
-
-        return true;
+        entity.history.enabled = history.entity;
     };
 
     const redo = () => {
-        let dirty = false;
-        records.forEach((record, i) => {
+        sortRecords('indNew');
+
+        const latest = (record) => {
             const entity = record.entity.latest();
             if (!entity) return;
 
@@ -93,18 +105,67 @@ function reparentEntities(data, options = {}) {
             const parentOld = entity.parent;
             if (!parentOld || !parent) return;
 
-            if (doReparent(entity, parent, record.indNew, parentOld, record.indOld, i, record.position, record.rotation)) {
-                dirty = true;
+            return { entity, parent, parentOld };
+        };
+
+        const validRecords = [];
+        records.forEach((record, i) => {
+            const data = latest(record);
+            if (!data) return;
+
+            if (isValidRecord(data.entity, data.parentOld, data.parent)) {
+                validRecords.push(record);
             }
         });
 
-        return dirty;
+        if (!validRecords.length) return false;
+
+        // remember selection
+        let selection;
+        let selectionHistory;
+        if (api.selection)  {
+            selection = api.selection.items;
+            selectionHistory = api.selection.history.enabled;
+            api.selection.history.enabled = false;
+        }
+
+        // remove all children from old parents
+        validRecords.forEach(record => {
+            const parentOld = record.entity.latest().parent;
+            const history = parentOld.history.enabled;
+            parentOld.history.enabled = false;
+            parentOld.removeValue('children', record.resourceId);
+            parentOld.history.enabled = history;
+        });
+
+        // reparent
+        validRecords.forEach(record => {
+            const data = latest(record);
+
+            doReparent(
+                data.entity,
+                data.parent,
+                record.indNew,
+                record.position,
+                record.rotation
+            );
+        });
+
+        // restore selection
+        if (selection) {
+            api.selection.set(selection, { history: false });
+            api.selection.history.enabled = selectionHistory;
+        }
+
+        return true;
     };
 
     const dirty = redo();
     if (dirty && options.history && api.history) {
         const undo = () => {
-            records.forEach((record, i) => {
+            sortRecords('indOld');
+
+            const latest = (record) => {
                 const entity = record.entity.latest();
                 if (!entity) return;
 
@@ -114,8 +175,57 @@ function reparentEntities(data, options = {}) {
                 const parentOld = record.parentOld.latest();
                 if (!parentOld) return;
 
-                doReparent(entity, parentOld, record.indOld, parent, record.indNew, i, record.position, record.rotation);
+                return { entity, parent, parentOld };
+            };
+
+            const validRecords = [];
+
+            records.forEach((record) => {
+                const data = latest(record);
+
+                if (isValidRecord(data.entity, data.parent, data.parentOld)) {
+                    validRecords.push(record);
+                }
             });
+
+            if (!validRecords.length) return;
+
+            // remember selection
+            let selection;
+            let selectionHistory;
+            if (api.selection)  {
+                selection = api.selection.items;
+                selectionHistory = api.selection.history.enabled;
+                api.selection.history.enabled = false;
+            }
+
+            // remove all children from parents
+            validRecords.forEach(record => {
+                const parent = record.entity.latest().parent;
+                const history = parent.history.enabled;
+                parent.history.enabled = false;
+                parent.removeValue('children', record.resourceId);
+                parent.history.enabled = history;
+            });
+
+            // reparent
+            validRecords.forEach(record => {
+                const data = latest(record);
+
+                doReparent(
+                    data.entity,
+                    data.parentOld,
+                    record.indOld,
+                    record.position,
+                    record.rotation
+                );
+            });
+
+            // restore selection
+            if (selection) {
+                api.selection.set(selection, { history: false });
+                api.selection.history.enabled = selectionHistory;
+            }
         };
 
         api.history.add({
