@@ -238,11 +238,11 @@ class Entities extends Events {
      *
      * @example
      * ```javascript
-     * editor.entities.delete([entity1, entity2]);
+     * await editor.entities.delete([entity1, entity2]);
      * ```
      */
-    delete(entities, options = {}) {
-        deleteEntities(entities, options);
+    async delete(entities, options = {}) {
+        await deleteEntities(entities, options);
     }
 
     /**
@@ -275,6 +275,8 @@ class Entities extends Events {
      * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
      * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
      * @returns {Promise<Entity[]>} The duplicated entities
+     * @example
+     * const duplicated = await editor.entities.duplicate(entities);
      */
     async duplicate(entities, options = {}) {
         const result = await duplicateEntities(entities, options);

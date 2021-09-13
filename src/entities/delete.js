@@ -1,6 +1,59 @@
 import { globals as api } from '../globals';
 import { findEntityReferencesInComponents, updateReferences } from './references';
 
+const USE_BACKEND_LIMIT = 500;
+
+let evtMessenger = null;
+
+// Gets the count of the entities and their children
+function getTotalEntityCount(entities) {
+    let count = 0;
+
+    entities.forEach(entity => {
+        entity.depthFirst(() => count++);
+    });
+
+    return count;
+}
+
+// When we have a lot of entities to delete
+// do it in the backend
+function deleteInBackend(entities) {
+    const deferred = {
+        resolve: null
+    };
+
+    const promise = new Promise((resolve) => {
+        deferred.resolve = resolve;
+    });
+
+    const jobId = api.jobs.start(() => {
+        deferred.resolve();
+    });
+
+    if (!evtMessenger) {
+        evtMessenger = api.messenger.on('entity.delete', data => {
+            const callback = api.jobs.finish(data.job_id);
+            if (callback) {
+                callback();
+            }
+        });
+    }
+
+    api.realtime.connection.sendMessage('pipeline', {
+        name: 'entities-delete',
+        data: {
+            projectId: api.projectId,
+            branchId: api.branchId,
+            sceneId: api.realtime.scenes.current.uniqueId,
+            jobId: jobId,
+            entities: entities.map(e => e.get('resource_id'))
+        }
+    });
+
+    return promise;
+}
+
 /**
  * Delete specified entities
  *
@@ -10,7 +63,7 @@ import { findEntityReferencesInComponents, updateReferences } from './references
  * @param {object} [options] - Options
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
  */
-function deleteEntities(entities, options = {}) {
+async function deleteEntities(entities, options = {}) {
     if (options.history === undefined) {
         options.history = true;
     }
@@ -40,7 +93,20 @@ function deleteEntities(entities, options = {}) {
         return !parentInSelection;
     });
 
-    // TODO: if we have a lot of entities delete in backend
+    if (api.messenger &&
+        api.jobs &&
+        api.realtime &&
+        api.realtime.scenes.current &&
+        getTotalEntityCount(entities) > USE_BACKEND_LIMIT) {
+
+        if (options.history) {
+            const ok = await api.confirmFn('Deleting this many entities is not undoable. Are you sure?');
+            if (ok) {
+                await deleteInBackend(entities);
+            }
+            return;
+        }
+    }
 
     // remember previous entities
     let previous;

@@ -402,6 +402,7 @@ class Entity extends Events {
      *
      * @param {object} options - Options
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @returns {Promise<void>} A promise
      * @example
      * ```javascript
      * editor.entities.root.findByName('door').delete();
@@ -409,7 +410,7 @@ class Entity extends Events {
      *
      */
     delete(options = {}) {
-        api.entities.delete([this], options);
+        return api.entities.delete([this], options);
     }
 
     /**
