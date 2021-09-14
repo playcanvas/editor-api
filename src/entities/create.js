@@ -69,6 +69,10 @@ function createEntity(data, options = {}) {
         });
     }
 
+    if (data.onCreate) {
+        data.onCreate(entity);
+    }
+
     let prevSelection;
 
     // remember previous selection
@@ -108,13 +112,10 @@ function createEntity(data, options = {}) {
                 entity = createEntity(data, {
                     history: false,
                     select: options.select
-                }
-                );
+                });
             }
         });
     }
-
-    // TODO: post creation callaback
 
     return entity;
 }

@@ -160,6 +160,25 @@ describe('api.Entities tests', function () {
         expect(e.children[0].children[0].get('name')).to.equal('subchild');
     });
 
+    it('create calls onCreate for each new entity', function () {
+        const called = [];
+        const onCreate = (e) => called.push(e);
+
+        const e = api.globals.entities.create({
+            onCreate: onCreate,
+            children: [{
+                onCreate: onCreate,
+                children: [{
+                    onCreate: onCreate
+                }]
+            }, {
+                onCreate: onCreate
+            }]
+        });
+
+        expect(called).to.deep.equal([e.children[0].children[0], e.children[0], e.children[1], e]);
+    });
+
     it('delete removes entity', async function () {
         const e = api.globals.entities.create();
         await api.globals.entities.delete([e]);
