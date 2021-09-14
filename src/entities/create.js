@@ -11,6 +11,7 @@ import { Entity } from '../entity';
  * @param {number} [options.index] - The child index that this entity will have under its parent.
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
  * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
+ * also be executed if you redo creating the entity (after undo).
  * @returns {Entity} The new entity
  */
 function createEntity(data, options = {}) {
@@ -69,6 +70,10 @@ function createEntity(data, options = {}) {
         });
     }
 
+    if (data.onCreate) {
+        data.onCreate(entity);
+    }
+
     let prevSelection;
 
     // remember previous selection
@@ -108,8 +113,7 @@ function createEntity(data, options = {}) {
                 entity = createEntity(data, {
                     history: false,
                     select: options.select
-                }
-                );
+                });
             }
         });
     }
