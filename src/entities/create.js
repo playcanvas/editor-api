@@ -118,8 +118,6 @@ function createEntity(data, options = {}) {
         });
     }
 
-    // TODO: post creation callaback
-
     return entity;
 }
 
