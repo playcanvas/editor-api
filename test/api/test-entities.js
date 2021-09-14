@@ -311,7 +311,7 @@ describe('api.Entities tests', function () {
                         }
                     }
                 }
-            })
+            });
             expect(e.get('components.testcomponent.entityRef')).to.equal(reference);
             expect(e.get('components.script.scripts.test.attributes.entity')).to.equal(reference);
             expect(e.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([reference, reference]);
@@ -499,17 +499,20 @@ describe('api.Entities tests', function () {
         expect(child.parent).to.equal(parent2);
     });
 
-    it('reparent multiple children preserves order', function () {
-        api.globals.history = new api.History()
+    it('reparent multiple children preserves order and selection', function () {
+        api.globals.history = new api.History();
+        api.globals.selection = new api.Selection();
         const root = api.globals.entities.create();
         const parent1 = api.globals.entities.create({ parent: root });
         const parent2 = api.globals.entities.create({ parent: root });
-        const child1 = api.globals.entities.create({ parent: parent1 });
-        const child2 = api.globals.entities.create({ parent: parent1 });
-        const child3 = api.globals.entities.create({ parent: parent1 });
-        const child4 = api.globals.entities.create({ parent: parent1 });
+        const child1 = api.globals.entities.create({ name: 'child1', parent: parent1 });
+        const child2 = api.globals.entities.create({ name: 'child2', parent: parent1 });
+        const child3 = api.globals.entities.create({ name: 'child3', parent: parent1 });
+        const child4 = api.globals.entities.create({ name: 'child4', parent: parent1 });
 
         expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
+
+        api.globals.selection.set([child1, child2, child4], { history: false });
 
         api.globals.entities.reparent([{
             entity: child1,
@@ -523,12 +526,39 @@ describe('api.Entities tests', function () {
             entity: child4,
             parent: parent2,
             index: 2
-        }])
+        }]);
         expect(parent2.children).to.deep.equal([child1, child2, child4]);
+        expect(api.globals.selection.items).to.deep.equal([child1, child2, child4]);
 
         api.globals.history.undo();
 
         expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
+        expect(api.globals.selection.items).to.deep.equal([child1, child2, child4]);
+
+        api.globals.entities.reparent([{
+            entity: child1,
+            parent: parent1,
+            index: 3
+        }, {
+            entity: child2,
+            parent: parent1,
+            index: 2
+        }, {
+            entity: child3,
+            parent: parent1,
+            index: 1
+        }, {
+            entity: child4,
+            parent: parent1,
+            index: 0
+        }]);
+        expect(parent1.children).to.deep.equal([child4, child3, child2, child1]);
+        expect(api.globals.selection.items).to.deep.equal([child1, child2, child4]);
+
+        api.globals.history.undo();
+
+        expect(parent1.children).to.deep.equal([child1, child2, child3, child4]);
+        expect(api.globals.selection.items).to.deep.equal([child1, child2, child4]);
     });
 
     it('duplicate duplicates an entity', async function () {
