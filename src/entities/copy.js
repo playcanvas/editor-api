@@ -178,33 +178,8 @@ function gatherDependencies(entity, data) {
     }
 }
 
-/**
- * Copy specified entities to localStorage clipboard. Can be used
- * to paste these entities later on.
- *
- * @param {Entity[]} entities - The entities
- */
-function copyEntities(entities) {
-    const currentScene = api.realtime.scenes.current;
-    if (!currentScene) throw new Error('No current scene loaded');
-
-    const data = {
-        project: api.projectId,
-        scene: currentScene.uniqueId,
-        branch: api.branchId,
-        legacy_scripts: api.hasLegacyScripts,
-        hierarchy: {},
-        assets: {},
-        type: 'entity'
-    };
-
-    // build index
-    const selection = {};
-    for (let i = 0; i < entities.length; i++) {
-        selection[entities[i].get('resource_id')] = entities[i];
-    }
-
-    // sort entities by their index in their parent's children list
+// Sorts entities by their index in their parent's children list
+function sortEntities(entities) {
     entities.sort((a, b) => {
         let parentA = a.get('parent');
         if (!parentA)
@@ -228,6 +203,35 @@ function copyEntities(entities) {
 
         return indA - indB;
     });
+}
+
+/**
+ * Copy specified entities to localStorage clipboard. Can be used
+ * to paste these entities later on.
+ *
+ * @param {Entity[]} entities - The entities
+ */
+function copyEntities(entities) {
+    const currentScene = api.realtime?.scenes?.current;
+    if (!currentScene) throw new Error('No current scene loaded');
+
+    const data = {
+        project: api.projectId,
+        scene: currentScene.uniqueId,
+        branch: api.branchId,
+        legacy_scripts: api.hasLegacyScripts,
+        hierarchy: {},
+        assets: {},
+        type: 'entity'
+    };
+
+    // build index
+    const selection = {};
+    for (let i = 0; i < entities.length; i++) {
+        selection[entities[i].get('resource_id')] = entities[i];
+    }
+
+    sortEntities(entities);
 
     for (let i = 0; i < entities.length; i++) {
         const e = entities[i];

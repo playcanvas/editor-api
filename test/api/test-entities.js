@@ -46,11 +46,28 @@ describe('api.Entities tests', function () {
         });
     }
 
+    function prepareCopyTest() {
+        // mock realtime scenes
+        api.globals.realtime = {
+            scenes: {
+                current: {
+                    addEntity: () => {},
+                    uniqueId: 1
+                }
+            }
+        };
+
+        api.globals.projectId = 1;
+        api.globals.branchId = 'branch';
+        api.globals.clipboard = new api.Clipboard('clippy');
+        api.globals.schema = new api.Schema(schema);
+        api.globals.assets = new api.Assets();
+    }
+
     beforeEach(() => {
-        api.globals.history = null;
-        api.globals.selection = null;
-        api.globals.schema = null;
-        api.globals.assets = null;
+        for (const key in api.globals) {
+            api.globals[key] = undefined;
+        }
         api.globals.entities = new api.Entities();
     });
 
@@ -823,5 +840,300 @@ describe('api.Entities tests', function () {
         api.globals.entities.add(e);
 
         await promise;
+    });
+
+    it('copy entities fails without a current scene', async function () {
+        const e = api.globals.entities.create();
+        try {
+            await api.globals.entities.copyToClipboard([e]);
+            throw new Error('should have thrown exception');
+        } catch (err) {
+            expect(err.message).to.equal('No current scene loaded');
+        }
+    });
+
+    it('copies single entity', async function () {
+        prepareCopyTest();
+        const e = api.globals.entities.create();
+        await api.globals.entities.copyToClipboard([e]);
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copies 2 unrelated entities', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const e2 = api.globals.entities.create({ parent: root });
+
+        await api.globals.entities.copyToClipboard([e, e2]);
+
+        const eJson = e.json();
+        eJson.parent = null;
+        const e2Json = e2.json();
+        e2Json.parent = null;
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: eJson,
+                [e2.get('resource_id')]: e2Json
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copy filters children from parents if parents and children are selected', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const e2 = api.globals.entities.create({ parent: e });
+
+        await api.globals.entities.copyToClipboard([e, e2]);
+
+        const eJson = e.json();
+        eJson.parent = null;
+
+        const e2Json = e2.json();
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: eJson,
+                [e2.get('resource_id')]: e2Json
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copy picks up asset references', async function () {
+        prepareCopyTest();
+
+        const assets = [];
+        for (let i = 0; i < 4; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const e = api.globals.entities.create();
+        const e2 = api.globals.entities.create();
+        e.addComponent('testcomponent', {
+            assetRef: assets[0].get('id')
+        });
+        e2.addComponent('testcomponent', {
+            assetArrayRef: [assets[1].get('id'), assets[2].get('id')],
+            nestedAssetRef: {
+                1: {
+                    asset: assets[3].get('id')
+                }
+            }
+        });
+        await api.globals.entities.copyToClipboard([e, e2]);
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json(),
+                [e2.get('resource_id')]: e2.json()
+            },
+            assets: {
+                [assets[0].get('id')]: {
+                    path: [assets[0].get('name')],
+                    type: assets[0].get('type')
+                },
+                [assets[1].get('id')]: {
+                    path: [assets[1].get('name')],
+                    type: assets[1].get('type')
+                },
+                [assets[2].get('id')]: {
+                    path: [assets[2].get('name')],
+                    type: assets[2].get('type')
+                },
+                [assets[3].get('id')]: {
+                    path: [assets[3].get('name')],
+                    type: assets[3].get('type')
+                }
+            },
+            type: 'entity'
+        }));
+    });
+
+    it('copy picks up assets from script attributes', async function () {
+        prepareCopyTest();
+
+        const assets = [];
+        for (let i = 0; i < 6; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const scriptAsset = new api.Asset({
+            id: 20,
+            type: 'script',
+            data: {
+                scripts: {
+                    test: {
+                        attributes: {
+                            asset: {
+                                type: 'asset'
+                            },
+                            assetArray: {
+                                type: 'asset',
+                                array: true
+                            },
+                            json: {
+                                type: 'json',
+                                schema: [{
+                                    name: 'asset',
+                                    type: 'asset'
+                                }, {
+                                    name: 'assetArray',
+                                    type: 'asset',
+                                    array: true
+                                }]
+                            },
+                            jsonArray: {
+                                type: 'json',
+                                array: true,
+                                schema: [{
+                                    name: 'asset',
+                                    type: 'asset'
+                                }, {
+                                    name: 'assetArray',
+                                    type: 'asset',
+                                    array: true
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        api.globals.assets.add(scriptAsset);
+
+        const e = api.globals.entities.create();
+        e.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        asset: assets[0].get('id'),
+                        assetArray: [assets[1].get('id')],
+                        json: {
+                            asset: assets[2].get('id'),
+                            assetArray: [assets[3].get('id')]
+                        },
+                        jsonArray: [{
+                            asset: assets[4].get('id'),
+                            assetArray: [assets[5].get('id')]
+                        }]
+                    }
+                }
+            }
+        });
+
+        await api.globals.entities.copyToClipboard([e]);
+
+        const expected = {
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        };
+
+        for (let i = 0; i < assets.length; i++) {
+            expected.assets[assets[i].get('id')] = {
+                path: [assets[i].get('name')],
+                type: assets[i].get('type')
+            };
+        }
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify(expected));
+    });
+
+    it('copy picks up assets from legacy script attributes', async function () {
+        prepareCopyTest();
+        api.globals.hasLegacyScripts = true;
+
+        const assets = [];
+        for (let i = 0; i < 2; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const e = api.globals.entities.create();
+        e.addComponent('script', {
+            scripts: [{
+                name: 'test',
+                attributes: {
+                    asset: {
+                        type: 'asset',
+                        value: [assets[0].get('id')],
+                        defaultValue: [assets[1].get('id')]
+                    }
+                }
+            }]
+        });
+
+        await api.globals.entities.copyToClipboard([e]);
+
+        const expected = {
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            legacy_scripts: true,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        };
+
+        for (let i = 0; i < assets.length; i++) {
+            expected.assets[assets[i].get('id')] = {
+                path: [assets[i].get('name')],
+                type: assets[i].get('type')
+            };
+        }
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify(expected));
     });
 });

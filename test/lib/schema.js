@@ -10,6 +10,27 @@ window.schema = {
                             $editorType: 'entity',
                             $allowNull: true,
                             $default: null
+                        },
+                        assetRef: {
+                            $type: 'number',
+                            $editorType: 'asset',
+                            $allowNull: true,
+                            $default: null
+                        },
+                        assetArrayRef: {
+                            $type: '[number]',
+                            $editorType: 'array:asset',
+                            $default: []
+                        },
+                        nestedAssetRef: {
+                            $type: 'map',
+                            $of: {
+                                asset: {
+                                    $type: 'number',
+                                    $editorType: 'asset',
+                                    $default: null
+                                }
+                            }
                         }
                     }
                 }
