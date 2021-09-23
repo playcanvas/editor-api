@@ -72,7 +72,6 @@ class LocalStorage {
     has(key) {
         return !!localStorage.getItem(key);
     }
-};
-
+}
 
 export { LocalStorage };
