@@ -68,6 +68,14 @@ class globals {
     static jobs;
 
     /**
+     * The main clipboard
+     *
+     * @type {import("./clipboard").Clipboard}
+     * @category Internal
+     */
+    static clipboard;
+
+    /**
      * The user's access token
      *
      * @category Internal

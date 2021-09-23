@@ -769,11 +769,11 @@ describe('api.Entities tests', function () {
         const entity = api.globals.entities.create({ parent: root });
         const child = api.globals.entities.create({ parent: entity });
         const templateEntIds = {};
-        templateEntIds[entity.get('resource_id')] = pc.guid.create();
-        templateEntIds[child.get('resource_id')] = pc.guid.create();
+        templateEntIds[entity.get('resource_id')] = api.Guid.create();
+        templateEntIds[child.get('resource_id')] = api.Guid.create();
         // create a missing reference as well
-        const missing = pc.guid.create();
-        templateEntIds[missing] = pc.guid.create();
+        const missing = api.Guid.create();
+        templateEntIds[missing] = api.Guid.create();
         entity.set('template_ent_ids', templateEntIds);
 
         const dup = await entity.duplicate();

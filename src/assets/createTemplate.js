@@ -1,6 +1,7 @@
 import { findEntityReferencesInComponents } from '../entities/references';
 import { Entity } from '../entity';
 import { globals as api } from '../globals';
+import { Guid } from '../guid';
 
 function createTemplate(rootEntity) {
     const entities = {};
@@ -10,7 +11,7 @@ function createTemplate(rootEntity) {
     // go through each entity and generate new resource_ids
     rootEntity.depthFirst(entity => {
         const id = entity.get('resource_id');
-        const newId = pc.guid.create();
+        const newId = Guid.create();
         oldToNewIds[id] = newId;
 
         const json = entity.json();
@@ -29,7 +30,7 @@ function createTemplate(rootEntity) {
         if (json.template_ent_ids) {
             for (const key in json.template_ent_ids) {
                 if (!oldToNewIds[key] && !api.entities.get(key)) {
-                    oldToNewIds[key] = pc.guid.create();
+                    oldToNewIds[key] = Guid.create();
                 }
             }
         }

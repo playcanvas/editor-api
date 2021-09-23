@@ -1,5 +1,6 @@
 import { globals as api } from '../globals';
 import { findEntityReferencesInComponents, updateReferences } from './references';
+import { Guid } from '../guid';
 
 /** @typedef {import("../entity").Entity} Entity */
 
@@ -123,7 +124,7 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     if (useUniqueName) {
         data.name = getUniqueNameForDuplicatedEntity(data.name, parent.children);
     }
-    data.resource_id = pc.guid.create();
+    data.resource_id = Guid.create();
     data.parent = parent.get('resource_id');
 
     entity = api.entities.create(data, {
@@ -138,7 +139,7 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     if (templateEntIds) {
         for (const key in templateEntIds) {
             if (!api.entities.get(key)) {
-                duplicatedIdsMap[key] = pc.guid.create();
+                duplicatedIdsMap[key] = Guid.create();
             }
         }
     }
