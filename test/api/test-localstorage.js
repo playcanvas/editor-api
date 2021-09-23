@@ -1,4 +1,4 @@
-describe.only('localstorage tests', function () {
+describe('localstorage tests', function () {
     let ls;
 
     beforeEach(function () {

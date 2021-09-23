@@ -1,4 +1,4 @@
-describe.only('clipboard tests', function () {
+describe('clipboard tests', function () {
     let clipboard;
 
     beforeEach(() => {
