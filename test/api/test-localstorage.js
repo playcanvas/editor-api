@@ -6,7 +6,7 @@ describe.only('localstorage tests', function () {
     });
 
     afterEach(function () {
-        localStorage.removeItem('key');
+        localStorage.clear();
     });
 
     it('gets / sets key', function () {
