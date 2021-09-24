@@ -301,9 +301,10 @@ class Entities extends Events {
      * under the specified parent.
      *
      * @param {Entity} parent - The parent
+     * @returns {Promise<Entity[]>} The new entities
      */
-    async pasteFromClipboard(parent) {
-        await pasteEntities(parent);
+    pasteFromClipboard(parent) {
+        return pasteEntities(parent);
     }
 
     /**

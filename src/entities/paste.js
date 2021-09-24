@@ -21,7 +21,7 @@ function remapAsset(assetId, assetsIndex) {
     if (!assetId) return null;
 
     // return the old asset id if not found
-    const result = parseInt(assetId, 10);
+    let result = parseInt(assetId, 10);
 
     const assetData = assetsIndex[assetId];
     if (!assetData)
@@ -38,10 +38,10 @@ function remapAsset(assetId, assetsIndex) {
 
     // change path names to folder ids
     for (let i = 0; i < len - 1; i++) {
-        const folder = null;
+        let folder = null;
 
         for (let j = 0; j < assetLen; j++) {
-            asset = assets[j];
+            const asset = assets[j];
             if (asset.get('name') === assetData.path[i] && asset.get('type') === 'folder') {
                 folder = asset;
                 break;
@@ -87,30 +87,75 @@ function remapAsset(assetId, assetsIndex) {
     return result;
 }
 
-function remapScriptAttribute(assetAttr, componentAttr, entity, path, localStorageData, entityMapping) {
+function mapValue(value, mapping, sameProject) {
+    if (sameProject) {
+        return mapping[value] || value;
+    }
+
+    return mapping[value] || null;
+}
+
+function remapField(entity, path, mapping, sameProject) {
+    if (REGEX_CONTAINS_STAR.test(path)) {
+        const parts = path.split('.*.');
+        if (!entity.has(parts[0])) return;
+
+        const obj = entity.get(parts[0]);
+        if (!obj) return;
+
+        for (const key in obj) {
+            const fullKey = parts[0] + '.' + key + '.' + parts[1];
+            if (!entity.has(fullKey)) continue;
+
+            const value = entity.get(fullKey);
+            if (!value) continue;
+
+            if (value instanceof Array) {
+                for (let j = 0; j < value.length; j++) {
+                    value[j] = mapValue(value[j], mapping, sameProject);
+                }
+                entity.set(fullKey, value);
+            } else {
+                entity.set(fullKey, mapValue(value, mapping, sameProject));
+            }
+        }
+    } else if (entity.has(path)) {
+        const value = entity.get(path);
+        if (!value) return;
+
+        if (value instanceof Array) {
+            for (let j = 0; j < value.length; j++) {
+                value[j] = mapValue(value[j], mapping, sameProject);
+            }
+            entity.set(path, value);
+        } else {
+            entity.set(path, mapValue(value, mapping, sameProject));
+        }
+    }
+}
+
+function remapScriptAttribute(assetAttr, componentAttr, entity, path, entityMapping, assetMapping, sameProject) {
     if (assetAttr.type === 'asset') {
-        if (localStorageData.project === api.projectId) return;
+        if (sameProject) return;
 
         // remap asset ids
         if (assetAttr.array) {
             for (let i = 0; i < componentAttr.length; i++) {
-                entity.set(`${path}.${i}`, localStorageData.assets[componentAttr[i]]);
+                entity.set(`${path}.${i}`, mapValue(componentAttr[i], assetMapping, sameProject));
             }
         } else {
-            entity.set(path, localStorageData.assets[componentAttr]);
+            entity.set(path, mapValue(componentAttr, assetMapping, sameProject));
         }
     } else if (assetAttr.type === 'entity') {
         // try to remap entities
         if (assetAttr.array) {
             for (let i = 0; i < componentAttr.length; i++) {
-                if (componentAttr[i] && entityMapping[componentAttr[i]]) {
-                    entity.set(`${path}.${i}`, entityMapping[componentAttr[i]]);
+                if (componentAttr[i]) {
+                    entity.set(`${path}.${i}`, mapValue(componentAttr[i], entityMapping, sameProject));
                 }
             }
         } else {
-            if (entityMapping[componentAttr]) {
-                entity.set(path, entityMapping[componentAttr]);
-            }
+            entity.set(path, mapValue(componentAttr, entityMapping, sameProject));
         }
     }
 }
@@ -126,6 +171,7 @@ function remapScriptAttribute(assetAttr, componentAttr, entity, path, localStora
  * @param {object} assetMapping - An index that maps old asset ids to new asset ids
  */
 function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMapping) {
+    const sameProject = (data.project === api.projectId);
     const resourceId = entity.get('resource_id');
 
     const newResourceId = entityMapping[resourceId];
@@ -156,7 +202,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
     entity.set('children', []);
 
     // remap assets and entities
-    if (data.project !== api.projectId) {
+    if (!sameProject) {
         if (!ASSET_PATHS) {
             // get asset paths for all components
             ASSET_PATHS = [];
@@ -170,42 +216,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
 
         for (let i = 0; i < ASSET_PATHS.length; i++) {
             const path = ASSET_PATHS[i];
-            if (REGEX_CONTAINS_STAR.test(path)) {
-                const parts = path.split('.*.');
-                if (!entity.has(parts[0])) continue;
-
-                const obj = entity.get(parts[0]);
-                if (!obj) continue;
-
-                for (const key in obj) {
-                    const fullKey = parts[0] + '.' + key + '.' + parts[1];
-                    if (!entity.has(fullKey)) continue;
-
-                    const assets = entity.get(fullKey);
-                    if (!assets) continue;
-
-                    if (assets instanceof Array) {
-                        for (let j = 0; j < assets.length; j++) {
-                            assets[j] = assetMapping[assets[j]];
-                        }
-                        entity.set(fullKey, assets);
-                    } else {
-                        entity.set(fullKey, assetMapping[assets]);
-                    }
-                }
-            } else if (entity.has(path)) {
-                const assets = entity.get(path);
-                if (!assets) continue;
-
-                if (assets instanceof Array) {
-                    for (let j = 0; j < assets.length; j++) {
-                        assets[j] = assetMapping[assets[j]];
-                    }
-                    entity.set(path, assets);
-                } else {
-                    entity.set(path, assetMapping[assets]);
-                }
-            }
+            remapField(entity, path, assetMapping, sameProject);
         }
     }
 
@@ -231,27 +242,27 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                                 if (attr.value) {
                                     if (attr.value instanceof Array) {
                                         for (j = 0; j < attr.value.length; j++) {
-                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value.' + j, assetMapping[attr.value[j]]);
+                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value.' + j, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
-                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', assetMapping[attr.value]);
+                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', mapValue(attr.value, assetMapping, sameProject));
                                     }
                                 }
 
                                 if (attr.defaultValue) {
                                     if (attr.defaultValue instanceof Array) {
                                         for (j = 0; j < attr.defaultValue.length; j++) {
-                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue.' + j, assetMapping[attr.value[j]]);
+                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue.' + j, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
-                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', assetMapping[attr.value]);
+                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', mapValue(attr.value, assetMapping, sameProject));
                                     }
                                 }
                             } else if (attr.type === 'entity') {
                                 if (entityMapping[attr.value])
-                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', entityMapping[attr.value]);
+                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', mapValue(attr.value, entityMapping, sameProject));
                                 if (entityMapping[attr.defaultValue])
-                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', entityMapping[attr.defaultValue]);
+                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', mapValue(attr.defaultValue, entityMapping, sameProject));
                             }
                         }
                     }
@@ -278,7 +289,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                                                 for (let k = 0; k < attrData.schema.length; k++) {
                                                     const field = attrData.schema[k];
                                                     if (attrs[key][j][field.name]) {
-                                                        remapScriptAttribute(field, attrs[key][j][field.name], entity, `components.script.scripts.${script}.attributes.${key}.${j}.${field.name}`, data, entityMapping);
+                                                        remapScriptAttribute(field, attrs[key][j][field.name], entity, `components.script.scripts.${script}.attributes.${key}.${j}.${field.name}`, entityMapping, assetMapping, sameProject);
                                                     }
                                                 }
                                             }
@@ -287,13 +298,13 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                                             for (let k = 0; k < attrData.schema.length; k++) {
                                                 const field = attrData.schema[k];
                                                 if (attrs[key][field.name]) {
-                                                    remapScriptAttribute(field, attrs[key][field.name], entity, `components.script.scripts.${script}.attributes.${key}.${field.name}`, data, entityMapping);
+                                                    remapScriptAttribute(field, attrs[key][field.name], entity, `components.script.scripts.${script}.attributes.${key}.${field.name}`, entityMapping, assetMapping, sameProject);
                                                 }
                                             }
                                         }
                                     } else {
                                         // non json attribute
-                                        remapScriptAttribute(attrData, attrs[key], entity, `components.script.scripts.${script}.attributes.${key}`, data, entityMapping);
+                                        remapScriptAttribute(attrData, attrs[key], entity, `components.script.scripts.${script}.attributes.${key}`, entityMapping, assetMapping, sameProject);
                                     }
                                 }
                             }
@@ -307,15 +318,12 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
 
     // remap entity references in components
     const components = entity.get('components');
-    Object.entries(components).forEach(([componentName, component]) => {
+    Object.keys(components).forEach((componentName) => {
         const entityFields = api.schema.components.getFieldsOfType(componentName, 'entity');
 
         entityFields.forEach(fieldName => {
-            const oldEntityId = component[fieldName];
-            const newEntityId = entityMapping[oldEntityId];
-            if (newEntityId) {
-                entity.set('components.' + componentName + '.' + fieldName, newEntityId);
-            }
+            const path = `components.${componentName}.${fieldName}`;
+            remapField(entity, path, entityMapping, sameProject);
         });
     });
 }
@@ -331,6 +339,7 @@ async function pasteInBackend(data, parent) {
  * @param {Entity} parent - The parent
  * @param {object} options - Options
  * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+ * @returns {Promise<Entity[]>} The new entities
  */
 async function pasteEntities(parent, options = {}) {
     if (options.history === undefined) {
@@ -350,8 +359,8 @@ async function pasteEntities(parent, options = {}) {
         (data.branch !== api.branchId ||
             Object.keys(data.hierarchy).length > USE_BACKEND_LIMIT)) {
         // TODO support pasting in different projects
-        await pasteInBackend(data, parent);
-        return;
+        const result = await pasteInBackend(data, parent);
+        return result;
     }
 
     // remap assets
@@ -464,6 +473,8 @@ async function pasteEntities(parent, options = {}) {
             }
         });
     }
+
+    return selectedEntities;
 }
 
 export { pasteEntities };
