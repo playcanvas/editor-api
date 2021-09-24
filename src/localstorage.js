@@ -18,7 +18,7 @@ class LocalStorage {
      * @returns {object} The value
      */
     get(key) {
-        var value = localStorage.getItem(key);
+        const value = localStorage.getItem(key);
         if (value) {
             if (!this._cache[key] || this._cache[key].value !== value) {
                 try {
