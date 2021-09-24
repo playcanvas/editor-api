@@ -301,10 +301,12 @@ class Entities extends Events {
      * under the specified parent.
      *
      * @param {Entity} parent - The parent
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
      * @returns {Promise<Entity[]>} The new entities
      */
-    pasteFromClipboard(parent) {
-        return pasteEntities(parent);
+    pasteFromClipboard(parent, options = {}) {
+        return pasteEntities(parent, options);
     }
 
     /**
