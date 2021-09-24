@@ -3,10 +3,12 @@ import { Observer } from '@playcanvas/observer';
 import { Guid } from '../guid';
 import { Entity } from '../entity';
 
-const USE_BACKEND_LIMIT = 500;
+const USE_BACKEND_LIMIT = 0;
+const TIME_WAIT_ENTITIES = 5000;
 const REGEX_CONTAINS_STAR = /\.\*\./;
 
 let ASSET_PATHS;
+let evtMessenger;
 
 /**
  * Try to find an assetId in this project that
@@ -328,8 +330,116 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
     });
 }
 
-async function pasteInBackend(data, parent) {
+/**
+ * Paste entities in backend
+ *
+ * @param {object} data - The clipboard data
+ * @param {Entity} parent - The parent
+ * @param {object} options - The paste options
+ * @returns {Promise<Entity[]>} A promise
+ */
+function pasteInBackend(data, parent, options) {
+    let entities;
+    let cancelWaitForEntities;
 
+    let deferred = {
+        resolve: null,
+        reject: null
+    };
+
+    const promise = new Promise((resolve, reject) => {
+        deferred.resolve = resolve;
+        deferred.reject = reject;
+    });
+
+    if (!evtMessenger)  {
+        evtMessenger = api.messenger.on('entity.copy', data => {
+            const callback = api.jobs.finish(data.job_id);
+            if (!callback) return;
+
+            const result = data.multTaskResults.map(d => d.newRootId);
+            callback(result);
+        });
+    }
+
+    function redo() {
+        parent = parent.latest();
+        if (!parent) return;
+
+        const jobId = api.jobs.start((newEntityIds) => {
+            const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, newEntities => {
+                entities = newEntities;
+
+                api.selection.set(newEntities, { history: false });
+
+                if (deferred) {
+                    deferred.resolve(newEntities);
+                    deferred = null;
+                }
+            });
+
+            cancelWaitForEntities = () => {
+                cancel();
+                if (deferred) {
+                    deferred.reject();
+                    deferred = null;
+                }
+            };
+        });
+
+        const children = parent.get('children');
+        const taskData = {
+            projectId: api.projectId,
+            branchId: data.branch || api.branchId,
+            parentId: parent.get('resource_id'),
+            sceneId: data.scene || api.realtime.scenes.current.uniqueId,
+            jobId: jobId,
+            children: children,
+            childIndex: children.length,
+            entities: Object.keys(data.hierarchy)
+            .filter(id => {
+                return data.hierarchy[id].parent === null;
+            })
+            .map(id => {
+                return {
+                    id: id
+                };
+            })
+        };
+
+        if (data.scene && data.scene !== api.realtime.scenes.current.uniqueId) {
+            taskData.newSceneId = api.realtime.scenes.current.uniqueId;
+            taskData.newBranchId = api.branchId;
+        }
+
+        api.realtime.connection.sendMessage('pipeline', {
+            name: 'entities-copy',
+            data: taskData
+        });
+    }
+
+    redo();
+
+    if (options.history && api.history) {
+        api.history.add({
+            name: 'paste entities',
+            redo: redo,
+            undo: () => {
+                if (cancelWaitForEntities) {
+                    cancelWaitForEntities();
+                    cancelWaitForEntities = null;
+                }
+
+                if (entities && entities.length) {
+                    api.entities.delete(entities, { history: false });
+                }
+
+                entities = null;
+            }
+        });
+    }
+
+    return promise;
 }
 
 /**
@@ -359,7 +469,7 @@ async function pasteEntities(parent, options = {}) {
         (data.branch !== api.branchId ||
             Object.keys(data.hierarchy).length > USE_BACKEND_LIMIT)) {
         // TODO support pasting in different projects
-        const result = await pasteInBackend(data, parent);
+        const result = await pasteInBackend(data, parent, options);
         return result;
     }
 
