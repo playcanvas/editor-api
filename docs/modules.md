@@ -20,7 +20,10 @@
 
 ### Internal Classes
 
+- [Clipboard](classes/Clipboard.md)
+- [Guid](classes/Guid.md)
 - [Jobs](classes/Jobs.md)
+- [LocalStorage](classes/LocalStorage.md)
 - [Messenger](classes/Messenger.md)
 - [Realtime](classes/Realtime.md)
 - [RealtimeAsset](classes/RealtimeAsset.md)

@@ -15,6 +15,10 @@ Provides methods to access the Editor schema.
 - [components](Schema.md#components)
 - [assets](Schema.md#assets)
 
+### Internal Methods
+
+- [getType](Schema.md#gettype)
+
 ## Constructors
 
 ### constructor
@@ -31,7 +35,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema.js#L13)
+[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema.js#L13)
 
 ## Accessors
 
@@ -47,7 +51,7 @@ Gets the component schema
 
 #### Defined in
 
-[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema.js#L24)
+[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema.js#L24)
 
 ___
 
@@ -63,4 +67,29 @@ Gets the assets schema
 
 #### Defined in
 
-[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema.js#L33)
+[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema.js#L33)
+
+## Internal Methods
+
+### getType
+
+▸ **getType**(`field`, `fixedLength`): `string`
+
+Converts the specified schema field to a type recursively.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `field` | `any` | The schema object or field of a parent schema object. |
+| `fixedLength` | `boolean` | Whether the specified schema field has a fixed length if it's an array type. |
+
+#### Returns
+
+`string`
+
+The type
+
+#### Defined in
+
+[src/schema.js:45](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema.js#L45)
