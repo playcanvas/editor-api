@@ -172,7 +172,7 @@ function gatherDependencies(entity, data) {
         }
     }
 
-    var children = entity.get('children');
+    const children = entity.get('children');
     for (let i = 0; i < children.length; i++) {
         gatherDependencies(api.entities.get(children[i]), data);
     }
