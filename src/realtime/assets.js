@@ -1,5 +1,4 @@
 import { RealtimeAsset } from './asset';
-import { globals as api } from '../globals';
 import { Events } from '@playcanvas/observer';
 
 /**
