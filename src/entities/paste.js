@@ -3,7 +3,7 @@ import { Observer } from '@playcanvas/observer';
 import { Guid } from '../guid';
 import { Entity } from '../entity';
 
-const USE_BACKEND_LIMIT = 0;
+const USE_BACKEND_LIMIT = 500;
 const TIME_WAIT_ENTITIES = 5000;
 const REGEX_CONTAINS_STAR = /\.\*\./;
 
