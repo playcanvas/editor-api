@@ -45,7 +45,7 @@ Events.constructor
 
 #### Defined in
 
-[src/messenger.js:17](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/messenger.js#L17)
+[src/messenger.js:17](https://github.com/playcanvas/editor-api/blob/80233d8/src/messenger.js#L17)
 
 ## Methods
 
@@ -67,7 +67,7 @@ Connects to the messenger server.
 
 #### Defined in
 
-[src/messenger.js:46](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/messenger.js#L46)
+[src/messenger.js:46](https://github.com/playcanvas/editor-api/blob/80233d8/src/messenger.js#L46)
 
 ## Accessors
 
@@ -83,4 +83,4 @@ Returns true if we are connected to the messenger server.
 
 #### Defined in
 
-[src/messenger.js:56](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/messenger.js#L56)
+[src/messenger.js:56](https://github.com/playcanvas/editor-api/blob/80233d8/src/messenger.js#L56)
