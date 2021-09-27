@@ -172,10 +172,6 @@ class RealtimeConnection extends Events {
         try {
             if (msg.data.startsWith('auth')) {
                 return this._onMessageAuth(msg);
-            } else if (msg.data.startsWith('whoisonline:')) {
-                return this._onMessageWhoIsOnline(msg);
-            } else if (msg.data.startsWith('chat:')) {
-                return this._onMessageChat(msg);
             }  else if (msg.data.startsWith('selection')) {
                 return this._onMessageSelection(msg);
             }
@@ -190,40 +186,6 @@ class RealtimeConnection extends Events {
         if (!this._authenticated) {
             this._authenticated = true;
             this._realtime.emit('authenticated');
-        }
-
-        return true;
-    }
-
-    _onMessageWhoIsOnline(msg) {
-        const parts = msg.data.split(':');
-        if (parts.length === 5 && parts[1] === 'scene') {
-            let data;
-            const op = parts[3];
-            if (op === 'set') {
-                data = JSON.parse(parts[4]);
-            } else if (op === 'add' || op === 'remove') {
-                data = parseInt(parts[4], 10);
-            }
-            this._realtime.emit('whoisonline', op, data);
-        }
-
-        return true;
-    }
-
-    _onMessageChat(msg) {
-        data = msg.data.slice('chat:'.length);
-
-        const ind = data.indexOf(':');
-        if (ind !== -1) {
-            const op = data.slice(0, ind);
-            data = JSON.parse(data.slice(ind + 1));
-
-            if (op === 'typing') {
-                this._realtime.emit('chat:typing', data);
-            } else if (op === 'msg') {
-                this._realtime.emit('chat:msg', data);
-            }
         }
 
         return true;
