@@ -25,6 +25,7 @@ Represents an Entity
 - [insert](Entity.md#insert)
 - [removeValue](Entity.md#removevalue)
 - [json](Entity.md#json)
+- [jsonHierarchy](Entity.md#jsonhierarchy)
 - [isDescendantOf](Entity.md#isdescendantof)
 - [findByName](Entity.md#findbyname)
 - [listByTag](Entity.md#listbytag)
@@ -65,7 +66,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entity.js:16](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L16)
+[src/entity.js:17](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L17)
 
 ## Public Methods
 
@@ -94,7 +95,7 @@ True if path exists
 
 #### Defined in
 
-[src/entity.js:83](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L83)
+[src/entity.js:84](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L84)
 
 ___
 
@@ -123,7 +124,7 @@ The value
 
 #### Defined in
 
-[src/entity.js:97](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L97)
+[src/entity.js:98](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L98)
 
 ___
 
@@ -153,7 +154,7 @@ Whether the value was set
 
 #### Defined in
 
-[src/entity.js:112](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L112)
+[src/entity.js:113](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L113)
 
 ___
 
@@ -182,7 +183,7 @@ Whether the value was unset
 
 #### Defined in
 
-[src/entity.js:126](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L126)
+[src/entity.js:127](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L127)
 
 ___
 
@@ -213,7 +214,7 @@ Whether the value was inserted
 
 #### Defined in
 
-[src/entity.js:142](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L142)
+[src/entity.js:143](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L143)
 
 ___
 
@@ -241,7 +242,7 @@ entity.removeValue('tags', 'a_tag');
 
 #### Defined in
 
-[src/entity.js:156](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L156)
+[src/entity.js:157](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L157)
 
 ___
 
@@ -262,7 +263,31 @@ console.log(entity.json());
 
 #### Defined in
 
-[src/entity.js:168](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L168)
+[src/entity.js:169](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L169)
+
+___
+
+### jsonHierarchy
+
+▸ **jsonHierarchy**(): `any`
+
+Returns a JSON representation of entity data. The children array
+of the entity gets recursively converted to an array of entity data
+instead of containing children resource ids.
+
+#### Returns
+
+`any`
+
+- The data
+```javascript
+const data = entity.jsonHierarchy();
+console.log(data.children[0].name);
+```
+
+#### Defined in
+
+[src/entity.js:184](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L184)
 
 ___
 
@@ -286,7 +311,7 @@ True if it is
 
 #### Defined in
 
-[src/entity.js:178](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L178)
+[src/entity.js:200](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L200)
 
 ___
 
@@ -315,7 +340,7 @@ The entity
 
 #### Defined in
 
-[src/entity.js:201](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L201)
+[src/entity.js:223](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L223)
 
 ___
 
@@ -349,7 +374,7 @@ The entities
 
 #### Defined in
 
-[src/entity.js:236](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L236)
+[src/entity.js:258](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L258)
 
 ___
 
@@ -378,7 +403,7 @@ The result
 
 #### Defined in
 
-[src/entity.js:275](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L275)
+[src/entity.js:297](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L297)
 
 ___
 
@@ -408,7 +433,7 @@ editor.entities.root.depthFirst(entity => entities.push(entity));
 
 #### Defined in
 
-[src/entity.js:305](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L305)
+[src/entity.js:327](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L327)
 
 ___
 
@@ -438,7 +463,7 @@ editor.entities.root.addComponent('model', {
 
 #### Defined in
 
-[src/entity.js:326](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L326)
+[src/entity.js:348](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L348)
 
 ___
 
@@ -465,13 +490,13 @@ editor.entities.root.removeComponent('model');
 
 #### Defined in
 
-[src/entity.js:341](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L341)
+[src/entity.js:363](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L363)
 
 ___
 
 ### delete
 
-▸ **delete**(`options?`): `void`
+▸ **delete**(`options?`): `Promise`<`void`\>
 
 Deletes entity (and its children)
 
@@ -489,11 +514,13 @@ editor.entities.root.findByName('door').delete();
 
 #### Returns
 
-`void`
+`Promise`<`void`\>
+
+A promise
 
 #### Defined in
 
-[src/entity.js:411](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L411)
+[src/entity.js:434](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L434)
 
 ___
 
@@ -527,7 +554,7 @@ door.reparent(greenHouse);
 
 #### Defined in
 
-[src/entity.js:431](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L431)
+[src/entity.js:454](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L454)
 
 ___
 
@@ -554,7 +581,7 @@ The new entity
 
 #### Defined in
 
-[src/entity.js:448](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L448)
+[src/entity.js:471](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L471)
 
 ___
 
@@ -572,7 +599,7 @@ The entity
 
 #### Defined in
 
-[src/entity.js:458](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L458)
+[src/entity.js:481](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L481)
 
 ___
 
@@ -598,7 +625,7 @@ Whether the child was added
 
 #### Defined in
 
-[src/entity.js:352](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L352)
+[src/entity.js:374](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L374)
 
 ___
 
@@ -623,7 +650,7 @@ Whether the child was added
 
 #### Defined in
 
-[src/entity.js:364](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L364)
+[src/entity.js:386](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L386)
 
 ___
 
@@ -645,4 +672,4 @@ Removes entity from children
 
 #### Defined in
 
-[src/entity.js:388](https://github.com/playcanvas/editor-api/blob/9178f92/src/entity.js#L388)
+[src/entity.js:410](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entity.js#L410)

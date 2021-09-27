@@ -13,7 +13,8 @@ class ComponentSchema {
      * @param {Schema} schema - The schema API
      */
     constructor(schema) {
-        this._schema = schema.scene.entities.$of.components;
+        this._schemaApi = schema;
+        this._schema = this._schemaApi._schema.scene.entities.$of.components;
     }
 
     _resolveLazyDefaults(defaults) {
@@ -68,10 +69,45 @@ class ComponentSchema {
     getFieldsOfType(componentName, type) {
         const result = [];
 
-        for (const field in this._schema[componentName]) {
-            if (this._schema[componentName][field].$editorType === type) {
-                result.push(field);
+        const recurse = (schemaField, path) => {
+            if (!schemaField) return;
+
+            if (schemaField.$editorType === type || schemaField.$editorType === 'array:' + type) {
+                result.push(path);
+                return;
             }
+
+            for (const field in schemaField) {
+                if (field.startsWith('$')) continue;
+
+                const p = (path ? path + '.' : '') + field;
+                const fieldType = this._schemaApi.getType(schemaField[field]);
+                if (fieldType === type || fieldType === 'array:' + type) {
+                    result.push(p);
+                } else if (fieldType === 'object' && schemaField[field].$of) {
+                    recurse(schemaField[field].$of, p + '.*');
+                }
+            }
+        };
+
+        recurse(this._schema[componentName], '');
+
+        return result;
+    }
+
+    /**
+     * Gets a list of all the available components
+     *
+     * @returns {string[]} The components
+     */
+    list() {
+        const result = Object.keys(this._schema);
+        result.sort();
+
+        // filter out zone (which is not really supported)
+        const idx = result.indexOf('zone');
+        if (idx !== -1) {
+            result.splice(idx, 1);
         }
 
         return result;

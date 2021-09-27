@@ -1,6 +1,7 @@
 export * from './src/polyfills';
 export * from './src/globals';
 export * from './src/utils';
+export * from './src/guid';
 export * from './src/entities';
 export * from './src/entity';
 export * from './src/assets';
@@ -18,3 +19,5 @@ export * from './src/realtime/assets';
 export * from './src/realtime';
 export * from './src/messenger';
 export * from './src/jobs';
+export * from './src/localstorage';
+export * from './src/clipboard';

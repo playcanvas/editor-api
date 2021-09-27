@@ -14,6 +14,7 @@ Provides methods to access the components schema
 
 - [getDefaultData](ComponentSchema.md#getdefaultdata)
 - [getFieldsOfType](ComponentSchema.md#getfieldsoftype)
+- [list](ComponentSchema.md#list)
 
 ## Internal Constructors
 
@@ -33,7 +34,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema/components.js:15](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema/components.js#L15)
+[src/schema/components.js:15](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema/components.js#L15)
 
 ## Methods
 
@@ -62,7 +63,7 @@ The default data
 
 #### Defined in
 
-[src/schema/components.js:42](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema/components.js#L42)
+[src/schema/components.js:43](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema/components.js#L43)
 
 ___
 
@@ -92,4 +93,22 @@ A list of fields
 
 #### Defined in
 
-[src/schema/components.js:68](https://github.com/playcanvas/editor-api/blob/9178f92/src/schema/components.js#L68)
+[src/schema/components.js:69](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema/components.js#L69)
+
+___
+
+### list
+
+▸ **list**(): `string`[]
+
+Gets a list of all the available components
+
+#### Returns
+
+`string`[]
+
+The components
+
+#### Defined in
+
+[src/schema/components.js:103](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/schema/components.js#L103)

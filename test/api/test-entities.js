@@ -1,10 +1,11 @@
 describe('api.Entities tests', function () {
-    function makeScriptAsset() {
+    function makeScriptAssetWithEntityRefs(id) {
         return new api.Asset({
-            id: 1,
-            uniqueId: 1,
+            id: id || 1,
+            uniqueId: id || 1,
             type: 'script',
             name: 'script',
+            path: [],
             data: {
                 scripts: {
                     test: {
@@ -46,11 +47,82 @@ describe('api.Entities tests', function () {
         });
     }
 
+    function makeScriptAssetWithAssetRefs(id) {
+        return new api.Asset({
+            id: id || 1,
+            uniqueId: id || 1,
+            type: 'script',
+            name: 'script',
+            path: [],
+            data: {
+                scripts: {
+                    test: {
+                        attributes: {
+                            asset: {
+                                type: 'asset'
+                            },
+                            assetArray: {
+                                type: 'asset',
+                                array: true
+                            },
+                            json: {
+                                type: 'json',
+                                schema: [{
+                                    name: 'asset',
+                                    type: 'asset'
+                                }, {
+                                    name: 'assetArray',
+                                    type: 'asset',
+                                    array: true
+                                }]
+                            },
+                            jsonArray: {
+                                type: 'json',
+                                array: true,
+                                schema: [{
+                                    name: 'asset',
+                                    type: 'asset'
+                                }, {
+                                    name: 'assetArray',
+                                    type: 'asset',
+                                    array: true
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function prepareCopyTest() {
+        // mock realtime scenes
+        api.globals.realtime = {
+            scenes: {
+                current: {
+                    addEntity: () => {},
+                    removeEntity: () => {},
+                    uniqueId: 1
+                }
+            },
+            assets: {
+                unload: () => {}
+            }
+        };
+
+        api.globals.projectId = 1;
+        api.globals.branchId = 'branch';
+        api.globals.clipboard = new api.Clipboard('clippy');
+        api.globals.schema = new api.Schema(schema);
+        api.globals.assets = new api.Assets();
+        api.globals.selection = new api.Selection();
+        api.globals.history = new api.History();
+    }
+
     beforeEach(() => {
-        api.globals.history = null;
-        api.globals.selection = null;
-        api.globals.schema = null;
-        api.globals.assets = null;
+        for (const key in api.globals) {
+            api.globals[key] = undefined;
+        }
         api.globals.entities = new api.Entities();
     });
 
@@ -289,7 +361,7 @@ describe('api.Entities tests', function () {
         api.globals.history = new api.History();
         api.globals.assets = new api.Assets();
 
-        const script = makeScriptAsset();
+        const script = makeScriptAssetWithEntityRefs();
         api.globals.assets.add(script);
 
         const root = api.globals.entities.create({
@@ -725,7 +797,7 @@ describe('api.Entities tests', function () {
         api.globals.assets = new api.Assets();
         api.globals.schema = new api.Schema(schema);
 
-        const script = makeScriptAsset();
+        const script = makeScriptAssetWithEntityRefs();
 
         api.globals.assets.add(script);
 
@@ -769,11 +841,11 @@ describe('api.Entities tests', function () {
         const entity = api.globals.entities.create({ parent: root });
         const child = api.globals.entities.create({ parent: entity });
         const templateEntIds = {};
-        templateEntIds[entity.get('resource_id')] = pc.guid.create();
-        templateEntIds[child.get('resource_id')] = pc.guid.create();
+        templateEntIds[entity.get('resource_id')] = api.Guid.create();
+        templateEntIds[child.get('resource_id')] = api.Guid.create();
         // create a missing reference as well
-        const missing = pc.guid.create();
-        templateEntIds[missing] = pc.guid.create();
+        const missing = api.Guid.create();
+        templateEntIds[missing] = api.Guid.create();
         entity.set('template_ent_ids', templateEntIds);
 
         const dup = await entity.duplicate();
@@ -823,5 +895,645 @@ describe('api.Entities tests', function () {
         api.globals.entities.add(e);
 
         await promise;
+    });
+
+    it('copy entities fails without a current scene', function () {
+        const e = api.globals.entities.create();
+        try {
+            api.globals.entities.copyToClipboard([e]);
+            throw new Error('should have thrown exception');
+        } catch (err) {
+            expect(err.message).to.equal('No current scene loaded');
+        }
+    });
+
+    it('copies single entity', function () {
+        prepareCopyTest();
+        const e = api.globals.entities.create();
+        api.globals.entities.copyToClipboard([e]);
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copies 2 unrelated entities', function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const e2 = api.globals.entities.create({ parent: root });
+
+        api.globals.entities.copyToClipboard([e, e2]);
+
+        const eJson = e.json();
+        eJson.parent = null;
+        const e2Json = e2.json();
+        e2Json.parent = null;
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: eJson,
+                [e2.get('resource_id')]: e2Json
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copy filters children from parents if parents and children are selected', function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const e2 = api.globals.entities.create({ parent: e });
+
+        api.globals.entities.copyToClipboard([e, e2]);
+
+        const eJson = e.json();
+        eJson.parent = null;
+
+        const e2Json = e2.json();
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: eJson,
+                [e2.get('resource_id')]: e2Json
+            },
+            assets: {},
+            type: 'entity'
+        }));
+    });
+
+    it('copy picks up asset references', function () {
+        prepareCopyTest();
+
+        const assets = [];
+        for (let i = 0; i < 4; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const e = api.globals.entities.create();
+        const e2 = api.globals.entities.create();
+        e.addComponent('testcomponent', {
+            assetRef: assets[0].get('id')
+        });
+        e2.addComponent('testcomponent', {
+            assetArrayRef: [assets[1].get('id'), assets[2].get('id')],
+            nestedAssetRef: {
+                1: {
+                    asset: assets[3].get('id')
+                }
+            }
+        });
+        api.globals.entities.copyToClipboard([e, e2]);
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify({
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json(),
+                [e2.get('resource_id')]: e2.json()
+            },
+            assets: {
+                [assets[0].get('id')]: {
+                    path: [assets[0].get('name')],
+                    type: assets[0].get('type')
+                },
+                [assets[1].get('id')]: {
+                    path: [assets[1].get('name')],
+                    type: assets[1].get('type')
+                },
+                [assets[2].get('id')]: {
+                    path: [assets[2].get('name')],
+                    type: assets[2].get('type')
+                },
+                [assets[3].get('id')]: {
+                    path: [assets[3].get('name')],
+                    type: assets[3].get('type')
+                }
+            },
+            type: 'entity'
+        }));
+    });
+
+    it('copy picks up assets from script attributes', function () {
+        prepareCopyTest();
+
+        const assets = [];
+        for (let i = 0; i < 6; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const scriptAsset = makeScriptAssetWithAssetRefs(20);
+        api.globals.assets.add(scriptAsset);
+
+        const e = api.globals.entities.create();
+        e.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        asset: assets[0].get('id'),
+                        assetArray: [assets[1].get('id')],
+                        json: {
+                            asset: assets[2].get('id'),
+                            assetArray: [assets[3].get('id')]
+                        },
+                        jsonArray: [{
+                            asset: assets[4].get('id'),
+                            assetArray: [assets[5].get('id')]
+                        }]
+                    }
+                }
+            }
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+
+        const expected = {
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        };
+
+        for (let i = 0; i < assets.length; i++) {
+            expected.assets[assets[i].get('id')] = {
+                path: [assets[i].get('name')],
+                type: assets[i].get('type')
+            };
+        }
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify(expected));
+    });
+
+    it('copy picks up assets from legacy script attributes', function () {
+        prepareCopyTest();
+        api.globals.hasLegacyScripts = true;
+
+        const assets = [];
+        for (let i = 0; i < 2; i++) {
+            assets.push(new api.Asset({
+                id: i + 1,
+                type: 'material',
+                path: [],
+                name: 'mat ' + (i + 1)
+            }));
+
+            api.globals.assets.add(assets[assets.length - 1]);
+        }
+
+        const e = api.globals.entities.create();
+        e.addComponent('script', {
+            scripts: [{
+                name: 'test',
+                attributes: {
+                    asset: {
+                        type: 'asset',
+                        value: [assets[0].get('id')],
+                        defaultValue: [assets[1].get('id')]
+                    }
+                }
+            }]
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+
+        const expected = {
+            project: api.globals.projectId,
+            scene: 1,
+            branch: api.globals.branchId,
+            legacy_scripts: true,
+            hierarchy: {
+                [e.get('resource_id')]: e.json()
+            },
+            assets: {},
+            type: 'entity'
+        };
+
+        for (let i = 0; i < assets.length; i++) {
+            expected.assets[assets[i].get('id')] = {
+                path: [assets[i].get('name')],
+                type: assets[i].get('type')
+            };
+        }
+
+        expect(JSON.stringify(api.globals.clipboard.value)).to.equal(JSON.stringify(expected));
+    });
+
+    it('paste single entity', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        api.globals.entities.copyToClipboard([e]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root);
+        expect(newEntities.length).to.equal(1);
+
+        const json = newEntities[0].json();
+        expect(json.resource_id).to.not.equal(e.get('resource_id'));
+        json.resource_id = e.get('resource_id');
+        expect(JSON.stringify(json)).to.equal(JSON.stringify(e.json()));
+        expect(root.children).to.deep.equal([e, newEntities[0]]);
+    });
+
+    it('paste multiple entities', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const e2 = api.globals.entities.create({ parent: root });
+        api.globals.entities.copyToClipboard([e, e2]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root);
+        expect(newEntities.length).to.equal(2);
+
+        expect(root.children).to.deep.equal([e, e2, ...newEntities]);
+    });
+
+    it('paste entity with children', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+        api.globals.entities.copyToClipboard([e]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root);
+        expect(newEntities.length).to.equal(1);
+
+        expect(root.children).to.deep.equal([e, newEntities[0]]);
+
+        expect(newEntities[0].children.length).to.equal(1);
+
+        const json = newEntities[0].children[0].json();
+        expect(json.resource_id).to.not.equal(e2.get('resource_id'));
+        expect(json.parent).to.equal(newEntities[0].get('resource_id'));
+        json.resource_id = e2.get('resource_id');
+        json.parent = e.get('resource_id');
+        expect(JSON.stringify(json)).to.equal(JSON.stringify(e2.json()));
+    });
+
+    it('paste entities only returns top level children', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+        api.globals.entities.copyToClipboard([e, e2]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root);
+        expect(newEntities.length).to.equal(1);
+        expect(newEntities[0].get('name')).to.equal('e');
+    });
+
+    it('paste updates entity references', async function () {
+        prepareCopyTest();
+
+        const scriptAsset = makeScriptAssetWithEntityRefs();
+        api.globals.assets.add(scriptAsset);
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+
+        e.addComponent('testcomponent', {
+            entityRef: e2.get('resource_id'),
+            entityArrayRef: [e2.get('resource_id')],
+            nestedEntityRef: {
+                1: {
+                    entity: e2.get('resource_id')
+                }
+            }
+        });
+        e.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        entity: e2.get('resource_id'),
+                        entityArray: [e2.get('resource_id')],
+                        json: {
+                            entity: e2.get('resource_id'),
+                            entityArray: [e2.get('resource_id')]
+                        },
+                        jsonArray: [{
+                            entity: e2.get('resource_id'),
+                            entityArray: [e2.get('resource_id')]
+                        }]
+                    }
+                }
+            }
+        });
+
+        e2.addComponent('testcomponent', {
+            entityRef: root.get('resource_id'),
+            entityArrayRef: [root.get('resource_id')],
+            nestedEntityRef: {
+                1: {
+                    entity: root.get('resource_id')
+                }
+            }
+        });
+        e2.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        entity: root.get('resource_id'),
+                        entityArray: [root.get('resource_id')],
+                        json: {
+                            entity: root.get('resource_id'),
+                            entityArray: [root.get('resource_id')]
+                        },
+                        jsonArray: [{
+                            entity: root.get('resource_id'),
+                            entityArray: [root.get('resource_id')]
+                        }]
+                    }
+                }
+            }
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+        let newEntities = await api.globals.entities.pasteFromClipboard(root);
+        let newE = newEntities[0];
+        let newChild = newEntities[0].children[0];
+        expect(newE.get('components.testcomponent.entityRef')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.testcomponent.entityArrayRef')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.testcomponent.nestedEntityRef.1.entity')).to.equal(newChild.get('resource_id'));
+
+        expect(newE.get('components.script.scripts.test.attributes.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.script.scripts.test.attributes.json.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+
+        expect(newChild.get('components.testcomponent.entityRef')).to.equal(root.get('resource_id'));
+        expect(newChild.get('components.testcomponent.entityArrayRef')).to.deep.equal([root.get('resource_id')]);
+        expect(newChild.get('components.testcomponent.nestedEntityRef.1.entity')).to.equal(root.get('resource_id'));
+
+        expect(newChild.get('components.script.scripts.test.attributes.entity')).to.equal(root.get('resource_id'));
+        expect(newChild.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([root.get('resource_id')]);
+        expect(newChild.get('components.script.scripts.test.attributes.json.entity')).to.equal(root.get('resource_id'));
+        expect(newChild.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([root.get('resource_id')]);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(root.get('resource_id'));
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([root.get('resource_id')]);
+
+        api.globals.projectId = 2;
+        newEntities = await api.globals.entities.pasteFromClipboard(root);
+        newE = newEntities[0];
+        newChild = newEntities[0].children[0];
+        expect(newE.get('components.testcomponent.entityRef')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.testcomponent.entityArrayRef')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.testcomponent.nestedEntityRef.1.entity')).to.equal(newChild.get('resource_id'));
+
+        expect(newE.get('components.script.scripts.test.attributes.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.script.scripts.test.attributes.json.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newChild.get('resource_id'));
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newChild.get('resource_id')]);
+
+        expect(newChild.get('components.testcomponent.entityRef')).to.equal(null);
+        expect(newChild.get('components.testcomponent.entityArrayRef')).to.deep.equal([null]);
+        expect(newChild.get('components.testcomponent.nestedEntityRef.1.entity')).to.equal(null);
+
+        expect(newChild.get('components.script.scripts.test.attributes.entity')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([null]);
+        expect(newChild.get('components.script.scripts.test.attributes.json.entity')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([null]);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([null]);
+    });
+
+    it('paste updates asset references', async function () {
+        prepareCopyTest();
+
+        const scriptAsset = makeScriptAssetWithAssetRefs();
+        api.globals.assets.add(scriptAsset);
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+
+        e.addComponent('testcomponent', {
+            assetRef: scriptAsset.get('id'),
+            assetArrayRef: [scriptAsset.get('id')],
+            nestedAssetRef: {
+                1: {
+                    asset: scriptAsset.get('id')
+                }
+            }
+        });
+        e.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        asset: scriptAsset.get('id'),
+                        assetArray: [scriptAsset.get('id')],
+                        json: {
+                            asset: scriptAsset.get('id'),
+                            assetArray: [scriptAsset.get('id')]
+                        },
+                        jsonArray: [{
+                            asset: scriptAsset.get('id'),
+                            assetArray: [scriptAsset.get('id')]
+                        }]
+                    }
+                }
+            }
+        });
+
+        e2.addComponent('testcomponent', {
+            assetRef: 1000,
+            assetArrayRef: [1000],
+            nestedAssetRef: {
+                1: {
+                    asset: 1000
+                }
+            }
+        });
+        e2.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        asset: 1000,
+                        assetArray: [1000],
+                        json: {
+                            asset: 1000,
+                            assetArray: [1000]
+                        },
+                        jsonArray: [{
+                            asset: 1000,
+                            assetArray: [1000]
+                        }]
+                    }
+                }
+            }
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+        let newEntities = await api.globals.entities.pasteFromClipboard(root);
+        let newE = newEntities[0];
+        let newChild = newEntities[0].children[0];
+        expect(newE.get('components.testcomponent.assetRef')).to.equal(scriptAsset.get('id'));
+        expect(newE.get('components.testcomponent.assetArrayRef')).to.deep.equal([scriptAsset.get('id')]);
+        expect(newE.get('components.testcomponent.nestedAssetRef.1.asset')).to.equal(scriptAsset.get('id'));
+
+        expect(newE.get('components.script.scripts.test.attributes.asset')).to.equal(scriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.assetArray')).to.deep.equal([scriptAsset.get('id')]);
+        expect(newE.get('components.script.scripts.test.attributes.json.asset')).to.equal(scriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.json.assetArray')).to.deep.equal([scriptAsset.get('id')]);
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.asset')).to.equal(scriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.assetArray')).to.deep.equal([scriptAsset.get('id')]);
+
+        expect(newChild.get('components.testcomponent.assetRef')).to.equal(1000);
+        expect(newChild.get('components.testcomponent.assetArrayRef')).to.deep.equal([1000]);
+        expect(newChild.get('components.testcomponent.nestedAssetRef.1.asset')).to.equal(1000);
+
+        expect(newChild.get('components.script.scripts.test.attributes.asset')).to.equal(1000);
+        expect(newChild.get('components.script.scripts.test.attributes.assetArray')).to.deep.equal([1000]);
+        expect(newChild.get('components.script.scripts.test.attributes.json.asset')).to.equal(1000);
+        expect(newChild.get('components.script.scripts.test.attributes.json.assetArray')).to.deep.equal([1000]);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.asset')).to.equal(1000);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.assetArray')).to.deep.equal([1000]);
+
+        api.globals.projectId = 2;
+        api.globals.assets.remove(scriptAsset);
+
+        const newScriptAsset = makeScriptAssetWithAssetRefs(2);
+        api.globals.assets.add(newScriptAsset);
+        newEntities = await api.globals.entities.pasteFromClipboard(root);
+        newE = newEntities[0];
+        newChild = newEntities[0].children[0];
+        expect(newE.get('components.testcomponent.assetRef')).to.equal(newScriptAsset.get('id'));
+        expect(newE.get('components.testcomponent.assetArrayRef')).to.deep.equal([newScriptAsset.get('id')]);
+        expect(newE.get('components.testcomponent.nestedAssetRef.1.asset')).to.equal(newScriptAsset.get('id'));
+
+        expect(newE.get('components.script.scripts.test.attributes.asset')).to.equal(newScriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.assetArray')).to.deep.equal([newScriptAsset.get('id')]);
+        expect(newE.get('components.script.scripts.test.attributes.json.asset')).to.equal(newScriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.json.assetArray')).to.deep.equal([newScriptAsset.get('id')]);
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.asset')).to.equal(newScriptAsset.get('id'));
+        expect(newE.get('components.script.scripts.test.attributes.jsonArray.0.assetArray')).to.deep.equal([newScriptAsset.get('id')]);
+
+        expect(newChild.get('components.testcomponent.assetRef')).to.equal(null);
+        expect(newChild.get('components.testcomponent.assetArrayRef')).to.deep.equal([null]);
+        expect(newChild.get('components.testcomponent.nestedAssetRef.1.asset')).to.equal(null);
+
+        expect(newChild.get('components.script.scripts.test.attributes.asset')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.assetArray')).to.deep.equal([null]);
+        expect(newChild.get('components.script.scripts.test.attributes.json.asset')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.json.assetArray')).to.deep.equal([null]);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.asset')).to.equal(null);
+        expect(newChild.get('components.script.scripts.test.attributes.jsonArray.0.assetArray')).to.deep.equal([null]);
+    });
+
+    it('paste remaps assets in new project when assets exist at same paths', async function () {
+        prepareCopyTest();
+        const folder = new api.Asset({
+            id: 1,
+            name: 'folder',
+            type: 'folder',
+            path: []
+        });
+        api.globals.assets.add(folder);
+
+        const asset = new api.Asset({
+            id: 2,
+            name: 'asset',
+            type: 'material',
+            path: [folder.get('id')]
+        });
+        api.globals.assets.add(asset);
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        e.addComponent('testcomponent', {
+            assetRef: asset.get('id')
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+
+        api.globals.projectId = 2;
+        api.globals.assets.remove(asset);
+        api.globals.assets.remove(folder);
+
+        folder.set('id', 3);
+        asset.set('id', 4);
+        asset.set('path', [3]);
+        api.globals.assets.add(folder);
+        api.globals.assets.add(asset);
+
+        const newEntities = await api.globals.entities.pasteFromClipboard(root);
+        expect(newEntities[0].get('components.testcomponent.assetRef')).to.equal(4);
+    });
+
+    it('undo / redo paste', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+        api.globals.entities.copyToClipboard([e]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root, { history: true });
+
+        const jsonE = newEntities[0].json();
+        const jsonE2 = newEntities[0].children[0].json();
+
+        api.globals.history.undo();
+
+        expect(root.children).to.deep.equal([e]);
+        expect(e.children).to.deep.equal([e2]);
+
+        api.globals.history.redo();
+
+        expect(root.children.length).to.equal(2);
+        expect(JSON.stringify(root.children[1].json())).to.equal(JSON.stringify(jsonE));
+        expect(JSON.stringify(root.children[1].children[0].json())).to.equal(JSON.stringify(jsonE2));
+    });
+
+    it('paste remaps template_ent_ids', async function () {
+        prepareCopyTest();
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root, name: 'e' });
+        const e2 = api.globals.entities.create({ parent: e, name: 'e2' });
+
+        const eTemplateId = api.Guid.create();
+        const e2TemplateId = api.Guid.create();
+        e.set('template_ent_ids', {
+            [e.get('resource_id')]: eTemplateId,
+            [e2.get('resource_id')]: e2TemplateId
+        });
+
+        api.globals.entities.copyToClipboard([e]);
+        const newEntities = await api.globals.entities.pasteFromClipboard(root, { history: true });
+
+        expect(newEntities[0].get('template_ent_ids')).to.deep.equal({
+            [newEntities[0].get('resource_id')]: eTemplateId,
+            [newEntities[0].children[0].get('resource_id')]: e2TemplateId
+        });
     });
 });

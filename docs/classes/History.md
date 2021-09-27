@@ -46,7 +46,7 @@ Events.constructor
 
 #### Defined in
 
-[src/history.js:21](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L21)
+[src/history.js:21](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L21)
 
 ## Methods
 
@@ -78,7 +78,7 @@ editor.history.add({
 
 #### Defined in
 
-[src/history.js:45](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L45)
+[src/history.js:45](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L45)
 
 ___
 
@@ -99,7 +99,7 @@ editor.history.undo();
 
 #### Defined in
 
-[src/history.js:57](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L57)
+[src/history.js:57](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L57)
 
 ___
 
@@ -120,7 +120,7 @@ editor.history.redo();
 
 #### Defined in
 
-[src/history.js:69](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L69)
+[src/history.js:69](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L69)
 
 ___
 
@@ -141,7 +141,7 @@ editor.history.clear();
 
 #### Defined in
 
-[src/history.js:81](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L81)
+[src/history.js:81](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L81)
 
 ## Accessors
 
@@ -157,7 +157,7 @@ Gets the current action
 
 #### Defined in
 
-[src/history.js:90](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L90)
+[src/history.js:90](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L90)
 
 ___
 
@@ -173,7 +173,7 @@ Gets the last action
 
 #### Defined in
 
-[src/history.js:99](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L99)
+[src/history.js:99](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L99)
 
 ___
 
@@ -189,7 +189,7 @@ Whether there are any actions to undo
 
 #### Defined in
 
-[src/history.js:108](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L108)
+[src/history.js:108](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L108)
 
 • `set` **canUndo**(`value`): `void`
 
@@ -207,7 +207,7 @@ Whether there are any actions to undo
 
 #### Defined in
 
-[src/history.js:112](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L112)
+[src/history.js:112](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L112)
 
 ___
 
@@ -223,7 +223,7 @@ Whether there are actions to redo
 
 #### Defined in
 
-[src/history.js:121](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L121)
+[src/history.js:121](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L121)
 
 • `set` **canRedo**(`value`): `void`
 
@@ -241,4 +241,4 @@ Whether there are actions to redo
 
 #### Defined in
 
-[src/history.js:125](https://github.com/playcanvas/editor-api/blob/9178f92/src/history.js#L125)
+[src/history.js:125](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/history.js#L125)

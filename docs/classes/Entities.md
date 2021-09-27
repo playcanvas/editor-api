@@ -24,6 +24,8 @@ The entities editor API
 - [delete](Entities.md#delete)
 - [reparent](Entities.md#reparent)
 - [duplicate](Entities.md#duplicate)
+- [copyToClipboard](Entities.md#copytoclipboard)
+- [pasteFromClipboard](Entities.md#pastefromclipboard)
 - [waitToExist](Entities.md#waittoexist)
 
 ### Internal Methods
@@ -50,7 +52,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:29](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L29)
+[src/entities.js:31](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L31)
 
 ## Public Methods
 
@@ -79,7 +81,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:49](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L49)
+[src/entities.js:51](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L51)
 
 ___
 
@@ -103,7 +105,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:64](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L64)
+[src/entities.js:66](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L66)
 
 ___
 
@@ -143,19 +145,19 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:228](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L228)
+[src/entities.js:230](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L230)
 
 ___
 
 ### delete
 
-▸ **delete**(`entities`, `options?`): `void`
+▸ **delete**(`entities`, `options?`): `Promise`<`void`\>
 
 Delete specified entities
 
 **`example`**
 ```javascript
-editor.entities.delete([entity1, entity2]);
+await editor.entities.delete([entity1, entity2]);
 ```
 
 #### Parameters
@@ -168,11 +170,11 @@ editor.entities.delete([entity1, entity2]);
 
 #### Returns
 
-`void`
+`Promise`<`void`\>
 
 #### Defined in
 
-[src/entities.js:244](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L244)
+[src/entities.js:246](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L246)
 
 ___
 
@@ -207,7 +209,7 @@ editor.entities.reparent([{
 
 #### Defined in
 
-[src/entities.js:265](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L265)
+[src/entities.js:267](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L267)
 
 ___
 
@@ -216,6 +218,9 @@ ___
 ▸ **duplicate**(`entities`, `options?`): `Promise`<[`Entity`](Entity.md)[]\>
 
 Duplicates the specified entities under the same parent
+
+**`example`**
+const duplicated = await editor.entities.duplicate(entities);
 
 #### Parameters
 
@@ -235,7 +240,57 @@ The duplicated entities
 
 #### Defined in
 
-[src/entities.js:279](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L279)
+[src/entities.js:283](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L283)
+
+___
+
+### copyToClipboard
+
+▸ **copyToClipboard**(`entities`): `void`
+
+Copy specified entities to localStorage clipboard. Can be used
+to paste these entities later on.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entities` | [`Entity`](Entity.md)[] | The entities |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/entities.js:295](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L295)
+
+___
+
+### pasteFromClipboard
+
+▸ **pasteFromClipboard**(`parent`, `options?`): `Promise`<[`Entity`](Entity.md)[]\>
+
+Paste entities copied into clipboard
+under the specified parent.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `parent` | [`Entity`](Entity.md) | The parent |
+| `options` | `Object` | Options |
+| `options.history` | `boolean` | Whether to record a history action. Defaults to true. |
+
+#### Returns
+
+`Promise`<[`Entity`](Entity.md)[]\>
+
+The new entities
+
+#### Defined in
+
+[src/entities.js:308](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L308)
 
 ___
 
@@ -263,7 +318,7 @@ callback when the entities are added.
 
 #### Defined in
 
-[src/entities.js:296](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L296)
+[src/entities.js:323](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L323)
 
 ___
 
@@ -287,7 +342,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:74](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L74)
+[src/entities.js:76](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L76)
 
 ___
 
@@ -309,7 +364,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:102](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L102)
+[src/entities.js:104](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L104)
 
 ___
 
@@ -332,7 +387,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:117](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L117)
+[src/entities.js:119](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L119)
 
 ___
 
@@ -354,7 +409,7 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:162](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L162)
+[src/entities.js:164](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L164)
 
 ___
 
@@ -370,4 +425,4 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:184](https://github.com/playcanvas/editor-api/blob/9178f92/src/entities.js#L184)
+[src/entities.js:186](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/entities.js#L186)

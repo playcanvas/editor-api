@@ -2,7 +2,9 @@ import { globals as api } from './globals';
 import { Entity } from './entity';
 import { Events, ObserverList } from '@playcanvas/observer';
 import { createEntity } from './entities/create';
+import { pasteEntities } from './entities/paste';
 import { duplicateEntities } from './entities/duplicate';
+import { copyEntities } from './entities/copy';
 import { reparentEntities } from './entities/reparent';
 import { deleteEntities } from './entities/delete';
 import { updateReferences } from './entities/references';
@@ -282,6 +284,29 @@ class Entities extends Events {
         const result = await duplicateEntities(entities, options);
         return result;
 
+    }
+
+    /**
+     * Copy specified entities to localStorage clipboard. Can be used
+     * to paste these entities later on.
+     *
+     * @param {Entity[]} entities - The entities
+     */
+    copyToClipboard(entities) {
+        copyEntities(entities);
+    }
+
+    /**
+     * Paste entities copied into clipboard
+     * under the specified parent.
+     *
+     * @param {Entity} parent - The parent
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @returns {Promise<Entity[]>} The new entities
+     */
+    pasteFromClipboard(parent, options = {}) {
+        return pasteEntities(parent, options);
     }
 
     /**

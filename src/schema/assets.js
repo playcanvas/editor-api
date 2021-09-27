@@ -12,7 +12,8 @@ class AssetsSchema {
      * @param {Schema} schema - The schema API
      */
     constructor(schema) {
-        this._schema = schema;
+        this._schemaApi = schema;
+        this._schema = this._schemaApi._schema;
     }
 
     /**

@@ -21,8 +21,13 @@ Global variables
 - [realtime](globals.md#realtime)
 - [messenger](globals.md#messenger)
 - [jobs](globals.md#jobs)
+- [clipboard](globals.md#clipboard)
 - [accessToken](globals.md#accesstoken)
 - [hasLegacyScripts](globals.md#haslegacyscripts)
+
+### Methods
+
+- [confirmFn](globals.md#confirmfn)
 
 ## Public Properties
 
@@ -34,7 +39,7 @@ The history API
 
 #### Defined in
 
-[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L16)
+[src/globals.js:16](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L16)
 
 ___
 
@@ -46,7 +51,7 @@ The selection API
 
 #### Defined in
 
-[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L23)
+[src/globals.js:23](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L23)
 
 ___
 
@@ -58,7 +63,7 @@ The schema API
 
 #### Defined in
 
-[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L30)
+[src/globals.js:30](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L30)
 
 ___
 
@@ -70,7 +75,7 @@ The assets API
 
 #### Defined in
 
-[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L45)
+[src/globals.js:45](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L45)
 
 ___
 
@@ -82,7 +87,7 @@ The entities API
 
 #### Defined in
 
-[src/globals.js:52](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L52)
+[src/globals.js:52](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L52)
 
 ___
 
@@ -94,7 +99,7 @@ The current project id
 
 #### Defined in
 
-[src/globals.js:83](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L83)
+[src/globals.js:91](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L91)
 
 ___
 
@@ -106,7 +111,7 @@ The current branch id
 
 #### Defined in
 
-[src/globals.js:90](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L90)
+[src/globals.js:98](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L98)
 
 ___
 
@@ -120,7 +125,7 @@ The realtime API
 
 #### Defined in
 
-[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L38)
+[src/globals.js:38](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L38)
 
 ___
 
@@ -132,7 +137,7 @@ The messenger API
 
 #### Defined in
 
-[src/globals.js:60](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L60)
+[src/globals.js:60](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L60)
 
 ___
 
@@ -144,7 +149,19 @@ The jobs API
 
 #### Defined in
 
-[src/globals.js:68](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L68)
+[src/globals.js:68](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L68)
+
+___
+
+### clipboard
+
+▪ `Static` **clipboard**: [`Clipboard`](Clipboard.md)
+
+The main clipboard
+
+#### Defined in
+
+[src/globals.js:76](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L76)
 
 ___
 
@@ -156,7 +173,7 @@ The user's access token
 
 #### Defined in
 
-[src/globals.js:76](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L76)
+[src/globals.js:84](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L84)
 
 ___
 
@@ -168,4 +185,34 @@ Whether this project is using legacy scripts
 
 #### Defined in
 
-[src/globals.js:98](https://github.com/playcanvas/editor-api/blob/9178f92/src/globals.js#L98)
+[src/globals.js:106](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L106)
+
+## Methods
+
+### confirmFn
+
+▸ `Static` **confirmFn**(`text`, `options?`): `Promise`<`boolean`\>
+
+Alert function called when user confirmation is needed
+for an action. Defaults to the default browser popup but
+can be overriden to show your custom popup instead.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `text` | `string` | The confirm dialog text |
+| `options` | `Object` | Options for the popup |
+| `options.yesText` | `string` | Text for 'yes' option |
+| `options.noText` | `string` | Text for 'no' option |
+| `options.noDismiss` | `boolean` | If true then user cannot dismiss the popup and will have to click yes or no |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+True if the user confirmed, false otherwise
+
+#### Defined in
+
+[src/globals.js:120](https://github.com/playcanvas/editor-api/blob/5ce3ac1/src/globals.js#L120)

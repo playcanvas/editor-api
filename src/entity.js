@@ -1,5 +1,6 @@
 import { globals as api } from './globals';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
+import { Guid } from './guid';
 
 /**
  * Represents an Entity
@@ -20,7 +21,7 @@ class Entity extends Events {
             name: data.name || 'New Entity',
             tags: data.tags || [],
             enabled: data.enabled || true,
-            resource_id: data.resource_id || pc.guid.create(),
+            resource_id: data.resource_id || Guid.create(),
             parent: typeof data.parent === 'string' ? data.parent : null,
             children: [],
             position: data.position || [0, 0, 0],
@@ -167,6 +168,27 @@ class Entity extends Events {
      */
     json() {
         return this._observer.json();
+    }
+
+    /**
+     * Returns a JSON representation of entity data. The children array
+     * of the entity gets recursively converted to an array of entity data
+     * instead of containing children resource ids.
+     *
+     * @returns {object} - The data
+     * ```javascript
+     * const data = entity.jsonHierarchy();
+     * console.log(data.children[0].name);
+     * ```
+     */
+    jsonHierarchy() {
+        const result = this.json();
+        const children = this.children;
+        for (let i = 0; i < children.length; i++) {
+            result.children[i] = children[i].jsonHierarchy();
+        }
+
+        return result;
     }
 
     /**

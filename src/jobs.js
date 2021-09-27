@@ -1,4 +1,5 @@
 import { Events } from '@playcanvas/observer';
+import { Guid } from './guid';
 
 /**
  * Facilitates tracking of asynchronous jobs.
@@ -24,7 +25,7 @@ class Jobs extends Events {
      * ```
      */
     start(fn) {
-        const jobId = pc.guid.create().substring(0, 8);
+        const jobId = Guid.create().substring(0, 8);
         this._jobsInProgress[jobId] = fn;
         this.emit('start', jobId);
         return jobId;

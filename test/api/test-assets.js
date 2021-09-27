@@ -524,7 +524,7 @@ ${className}.prototype.update = function(dt) {
             'child_guid'
         ];
         let guidIndex = 0;
-        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+        sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
         api.globals.assets.createTemplate(null, root, folder);
 
@@ -569,7 +569,7 @@ ${className}.prototype.update = function(dt) {
             'child_guid'
         ];
         let guidIndex = 0;
-        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+        sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
         api.globals.assets.createTemplate(null, root);
 
@@ -598,16 +598,16 @@ ${className}.prototype.update = function(dt) {
         api.globals.entities = new api.Entities();
 
         const templateGuids = [
-            pc.guid.create(),
-            pc.guid.create(),
-            pc.guid.create(),
-            pc.guid.create()
+            api.Guid.create(),
+            api.Guid.create(),
+            api.Guid.create(),
+            api.Guid.create()
         ];
 
         const root = api.globals.entities.create({ name: 'root' });
         const child = api.globals.entities.create({ name: 'child', parent: root });
         const child2 = api.globals.entities.create({ name: 'child2', parent: child });
-        const missing = pc.guid.create();
+        const missing = api.Guid.create();
 
         root.set('template_ent_ids', {
             [root.get('resource_id')]: templateGuids[0],
@@ -634,7 +634,7 @@ ${className}.prototype.update = function(dt) {
             'child_2_guid'
         ];
         let guidIndex = 0;
-        sandbox.replace(pc.guid, 'create', () => guids[guidIndex++]);
+        sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
         api.globals.assets.createTemplate(null, root);
 
