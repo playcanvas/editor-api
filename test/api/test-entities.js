@@ -859,6 +859,21 @@ describe('api.Entities tests', function () {
         expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
     });
 
+    it('duplicate filters children if parents are selected', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = api.globals.entities.create();
+        const entity = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: entity });
+
+        const duplicates = await api.globals.entities.duplicate([entity, child]);
+        expect(duplicates.length).to.equal(1);
+        const json = duplicates[0].json();
+        json.resource_id = entity.get('resource_id');
+        json.children[0] = child.get('resource_id');
+        expect(JSON.stringify(json)).to.equal(JSON.stringify(entity.json()));
+    });
+
     it('waitToExist waits for entities to be added', async function () {
         const e = api.globals.entities.create();
         api.globals.entities.remove(e);

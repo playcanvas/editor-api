@@ -272,8 +272,8 @@ async function duplicateEntities(entities, options) {
         let parent = entities[i].parent;
         while (parent && parent !== root) {
             if (records[parent.get('resource_id')]) {
-                entities.splice(i, 1);
                 delete records[entities[i].get('resource_id')];
+                entities.splice(i, 1);
                 break;
             }
 
