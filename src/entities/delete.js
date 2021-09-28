@@ -54,6 +54,21 @@ function deleteInBackend(entities) {
     return promise;
 }
 
+function rememberPrevious(entities) {
+    const previous = [];
+    entities.forEach(entity => {
+        previous.push({
+            entity: entity.jsonHierarchy(),
+            index: entity.parent.get('children').indexOf(entity.get('resource_id'))
+        });
+    });
+
+    // sort previous records by index so that entities
+    // are added in the correct order in undo
+    previous.sort((a, b) => a.index - b.index);
+    return previous;
+}
+
 /**
  * Delete specified entities
  *
@@ -116,11 +131,9 @@ async function deleteEntities(entities, options = {}) {
     }
 
     // remember previous entities
-    let previous;
-    let previousIndexes;
+    let previous = null;
     if (options.history && api.history) {
-        previous = entities.map(entity => entity.jsonHierarchy());
-        previousIndexes = entities.map(entity => entity.parent.children.indexOf(entity));
+        previous = rememberPrevious(entities);
     }
 
     // find entity references
@@ -135,9 +148,9 @@ async function deleteEntities(entities, options = {}) {
             name: 'delete entities',
             undo: () => {
                 entities = previous.map((data, i) => {
-                    return api.entities.create(data, {
+                    return api.entities.create(data.entity, {
                         history: false,
-                        index: previousIndexes[i]
+                        index: data.index
                     });
                 });
 
@@ -152,12 +165,10 @@ async function deleteEntities(entities, options = {}) {
                 }
 
                 previous = null;
-                previousIndexes = null;
             },
             redo: () => {
                 entities = entities.map(e => e.latest()).filter(e => !!e);
-                previous = entities.map(entity => entity.jsonHierarchy());
-                previousIndexes = entities.map(entity => entity.parent.children.indexOf(entity));
+                previous = rememberPrevious(entities);
 
                 api.entities.delete(entities, {
                     history: false

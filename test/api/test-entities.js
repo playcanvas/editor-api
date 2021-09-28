@@ -357,6 +357,30 @@ describe('api.Entities tests', function () {
         expect(e.children).to.deep.equal(children);
     });
 
+    it('undo delete restores original children order when entities are passed in random order', async function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        let children = [];
+        for (let i = 0; i < 3; i++) {
+            children.push(api.globals.entities.create({ parent: e, name: 'child ' + (i + 1) }));
+        }
+
+        expect(e.children).to.deep.equal(children);
+
+        await api.globals.entities.delete([children[2], children[1], children[0]]);
+        api.globals.history.undo();
+        children = children.map(c => c.latest());
+        expect(e.children).to.deep.equal(children);
+
+        // test undo after redo in case something breaks there
+        api.globals.history.redo();
+        api.globals.history.undo();
+        children = children.map(c => c.latest());
+        expect(e.children).to.deep.equal(children);
+    });
+
     it('redo delete deletes entities', async function () {
         api.globals.history = new api.History();
 
