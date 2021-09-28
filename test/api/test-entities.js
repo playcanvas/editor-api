@@ -195,6 +195,9 @@ describe('api.Entities tests', function () {
     it('undo create removes entity', function () {
         api.globals.history = new api.History();
 
+        // create root
+        api.globals.entities.create();
+
         const e = api.globals.entities.create(null, {
             history: true
         });
@@ -252,12 +255,18 @@ describe('api.Entities tests', function () {
     });
 
     it('delete removes entity', async function () {
+        // create root
+        api.globals.entities.create();
+
         const e = api.globals.entities.create();
         await api.globals.entities.delete([e]);
         expect(api.globals.entities.get(e.get('resource_id'))).to.equal(null);
     });
 
     it('delete removes children', async function () {
+        // create root
+        api.globals.entities.create();
+
         const e = api.globals.entities.create({
             name: 'parent',
             children: [{
@@ -274,6 +283,9 @@ describe('api.Entities tests', function () {
     });
 
     it('delete works when children are passed along with parents', async function () {
+        // create root
+        api.globals.entities.create();
+
         const e = api.globals.entities.create({
             name: 'parent',
             children: [{
@@ -292,7 +304,9 @@ describe('api.Entities tests', function () {
     it('undo delete brings back entities with same data as before', async function () {
         api.globals.history = new api.History();
 
+        const root = api.globals.entities.create();
         const e = api.globals.entities.create({
+            parent: root,
             name: 'parent',
             children: [{
                 name: 'child'
@@ -318,8 +332,60 @@ describe('api.Entities tests', function () {
         expect(api.globals.entities.get(c.get('resource_id')).json()).to.deep.equal(cJson);
     });
 
+    it('undo delete restores original children order', async function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        const children = [];
+        for (let i = 0; i < 3; i++) {
+            children.push(api.globals.entities.create({ parent: e, name: 'child ' + (i + 1) }));
+        }
+
+        expect(e.children).to.deep.equal(children);
+
+        await api.globals.entities.delete([children[1]]);
+        expect(e.children).to.deep.equal([children[0], children[2]]);
+        api.globals.history.undo();
+        children[1] = children[1].latest();
+        expect(e.children).to.deep.equal(children);
+
+        // test undo after redo in case something breaks there
+        api.globals.history.redo();
+        api.globals.history.undo();
+        children[1] = children[1].latest();
+        expect(e.children).to.deep.equal(children);
+    });
+
+    it('undo delete restores original children order when entities are passed in random order', async function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const e = api.globals.entities.create({ parent: root });
+        let children = [];
+        for (let i = 0; i < 3; i++) {
+            children.push(api.globals.entities.create({ parent: e, name: 'child ' + (i + 1) }));
+        }
+
+        expect(e.children).to.deep.equal(children);
+
+        await api.globals.entities.delete([children[2], children[1], children[0]]);
+        api.globals.history.undo();
+        children = children.map(c => c.latest());
+        expect(e.children).to.deep.equal(children);
+
+        // test undo after redo in case something breaks there
+        api.globals.history.redo();
+        api.globals.history.undo();
+        children = children.map(c => c.latest());
+        expect(e.children).to.deep.equal(children);
+    });
+
     it('redo delete deletes entities', async function () {
         api.globals.history = new api.History();
+
+        // create root
+        api.globals.entities.create();
 
         const e = api.globals.entities.create({
             name: 'parent',
@@ -342,6 +408,9 @@ describe('api.Entities tests', function () {
     it('delete removes from selection', async function () {
         api.globals.history = new api.History();
         api.globals.selection = new api.Selection();
+
+        // create root
+        api.globals.entities.create();
 
         const e = api.globals.entities.create(null, {
             select: true
