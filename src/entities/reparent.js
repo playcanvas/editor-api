@@ -7,7 +7,7 @@ import { globals as api } from '../globals';
  * @typedef {import("../entities").ReparentArguments} ReparentArguments
  * @param {ReparentArguments[]} data - The reparenting data
  * @param {object} [options] - Options
- * @param {boolean} [options.preserverTransform] - Whether to preserve the transform of the entities
+ * @param {boolean} [options.preserveTransform] - Whether to preserve the transform of the entities
  * @param {boolean} [options.history] - Whether to record history. Defaults to true
  */
 function reparentEntities(data, options = {}) {

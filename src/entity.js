@@ -442,7 +442,7 @@ class Entity extends Events {
      * @param {number} index - The desired index. If undefined the entity will be added at the end of the parent's children.
      * @param {object} options - Options
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
-     * @param {boolean} options.preserverTransform - Whether to preserve the original transform after reparenting
+     * @param {boolean} options.preserveTransform - Whether to preserve the original transform after reparenting
      * @example
      * ```javascript
      * const redHouse = editor.entities.root.findByName('red house');
