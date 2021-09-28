@@ -23,9 +23,9 @@ class Assets extends Events {
                 const f = (b._data.type === 'folder') - (a._data.type === 'folder');
                 if (f !== 0)
                     return f;
-                if (a._data.name.toLowerCase() > b._data.name.toLowerCase()) {
+                if ((a._data.name || '').toLowerCase() > (b._data.name || '').toLowerCase()) {
                     return 1;
-                } else if (a._data.name.toLowerCase() < b._data.name.toLowerCase()) {
+                } else if ((a._data.name || '').toLowerCase() < (b._data.name || '').toLowerCase()) {
                     return -1;
                 }
                 return 0;
@@ -115,8 +115,8 @@ class Assets extends Events {
         this._uniqueIdToItemId[asset.get('uniqueId')] = id;
 
         asset._observer.on('name:set', (name, oldName) => {
-            name = name.toLowerCase();
-            oldName = oldName.toLowerCase();
+            name = (name || '').toLowerCase();
+            oldName = (oldName || '').toLowerCase();
 
             const ind = this._assets.data.indexOf(asset._observer);
             let pos = this._assets.positionNextClosest(asset._observer, (a, b) => {
@@ -125,9 +125,9 @@ class Assets extends Events {
                 if (f !== 0)
                     return f;
 
-                if ((a === b ? oldName : a._data.name.toLowerCase()) > name) {
+                if ((a === b ? oldName : (a._data.name || '').toLowerCase()) > name) {
                     return 1;
-                } else if ((a === b ? oldName : a._data.name.toLowerCase()) < name) {
+                } else if ((a === b ? oldName : (a._data.name || '').toLowerCase()) < name) {
                     return -1;
                 }
                 return 0;
