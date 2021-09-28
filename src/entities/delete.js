@@ -72,6 +72,13 @@ async function deleteEntities(entities, options = {}) {
         entities = [entities];
     }
 
+    // make sure we are not deleting root
+    entities.forEach(e => {
+        if (e === api.entities.root) {
+            throw new Error('Cannot delete root entity ' + e.get('resource_id'));
+        }
+    });
+
     // first only gather top level entities
     const ids = new Set();
     entities.forEach(entity => ids.add(entity.get('resource_id')));
@@ -110,13 +117,10 @@ async function deleteEntities(entities, options = {}) {
 
     // remember previous entities
     let previous;
+    let previousIndexes;
     if (options.history && api.history) {
-        previous = {};
-        entities.forEach(entity => {
-            entity.depthFirst(e => {
-                previous[e.get('resource_id')] = e.json();
-            });
-        });
+        previous = entities.map(entity => entity.jsonHierarchy());
+        previousIndexes = entities.map(entity => entity.parent.children.indexOf(entity));
     }
 
     // find entity references
@@ -130,19 +134,11 @@ async function deleteEntities(entities, options = {}) {
         api.history.add({
             name: 'delete entities',
             undo: () => {
-                function recreateEntityData(data) {
-                    data = Object.assign({}, data);
-                    data.children = data.children.map(id => recreateEntityData(previous[id]));
-                    return data;
-                }
-
-                entities = entities.map(entity => {
-                    const data = recreateEntityData(previous[entity.get('resource_id')]);
-                    entity = api.entities.create(data, {
-                        history: false
+                entities = previous.map((data, i) => {
+                    return api.entities.create(data, {
+                        history: false,
+                        index: previousIndexes[i]
                     });
-
-                    return entity;
                 });
 
                 entities.forEach(entity => {
@@ -156,16 +152,12 @@ async function deleteEntities(entities, options = {}) {
                 }
 
                 previous = null;
+                previousIndexes = null;
             },
             redo: () => {
-                previous = {};
                 entities = entities.map(e => e.latest()).filter(e => !!e);
-
-                entities.forEach(entity => {
-                    entity.depthFirst(e => {
-                        previous[e.get('resource_id')] = e.json();
-                    });
-                });
+                previous = entities.map(entity => entity.jsonHierarchy());
+                previousIndexes = entities.map(entity => entity.parent.children.indexOf(entity));
 
                 api.entities.delete(entities, {
                     history: false
