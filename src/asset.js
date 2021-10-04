@@ -2,7 +2,7 @@ import { globals as api } from './globals';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
 
 /**
- * Represents an Asset
+ * Represents an Asset. For a list of Asset properties see [here](AssetProperties.md).
  */
 class Asset extends Events {
     /**  @typedef {import("./assets").Assets} Assets */
@@ -102,7 +102,7 @@ class Asset extends Events {
     }
 
     /**
-     * Checks if path exists
+     * Checks if path exists. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @returns {boolean} True if path exists
@@ -112,7 +112,7 @@ class Asset extends Events {
     }
 
     /**
-     * Gets value at path
+     * Gets value at path. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @returns {any} The value
@@ -122,7 +122,7 @@ class Asset extends Events {
     }
 
     /**
-     * Sets value at path
+     * Sets value at path. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @param {any} value - The value
@@ -133,7 +133,7 @@ class Asset extends Events {
     }
 
     /**
-     * Unsets value at path
+     * Unsets value at path. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @returns {boolean} Whether the value was unset
@@ -143,7 +143,7 @@ class Asset extends Events {
     }
 
     /**
-     * Inserts value in array at path, at specified index
+     * Inserts value in array at path, at specified index. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @param {any} value - The value
@@ -155,7 +155,7 @@ class Asset extends Events {
     }
 
     /**
-     * Remove value from array at path.
+     * Remove value from array at path. For a list of Asset properties see [here](AssetProperties.md).
      *
      * @param {string} path - The path
      * @param {any} value - The value

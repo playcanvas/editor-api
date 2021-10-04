@@ -3,7 +3,7 @@ import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
 import { Guid } from './guid';
 
 /**
- * Represents an Entity
+ * Represents an Entity. For a list of Entity properties see [here](EntityProperties.md).
  */
 class Entity extends Events {
     /** @typedef {import("./entities").Entities} Entities */
@@ -71,7 +71,7 @@ class Entity extends Events {
     }
 
     /**
-     * Checks if path exists
+     * Checks if path exists. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @returns {boolean} True if path exists
@@ -86,7 +86,7 @@ class Entity extends Events {
     }
 
     /**
-     * Gets value at path
+     * Gets value at path. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @returns {any} The value
@@ -100,7 +100,7 @@ class Entity extends Events {
     }
 
     /**
-     * Sets value at path
+     * Sets value at path. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @param {any} value - The value
@@ -115,7 +115,7 @@ class Entity extends Events {
     }
 
     /**
-     * Unsets value at path
+     * Unsets value at path. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @returns {boolean} Whether the value was unset
@@ -129,7 +129,7 @@ class Entity extends Events {
     }
 
     /**
-     * Inserts value in array at path, at specified index
+     * Inserts value in array at path, at specified index. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @param {any} value - The value
@@ -145,7 +145,7 @@ class Entity extends Events {
     }
 
     /**
-     * Remove value from array at path.
+     * Remove value from array at path. See [here](EntityProperties.md) for a list of properties.
      *
      * @param {string} path - The path
      * @param {any} value - The value
