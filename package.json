@@ -8,7 +8,7 @@
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "build:docs": "rm -rf docs; typedoc --options typedoc.json",
+    "build:docs": "typedoc --options typedoc.json",
     "lint": "eslint --ext .js src"
   },
   "repository": {
