@@ -310,10 +310,10 @@ class Assets extends Events {
     }
 
     /**
-     * Creates new anim state graph asset
+     * Creates new anim state graph asset.
      *
      * @param {string} name - The asset name
-     * @param {object} data - The asset data
+     * @param {object} data - The asset data. See see [here](AssetProperties.md) for Animstategraph data.
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
@@ -478,7 +478,7 @@ class Assets extends Events {
      * Creates new material asset
      *
      * @param {string} name - The asset name
-     * @param {object} data - The material data. Default values will be used for missing fields.
+     * @param {object} data - The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data.
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */

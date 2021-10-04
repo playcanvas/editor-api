@@ -337,7 +337,8 @@ class Entity extends Events {
      * Adds a component to this Entity
      *
      * @param {string} component - The component name
-     * @param {object} data - Default component data
+     * @param {object} data - Default component data. Defaults values will be used for any missing fields.
+     * For details on component properties see see [here](EntityProperties.md).
      * @example
      * ```javascript
      * editor.entities.root.addComponent('model', {
