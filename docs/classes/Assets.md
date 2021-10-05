@@ -62,7 +62,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:58](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L58)
+[src/assets.js:58](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L58)
 
 ## Public Methods
 
@@ -86,7 +86,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:85](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L85)
+[src/assets.js:85](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L85)
 
 ___
 
@@ -110,7 +110,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:96](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L96)
+[src/assets.js:96](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L96)
 
 ___
 
@@ -128,7 +128,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:106](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L106)
+[src/assets.js:106](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L106)
 
 ___
 
@@ -152,7 +152,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:117](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L117)
+[src/assets.js:117](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L117)
 
 ___
 
@@ -176,7 +176,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:244](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L244)
+[src/assets.js:244](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L244)
 
 ___
 
@@ -200,7 +200,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:256](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L256)
+[src/assets.js:256](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L256)
 
 ___
 
@@ -224,7 +224,7 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L324)
+[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L324)
 
 ___
 
@@ -252,23 +252,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:365](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L365)
+[src/assets.js:365](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L365)
 
 ___
 
 ### createBundle
 
-▸ **createBundle**(`name`, `assets?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createBundle**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new bundle asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `assets` | [`Asset`](Asset.md)[] | `[]` | The assets that the bundle will contain |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.assets` | [`Asset`](Asset.md)[] | The assets that the bundle will contain |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -278,23 +280,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:383](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L383)
+[src/assets.js:385](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L385)
 
 ___
 
 ### createCss
 
-▸ **createCss**(`name`, `text?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createCss**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new CSS asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `text` | `string` | `'\n'` | The CSS |
-| `folder` | `string` | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.text` | `string` | The CSS |
+| `options.folder` | `string` | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -304,27 +308,28 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:402](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L402)
+[src/assets.js:407](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L407)
 
 ___
 
 ### createCubemap
 
-▸ **createCubemap**(`name`, `textures?`, `settings?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createCubemap**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new cubemap asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `textures` | [`Asset`](Asset.md)[] | `[]` | The textures for each cubemap face in this order: right, left, up, down, front, back |
-| `settings` | `Object` | `null` | Cubemap settings |
-| `settings.minFilter` | `number` | `undefined` | Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR. |
-| `settings.magFilter` | `number` | `undefined` | Cubemap magFilter value. Defaults to pc.FILTER_LINEAR. |
-| `settings.anisotropy` | `number` | `undefined` | Cubemap anisotropy value. Defaults to 1. |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.textures` | [`Asset`](Asset.md)[] | The textures for each cubemap face in this order: right, left, up, down, front, back |
+| `options.minFilter` | `number` | Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR. |
+| `options.magFilter` | `number` | Cubemap magFilter value. Defaults to pc.FILTER_LINEAR. |
+| `options.anisotropy` | `number` | Cubemap anisotropy value. Defaults to 1. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -334,22 +339,23 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:425](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L425)
+[src/assets.js:432](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L432)
 
 ___
 
 ### createFolder
 
-▸ **createFolder**(`name`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createFolder**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates a new folder asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 
 #### Returns
 
@@ -359,23 +365,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:454](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L454)
+[src/assets.js:461](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L461)
 
 ___
 
 ### createHtml
 
-▸ **createHtml**(`name`, `text?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createHtml**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new HTML asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `text` | `string` | `'\n'` | The HTML |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.text` | `string` | The HTML |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -385,23 +393,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:470](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L470)
+[src/assets.js:479](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L479)
 
 ___
 
 ### createJson
 
-▸ **createJson**(`name`, `json?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createJson**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new JSON asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `json` | `any` | `{}` | The JSON |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.json` | `any` | The JSON |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -411,23 +421,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:488](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L488)
+[src/assets.js:500](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L500)
 
 ___
 
 ### createI18n
 
-▸ **createI18n**(`name`, `localizationData?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createI18n**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new localization JSON asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `localizationData` | `any` | `null` | The localization data. If null then default data will be used. |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | The options |
+| `options.name` | `string` | The asset name |
+| `options.localizationData` | `any` | The localization data. If null then default data will be used. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -437,23 +449,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:506](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L506)
+[src/assets.js:521](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L521)
 
 ___
 
 ### createMaterial
 
-▸ **createMaterial**(`name`, `data?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createMaterial**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new material asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `data` | `any` | `null` | The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data. |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.data` | `any` | The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -463,25 +477,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:531](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L531)
+[src/assets.js:553](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L553)
 
 ___
 
 ### createScript
 
-▸ **createScript**(`name`, `filename`, `text?`, `data?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createScript**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new script asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The name of the script. This will be the name of the class inside the script if boilerplate code is used. |
-| `filename` | `string` | `undefined` | The filename of the script. This will also be the name of the script asset. If not defined it will be generated from the name of the script. |
-| `text` | `string` | `null` | The contents of the script. If none then boilerplate code will be used. |
-| `data` | `any` | `null` | The script data. See [here](AssetProperties.md) for Script data. |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The name of the script. This will be the name of the class inside the script if boilerplate code is used. |
+| `options.filename` | `string` | The filename of the script. This will also be the name of the script asset. If not defined it will be generated from the name of the script. |
+| `options.text` | `string` | The contents of the script. If none then boilerplate code will be used. |
+| `options.data` | `any` | The script data. See [here](AssetProperties.md) for Script data. |
 
 #### Returns
 
@@ -491,23 +505,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:560](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L560)
+[src/assets.js:585](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L585)
 
 ___
 
 ### createShader
 
-▸ **createShader**(`name`, `text?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createShader**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new shader asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `text` | `string` | `'\n'` | The GLSL |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.text` | `string` | The GLSL |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -517,27 +533,28 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:589](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L589)
+[src/assets.js:617](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L617)
 
 ___
 
 ### createSprite
 
-▸ **createSprite**(`name`, `data?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createSprite**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new sprite asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `data` | `Object` | `{}` | The sprite data |
-| `data.pixelsPerUnit` | `number` | `undefined` | The sprite's pixels per unit value. Defaults to 100. |
-| `data.frameKeys` | `number`[] | `undefined` | The sprite's frame keys |
-| `data.textureAtlas` | [`Asset`](Asset.md) | `undefined` | The sprite's texture atlas asset |
-| `data.renderMode` | `number` | `undefined` | The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE. |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | = Options |
+| `options.name` | `string` | The asset name |
+| `options.pixelsPerUnit` | `number` | The sprite's pixels per unit value. Defaults to 100. |
+| `options.frameKeys` | `number`[] | The sprite's frame keys |
+| `options.textureAtlas` | [`Asset`](Asset.md) | The sprite's texture atlas asset |
+| `options.renderMode` | `number` | The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -547,23 +564,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:611](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L611)
+[src/assets.js:641](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L641)
 
 ___
 
 ### createText
 
-▸ **createText**(`name`, `text?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createText**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new text asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `text` | `string` | `'\n'` | The text |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.text` | `string` | The text |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -573,23 +592,25 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:634](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L634)
+[src/assets.js:667](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L667)
 
 ___
 
 ### createTemplate
 
-▸ **createTemplate**(`name`, `entity`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createTemplate**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new template asset
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `entity` | [`Entity`](Entity.md) | `undefined` | The entity to create the template from |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.entity` | [`Entity`](Entity.md) | The entity to create the template from |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 
 #### Returns
 
@@ -599,7 +620,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:653](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L653)
+[src/assets.js:689](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L689)
 
 ___
 
@@ -621,7 +642,7 @@ Deletes specified assets
 
 #### Defined in
 
-[src/assets.js:678](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L678)
+[src/assets.js:715](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L715)
 
 ___
 
@@ -645,7 +666,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:151](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L151)
+[src/assets.js:151](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L151)
 
 ___
 
@@ -667,7 +688,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:203](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L203)
+[src/assets.js:203](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L203)
 
 ___
 
@@ -683,7 +704,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:224](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L224)
+[src/assets.js:224](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L224)
 
 ___
 
@@ -700,4 +721,4 @@ and subscribes to changes
 
 #### Defined in
 
-[src/assets.js:267](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L267)
+[src/assets.js:267](https://github.com/playcanvas/editor-api/blob/c22ad47/src/assets.js#L267)
