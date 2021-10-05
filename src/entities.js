@@ -11,6 +11,22 @@ import { updateReferences } from './entities/references';
 import { wait } from './entities/wait';
 
 /**
+ * Data to create new Entity
+ *
+ * @typedef {object} CreateEntityArguments
+ * @property {string} name - The entity name
+ * @property {object} components - Component data. See [here](EntityProperties.md) for details on component data.
+ * @property {Entity|string} parent - The parent Entity or its resource_id. If undefined then the Entity will not be added to the current scene.
+ * @property {CreateEntityArguments[]} children - Data for child entities.
+ * @property {string[]} tags - Tags for the Entity.
+ * @property {boolean} enabled - Whether the Entity should be enabled.
+ * @property {string} resource_id - The resource_id of the Entity. Leave undefined to generate a new one.
+ * @property {number[]} position - The position of the Entity in local space.
+ * @property {number[]} rotation - The rotation of the Entity in local space (euler angles in degrees).
+ * @property {number[]} scale - The scale of the Entity in local space.
+ */
+
+/**
  * Data to reparent an entity under a new parent
  *
  * @typedef {object} ReparentArguments
@@ -208,7 +224,7 @@ class Entities extends Events {
     /**
      * Creates new entity and adds it to the hierarchy
      *
-     * @param {object} data - Optional initial data for the entity
+     * @param {CreateEntityArguments} data - Initial data for the entity
      * @param {object} options - Options
      * @param {number} options.index - The child index that this entity will have under its parent.
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
