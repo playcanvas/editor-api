@@ -1,7 +1,7 @@
 import { globals as api } from '../globals';
 
 function getSetting(settings, name, defaultValue) {
-    return settings[name] !== undefined ? settings[name] : defaultValue;
+    return settings && settings[name] !== undefined ? settings[name] : defaultValue;
 }
 
 function createFormData(data, settings) {
@@ -83,7 +83,7 @@ function appendCreateFields(form, data) {
  * @param {Function} onProgress - Progress function
  * @returns {object} The JSON response from the server
  */
-async function uploadFile(data, settings = {}, onProgress = null) {
+async function uploadFile(data, settings = null, onProgress = null) {
     let method;
     let url;
 
