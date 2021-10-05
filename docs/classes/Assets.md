@@ -62,7 +62,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:15](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L15)
+[src/assets.js:58](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L58)
 
 ## Public Methods
 
@@ -86,7 +86,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:42](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L42)
+[src/assets.js:85](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L85)
 
 ___
 
@@ -110,7 +110,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:53](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L53)
+[src/assets.js:96](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L96)
 
 ___
 
@@ -128,7 +128,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:63](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L63)
+[src/assets.js:106](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L106)
 
 ___
 
@@ -152,7 +152,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:74](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L74)
+[src/assets.js:117](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L117)
 
 ___
 
@@ -176,7 +176,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:201](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L201)
+[src/assets.js:244](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L244)
 
 ___
 
@@ -200,7 +200,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:213](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L213)
+[src/assets.js:256](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L256)
 
 ___
 
@@ -224,23 +224,25 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:281](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L281)
+[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L324)
 
 ___
 
 ### createAnimStateGraph
 
-▸ **createAnimStateGraph**(`name`, `data?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createAnimStateGraph**(`options?`): `Promise`<[`Asset`](Asset.md)\>
 
-Creates new anim state graph asset
+Creates new anim state graph asset.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `name` | `string` | `undefined` | The asset name |
-| `data` | `any` | `null` | The asset data |
-| `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | Options |
+| `options.name` | `string` | The asset name |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.data` | `any` | The asset data. See [here](AssetProperties.md) for Animstategraph data. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 
 #### Returns
 
@@ -250,7 +252,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:320](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L320)
+[src/assets.js:365](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L365)
 
 ___
 
@@ -276,7 +278,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:337](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L337)
+[src/assets.js:383](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L383)
 
 ___
 
@@ -302,7 +304,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:356](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L356)
+[src/assets.js:402](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L402)
 
 ___
 
@@ -332,7 +334,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:379](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L379)
+[src/assets.js:425](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L425)
 
 ___
 
@@ -357,7 +359,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:408](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L408)
+[src/assets.js:454](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L454)
 
 ___
 
@@ -383,7 +385,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:424](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L424)
+[src/assets.js:470](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L470)
 
 ___
 
@@ -409,7 +411,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:442](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L442)
+[src/assets.js:488](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L488)
 
 ___
 
@@ -435,7 +437,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:460](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L460)
+[src/assets.js:506](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L506)
 
 ___
 
@@ -450,7 +452,7 @@ Creates new material asset
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `name` | `string` | `undefined` | The asset name |
-| `data` | `any` | `null` | The material data. Default values will be used for missing fields. |
+| `data` | `any` | `null` | The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data. |
 | `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
 
 #### Returns
@@ -461,13 +463,13 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:485](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L485)
+[src/assets.js:531](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L531)
 
 ___
 
 ### createScript
 
-▸ **createScript**(`name`, `filename`, `text?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createScript**(`name`, `filename`, `text?`, `data?`, `folder?`): `Promise`<[`Asset`](Asset.md)\>
 
 Creates new script asset
 
@@ -478,6 +480,7 @@ Creates new script asset
 | `name` | `string` | `undefined` | The name of the script. This will be the name of the class inside the script if boilerplate code is used. |
 | `filename` | `string` | `undefined` | The filename of the script. This will also be the name of the script asset. If not defined it will be generated from the name of the script. |
 | `text` | `string` | `null` | The contents of the script. If none then boilerplate code will be used. |
+| `data` | `any` | `null` | The script data. See [here](AssetProperties.md) for Script data. |
 | `folder` | [`Asset`](Asset.md) | `null` | The parent folder asset |
 
 #### Returns
@@ -488,7 +491,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:513](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L513)
+[src/assets.js:560](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L560)
 
 ___
 
@@ -514,7 +517,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:549](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L549)
+[src/assets.js:589](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L589)
 
 ___
 
@@ -544,7 +547,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:571](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L571)
+[src/assets.js:611](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L611)
 
 ___
 
@@ -570,7 +573,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:594](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L594)
+[src/assets.js:634](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L634)
 
 ___
 
@@ -596,7 +599,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:613](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L613)
+[src/assets.js:653](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L653)
 
 ___
 
@@ -618,7 +621,7 @@ Deletes specified assets
 
 #### Defined in
 
-[src/assets.js:638](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L638)
+[src/assets.js:678](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L678)
 
 ___
 
@@ -642,7 +645,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:108](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L108)
+[src/assets.js:151](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L151)
 
 ___
 
@@ -664,7 +667,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:160](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L160)
+[src/assets.js:203](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L203)
 
 ___
 
@@ -680,7 +683,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:181](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L181)
+[src/assets.js:224](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L224)
 
 ___
 
@@ -697,4 +700,4 @@ and subscribes to changes
 
 #### Defined in
 
-[src/assets.js:224](https://github.com/playcanvas/editor-api/blob/548f133/src/assets.js#L224)
+[src/assets.js:267](https://github.com/playcanvas/editor-api/blob/cd796c6/src/assets.js#L267)

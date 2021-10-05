@@ -35,5 +35,8 @@
 
 ### Interfaces
 
+- [AssetUploadArguments](interfaces/AssetUploadArguments.md)
+- [TextureImportSettings](interfaces/TextureImportSettings.md)
+- [SceneImportSettings](interfaces/SceneImportSettings.md)
 - [ReparentArguments](interfaces/ReparentArguments.md)
 - [HistoryAction](interfaces/HistoryAction.md)
