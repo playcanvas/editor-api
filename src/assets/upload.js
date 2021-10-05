@@ -22,9 +22,9 @@ function createFormData(data, settings) {
 
     if (data.type === 'texture' || data.type === 'textureatlas') {
         form.append('pow2', getSetting(settings, 'pow2', true));
-        form.append('searcRelatedAssets', getSetting(settings, 'searcRelatedAssets', true));
+        form.append('searchRelatedAssets', getSetting(settings, 'searchRelatedAssets', true));
     } else if (data.type === 'scene') {
-        form.append('searcRelatedAssets', getSetting(settings, 'searcRelatedAssets', true));
+        form.append('searchRelatedAssets', getSetting(settings, 'searchRelatedAssets', true));
         form.append('overwriteModel', getSetting(settings, 'overwriteModel', true));
         form.append('overwriteAnimation', getSetting(settings, 'overwriteAnimation', true));
         form.append('overwriteMaterial', getSetting(settings, 'overwriteMaterial', true));

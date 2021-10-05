@@ -201,7 +201,10 @@ ${className}.prototype.update = function(dt) {
         api.globals.schema = new api.Schema(schema);
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createAnimStateGraph('name', null, folder);
+        api.globals.assets.createAnimStateGraph({
+            name: 'name',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);

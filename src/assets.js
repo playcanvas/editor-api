@@ -6,6 +6,49 @@ import { createTemplate } from './assets/createTemplate';
 import { createScript } from './assets/createScript';
 
 /**
+ * Arguments passed when uploading an asset file.
+ *
+ * @typedef {object} AssetUploadArguments
+ * @property {Asset} folder - The parent folder asset where the asset should be placed.
+ * @property {string} filename - The filename of the uploaded file.
+ * @property {File} file - The file being uploaded.
+ * @property {string} type - The type of the asset we are uploading. See [here](AssetProperties.md) for available asset types.
+ * @property {string} name - The name of the asset.
+ * @property {string[]} tags - The tags of the asset.
+ * @property {number} sourceAssetId - The id of the source asset.
+ * @property {object} data - The asset data. This depends on the asset type. See [here](AssetProperties.md) for asset data depending on the type.
+ * @property {boolean} preload - Whether to preload the asset. Defaults to true.
+ * @property {number} id - If an asset id is specified then this asset will be updated instead of creating a new asset.
+ */
+
+/**
+ * Import settings used when uploading a texture asset.
+ *
+ * @typedef {object} TextureImportSettings
+ * @property {boolean} pow2 - Whether to resize the texture to power of 2.
+ * @property {boolean} searchRelatedAssets - Whether to search for target assets to update
+ * throughout the whole project instead of just the same folder.
+ */
+
+/**
+ * Import settings used when uploading a scene (fbx etc.).
+ *
+ * @typedef {object} SceneImportSettings
+ * @property {boolean} searchRelatedAssets - Whether to search for target assets to update
+ * throughout the whole project instead of just the same folder. Defaults to true.
+ * @property {boolean} overwriteModel - Whether to overwrite existing model or create a new one. Defaults to true.
+ * @property {boolean} overwriteAnimation - Whether to overwrite existing animations or create new ones. Defaults to true.
+ * @property {boolean} overwriteMaterial - Whether to overwrite existing materials or create new ones. Defaults to true.
+ * @property {boolean} overwriteTexture - Whether to overwrite existing textures or create new ones. Defaults to true.
+ * @property {boolean} pow2 - Whether to resize embedded textures to power of 2. Defaults to true.
+ * @property {boolean} useGlb - Whether to convert models to GLB. Defaults to true.
+ * @property {boolean} animSampleRate - The desired animation sample rate. Defaults to 10.
+ * @property {boolean} animCurveTolerance - The animation curve tolerance. Defaults to 0.
+ * @property {boolean} animEnableCubic - Whether to enable cubic curves. Defaults to false.
+ * @property {boolean} animUseFbxFilename - Whether to use the fbx filename for animation names. Defaults to false.
+ */
+
+/**
  * The Assets Editor API
  */
 class Assets extends Events {
@@ -289,11 +332,11 @@ class Assets extends Events {
      * Creates new asset
      *
      * @private
-     * @param {object} data - The asset fields
-     * @param {object} settings - Import settings
+     * @param {AssetUploadArguments} data - The asset fields
+     * @param {TextureImportSettings|SceneImportSettings} settings - Import settings
      * @returns {Promise<Asset>} The new asset
      */
-    async _create(data, settings = {}) {
+    async upload(data, settings = {}) {
         if (data.folder) {
             data.folderId = data.folder.get('id');
         }
@@ -312,17 +355,20 @@ class Assets extends Events {
     /**
      * Creates new anim state graph asset.
      *
-     * @param {string} name - The asset name
-     * @param {object} data - The asset data. See see [here](AssetProperties.md) for Animstategraph data.
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {object} options.data - The asset data. See [here](AssetProperties.md) for Animstategraph data.
+     * @param {Asset} options.folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
-    createAnimStateGraph(name, data = null, folder = null) {
-        return this._create({
-            name: name || 'New Anim State Graph',
+    createAnimStateGraph(options = {}) {
+        return this.upload({
+            name: options.name || 'New Anim State Graph',
             type: 'animstategraph',
-            data: data || api.schema.assets.getDefaultData('animstategraph'),
-            folder: folder
+            data: options.data || api.schema.assets.getDefaultData('animstategraph'),
+            folder: options.folder,
+            preload: options.preload
         });
     }
 
@@ -335,7 +381,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createBundle(name, assets = [], folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Bundle',
             type: 'bundle',
             folder: folder,
@@ -354,7 +400,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createCss(name, text = '\n', folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Css',
             type: 'css',
             folder: folder,
@@ -384,7 +430,7 @@ class Assets extends Events {
 
         settings = settings || {};
 
-        return this._create({
+        return this.upload({
             name: name || 'New Cubemap',
             type: 'cubemap',
             folder: folder,
@@ -406,7 +452,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createFolder(name, folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Folder',
             type: 'folder',
             folder: folder
@@ -422,7 +468,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createHtml(name, text = '\n', folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Html',
             type: 'html',
             folder: folder,
@@ -440,7 +486,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createJson(name, json = {}, folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Json',
             type: 'json',
             folder: folder,
@@ -492,7 +538,7 @@ class Assets extends Events {
             }
         }
 
-        return this._create({
+        return this.upload({
             name: name || 'New Material',
             type: 'material',
             folder: folder,
@@ -518,7 +564,7 @@ class Assets extends Events {
 
         const result = createScript(name, filename, text);
 
-        return this._create({
+        return this.upload({
             name: result.filename,
             type: 'script',
             folder: folder,
@@ -541,7 +587,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createShader(name, text = '\n', folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Shader',
             type: 'shader',
             folder: folder,
@@ -569,7 +615,7 @@ class Assets extends Events {
         args.textureAtlasAsset = data.textureAtlas ? data.textureAtlas.get('id') : null;
         args.renderMode = data.renderMode !== undefined ? data.renderMode : 0;
 
-        return this._create({
+        return this.upload({
             name: name || 'New Sprite',
             type: 'sprite',
             folder: folder,
@@ -586,7 +632,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createText(name, text = '\n', folder = null) {
-        return this._create({
+        return this.upload({
             name: name || 'New Text',
             type: 'text',
             folder: folder,
@@ -610,7 +656,7 @@ class Assets extends Events {
             oldToNewIds
         } = createTemplate(entity);
 
-        const asset = await this._create({
+        const asset = await this.upload({
             name: name || entity.get('name'),
             type: 'template',
             folder: folder,
