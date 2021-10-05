@@ -51,7 +51,7 @@ window.schema = {
             }
         }
     },
-    animStateGraphData: {
+    animstategraphData: {
         testData: {
             type: 'number',
             $default: 0

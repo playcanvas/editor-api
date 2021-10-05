@@ -23,12 +23,7 @@ class AssetsSchema {
      * @returns {object} The default data
      */
     getDefaultData(type) {
-        let field;
-        if (type === 'animstategraph') {
-            field = 'animStateGraphData';
-        } else if (type === 'material') {
-            field = 'materialData';
-        }
+        const field = type + 'Data';
 
         if (!field || !this._schema[field]) return null;
 
