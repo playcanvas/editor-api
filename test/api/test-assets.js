@@ -194,7 +194,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates anim state graph', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -206,9 +210,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('animstategraph');
@@ -221,7 +225,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates bundle', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -235,9 +243,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('bundle');
@@ -250,7 +258,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates css asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -262,9 +274,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.css');
@@ -277,7 +289,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates cubemap asset', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -295,9 +311,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('cubemap');
@@ -314,7 +330,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates folder asset', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -331,9 +351,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('folder');
@@ -343,7 +363,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates html asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -355,9 +379,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.html');
@@ -370,7 +394,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates json asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -382,9 +410,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.json');
@@ -397,7 +425,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates i18n asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -408,9 +440,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.json');
@@ -436,7 +468,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates material asset', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -448,9 +484,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('material');
@@ -463,7 +499,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates shader asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -475,9 +515,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.glsl');
@@ -490,7 +530,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates sprite asset', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -503,9 +547,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('sprite');
@@ -521,7 +565,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates text asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -533,9 +581,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('asset.txt');
@@ -548,7 +596,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates template asset', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.schema = new api.Schema(schema);
         api.globals.entities = new api.Entities();
@@ -573,9 +625,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('type')).to.equal('template');
@@ -597,7 +649,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('template asset remaps entity references', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.schema = new api.Schema(schema);
         api.globals.entities = new api.Entities();
@@ -620,9 +676,9 @@ ${className}.prototype.update = function(dt) {
             entity: root
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
 
         const expected = { entities: {} };
 
@@ -639,7 +695,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('template asset remaps template_ent_ids', function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.schema = new api.Schema(schema);
         api.globals.entities = new api.Entities();
@@ -687,9 +747,9 @@ ${className}.prototype.update = function(dt) {
             entity: root
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
 
         const expected = { entities: {} };
 
@@ -720,7 +780,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates script asset', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         api.globals.branchId = 'branch';
         api.globals.projectId = 1;
@@ -731,9 +795,9 @@ ${className}.prototype.update = function(dt) {
             folder: folder
         });
 
-        const fetchArgs = window.fetch.getCall(0).args;
-        expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-        const data = fetchArgs[1].body;
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
         expect(data.get('branchId')).to.equal('branch');
         expect(data.get('projectId')).to.equal('1');
         expect(data.get('filename')).to.equal('name.js');
@@ -752,7 +816,11 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('creates valid script names', async function () {
-        sandbox.stub(window, 'fetch');
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
 
         // row format is desired name, expected class name, expected script name
         const names = [
@@ -767,9 +835,9 @@ ${className}.prototype.update = function(dt) {
                 name: names[i]
             });
 
-            const fetchArgs = window.fetch.getCall(i / 3).args;
-            expect(fetchArgs[1].body instanceof FormData).to.equal(true);
-            const data = fetchArgs[1].body;
+            const request = requests[i / 3];
+            expect(request.requestBody instanceof FormData).to.equal(true);
+            const data = request.requestBody;
             expect(await data.get('file').text()).to.equal(boilerplate(names[i + 1], names[i + 2])); // eslint-disable-line no-await-in-loop
         }
 

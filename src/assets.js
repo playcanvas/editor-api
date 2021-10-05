@@ -74,6 +74,11 @@ class Assets extends Events {
                 return 0;
             }
         });
+
+        this._defaultUploadCompletedCallback = null;
+        this._defaultUploadProgressCallback = null;
+        this._defaultUploadErrorCallback = null;
+        this._uploadId = 0;
     }
 
     /**
@@ -334,22 +339,42 @@ class Assets extends Events {
      * @private
      * @param {AssetUploadArguments} data - The asset fields
      * @param {TextureImportSettings|SceneImportSettings} settings - Import settings
+     * @param {Function} onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    async upload(data, settings = {}) {
+    async upload(data, settings = {}, onProgress = null) {
         if (data.folder) {
             data.folderId = data.folder.get('id');
         }
 
-        const result = await uploadFile(data, settings);
-        let asset = this.get(result.id);
-        if (!asset) {
-            asset = await new Promise(resolve => {
-                this.once(`add[${result.id}]`, a => resolve(a));
-            });
+        const uploadId = this._uploadId++;
+        if (!onProgress && this._defaultUploadProgressCallback) {
+            onProgress = (progress) => {
+                this._defaultUploadProgressCallback(uploadId, progress);
+            };
         }
 
-        return asset;
+        try {
+            const result = await uploadFile(data, settings, onProgress || this._defaultUploadProgressCallback);
+            let asset = this.get(result.id);
+            if (!asset) {
+                asset = await new Promise(resolve => {
+                    this.once(`add[${result.id}]`, a => resolve(a));
+                });
+            }
+
+            if (this._defaultUploadCompletedCallback) {
+                this._defaultUploadCompletedCallback(uploadId, asset);
+            }
+
+            return asset;
+        } catch (err) {
+            if (this._defaultUploadErrorCallback) {
+                this._defaultUploadErrorCallback(uploadId, err);
+            }
+
+            throw err;
+        }
     }
 
     /**
@@ -360,6 +385,7 @@ class Assets extends Events {
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {object} options.data - The asset data. See [here](AssetProperties.md) for Animstategraph data.
      * @param {Asset} options.folder - The parent folder asset
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createAnimStateGraph(options = {}) {
@@ -369,7 +395,7 @@ class Assets extends Events {
             data: options.data || api.schema.assets.getDefaultData('animstategraph'),
             folder: options.folder,
             preload: options.preload
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -380,6 +406,7 @@ class Assets extends Events {
      * @param {Asset[]} options.assets - The assets that the bundle will contain
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createBundle(options = {}) {
@@ -388,10 +415,10 @@ class Assets extends Events {
             type: 'bundle',
             folder: options.folder,
             data: {
-                assets: options.assets.map(a => a.get('id'))
+                assets: (options.assets || []).map(a => a.get('id'))
             },
             preload: options.preload
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -402,6 +429,7 @@ class Assets extends Events {
      * @param {string} options.text - The CSS
      * @param {string} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createCss(options = {}) {
@@ -412,7 +440,7 @@ class Assets extends Events {
             filename: 'asset.css',
             file: new Blob([options.text || '\n'], { type: 'text/css' }),
             preload: options.preload
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -427,6 +455,7 @@ class Assets extends Events {
      * @param {number} options.anisotropy - Cubemap anisotropy value. Defaults to 1.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createCubemap(options = {}) {
@@ -447,7 +476,7 @@ class Assets extends Events {
                 magFilter: options.magFilter !== undefined ? options.magFilter : 1, // linear
                 anisotropy: options.anisotropy !== undefined ? options.anisotropy : 1
             }
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -456,6 +485,7 @@ class Assets extends Events {
      * @param {object} options - Options
      * @param {string} options.name - The asset name
      * @param {Asset} options.folder - The parent folder asset
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createFolder(options = {}) {
@@ -463,7 +493,7 @@ class Assets extends Events {
             name: options.name || 'New Folder',
             type: 'folder',
             folder: options.folder
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -474,6 +504,7 @@ class Assets extends Events {
      * @param {string} options.text - The HTML
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createHtml(options = {}) {
@@ -484,7 +515,7 @@ class Assets extends Events {
             preload: options.preload,
             filename: 'asset.html',
             file: new Blob([options.text || '\n'], { type: 'text/html' })
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -495,6 +526,7 @@ class Assets extends Events {
      * @param {object} options.json - The JSON
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createJson(options = {}) {
@@ -505,7 +537,7 @@ class Assets extends Events {
             preload: options.preload,
             filename: 'asset.json',
             file: new Blob([JSON.stringify(options.json || {})], { type: 'application/json' })
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -516,6 +548,7 @@ class Assets extends Events {
      * @param {object} options.localizationData - The localization data. If null then default data will be used.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createI18n(options = {}) {
@@ -537,7 +570,7 @@ class Assets extends Events {
             },
             folder: options.folder,
             preload: options.preload
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -548,6 +581,7 @@ class Assets extends Events {
      * @param {object} options.data - The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createMaterial(options = {}) {
@@ -566,7 +600,7 @@ class Assets extends Events {
             folder: options.folder,
             data: defaultData,
             preload: options.preload
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -580,6 +614,7 @@ class Assets extends Events {
      * @param {object} options.data - The script data. See [here](AssetProperties.md) for Script data.
      * @param {Asset} optionsfolder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createScript(options = {}) {
@@ -601,7 +636,7 @@ class Assets extends Events {
                 loading: false,
                 loadingType: 0 // load script as asset
             }
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -612,6 +647,7 @@ class Assets extends Events {
      * @param {string} options.text - The GLSL
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createShader(options = {}) {
@@ -622,7 +658,7 @@ class Assets extends Events {
             preload: options.preload,
             filename: 'asset.glsl',
             file: new Blob([options.text || '\n'], { type: 'text/x-glsl' })
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -636,6 +672,7 @@ class Assets extends Events {
      * @param {number} options.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createSprite(options = {}) {
@@ -651,7 +688,7 @@ class Assets extends Events {
             folder: options.folder,
             preload: options.preload,
             data: data
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -662,6 +699,7 @@ class Assets extends Events {
      * @param {string} options.text - The text
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createText(options = {}) {
@@ -672,7 +710,7 @@ class Assets extends Events {
             preload: options.preload,
             filename: 'asset.txt',
             file: new Blob([options.text || '\n'], { type: 'text/plain' })
-        });
+        }, null, options.onProgress);
     }
 
     /**
@@ -684,6 +722,7 @@ class Assets extends Events {
      * @param {Entity} options.entity - The entity to create the template from
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     async createTemplate(options = {}) {
@@ -698,7 +737,7 @@ class Assets extends Events {
             folder: options.folder,
             preload: options.preload,
             data: { entities }
-        });
+        }, null, options.onProgress);
 
         const history = options.entity.history.enabled;
         options.entity.history.enabled = false;
@@ -729,6 +768,66 @@ class Assets extends Events {
         }
 
         assets.forEach(a => this.remove(a));
+    }
+
+    /**
+     * Gets the default callback called when on asset upload succeeds.
+     * The function takes 2 arguments: the upload id, and the new asset.
+     *
+     * @type {Function<number, Asset>}
+     */
+    get defaultUploadCompletedCallback() {
+        return this._defaultUploadCompletedCallback;
+    }
+
+    /**
+     * Sets the default callback called when on asset upload succeeds.
+     * The function takes 2 arguments: the upload id, and the new asset.
+     *
+     * @type {Function<number, Asset>}
+     */
+    set defaultUploadCompletedCallback(value) {
+        this._defaultUploadCompletedCallback = value;
+    }
+
+    /**
+     * Gets the default callback called when on asset upload progress.
+     * The function takes 2 arguments: the upload id and the progress.
+     *
+     * @type {Function<number, number>}
+     */
+    get defaultUploadProgressCallback() {
+        return this._defaultUploadProgressCallback;
+    }
+
+    /**
+     * Sets the default callback called when on asset upload progress.
+     * The function takes 2 arguments: the upload id and the progress.
+     *
+     * @type {Function<number, number>}
+     */
+    set defaultUploadProgressCallback(value) {
+        this._defaultUploadProgressCallback = value;
+    }
+
+    /**
+     * Gets the default callback called when on asset upload fails.
+     * The function takes 2 arguments: the upload id, and the error.
+     *
+     * @type {Function<number, Error>}
+     */
+    get defaultUploadErrorCallback() {
+        return this._defaultUploadErrorCallback;
+    }
+
+    /**
+     * Sets the default callback called when on asset upload progress.
+     * The function takes 2 arguments: the upload id, and the error.
+     *
+     * @type {Function<number, Error>}
+     */
+    set defaultUploadErrorCallback(value) {
+        this._defaultUploadErrorCallback = value;
     }
 }
 
