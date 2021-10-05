@@ -226,10 +226,6 @@ class Asset extends Events {
         });
     }
 
-    async parseScript() {
-        // TODD
-    }
-
     /**
      * Deletes this asset
      */

@@ -507,35 +507,29 @@ class Assets extends Events {
      * @param {string} filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
      * @param {string} text - The contents of the script. If none then boilerplate code will be used.
+     * @param {object} data - The script data. See [here](AssetProperties.md) for Script data.
      * @param {Asset} folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
-    async createScript(name, filename, text = null, folder = null) {
+    createScript(name, filename, text = null, data = null, folder = null) {
         if (!name) {
             throw new Error('createScript: missing required name');
         }
 
         const result = createScript(name, filename, text);
 
-        const asset = await this._create({
+        return this._create({
             name: result.filename,
             type: 'script',
             folder: folder,
             filename: result.filename,
             file: new Blob([result.content], { type: 'text/javascript' }),
-            data: {
+            data: data || {
                 scripts: { },
                 loading: false,
                 loadingType: 0 // load script as asset
             }
         });
-
-        const url = asset.get('file.url');
-        if (url) {
-            asset.parseScript();
-        } else {
-            asset.once('file.url:set', url => asset.parseScript());
-        }
     }
 
     /**

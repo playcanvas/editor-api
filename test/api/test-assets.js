@@ -677,7 +677,7 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createScript('name', null, null, folder);
+        api.globals.assets.createScript('name', null, null, null, folder);
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
