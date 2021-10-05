@@ -375,71 +375,77 @@ class Assets extends Events {
     /**
      * Creates new bundle asset
      *
-     * @param {string} name - The asset name
-     * @param {Asset[]} assets - The assets that the bundle will contain
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {Asset[]} options.assets - The assets that the bundle will contain
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createBundle(name, assets = [], folder = null) {
+    createBundle(options = {}) {
         return this.upload({
-            name: name || 'New Bundle',
+            name: options.name || 'New Bundle',
             type: 'bundle',
-            folder: folder,
+            folder: options.folder,
             data: {
-                assets: assets.map(a => a.get('id'))
-            }
+                assets: options.assets.map(a => a.get('id'))
+            },
+            preload: options.preload
         });
     }
 
     /**
      * Creates new CSS asset
      *
-     * @param {string} name - The asset name
-     * @param {string} text - The CSS
-     * @param {string} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {string} options.text - The CSS
+     * @param {string} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createCss(name, text = '\n', folder = null) {
+    createCss(options = {}) {
         return this.upload({
-            name: name || 'New Css',
+            name: options.name || 'New Css',
             type: 'css',
-            folder: folder,
+            folder: options.folder,
             filename: 'asset.css',
-            file: new Blob([text], { type: 'text/css' })
+            file: new Blob([options.text || '\n'], { type: 'text/css' }),
+            preload: options.preload
         });
     }
 
     /**
      * Creates new cubemap asset
      *
-     * @param {string} name - The asset name
-     * @param {Asset[]} textures - The textures for each cubemap face in this order:
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {Asset[]} options.textures - The textures for each cubemap face in this order:
      * right, left, up, down, front, back
-     * @param {object} settings - Cubemap settings
-     * @param {number} settings.minFilter - Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR.
-     * @param {number} settings.magFilter - Cubemap magFilter value. Defaults to pc.FILTER_LINEAR.
-     * @param {number} settings.anisotropy - Cubemap anisotropy value. Defaults to 1.
-     * @param {Asset} folder - The parent folder asset
+     * @param {number} options.minFilter - Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR.
+     * @param {number} options.magFilter - Cubemap magFilter value. Defaults to pc.FILTER_LINEAR.
+     * @param {number} options.anisotropy - Cubemap anisotropy value. Defaults to 1.
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createCubemap(name, textures = [], settings = null, folder = null) {
-        textures = textures.slice(0, 6);
+    createCubemap(options = {}) {
+        const textures = options.textures.slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
         }
 
-        settings = settings || {};
-
         return this.upload({
-            name: name || 'New Cubemap',
+            name: options.name || 'New Cubemap',
             type: 'cubemap',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             data: {
-                name: name || 'New Cubemap',
+                name: options.name || 'New Cubemap',
                 textures: textures,
-                minFilter: settings.minFilter !== undefined ? settings.minFilter : 5, // linear mipmap linear
-                magFilter: settings.magFilter !== undefined ? settings.magFilter : 1, // linear
-                anisotropy: settings.anisotropy !== undefined ? settings.anisotropy : 1
+                minFilter: options.minFilter !== undefined ? options.minFilter : 5, // linear mipmap linear
+                magFilter: options.magFilter !== undefined ? options.magFilter : 1, // linear
+                anisotropy: options.anisotropy !== undefined ? options.anisotropy : 1
             }
         });
     }
@@ -447,130 +453,150 @@ class Assets extends Events {
     /**
      * Creates a new folder asset
      *
-     * @param {string} name - The asset name
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {Asset} options.folder - The parent folder asset
      * @returns {Promise<Asset>} The new asset
      */
-    createFolder(name, folder = null) {
+    createFolder(options = {}) {
         return this.upload({
-            name: name || 'New Folder',
+            name: options.name || 'New Folder',
             type: 'folder',
-            folder: folder
+            folder: options.folder
         });
     }
 
     /**
      * Creates new HTML asset
      *
-     * @param {string} name - The asset name
-     * @param {string} text - The HTML
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {string} options.text - The HTML
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createHtml(name, text = '\n', folder = null) {
+    createHtml(options = {}) {
         return this.upload({
-            name: name || 'New Html',
+            name: options.name || 'New Html',
             type: 'html',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             filename: 'asset.html',
-            file: new Blob([text], { type: 'text/html' })
+            file: new Blob([options.text || '\n'], { type: 'text/html' })
         });
     }
 
     /**
      * Creates new JSON asset
      *
-     * @param {string} name - The asset name
-     * @param {object} json - The JSON
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {object} options.json - The JSON
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createJson(name, json = {}, folder = null) {
+    createJson(options = {}) {
         return this.upload({
-            name: name || 'New Json',
+            name: options.name || 'New Json',
             type: 'json',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             filename: 'asset.json',
-            file: new Blob([JSON.stringify(json)], { type: 'application/json' })
+            file: new Blob([JSON.stringify(options.json || {})], { type: 'application/json' })
         });
     }
 
     /**
      * Creates new localization JSON asset
      *
-     * @param {string} name - The asset name
-     * @param {object} localizationData - The localization data. If null then default data will be used.
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - The options
+     * @param {string} options.name - The asset name
+     * @param {object} options.localizationData - The localization data. If null then default data will be used.
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createI18n(name, localizationData = null, folder = null) {
-        return this.createJson(name, localizationData || {
-            "header": {
-                "version": 1
-            },
-            "data": [{
-                "info": {
-                    "locale": "en-US"
+    createI18n(options = {}) {
+        return this.createJson({
+            name: options.name,
+            json: options.localizationData || {
+                "header": {
+                    "version": 1
                 },
-                "messages": {
-                    "key": "Single key translation",
-                    "key plural": ["One key translation", "Translation for {number} keys"]
-                }
-            }]
-        }, folder);
+                "data": [{
+                    "info": {
+                        "locale": "en-US"
+                    },
+                    "messages": {
+                        "key": "Single key translation",
+                        "key plural": ["One key translation", "Translation for {number} keys"]
+                    }
+                }]
+            },
+            folder: options.folder,
+            preload: options.preload
+        });
     }
 
     /**
      * Creates new material asset
      *
-     * @param {string} name - The asset name
-     * @param {object} data - The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data.
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {object} options.data - The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data.
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createMaterial(name, data = null, folder = null) {
+    createMaterial(options = {}) {
         const defaultData = api.schema.assets.getDefaultData('material');
-        if (data) {
+        if (options.data) {
             for (const key in defaultData) {
-                if (data[key]) {
-                    defaultData[key] = data[key];
+                if (options.data[key]) {
+                    defaultData[key] = options.data[key];
                 }
             }
         }
 
         return this.upload({
-            name: name || 'New Material',
+            name: options.name || 'New Material',
             type: 'material',
-            folder: folder,
-            data: defaultData
+            folder: options.folder,
+            data: defaultData,
+            preload: options.preload
         });
     }
 
     /**
      * Creates new script asset
      *
-     * @param {string} name - The name of the script. This will be the name of the class inside the script if boilerplate code is used.
-     * @param {string} filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
+     * @param {object} options - Options
+     * @param {string} options.name - The name of the script. This will be the name of the class inside the script if boilerplate code is used.
+     * @param {string} options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
-     * @param {string} text - The contents of the script. If none then boilerplate code will be used.
-     * @param {object} data - The script data. See [here](AssetProperties.md) for Script data.
-     * @param {Asset} folder - The parent folder asset
+     * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
+     * @param {object} options.data - The script data. See [here](AssetProperties.md) for Script data.
+     * @param {Asset} optionsfolder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createScript(name, filename, text = null, data = null, folder = null) {
-        if (!name) {
+    createScript(options = {}) {
+        if (!options.name) {
             throw new Error('createScript: missing required name');
         }
 
-        const result = createScript(name, filename, text);
+        const result = createScript(options.name, options.filename, options.text);
 
         return this.upload({
             name: result.filename,
             type: 'script',
-            folder: folder,
+            folder: options.folder,
             filename: result.filename,
             file: new Blob([result.content], { type: 'text/javascript' }),
-            data: data || {
+            preload: options.preload,
+            data: options.data || {
                 scripts: { },
                 loading: false,
                 loadingType: 0 // load script as asset
@@ -581,63 +607,71 @@ class Assets extends Events {
     /**
      * Creates new shader asset
      *
-     * @param {string} name - The asset name
-     * @param {string} text - The GLSL
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {string} options.text - The GLSL
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createShader(name, text = '\n', folder = null) {
+    createShader(options = {}) {
         return this.upload({
-            name: name || 'New Shader',
+            name: options.name || 'New Shader',
             type: 'shader',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             filename: 'asset.glsl',
-            file: new Blob([text], { type: 'text/x-glsl' })
+            file: new Blob([options.text || '\n'], { type: 'text/x-glsl' })
         });
     }
 
     /**
      * Creates new sprite asset
      *
-     * @param {string} name - The asset name
-     * @param {object} data - The sprite data
-     * @param {number} data.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
-     * @param {number[]} data.frameKeys - The sprite's frame keys
-     * @param {Asset} data.textureAtlas - The sprite's texture atlas asset
-     * @param {number} data.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options = Options
+     * @param {string} options.name - The asset name
+     * @param {number} options.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
+     * @param {number[]} options.frameKeys - The sprite's frame keys
+     * @param {Asset} options.textureAtlas - The sprite's texture atlas asset
+     * @param {number} options.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createSprite(name, data = {}, folder = null) {
-        const args = {};
-        args.pixelsPerUnit = data.pixelsPerUnit !== undefined ? data.pixelsPerUnit : 100;
-        args.frameKeys = data.frameKeys ? data.frameKeys.map(val => val.toString()) : [];
-        args.textureAtlasAsset = data.textureAtlas ? data.textureAtlas.get('id') : null;
-        args.renderMode = data.renderMode !== undefined ? data.renderMode : 0;
+    createSprite(options = {}) {
+        const data = {};
+        data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
+        data.frameKeys = options.frameKeys ? options.frameKeys.map(val => val.toString()) : [];
+        data.textureAtlasAsset = options.textureAtlas ? options.textureAtlas.get('id') : null;
+        data.renderMode = options.renderMode !== undefined ? options.renderMode : 0;
 
         return this.upload({
-            name: name || 'New Sprite',
+            name: options.name || 'New Sprite',
             type: 'sprite',
-            folder: folder,
-            data: args
+            folder: options.folder,
+            preload: options.preload,
+            data: data
         });
     }
 
     /**
      * Creates new text asset
      *
-     * @param {string} name - The asset name
-     * @param {string} text - The text
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {string} options.text - The text
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    createText(name, text = '\n', folder = null) {
+    createText(options = {}) {
         return this.upload({
-            name: name || 'New Text',
+            name: options.name || 'New Text',
             type: 'text',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             filename: 'asset.txt',
-            file: new Blob([text], { type: 'text/plain' })
+            file: new Blob([options.text || '\n'], { type: 'text/plain' })
         });
     }
 
@@ -645,29 +679,32 @@ class Assets extends Events {
      * Creates new template asset
      *
      * @typedef {import("./entity").Entity} Entity
-     * @param {string} name - The asset name
-     * @param {Entity} entity - The entity to create the template from
-     * @param {Asset} folder - The parent folder asset
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {Entity} options.entity - The entity to create the template from
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @returns {Promise<Asset>} The new asset
      */
-    async createTemplate(name, entity, folder = null) {
+    async createTemplate(options = {}) {
         const {
             entities,
             oldToNewIds
-        } = createTemplate(entity);
+        } = createTemplate(options.entity);
 
         const asset = await this.upload({
-            name: name || entity.get('name'),
+            name: options.name || options.entity.get('name'),
             type: 'template',
-            folder: folder,
+            folder: options.folder,
+            preload: options.preload,
             data: { entities }
         });
 
-        const history = entity.history.enabled;
-        entity.history.enabled = false;
-        entity.set('template_id', parseInt(asset.get('id'), 10));
-        entity.set('template_ent_ids', oldToNewIds);
-        entity.history.enabled = history;
+        const history = options.entity.history.enabled;
+        options.entity.history.enabled = false;
+        options.entity.set('template_id', parseInt(asset.get('id'), 10));
+        options.entity.set('template_ent_ids', oldToNewIds);
+        options.entity.history.enabled = history;
     }
 
     /**

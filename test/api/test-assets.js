@@ -229,7 +229,11 @@ ${className}.prototype.update = function(dt) {
 
         const assets = [new api.Asset({ id: 1 })];
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createBundle('name', assets, folder);
+        api.globals.assets.createBundle({
+            name: 'name',
+            assets: assets,
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -252,7 +256,11 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createCss('name', 'text', folder);
+        api.globals.assets.createCss({
+            name: 'name',
+            text: 'text',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -281,7 +289,11 @@ ${className}.prototype.update = function(dt) {
         }
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createCubemap('name', textures, null, folder);
+        api.globals.assets.createCubemap({
+            name: 'name',
+            textures: textures,
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -314,7 +326,10 @@ ${className}.prototype.update = function(dt) {
         }
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createFolder('name', folder);
+        api.globals.assets.createFolder({
+            name: 'name',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -334,7 +349,11 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createHtml('name', 'text', folder);
+        api.globals.assets.createHtml({
+            name: 'name',
+            text: 'text',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -357,7 +376,11 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createJson('name', { test: 1 }, folder);
+        api.globals.assets.createJson({
+            name: 'name',
+            json: { test: 1 },
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -380,7 +403,10 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createI18n('name', null, folder);
+        api.globals.assets.createI18n({
+            name: 'name',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -417,7 +443,10 @@ ${className}.prototype.update = function(dt) {
         api.globals.schema = new api.Schema(schema);
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createMaterial('name', null, folder);
+        api.globals.assets.createMaterial({
+            name: 'name',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -440,7 +469,11 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createShader('name', 'text', folder);
+        api.globals.assets.createShader({
+            name: 'name',
+            text: 'text',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -464,9 +497,11 @@ ${className}.prototype.update = function(dt) {
 
         const atlas = new api.Asset({ id: 1 });
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createSprite('name', {
-            textureAtlas: atlas
-        }, folder);
+        api.globals.assets.createSprite({
+            name: 'name',
+            textureAtlas: atlas,
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -492,7 +527,11 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createText('name', 'text', folder);
+        api.globals.assets.createText({
+            name: 'name',
+            text: 'text',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -529,7 +568,10 @@ ${className}.prototype.update = function(dt) {
         let guidIndex = 0;
         sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
-        api.globals.assets.createTemplate(null, root, folder);
+        api.globals.assets.createTemplate({
+            entity: root,
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -574,7 +616,9 @@ ${className}.prototype.update = function(dt) {
         let guidIndex = 0;
         sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
-        api.globals.assets.createTemplate(null, root);
+        api.globals.assets.createTemplate({
+            entity: root
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -639,7 +683,9 @@ ${className}.prototype.update = function(dt) {
         let guidIndex = 0;
         sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
-        api.globals.assets.createTemplate(null, root);
+        api.globals.assets.createTemplate({
+            entity: root
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -680,7 +726,10 @@ ${className}.prototype.update = function(dt) {
         api.globals.projectId = 1;
 
         const folder = new api.Asset({ id: 10 });
-        api.globals.assets.createScript('name', null, null, null, folder);
+        api.globals.assets.createScript({
+            name: 'name',
+            folder: folder
+        });
 
         const fetchArgs = window.fetch.getCall(0).args;
         expect(fetchArgs[1].body instanceof FormData).to.equal(true);
@@ -714,7 +763,9 @@ ${className}.prototype.update = function(dt) {
         ];
 
         for (let i = 0; i < names.length; i += 3) {
-            api.globals.assets.createScript(names[i]);
+            api.globals.assets.createScript({
+                name: names[i]
+            });
 
             const fetchArgs = window.fetch.getCall(i / 3).args;
             expect(fetchArgs[1].body instanceof FormData).to.equal(true);
