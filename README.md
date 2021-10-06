@@ -28,6 +28,8 @@ The resulting .md file will be under docs/modules.md.
 
 NOTE: Build the docs after you commit any API changes, otherwise the code links in the docs might point to the wrong lines.
 
+NOTE: The `EntityProperties.md` and `AssetProperties.md` documents are created externally. When you build the docs, revert those 2 documents (or update them externally).
+
 # Tests
 
 To run tests run:
