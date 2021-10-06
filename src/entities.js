@@ -16,7 +16,7 @@ import { wait } from './entities/wait';
  * @typedef {object} CreateEntityArguments
  * @property {string} name - The entity name
  * @property {object} components - Component data. See [here](EntityProperties.md) for details on component data.
- * @property {Entity|string} parent - The parent Entity or its resource_id. If undefined then the Entity will not be added to the current scene.
+ * @property {Entity|string} parent - The parent Entity or its resource_id. If undefined then the root Entity will be used as the parent.
  * @property {CreateEntityArguments[]} children - Data for child entities.
  * @property {string[]} tags - Tags for the Entity.
  * @property {boolean} enabled - Whether the Entity should be enabled.
