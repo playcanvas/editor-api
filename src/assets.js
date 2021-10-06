@@ -106,7 +106,7 @@ class Assets extends Events {
     /**
      * Returns array of all assets
      *
-     * @returns {Array[]} The assets
+     * @returns {Asset[]} The assets
      */
     list() {
         return this._assets.array().map(a => a.apiAsset);
