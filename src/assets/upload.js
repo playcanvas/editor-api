@@ -1,7 +1,7 @@
 import { globals as api } from '../globals';
 
 function getSetting(settings, name, defaultValue) {
-    return settings[name] !== undefined ? settings[name] : defaultValue;
+    return settings && settings[name] !== undefined ? settings[name] : defaultValue;
 }
 
 function createFormData(data, settings) {
@@ -80,9 +80,10 @@ function appendCreateFields(form, data) {
  *
  * @param {object} data - The data
  * @param {object} settings - Import settings
+ * @param {Function} onProgress - Progress function
  * @returns {object} The JSON response from the server
  */
-async function uploadFile(data, settings = {}) {
+async function uploadFile(data, settings = null, onProgress = null) {
     let method;
     let url;
 
@@ -96,17 +97,81 @@ async function uploadFile(data, settings = {}) {
         url = '/api/assets';
     }
 
-    const response = await fetch(url, {
-        body: form,
-        method: method
+    const response = await new Promise(resolve => {
+        let progress;
+
+        function onProgressUpdate(value) {
+            if (progress !== value) {
+                progress = value;
+                if (onProgress) {
+                    onProgress(progress);
+                }
+            }
+        }
+
+        function onError(status, err) {
+            resolve({
+                ok: false,
+                status: status,
+                error: err
+            });
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener('load', () => {
+            onProgressUpdate(1.0);
+
+            if (xhr.status === 200 || xhr.status === 201) {
+                resolve({
+                    ok: true,
+                    status: xhr.status,
+                    json: JSON.parse(xhr.responseText)
+                });
+            } else {
+                try {
+                    const json = JSON.parse(xhr.responseText);
+                    let msg = json.message;
+                    if (! msg) {
+                        msg = json.error || (json.response && json.response.error);
+                    }
+
+                    if (! msg) {
+                        msg = xhr.responseText;
+                    }
+
+                    onError(xhr.status, msg);
+                } catch (ex) {
+                    onError(xhr.status, ex);
+                }
+            }
+        });
+
+        xhr.upload.addEventListener('progress', evt => {
+            if (!evt.lengthComputable) return;
+
+            onProgressUpdate(evt.loaded / evt.total);
+        });
+
+        xhr.addEventListener('error', evt => {
+            onError(xhr.status, evt);
+        });
+
+        xhr.addEventListener('abort', evt => {
+            onError(xhr.status, evt);
+        });
+
+        onProgressUpdate(0);
+
+        xhr.open(method, url, true);
+        xhr.send(form);
     });
 
     if (!response.ok) {
-        throw new Error(response.status + ': ' + response.statusText);
+        throw new Error(`${response.status}${response.error ? ': ' + response.error : ''}`);
     }
 
-    const json = await response.json();
-    return json;
+    return response.json;
 }
 
 export { uploadFile };
