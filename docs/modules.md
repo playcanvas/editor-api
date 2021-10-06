@@ -38,5 +38,6 @@
 - [AssetUploadArguments](interfaces/AssetUploadArguments.md)
 - [TextureImportSettings](interfaces/TextureImportSettings.md)
 - [SceneImportSettings](interfaces/SceneImportSettings.md)
+- [CreateEntityArguments](interfaces/CreateEntityArguments.md)
 - [ReparentArguments](interfaces/ReparentArguments.md)
 - [HistoryAction](interfaces/HistoryAction.md)
