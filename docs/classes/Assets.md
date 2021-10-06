@@ -48,6 +48,12 @@ The Assets Editor API
 - [clear](Assets.md#clear)
 - [loadAllAndSubscribe](Assets.md#loadallandsubscribe)
 
+### Accessors
+
+- [defaultUploadCompletedCallback](Assets.md#defaultuploadcompletedcallback)
+- [defaultUploadProgressCallback](Assets.md#defaultuploadprogresscallback)
+- [defaultUploadErrorCallback](Assets.md#defaultuploaderrorcallback)
+
 ## Constructors
 
 ### constructor
@@ -62,7 +68,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:58](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L58)
+[src/assets.js:58](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L58)
 
 ## Public Methods
 
@@ -86,7 +92,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:85](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L85)
+[src/assets.js:90](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L90)
 
 ___
 
@@ -110,7 +116,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:96](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L96)
+[src/assets.js:101](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L101)
 
 ___
 
@@ -128,7 +134,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:106](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L106)
+[src/assets.js:111](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L111)
 
 ___
 
@@ -152,7 +158,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:117](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L117)
+[src/assets.js:122](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L122)
 
 ___
 
@@ -176,7 +182,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:244](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L244)
+[src/assets.js:249](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L249)
 
 ___
 
@@ -200,7 +206,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:256](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L256)
+[src/assets.js:261](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L261)
 
 ___
 
@@ -224,7 +230,7 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L324)
+[src/assets.js:329](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L329)
 
 ___
 
@@ -243,6 +249,7 @@ Creates new anim state graph asset.
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 | `options.data` | `any` | The asset data. See [here](AssetProperties.md) for Animstategraph data. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -252,7 +259,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:365](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L365)
+[src/assets.js:391](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L391)
 
 ___
 
@@ -271,6 +278,7 @@ Creates new bundle asset
 | `options.assets` | [`Asset`](Asset.md)[] | The assets that the bundle will contain |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -280,7 +288,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:385](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L385)
+[src/assets.js:412](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L412)
 
 ___
 
@@ -299,6 +307,7 @@ Creates new CSS asset
 | `options.text` | `string` | The CSS |
 | `options.folder` | `string` | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -308,7 +317,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:407](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L407)
+[src/assets.js:435](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L435)
 
 ___
 
@@ -330,6 +339,7 @@ Creates new cubemap asset
 | `options.anisotropy` | `number` | Cubemap anisotropy value. Defaults to 1. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -339,7 +349,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:432](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L432)
+[src/assets.js:461](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L461)
 
 ___
 
@@ -356,6 +366,7 @@ Creates a new folder asset
 | `options` | `Object` | Options |
 | `options.name` | `string` | The asset name |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -365,7 +376,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:461](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L461)
+[src/assets.js:491](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L491)
 
 ___
 
@@ -384,6 +395,7 @@ Creates new HTML asset
 | `options.text` | `string` | The HTML |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -393,7 +405,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:479](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L479)
+[src/assets.js:510](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L510)
 
 ___
 
@@ -412,6 +424,7 @@ Creates new JSON asset
 | `options.json` | `any` | The JSON |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -421,7 +434,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:500](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L500)
+[src/assets.js:532](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L532)
 
 ___
 
@@ -440,6 +453,7 @@ Creates new localization JSON asset
 | `options.localizationData` | `any` | The localization data. If null then default data will be used. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -449,7 +463,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:521](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L521)
+[src/assets.js:554](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L554)
 
 ___
 
@@ -468,6 +482,7 @@ Creates new material asset
 | `options.data` | `any` | The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -477,7 +492,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:553](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L553)
+[src/assets.js:587](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L587)
 
 ___
 
@@ -505,7 +520,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:585](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L585)
+[src/assets.js:620](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L620)
 
 ___
 
@@ -524,6 +539,7 @@ Creates new shader asset
 | `options.text` | `string` | The GLSL |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -533,7 +549,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:617](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L617)
+[src/assets.js:653](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L653)
 
 ___
 
@@ -555,6 +571,7 @@ Creates new sprite asset
 | `options.renderMode` | `number` | The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -564,7 +581,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:641](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L641)
+[src/assets.js:678](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L678)
 
 ___
 
@@ -583,6 +600,7 @@ Creates new text asset
 | `options.text` | `string` | The text |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -592,7 +610,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:667](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L667)
+[src/assets.js:705](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L705)
 
 ___
 
@@ -611,6 +629,7 @@ Creates new template asset
 | `options.entity` | [`Entity`](Entity.md) | The entity to create the template from |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | `Function` | Function to report progress |
 
 #### Returns
 
@@ -620,7 +639,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:689](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L689)
+[src/assets.js:728](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L728)
 
 ___
 
@@ -642,7 +661,7 @@ Deletes specified assets
 
 #### Defined in
 
-[src/assets.js:715](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L715)
+[src/assets.js:754](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L754)
 
 ___
 
@@ -666,7 +685,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:151](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L151)
+[src/assets.js:156](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L156)
 
 ___
 
@@ -688,7 +707,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:203](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L203)
+[src/assets.js:208](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L208)
 
 ___
 
@@ -704,7 +723,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:224](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L224)
+[src/assets.js:229](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L229)
 
 ___
 
@@ -721,4 +740,112 @@ and subscribes to changes
 
 #### Defined in
 
-[src/assets.js:267](https://github.com/playcanvas/editor-api/blob/24a7c67/src/assets.js#L267)
+[src/assets.js:272](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L272)
+
+## Accessors
+
+### defaultUploadCompletedCallback
+
+• `get` **defaultUploadCompletedCallback**(): `Function`
+
+Gets the default callback called when on asset upload succeeds.
+The function takes 2 arguments: the upload id, and the new asset.
+
+#### Returns
+
+`Function`
+
+#### Defined in
+
+[src/assets.js:779](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L779)
+
+• `set` **defaultUploadCompletedCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload succeeds.
+The function takes 2 arguments: the upload id, and the new asset.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `Function` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:789](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L789)
+
+___
+
+### defaultUploadProgressCallback
+
+• `get` **defaultUploadProgressCallback**(): `Function`
+
+Gets the default callback called when on asset upload progress.
+The function takes 2 arguments: the upload id and the progress.
+
+#### Returns
+
+`Function`
+
+#### Defined in
+
+[src/assets.js:799](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L799)
+
+• `set` **defaultUploadProgressCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload progress.
+The function takes 2 arguments: the upload id and the progress.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `Function` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:809](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L809)
+
+___
+
+### defaultUploadErrorCallback
+
+• `get` **defaultUploadErrorCallback**(): `Function`
+
+Gets the default callback called when on asset upload fails.
+The function takes 2 arguments: the upload id, and the error.
+
+#### Returns
+
+`Function`
+
+#### Defined in
+
+[src/assets.js:819](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L819)
+
+• `set` **defaultUploadErrorCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload progress.
+The function takes 2 arguments: the upload id, and the error.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `Function` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:829](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/assets.js#L829)

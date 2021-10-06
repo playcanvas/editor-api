@@ -52,7 +52,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:47](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L47)
+[src/entities.js:47](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L47)
 
 ## Public Methods
 
@@ -81,7 +81,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:67](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L67)
+[src/entities.js:67](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L67)
 
 ___
 
@@ -105,7 +105,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:82](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L82)
+[src/entities.js:82](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L82)
 
 ___
 
@@ -145,7 +145,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:246](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L246)
+[src/entities.js:246](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L246)
 
 ___
 
@@ -174,7 +174,7 @@ await editor.entities.delete([entity1, entity2]);
 
 #### Defined in
 
-[src/entities.js:262](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L262)
+[src/entities.js:262](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L262)
 
 ___
 
@@ -209,7 +209,7 @@ editor.entities.reparent([{
 
 #### Defined in
 
-[src/entities.js:283](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L283)
+[src/entities.js:283](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L283)
 
 ___
 
@@ -240,7 +240,7 @@ The duplicated entities
 
 #### Defined in
 
-[src/entities.js:299](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L299)
+[src/entities.js:299](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L299)
 
 ___
 
@@ -263,7 +263,7 @@ to paste these entities later on.
 
 #### Defined in
 
-[src/entities.js:311](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L311)
+[src/entities.js:311](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L311)
 
 ___
 
@@ -290,7 +290,7 @@ The new entities
 
 #### Defined in
 
-[src/entities.js:324](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L324)
+[src/entities.js:324](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L324)
 
 ___
 
@@ -318,7 +318,7 @@ callback when the entities are added.
 
 #### Defined in
 
-[src/entities.js:339](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L339)
+[src/entities.js:339](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L339)
 
 ___
 
@@ -342,7 +342,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:92](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L92)
+[src/entities.js:92](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L92)
 
 ___
 
@@ -364,7 +364,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:120](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L120)
+[src/entities.js:120](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L120)
 
 ___
 
@@ -387,7 +387,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:135](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L135)
+[src/entities.js:135](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L135)
 
 ___
 
@@ -409,7 +409,7 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:180](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L180)
+[src/entities.js:180](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L180)
 
 ___
 
@@ -425,4 +425,4 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:202](https://github.com/playcanvas/editor-api/blob/24a7c67/src/entities.js#L202)
+[src/entities.js:202](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/entities.js#L202)

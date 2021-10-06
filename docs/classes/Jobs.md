@@ -33,7 +33,7 @@ Events.constructor
 
 #### Defined in
 
-[src/jobs.js:10](https://github.com/playcanvas/editor-api/blob/24a7c67/src/jobs.js#L10)
+[src/jobs.js:10](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/jobs.js#L10)
 
 ## Methods
 
@@ -64,7 +64,7 @@ Returns a job id
 
 #### Defined in
 
-[src/jobs.js:27](https://github.com/playcanvas/editor-api/blob/24a7c67/src/jobs.js#L27)
+[src/jobs.js:27](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/jobs.js#L27)
 
 ___
 
@@ -96,4 +96,4 @@ The function stored when the job was started
 
 #### Defined in
 
-[src/jobs.js:47](https://github.com/playcanvas/editor-api/blob/24a7c67/src/jobs.js#L47)
+[src/jobs.js:47](https://github.com/playcanvas/editor-api/blob/ef0d9ab/src/jobs.js#L47)
