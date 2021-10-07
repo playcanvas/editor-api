@@ -83,6 +83,23 @@ ${className}.prototype.update = function(dt) {
         expect(assets.list()).to.deep.equal([asset3, asset4, asset1, asset2]);
     });
 
+    it('add emits events', function () {
+        const a = new api.Asset({ id: 1, type: 'material' });
+        const evts = {};
+
+        assets.once('add', (asset, pos) => {
+            evts.add = { asset, pos };
+        });
+        assets.once('add[1]', (asset, pos) => {
+            evts.addId = { asset, pos };
+        });
+
+        assets.add(a);
+
+        expect(evts.add).to.deep.equal({ asset: a, pos: -1 });
+        expect(evts.addId).to.deep.equal({ asset: a, pos: -1 });
+    });
+
     it('changing asset name re-sorts assets', function () {
         const asset1 = new api.Asset({ type: 'material', id: 1, name: '1'});
         const asset2 = new api.Asset({ type: 'material', id: 2, name: '2'});
@@ -791,7 +808,7 @@ ${className}.prototype.update = function(dt) {
 
         const folder = new api.Asset({ id: 10 });
         api.globals.assets.createScript({
-            name: 'name',
+            filename: 'name.js',
             folder: folder
         });
 
@@ -824,15 +841,15 @@ ${className}.prototype.update = function(dt) {
 
         // row format is desired name, expected class name, expected script name
         const names = [
-            'name-1', 'Name1', 'name1',
-            'name-$', 'Script', 'name$',
-            'name.js', 'NameJs', 'nameJs',
-            'NameName', 'NameName', 'nameName'
+            'name-1.js', 'Name1', 'name1',
+            'name-$.js', 'Script', 'name$',
+            'name.js.js', 'NameJs', 'nameJs',
+            'NameName.js', 'NameName', 'nameName'
         ];
 
         for (let i = 0; i < names.length; i += 3) {
             api.globals.assets.createScript({
-                name: names[i]
+                filename: names[i]
             });
 
             const request = requests[i / 3];

@@ -195,7 +195,7 @@ class Assets extends Events {
             this.emit('move', asset, pos);
         });
 
-        this.emit(`add:[${id}]`, asset, pos);
+        this.emit(`add[${id}]`, asset, pos);
         this.emit('add', asset, pos);
     }
 
@@ -359,7 +359,10 @@ class Assets extends Events {
             let asset = this.get(result.id);
             if (!asset) {
                 asset = await new Promise(resolve => {
-                    this.once(`add[${result.id}]`, a => resolve(a));
+                    this.once(`add[${result.id}]`, a => {
+                        console.log('event add emitted');
+                        resolve(a);
+                    });
                 });
             }
 
@@ -459,7 +462,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createCubemap(options = {}) {
-        const textures = options.textures.slice(0, 6);
+        const textures = (options.textures || new Array(6)).slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
         }
@@ -607,7 +610,6 @@ class Assets extends Events {
      * Creates new script asset
      *
      * @param {object} options - Options
-     * @param {string} options.name - The name of the script. This will be the name of the class inside the script if boilerplate code is used.
      * @param {string} options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
      * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
@@ -618,11 +620,11 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createScript(options = {}) {
-        if (!options.name) {
-            throw new Error('createScript: missing required name');
+        if (!options.filename) {
+            throw new Error('createScript: missing required filename');
         }
 
-        const result = createScript(options.name, options.filename, options.text);
+        const result = createScript(options.filename, options.text);
 
         return this.upload({
             name: result.filename,
