@@ -20,7 +20,7 @@ class Entity extends Events {
         const observerData = {
             name: data.name || 'New Entity',
             tags: data.tags || [],
-            enabled: data.enabled || true,
+            enabled: data.enabled !== undefined ? !!data.enabled : true,
             resource_id: data.resource_id || Guid.create(),
             parent: typeof data.parent === 'string' ? data.parent : null,
             children: [],

@@ -236,7 +236,27 @@ describe('api.Entity tests', function () {
 
         e.set('name', 'test');
 
-        expect(evtNameSet).to.equal(true)
+        expect(evtNameSet).to.equal(true);
         expect(evtSet).to.equal(true);
+    });
+
+    it('enabled flag in constructor is respected', function () {
+        const e = new api.Entity();
+        expect(e.get('enabled')).to.equal(true);
+
+        const e2 = new api.Entity({
+            enabled: false
+        });
+        expect(e2.get('enabled')).to.equal(false);
+
+        const e3 = new api.Entity({
+            enabled: true
+        });
+        expect(e3.get('enabled')).to.equal(true);
+
+        const e4 = new api.Entity({
+            enabled: 'something'
+        });
+        expect(e4.get('enabled')).to.equal(true);
     });
 });
