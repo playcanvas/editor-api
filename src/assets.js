@@ -84,13 +84,12 @@ class Assets extends Events {
         this._uploadId = 0;
 
         this._autoSubscribe = options.autoSubscribe || false;
-        if (this._autoSubscribe) {
-            if (!api.messenger) {
-                throw new Error('Cannot autosubscribe to asset changes without the messenger API');
-            }
-            api.messenger.on('asset.new', this._onMessengerAddAsset.bind(this));
+        if (this._autoSubscribe && !api.messenger) {
+            throw new Error('Cannot autosubscribe to asset changes without the messenger API');
         }
+
         if (api.messenger) {
+            api.messenger.on('asset.new', this._onMessengerAddAsset.bind(this));
             api.messenger.on('asset.delete', this._onMessengerDeleteAsset.bind(this));
             api.messenger.on('assets.delete', this._onMessengerDeleteAssets.bind(this));
         }
@@ -109,11 +108,19 @@ class Assets extends Events {
         if (asset) return;
 
         asset = new Asset({
+            id: uniqueId,
             uniqueId: uniqueId
         });
-        asset.loadAndSubscribe().then(() => {
-            this.add(asset);
-        });
+
+        if (this._autoSubscribe) {
+            asset.loadAndSubscribe().then(() => {
+                this.add(asset);
+            });
+        } else {
+            asset.load().then(() => {
+                this.add(asset);
+            });
+        }
     }
 
     _onMessengerDeleteAsset(data) {
@@ -315,8 +322,57 @@ class Assets extends Events {
     }
 
     /**
+     * Loads all assets in the current project / branch. Does not
+     * subscribe to realtime changes.
+     *
+     * @category Internal
+     */
+    async loadAll() {
+        this.clear();
+
+        this.emit('load:progress', 0.1);
+
+        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=designer`);
+        if (!response.ok) {
+            console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
+            return;
+        }
+
+        const assets = await response.json();
+        this.emit('load:progress', 0.5);
+
+        const total = assets.length;
+        if (!total) {
+            this.emit('load:progress', 1);
+            this.emit('load:all');
+            return;
+        }
+
+        let loaded = 0;
+
+        const onProgress = () => {
+            loaded++;
+            this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
+            if (loaded === total) {
+                this.emit('load:progress', 1);
+                this.emit('load:all');
+            }
+        };
+
+        for (let i = 0; i < total; i++) {
+            const asset = new Asset(assets[i]);
+            asset.load().then(() => {
+                onProgress();
+                this.add(asset);
+            }).catch(err => {
+                onProgress();
+            });
+        }
+    }
+
+    /**
      * Loads all assets in the current project / branch
-     * and subscribes to changes
+     * and subscribes to changes.
      *
      * @category Internal
      */
