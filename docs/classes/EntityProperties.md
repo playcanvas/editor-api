@@ -441,7 +441,9 @@ These are the properties that you can access on an [Entity](Entity.md):
 | `components.scrollview.horizontal` | `boolean` | Whether to enable horizontal scrolling. | `true`| 
 | `components.scrollview.horizontalScrollbarEntity` | `string` | The `resource_id` of the entity to be used as the horizontal scrollbar. This entity must have a scrollbar component. | `null`| 
 | `components.scrollview.horizontalScrollbarVisibility` | `number` | Controls whether the horizontal scrollbar should be visible all the time, or only visible when the content exceeds the size of the viewport. | `1`| 
+| `components.scrollview.mouseWheelSensitivity` | `Array<number>` | Array of 2 numbers controlling mouse wheel horizontal and vertical sensitivity. Only used if `useMouseWheel` is set. Setting a direction to 0 will disable mouse wheel scrolling in that direction. 1 is a default sensitivity that is considered to feel good. The values can be set higher or lower than 1 to tune the sensitivity. | `[1,1]`| 
 | `components.scrollview.scrollMode` | `number` | Specifies how the scroll view should behave when the user scrolls past the end of the content. | `1`| 
+| `components.scrollview.useMouseWheel` | `boolean` | Controls whether to use mouse wheel for scrolling (horizontally and vertically) when mouse is within bounds. | `true`| 
 | `components.scrollview.vertical` | `boolean` | Whether to enable vertical scrolling. | `true`| 
 | `components.scrollview.verticalScrollbarEntity` | `string` | The `resource_id` of the entity to be used as the vertical scrollbar. This entity must have a scrollbar component. | `null`| 
 | `components.scrollview.verticalScrollbarVisibility` | `number` | Controls whether the vertical scrollbar should be visible all the time, or only visible when the content exceeds the size of the viewport. | `1`| 
