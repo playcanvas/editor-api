@@ -54,8 +54,11 @@ import { createScript } from './assets/createScript';
 class Assets extends Events {
     /**
      * Constructor
+     *
+     * @param {object} options - Options
+     * @param {boolean} options.autoSubscribe - Whether to auto subscribe to asset changes when assets are loaded.
      */
-    constructor() {
+    constructor(options = {}) {
         super();
 
         this._uniqueIdToItemId = {};
@@ -79,6 +82,54 @@ class Assets extends Events {
         this._defaultUploadProgressCallback = null;
         this._defaultUploadErrorCallback = null;
         this._uploadId = 0;
+
+        this._autoSubscribe = options.autoSubscribe || false;
+        if (this._autoSubscribe) {
+            if (!api.messenger) {
+                throw new Error('Cannot autosubscribe to asset changes without the messenger API');
+            }
+            api.messenger.on('asset.new', this._onMessengerAddAsset.bind(this));
+        }
+        if (api.messenger) {
+            api.messenger.on('asset.delete', this._onMessengerDeleteAsset.bind(this));
+            api.messenger.on('assets.delete', this._onMessengerDeleteAssets.bind(this));
+        }
+    }
+
+    _onMessengerAddAsset(data) {
+        if (data.asset.branchId !== api.branchId) return;
+
+        const uniqueId = parseInt(data.asset.id, 10);
+
+        if (data.asset.source === false && data.asset.status && data.asset.status !== 'complete') {
+            return;
+        }
+
+        let asset = this.getUnique(uniqueId);
+        if (asset) return;
+
+        asset = new Asset({
+            uniqueId: uniqueId
+        });
+        asset.loadAndSubscribe().then(() => {
+            this.add(asset);
+        });
+    }
+
+    _onMessengerDeleteAsset(data) {
+        const asset = this.getUnique(data.asset.id);
+        if (asset) {
+            this.remove(asset);
+        }
+    }
+
+    _onMessengerDeleteAssets(data) {
+        for (let i = 0; i < data.assets.length; i++) {
+            const asset = this.getUnique(parseInt(data.assets[i], 10));
+            if (asset) {
+                this.remove(asset);
+            }
+        }
     }
 
     /**
