@@ -78,6 +78,7 @@ class Assets extends Events {
             }
         });
 
+        this._parseScriptCallback = null;
         this._defaultUploadCompletedCallback = null;
         this._defaultUploadProgressCallback = null;
         this._defaultUploadErrorCallback = null;
@@ -726,14 +727,14 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createScript(options = {}) {
+    async createScript(options = {}) {
         if (!options.filename) {
             throw new Error('createScript: missing required filename');
         }
 
         const result = createScript(options.filename, options.text);
 
-        return this.upload({
+        let asset = await this.upload({
             name: result.filename,
             type: 'script',
             folder: options.folder,
@@ -746,6 +747,19 @@ class Assets extends Events {
                 loadingType: 0 // load script as asset
             }
         }, null, options.onProgress);
+
+        // wait for asset to have a file url
+        if (this._parseScriptCallback) {
+            if (!asset.get('file.url')) {
+                await new Promise(resolve => {
+                    asset.once('file.url:set', resolve);
+                });
+            }
+
+            await this._parseScriptCallback(asset);
+        }
+
+        return asset;
     }
 
     /**
@@ -881,7 +895,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload succeeds.
-     * The function takes 2 arguments: the upload id, and the new asset.
      *
      * @type {Function<number, Asset>}
      */
@@ -901,7 +914,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload progress.
-     * The function takes 2 arguments: the upload id and the progress.
      *
      * @type {Function<number, number>}
      */
@@ -921,7 +933,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload fails.
-     * The function takes 2 arguments: the upload id, and the error.
      *
      * @type {Function<number, Error>}
      */
@@ -937,6 +948,27 @@ class Assets extends Events {
      */
     set defaultUploadErrorCallback(value) {
         this._defaultUploadErrorCallback = value;
+    }
+
+    /**
+     * Gets the callback which parses script assets.
+     *
+     * @type {Function<Asset>}
+     */
+    get parseScriptCallback() {
+        return this._parseScriptCallback;
+    }
+
+    /**
+     * Sets the callback which parses script assets. When this
+     * callback is set, new script assets will be parsed after they
+     * are created. The function takes the asset as a parameter and returns
+     * a promise when it is done parsing.
+     *
+     * @type {Function<Asset>}
+     */
+    set parseScriptCallback(value) {
+        this._parseScriptCallback = value;
     }
 }
 
