@@ -259,4 +259,18 @@ describe('api.Entity tests', function () {
         });
         expect(e4.get('enabled')).to.equal(true);
     });
+
+    it('name in constructor is valid', function () {
+        const e = new api.Entity();
+        expect(e.get('name')).to.equal('New Entity');
+
+        const e2 = new api.Entity({ name: null });
+        expect(e2.get('name')).to.equal('New Entity');
+
+        const e3 = new api.Entity({ name: 'test' });
+        expect(e3.get('name')).to.equal('test');
+
+        const e4 = new api.Entity({ name: '' });
+        expect(e4.get('name')).to.equal('');
+    });
 });

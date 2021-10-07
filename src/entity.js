@@ -17,8 +17,12 @@ class Entity extends Events {
     constructor(data = {}) {
         super();
 
+        let name = data.name;
+        if (name === undefined || typeof name !== 'string') {
+            name = 'New Entity';
+        }
         const observerData = {
-            name: data.name || 'New Entity',
+            name: name,
             tags: data.tags || [],
             enabled: data.enabled !== undefined ? !!data.enabled : true,
             resource_id: data.resource_id || Guid.create(),
