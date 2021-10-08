@@ -1,3 +1,5 @@
+import babel from '@rollup/plugin-babel';
+
 const umd = {
     external: ['@playcanvas/observer'],
     input: 'index.js',
@@ -8,7 +10,28 @@ const umd = {
         globals: {
             '@playcanvas/observer': 'observer'
         }
-    }
+    },
+    plugins: [
+        babel({
+            babelHelpers: 'bundled',
+            babelrc: false,
+            comments: false,
+            compact: false,
+            minified: false,
+            presets: [
+                [
+                    '@babel/preset-env', {
+                        bugfixes: true,
+                        loose: true,
+                        modules: false,
+                        targets: {
+                            esmodules: true
+                        }
+                    }
+                ]
+            ]
+        })
+    ]
 };
 
 const module = {
