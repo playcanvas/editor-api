@@ -110,7 +110,11 @@ class Assets extends Events {
 
         asset = new Asset({
             id: uniqueId,
-            uniqueId: uniqueId
+            uniqueId: uniqueId,
+            type: data.asset.type,
+            source: data.asset.source,
+            source_asset_id: parseInt(data.asset.source_asset_id, 10),
+            createdAt: data.asset.createdAt
         });
 
         if (this._autoSubscribe) {
