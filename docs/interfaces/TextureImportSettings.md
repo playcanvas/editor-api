@@ -19,7 +19,7 @@ Whether to resize the texture to power of 2.
 
 #### Defined in
 
-[src/assets.js:28](https://github.com/playcanvas/editor-api/blob/b3fdbb7/src/assets.js#L28)
+[src/assets.js:28](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L28)
 
 ___
 
@@ -32,4 +32,4 @@ throughout the whole project instead of just the same folder.
 
 #### Defined in
 
-[src/assets.js:29](https://github.com/playcanvas/editor-api/blob/b3fdbb7/src/assets.js#L29)
+[src/assets.js:29](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L29)
