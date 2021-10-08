@@ -3,17 +3,17 @@ const VALID_FILENAME = /^([^0-9.#<>$+%!`&='{}@\\/:*?"<>|\n])([^#<>$+%!`&='{}@\\/
 /**
  * Creates filename and script content from provided arguments.
  *
- * @param {string} name - The desired script name.
  * @param {string} filename - The desired filename.
  * @param {string} text - The desired contents of the script. If not provided boilerplate code will be used.
  * @returns {object} The filename and content of the script
  */
-function createScript(name, filename, text) {
+function createScript(filename, text) {
     let className = '';
     let scriptName = '';
 
     // tokenize filename
     const tokens = [];
+    const name = filename.slice(0, -3);
     const str = name.replace(/([^A-Z])([A-Z][^A-Z])/g, '$1 $2').replace(/([A-Z0-9]{2,})/g, ' $1');
     const parts = str.split(/(\s|\-|_|\.)/g);
 

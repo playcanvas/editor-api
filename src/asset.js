@@ -184,6 +184,31 @@ class Asset extends Events {
     }
 
     /**
+     * Loads asset from the server without subscribing to realtime changes.
+     */
+    async load() {
+        const response = await fetch('/api/assets/' + this.get('id') + '?branchId=' + api.branchId);
+        if (!response.ok) {
+            throw new Error(response.status + ': ' + response.statusText);
+        }
+
+        const data = await response.json();
+        if (data.file) {
+            data.file.url = Asset.getFileUrl(data.id, data.file.filename);
+
+            if (data.file.variants) {
+                for (const key in data.file.variants) {
+                    data.file.variants[key].url = Asset.getFileUrl(data.id, data.file.variants[key].filename);
+                }
+            }
+        }
+
+        for (const field in data) {
+            this.set(field, data[field]);
+        }
+    }
+
+    /**
      * Loads the asset's data from sharedb and subscribes to changes
      */
     async loadAndSubscribe() {

@@ -54,8 +54,11 @@ import { createScript } from './assets/createScript';
 class Assets extends Events {
     /**
      * Constructor
+     *
+     * @param {object} options - Options
+     * @param {boolean} options.autoSubscribe - Whether to auto subscribe to asset changes when assets are loaded.
      */
-    constructor() {
+    constructor(options = {}) {
         super();
 
         this._uniqueIdToItemId = {};
@@ -75,10 +78,70 @@ class Assets extends Events {
             }
         });
 
+        this._parseScriptCallback = null;
         this._defaultUploadCompletedCallback = null;
         this._defaultUploadProgressCallback = null;
         this._defaultUploadErrorCallback = null;
         this._uploadId = 0;
+
+        this._autoSubscribe = options.autoSubscribe || false;
+        if (this._autoSubscribe && !api.messenger) {
+            throw new Error('Cannot autosubscribe to asset changes without the messenger API');
+        }
+
+        if (api.messenger) {
+            api.messenger.on('asset.new', this._onMessengerAddAsset.bind(this));
+            api.messenger.on('asset.delete', this._onMessengerDeleteAsset.bind(this));
+            api.messenger.on('assets.delete', this._onMessengerDeleteAssets.bind(this));
+        }
+    }
+
+    _onMessengerAddAsset(data) {
+        if (data.asset.branchId !== api.branchId) return;
+
+        const uniqueId = parseInt(data.asset.id, 10);
+
+        if (data.asset.source === false && data.asset.status && data.asset.status !== 'complete') {
+            return;
+        }
+
+        let asset = this.getUnique(uniqueId);
+        if (asset) return;
+
+        asset = new Asset({
+            id: uniqueId,
+            uniqueId: uniqueId,
+            type: data.asset.type,
+            source: data.asset.source,
+            source_asset_id: parseInt(data.asset.source_asset_id, 10),
+            createdAt: data.asset.createdAt
+        });
+
+        if (this._autoSubscribe) {
+            asset.loadAndSubscribe().then(() => {
+                this.add(asset);
+            });
+        } else {
+            asset.load().then(() => {
+                this.add(asset);
+            });
+        }
+    }
+
+    _onMessengerDeleteAsset(data) {
+        const asset = this.getUnique(data.asset.id);
+        if (asset) {
+            this.remove(asset);
+        }
+    }
+
+    _onMessengerDeleteAssets(data) {
+        for (let i = 0; i < data.assets.length; i++) {
+            const asset = this.getUnique(parseInt(data.assets[i], 10));
+            if (asset) {
+                this.remove(asset);
+            }
+        }
     }
 
     /**
@@ -195,7 +258,7 @@ class Assets extends Events {
             this.emit('move', asset, pos);
         });
 
-        this.emit(`add:[${id}]`, asset, pos);
+        this.emit(`add[${id}]`, asset, pos);
         this.emit('add', asset, pos);
     }
 
@@ -264,8 +327,57 @@ class Assets extends Events {
     }
 
     /**
+     * Loads all assets in the current project / branch. Does not
+     * subscribe to realtime changes.
+     *
+     * @category Internal
+     */
+    async loadAll() {
+        this.clear();
+
+        this.emit('load:progress', 0.1);
+
+        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=designer`);
+        if (!response.ok) {
+            console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
+            return;
+        }
+
+        const assets = await response.json();
+        this.emit('load:progress', 0.5);
+
+        const total = assets.length;
+        if (!total) {
+            this.emit('load:progress', 1);
+            this.emit('load:all');
+            return;
+        }
+
+        let loaded = 0;
+
+        const onProgress = () => {
+            loaded++;
+            this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
+            if (loaded === total) {
+                this.emit('load:progress', 1);
+                this.emit('load:all');
+            }
+        };
+
+        for (let i = 0; i < total; i++) {
+            const asset = new Asset(assets[i]);
+            asset.load().then(() => {
+                onProgress();
+                this.add(asset);
+            }).catch(err => {
+                onProgress();
+            });
+        }
+    }
+
+    /**
      * Loads all assets in the current project / branch
-     * and subscribes to changes
+     * and subscribes to changes.
      *
      * @category Internal
      */
@@ -359,7 +471,10 @@ class Assets extends Events {
             let asset = this.get(result.id);
             if (!asset) {
                 asset = await new Promise(resolve => {
-                    this.once(`add[${result.id}]`, a => resolve(a));
+                    this.once(`add[${result.id}]`, a => {
+                        console.log('event add emitted');
+                        resolve(a);
+                    });
                 });
             }
 
@@ -459,7 +574,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createCubemap(options = {}) {
-        const textures = options.textures.slice(0, 6);
+        const textures = (options.textures || new Array(6)).slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
         }
@@ -607,7 +722,6 @@ class Assets extends Events {
      * Creates new script asset
      *
      * @param {object} options - Options
-     * @param {string} options.name - The name of the script. This will be the name of the class inside the script if boilerplate code is used.
      * @param {string} options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
      * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
@@ -617,14 +731,14 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createScript(options = {}) {
-        if (!options.name) {
-            throw new Error('createScript: missing required name');
+    async createScript(options = {}) {
+        if (!options.filename) {
+            throw new Error('createScript: missing required filename');
         }
 
-        const result = createScript(options.name, options.filename, options.text);
+        const result = createScript(options.filename, options.text);
 
-        return this.upload({
+        let asset = await this.upload({
             name: result.filename,
             type: 'script',
             folder: options.folder,
@@ -637,6 +751,19 @@ class Assets extends Events {
                 loadingType: 0 // load script as asset
             }
         }, null, options.onProgress);
+
+        // wait for asset to have a file url
+        if (this._parseScriptCallback) {
+            if (!asset.get('file.url')) {
+                await new Promise(resolve => {
+                    asset.once('file.url:set', resolve);
+                });
+            }
+
+            await this._parseScriptCallback(asset);
+        }
+
+        return asset;
     }
 
     /**
@@ -772,7 +899,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload succeeds.
-     * The function takes 2 arguments: the upload id, and the new asset.
      *
      * @type {Function<number, Asset>}
      */
@@ -792,7 +918,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload progress.
-     * The function takes 2 arguments: the upload id and the progress.
      *
      * @type {Function<number, number>}
      */
@@ -812,7 +937,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload fails.
-     * The function takes 2 arguments: the upload id, and the error.
      *
      * @type {Function<number, Error>}
      */
@@ -828,6 +952,27 @@ class Assets extends Events {
      */
     set defaultUploadErrorCallback(value) {
         this._defaultUploadErrorCallback = value;
+    }
+
+    /**
+     * Gets the callback which parses script assets.
+     *
+     * @type {Function<Asset>}
+     */
+    get parseScriptCallback() {
+        return this._parseScriptCallback;
+    }
+
+    /**
+     * Sets the callback which parses script assets. When this
+     * callback is set, new script assets will be parsed after they
+     * are created. The function takes the asset as a parameter and returns
+     * a promise when it is done parsing.
+     *
+     * @type {Function<Asset>}
+     */
+    set parseScriptCallback(value) {
+        this._parseScriptCallback = value;
     }
 }
 
