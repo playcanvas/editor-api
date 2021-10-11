@@ -472,7 +472,6 @@ class Assets extends Events {
             if (!asset) {
                 asset = await new Promise(resolve => {
                     this.once(`add[${result.id}]`, a => {
-                        console.log('event add emitted');
                         resolve(a);
                     });
                 });
