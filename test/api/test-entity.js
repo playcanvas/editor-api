@@ -273,4 +273,28 @@ describe('api.Entity tests', function () {
         const e4 = new api.Entity({ name: '' });
         expect(e4.get('name')).to.equal('');
     });
+
+    it('depthFirst visits all children', function () {
+        const e = api.globals.entities.create({
+            name: 'root',
+            children: [{
+                name: 'child1',
+                children: [{
+                    name: 'child2'
+                }]
+            }, {
+                name: 'child3'
+            }]
+        });
+
+        // add a missing child as well to see if it crashes
+        e.insert('children', 'missing');
+
+        const visited = [];
+        e.depthFirst(entity => {
+            visited.push(entity ? entity.get('name') : 'null');
+        });
+
+        expect(visited).to.deep.equal(['root', 'child1', 'child2', 'child3', 'null']);
+    });
 });
