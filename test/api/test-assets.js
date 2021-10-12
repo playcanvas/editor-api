@@ -49,7 +49,7 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('getUnique returns asset', function () {
-        const asset = new api.Asset({ type: 'material', id: 1, uniqueId: 2});
+        const asset = new api.Asset({ type: 'material', id: 1, uniqueId: 2 });
         assets.add(asset);
         expect(assets.getUnique(2)).to.equal(asset);
     });
@@ -62,9 +62,9 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('add sorts assets alphabetically', function () {
-        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1'});
-        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2'});
-        const asset3 = new api.Asset({ type: 'material', id: 3, name: '3'});
+        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1' });
+        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2' });
+        const asset3 = new api.Asset({ type: 'material', id: 3, name: '3' });
         assets.add(asset2);
         assets.add(asset3);
         assets.add(asset1);
@@ -72,10 +72,10 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('add puts folders first', function () {
-        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1'});
-        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2'});
-        const asset3 = new api.Asset({ type: 'folder', id: 3, name: '3'});
-        const asset4 = new api.Asset({ type: 'folder', id: 4, name: '4'});
+        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1' });
+        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2' });
+        const asset3 = new api.Asset({ type: 'folder', id: 3, name: '3' });
+        const asset4 = new api.Asset({ type: 'folder', id: 4, name: '4' });
         assets.add(asset1);
         assets.add(asset2);
         assets.add(asset4);
@@ -101,10 +101,10 @@ ${className}.prototype.update = function(dt) {
     });
 
     it('changing asset name re-sorts assets', function () {
-        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1'});
-        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2'});
-        const asset3 = new api.Asset({ type: 'folder', id: 3, name: '3'});
-        const asset4 = new api.Asset({ type: 'folder', id: 4, name: '4'});
+        const asset1 = new api.Asset({ type: 'material', id: 1, name: '1' });
+        const asset2 = new api.Asset({ type: 'material', id: 2, name: '2' });
+        const asset3 = new api.Asset({ type: 'folder', id: 3, name: '3' });
+        const asset4 = new api.Asset({ type: 'folder', id: 4, name: '4' });
         assets.add(asset1);
         assets.add(asset2);
         assets.add(asset4);
@@ -677,20 +677,36 @@ ${className}.prototype.update = function(dt) {
 
         const root = api.globals.entities.create({ name: 'root' });
         const child = api.globals.entities.create({ name: 'child', parent: root });
+        const subChild = api.globals.entities.create({ name: 'subchild', parent: child });
 
         root.addComponent('testcomponent', {
-            entityRef: child.get('resource_id')
+            entityRef: child.get('resource_id'),
+            entityArrayRef: [child.get('resource_id')]
+        });
+
+        child.addComponent('testcomponent', {
+            entityRef: subChild.get('resource_id'),
+            entityArrayRef: [subChild.get('resource_id')]
+        });
+
+        // create missing reference to check it doesn't crash
+        subChild.addComponent('testcomponent', {
+            entityRef: 'missing',
+            entityArrayRef: ['missing']
         });
 
         const guids = [
             'root_guid',
-            'child_guid'
+            'child_guid',
+            'subchild_guid'
         ];
         let guidIndex = 0;
         sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
 
         api.globals.assets.createTemplate({
             entity: root
+        }).catch(err => {
+            console.error(err);
         });
 
         expect(requests.length).to.equal(1);
@@ -703,10 +719,61 @@ ${className}.prototype.update = function(dt) {
         expected.entities[guids[0]].resource_id = guids[0];
         expected.entities[guids[0]].children = [guids[1]];
         expected.entities[guids[0]].components.testcomponent.entityRef = guids[1];
+        expected.entities[guids[0]].components.testcomponent.entityArrayRef = [guids[1]];
 
         expected.entities[guids[1]] = child.json();
         expected.entities[guids[1]].resource_id = guids[1];
         expected.entities[guids[1]].parent = guids[0];
+        expected.entities[guids[1]].children = [guids[2]];
+        expected.entities[guids[1]].components.testcomponent.entityRef = guids[2];
+        expected.entities[guids[1]].components.testcomponent.entityArrayRef = [guids[2]];
+
+        expected.entities[guids[2]] = subChild.json();
+        expected.entities[guids[2]].resource_id = guids[2];
+        expected.entities[guids[2]].parent = guids[1];
+        expected.entities[guids[2]].components.testcomponent.entityRef = 'missing';
+        expected.entities[guids[2]].components.testcomponent.entityArrayRef = ['missing'];
+
+        expect(data.get('data')).to.equal(JSON.stringify(expected));
+    });
+
+    it('template asset does not remap external entity refs', function () {
+        const xhr = sandbox.useFakeXMLHttpRequest();
+        const requests = [];
+        xhr.onCreate = (fake) => {
+            requests.push(fake);
+        };
+
+        api.globals.schema = new api.Schema(schema);
+        api.globals.entities = new api.Entities();
+
+        const root = api.globals.entities.create({ name: 'root' });
+        const child = api.globals.entities.create({ name: 'child', parent: root });
+
+        child.addComponent('testcomponent', {
+            entityRef: root.get('resource_id')
+        });
+
+        const guids = [
+            'child_guid'
+        ];
+        let guidIndex = 0;
+        sandbox.replace(api.Guid, 'create', () => guids[guidIndex++]);
+
+        api.globals.assets.createTemplate({
+            entity: child
+        });
+
+        expect(requests.length).to.equal(1);
+        expect(requests[0].requestBody instanceof FormData).to.equal(true);
+        const data = requests[0].requestBody;
+
+        const expected = { entities: {} };
+
+        expected.entities[guids[0]] = child.json();
+        expected.entities[guids[0]].parent = null;
+        expected.entities[guids[0]].resource_id = guids[0];
+        expected.entities[guids[0]].components.testcomponent.entityRef = root.get('resource_id');
 
         expect(data.get('data')).to.equal(JSON.stringify(expected));
     });
@@ -825,7 +892,7 @@ ${className}.prototype.update = function(dt) {
         expect(data.get('file') instanceof Blob).to.equal(true);
         expect(await data.get('file').text()).to.equal(boilerplate('Name', 'name'));
         expect(data.get('data')).to.equal(JSON.stringify({
-            scripts: { },
+            scripts: {},
             loading: false,
             loadingType: 0
         }));
