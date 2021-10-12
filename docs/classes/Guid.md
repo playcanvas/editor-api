@@ -31,7 +31,7 @@ A new GUID.
 
 #### Defined in
 
-[src/guid.js:14](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/guid.js#L14)
+[src/guid.js:14](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/guid.js#L14)
 
 ## Constructors
 

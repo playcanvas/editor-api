@@ -32,7 +32,7 @@ Constructor
 
 #### Defined in
 
-[src/selection.js:14](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/selection.js#L14)
+[src/selection.js:14](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/selection.js#L14)
 
 ## Accessors
 
@@ -48,7 +48,7 @@ Disables / enables selection undo / redo
 
 #### Defined in
 
-[src/selection.js:25](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/selection.js#L25)
+[src/selection.js:25](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/selection.js#L25)
 
 • `set` **enabled**(`value`): `void`
 
@@ -66,4 +66,4 @@ Disables / enables selection undo / redo
 
 #### Defined in
 
-[src/selection.js:29](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/selection.js#L29)
+[src/selection.js:29](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/selection.js#L29)

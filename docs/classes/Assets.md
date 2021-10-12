@@ -77,7 +77,7 @@ Events.constructor
 
 #### Defined in
 
-[src/assets.js:61](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L61)
+[src/assets.js:61](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L61)
 
 ## Public Methods
 
@@ -101,7 +101,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:153](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L153)
+[src/assets.js:153](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L153)
 
 ___
 
@@ -125,7 +125,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:164](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L164)
+[src/assets.js:164](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L164)
 
 ___
 
@@ -143,7 +143,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:174](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L174)
+[src/assets.js:174](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L174)
 
 ___
 
@@ -167,7 +167,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:185](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L185)
+[src/assets.js:185](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L185)
 
 ___
 
@@ -191,7 +191,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:312](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L312)
+[src/assets.js:312](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L312)
 
 ___
 
@@ -215,7 +215,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L324)
+[src/assets.js:324](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L324)
 
 ___
 
@@ -239,7 +239,7 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:441](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L441)
+[src/assets.js:441](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L441)
 
 ___
 
@@ -268,7 +268,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:506](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L506)
+[src/assets.js:505](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L505)
 
 ___
 
@@ -297,7 +297,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:527](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L527)
+[src/assets.js:526](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L526)
 
 ___
 
@@ -326,7 +326,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:550](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L550)
+[src/assets.js:549](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L549)
 
 ___
 
@@ -358,7 +358,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:576](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L576)
+[src/assets.js:575](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L575)
 
 ___
 
@@ -385,7 +385,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:606](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L606)
+[src/assets.js:605](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L605)
 
 ___
 
@@ -414,7 +414,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:625](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L625)
+[src/assets.js:624](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L624)
 
 ___
 
@@ -443,7 +443,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:647](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L647)
+[src/assets.js:646](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L646)
 
 ___
 
@@ -472,7 +472,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:669](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L669)
+[src/assets.js:668](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L668)
 
 ___
 
@@ -501,7 +501,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:702](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L702)
+[src/assets.js:701](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L701)
 
 ___
 
@@ -528,7 +528,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:734](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L734)
+[src/assets.js:733](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L733)
 
 ___
 
@@ -557,7 +557,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:780](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L780)
+[src/assets.js:779](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L779)
 
 ___
 
@@ -589,7 +589,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:805](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L805)
+[src/assets.js:804](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L804)
 
 ___
 
@@ -618,7 +618,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:832](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L832)
+[src/assets.js:831](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L831)
 
 ___
 
@@ -647,7 +647,7 @@ The new asset
 
 #### Defined in
 
-[src/assets.js:855](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L855)
+[src/assets.js:854](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L854)
 
 ___
 
@@ -669,7 +669,7 @@ Deletes specified assets
 
 #### Defined in
 
-[src/assets.js:881](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L881)
+[src/assets.js:880](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L880)
 
 ___
 
@@ -693,7 +693,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:219](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L219)
+[src/assets.js:219](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L219)
 
 ___
 
@@ -715,7 +715,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:271](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L271)
+[src/assets.js:271](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L271)
 
 ___
 
@@ -731,7 +731,7 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:292](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L292)
+[src/assets.js:292](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L292)
 
 ___
 
@@ -748,7 +748,7 @@ subscribe to realtime changes.
 
 #### Defined in
 
-[src/assets.js:335](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L335)
+[src/assets.js:335](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L335)
 
 ___
 
@@ -765,7 +765,7 @@ and subscribes to changes.
 
 #### Defined in
 
-[src/assets.js:384](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L384)
+[src/assets.js:384](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L384)
 
 ## Accessors
 
@@ -781,7 +781,7 @@ Gets the default callback called when on asset upload succeeds.
 
 #### Defined in
 
-[src/assets.js:905](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L905)
+[src/assets.js:904](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L904)
 
 • `set` **defaultUploadCompletedCallback**(`value`): `void`
 
@@ -800,7 +800,7 @@ The function takes 2 arguments: the upload id, and the new asset.
 
 #### Defined in
 
-[src/assets.js:915](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L915)
+[src/assets.js:914](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L914)
 
 ___
 
@@ -816,7 +816,7 @@ Gets the default callback called when on asset upload progress.
 
 #### Defined in
 
-[src/assets.js:924](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L924)
+[src/assets.js:923](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L923)
 
 • `set` **defaultUploadProgressCallback**(`value`): `void`
 
@@ -835,7 +835,7 @@ The function takes 2 arguments: the upload id and the progress.
 
 #### Defined in
 
-[src/assets.js:934](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L934)
+[src/assets.js:933](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L933)
 
 ___
 
@@ -851,7 +851,7 @@ Gets the default callback called when on asset upload fails.
 
 #### Defined in
 
-[src/assets.js:943](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L943)
+[src/assets.js:942](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L942)
 
 • `set` **defaultUploadErrorCallback**(`value`): `void`
 
@@ -870,7 +870,7 @@ The function takes 2 arguments: the upload id, and the error.
 
 #### Defined in
 
-[src/assets.js:953](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L953)
+[src/assets.js:952](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L952)
 
 ___
 
@@ -886,7 +886,7 @@ Gets the callback which parses script assets.
 
 #### Defined in
 
-[src/assets.js:962](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L962)
+[src/assets.js:961](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L961)
 
 • `set` **parseScriptCallback**(`value`): `void`
 
@@ -907,4 +907,4 @@ a promise when it is done parsing.
 
 #### Defined in
 
-[src/assets.js:974](https://github.com/playcanvas/editor-api/blob/6dc44e0/src/assets.js#L974)
+[src/assets.js:973](https://github.com/playcanvas/editor-api/blob/10ca2e4/src/assets.js#L973)
