@@ -30,11 +30,28 @@ function findEntityReferencesInComponents(entity) {
         if (!attributeValue) return;
         if (attributeDefinition.array) {
             attributeValue.forEach((id, i) => {
-                if (!id) return;
-                addReference(entity, `${path}.${i}`, id);
+                if (id) {
+                    addReference(entity, `${path}.${i}`, id);
+                }
             });
         } else {
-            addReference(entity, path, attributeValue);
+            if (attributeValue) {
+                addReference(entity, path, attributeValue);
+            }
+        }
+    }
+
+    function handleEntityReference(entity, path) {
+        const value = entity.get(path);
+        if (!value) return;
+        if (Array.isArray(value)) {
+            value.forEach((id, i) => {
+                if (id) {
+                    addReference(entity, path + '.' + i, id);
+                }
+            });
+        } else {
+            addReference(entity, path, value);
         }
     }
 
@@ -46,9 +63,9 @@ function findEntityReferencesInComponents(entity) {
             }
 
             entityFieldsCache[component].forEach(field => {
+                // TODO: handle paths that contain '*'
                 const path = `components.${component}.${field}`;
-                const id = entity.get(path);
-                addReference(entity, path, id);
+                handleEntityReference(entity, path);
             });
 
             // get script attributes

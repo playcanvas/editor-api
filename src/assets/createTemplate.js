@@ -41,8 +41,7 @@ function createTemplate(rootEntity) {
     });
 
     // find component entity references
-    const newRootEntity = entities[oldToNewIds[rootId]];
-    const references = findEntityReferencesInComponents(newRootEntity);
+    const references = findEntityReferencesInComponents(rootEntity);
     for (const id in references) {
         const prevEntity = api.entities.get(id);
         // do not update references to entities outside the rootEntity
@@ -58,8 +57,10 @@ function createTemplate(rootEntity) {
             if (!referencesToEntity) continue;
 
             referencesToEntity.forEach(reference => {
-                const entity = entities[reference.entityId];
-                entity.set(reference.path, oldToNewIds[oldId]);
+                const entity = entities[oldToNewIds[reference.entityId]];
+                if (entity) {
+                    entity.set(reference.path, oldToNewIds[oldId]);
+                }
             });
         }
     }
