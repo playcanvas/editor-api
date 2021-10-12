@@ -333,7 +333,11 @@ class Entity extends Events {
 
         const children = this.children;
         children.forEach(child => {
-            child.depthFirst(fn);
+            if (child) {
+                child.depthFirst(fn);
+            } else {
+                fn(child);
+            }
         });
     }
 
