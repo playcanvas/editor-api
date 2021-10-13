@@ -42,27 +42,21 @@ function createTemplate(rootEntity) {
 
     // find component entity references
     const references = findEntityReferencesInComponents(rootEntity);
-    for (const id in references) {
-        const prevEntity = api.entities.get(id);
-        // do not update references to entities outside the rootEntity
-        if (!prevEntity || (prevEntity !== rootEntity && !prevEntity.isDescendantOf(rootEntity))) {
-            delete references[id];
-        }
-    }
+    for (const oldId in references) {
+        const prevEntity = api.entities.get(oldId);
+        const isExternalReference = (!prevEntity || (prevEntity !== rootEntity && !prevEntity.isDescendantOf(rootEntity)));
 
-    // update references
-    if (Object.keys(references).length) {
-        for (const oldId in oldToNewIds) {
-            const referencesToEntity = references[oldId];
-            if (!referencesToEntity) continue;
-
-            referencesToEntity.forEach(reference => {
-                const entity = entities[oldToNewIds[reference.entityId]];
-                if (entity) {
-                    entity.set(reference.path, oldToNewIds[oldId]);
+        const referencesToEntity = references[oldId];
+        referencesToEntity.forEach((reference) => {
+            const entity = entities[oldToNewIds[reference.entityId]];
+            if (entity) {
+                let value = null;
+                if (!isExternalReference && oldToNewIds[oldId])  {
+                    value = oldToNewIds[oldId];
                 }
-            });
-        }
+                entity.set(reference.path, value);
+            }
+        });
     }
 
     // remap top level references
