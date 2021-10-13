@@ -731,8 +731,8 @@ ${className}.prototype.update = function(dt) {
         expected.entities[guids[2]] = subChild.json();
         expected.entities[guids[2]].resource_id = guids[2];
         expected.entities[guids[2]].parent = guids[1];
-        expected.entities[guids[2]].components.testcomponent.entityRef = 'missing';
-        expected.entities[guids[2]].components.testcomponent.entityArrayRef = ['missing'];
+        expected.entities[guids[2]].components.testcomponent.entityRef = null;
+        expected.entities[guids[2]].components.testcomponent.entityArrayRef = [null];
 
         expect(data.get('data')).to.equal(JSON.stringify(expected));
     });
@@ -773,7 +773,7 @@ ${className}.prototype.update = function(dt) {
         expected.entities[guids[0]] = child.json();
         expected.entities[guids[0]].parent = null;
         expected.entities[guids[0]].resource_id = guids[0];
-        expected.entities[guids[0]].components.testcomponent.entityRef = root.get('resource_id');
+        expected.entities[guids[0]].components.testcomponent.entityRef = null;
 
         expect(data.get('data')).to.equal(JSON.stringify(expected));
     });
