@@ -769,6 +769,104 @@ describe('api.Entities tests', function () {
         expect(parent.children).to.deep.equal([child, child3]);
     });
 
+    it('undo reparent handles deleted original parent', function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: parent });
+        const child2 = api.globals.entities.create({ parent: parent });
+        const child3 = api.globals.entities.create({ parent: parent });
+
+        expect(parent.children).to.deep.equal([child, child2, child3]);
+
+        api.globals.entities.reparent([{
+            entity: child2,
+            parent: root
+        }]);
+
+        api.globals.entities.delete([parent], { history: false });
+
+        api.globals.history.undo();
+
+        expect(root.children).to.deep.equal([child2]);
+    });
+
+    it('redo reparent handles deleted original parent', function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: parent });
+        const child2 = api.globals.entities.create({ parent: parent });
+        const child3 = api.globals.entities.create({ parent: parent });
+
+        expect(parent.children).to.deep.equal([child, child2, child3]);
+
+        api.globals.entities.reparent([{
+            entity: child2,
+            parent: root
+        }]);
+
+        api.globals.history.undo();
+
+        api.globals.entities.delete([parent], { history: false });
+
+        api.globals.history.redo();
+
+        expect(root.children).to.deep.equal([]);
+    });
+
+    it('undo reparent handles deleted new parent', function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ parent: root });
+        const parent2 = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: parent });
+        const child2 = api.globals.entities.create({ parent: parent });
+        const child3 = api.globals.entities.create({ parent: parent });
+
+        expect(parent.children).to.deep.equal([child, child2, child3]);
+
+        api.globals.entities.reparent([{
+            entity: child2,
+            parent: parent2
+        }]);
+
+        api.globals.entities.delete([parent2], { history: false });
+
+        api.globals.history.undo();
+
+        expect(parent.children).to.deep.equal([child, child3]);
+    });
+
+    it('redo reparent handles deleted new parent', function () {
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const parent = api.globals.entities.create({ parent: root });
+        const parent2 = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: parent });
+        const child2 = api.globals.entities.create({ parent: parent });
+        const child3 = api.globals.entities.create({ parent: parent });
+
+        expect(parent.children).to.deep.equal([child, child2, child3]);
+
+        api.globals.entities.reparent([{
+            entity: child2,
+            parent: parent2
+        }]);
+
+        api.globals.history.undo();
+
+        api.globals.entities.delete([parent2], { history: false });
+
+        api.globals.history.redo();
+
+        expect(parent.children).to.deep.equal([child, child2, child3]);
+    });
+
     it('duplicate duplicates an entity', async function () {
         api.globals.history = new api.History();
         api.globals.schema = new api.Schema(schema);
