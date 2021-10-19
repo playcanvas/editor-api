@@ -17,6 +17,7 @@ describe('api.Selection tests', function () {
         const item = new api.Entity();
         api.globals.selection.add(item);
         expect(api.globals.selection.items).to.deep.equal([item]);
+        expect(api.globals.selection.item).to.equal(item);
         expect(api.globals.selection.emit.calledOnceWith('add', item)).to.equal(true);
         api.globals.selection.emit.resetHistory();
         setTimeout(() => {

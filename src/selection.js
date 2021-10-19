@@ -314,6 +314,15 @@ class Selection extends Events {
     }
 
     /**
+     * Gets the first selected item. Short for this.items[0].
+     *
+     * @type {any[]}
+     */
+    get item() {
+        return this._items[0];
+    }
+
+    /**
      * Enables / disables the selection methods
      *
      * @type {boolean}
