@@ -297,4 +297,23 @@ describe('api.Entity tests', function () {
 
         expect(visited).to.deep.equal(['root', 'child1', 'child2', 'child3', 'null']);
     });
+
+    it('jsonHiearchy returns correct data', function () {
+        const root = api.globals.entities.create({ name: 'root' });
+        const e = api.globals.entities.create({ name: 'child', parent: root });
+
+        const expected = root.json();
+        expected.children[0] = e.json();
+        expect(root.jsonHierarchy()).to.deep.equal(expected);
+    });
+
+    it('jsonHierarchy works with null children', function () {
+        const root = api.globals.entities.create({ name: 'root' });
+        root.set('children', ['missing']);
+        expect(root.children).to.deep.equal([null]);
+
+        const expected = root.json();
+        expected.children = [ null ];
+        expect(root.jsonHierarchy()).to.deep.equal(expected);
+    });
 });

@@ -189,7 +189,7 @@ class Entity extends Events {
         const result = this.json();
         const children = this.children;
         for (let i = 0; i < children.length; i++) {
-            result.children[i] = children[i].jsonHierarchy();
+            result.children[i] = children[i] && children[i].jsonHierarchy();
         }
 
         return result;
