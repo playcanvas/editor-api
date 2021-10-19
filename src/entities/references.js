@@ -134,7 +134,9 @@ function updateReferences(entityReferences, oldValue, newValue) {
         if (entity) {
             const history = entity.history.enabled;
             entity.history.enabled = false;
-            entity.set(reference.path, newValue);
+            if (entity.has(reference.path)) {
+                entity.set(reference.path, newValue);
+            }
             entity.history.enabled = history;
         }
     });

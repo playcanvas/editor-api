@@ -155,8 +155,12 @@ class Entities extends Events {
         }
 
         // remove from observer list
-        this._entities.remove(entity._observer);
-        entity._observer.destroy();
+        try {
+            this._entities.remove(entity._observer);
+            entity._observer.destroy();
+        } catch (err) {
+            console.error(err);
+        }
 
         // reset root
         if (this._root === entity) {
