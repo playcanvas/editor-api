@@ -182,6 +182,7 @@ function reparentEntities(data, options = {}) {
 
             records.forEach((record) => {
                 const data = latest(record);
+                if (!data) return;
 
                 if (isValidRecord(data.entity, data.parent, data.parentOld)) {
                     validRecords.push(record);
