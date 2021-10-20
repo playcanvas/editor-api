@@ -419,12 +419,22 @@ class Entity extends Events {
     removeChild(entity) {
         let history = entity.history.enabled;
         entity.history.enabled = false;
-        entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
+        try {
+            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
+        } catch (err) {
+            console.error(`Error when setting parent to null for entity ${entity.get('resource_id')}`);
+            console.error(err);
+        }
         entity.history.enabled = history;
 
         history = this.history.enabled;
         this.history.enabled = false;
-        this.removeValue('children', entity.get('resource_id'));
+        try {
+            this.removeValue('children', entity.get('resource_id'));
+        } catch (err) {
+            console.error(`Error when removing ${entity.get('resource_id')} from children of entity ${this.get('resource_id')}`);
+            console.error(err);
+        }
         this.history.enabled = history;
     }
 
