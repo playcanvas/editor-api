@@ -244,6 +244,9 @@ function duplicateInBackend(entities, options) {
  * @returns {Promise<Entity[]>} The duplicated entities
  */
 async function duplicateEntities(entities, options) {
+    // copy entities for safety in undo / redo
+    entities = entities.slice();
+
     if (options.history === undefined) {
         options.history = true;
     }
