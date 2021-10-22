@@ -5,7 +5,7 @@ import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
  * Represents an Asset. For a list of Asset properties see [here](AssetProperties.md).
  */
 class Asset extends Events {
-    /**  @typedef {import("./assets").Assets} Assets */
+    /** @typedef {import("./entity").Entity} Entity */
 
     /**
      * Constructor
@@ -256,6 +256,23 @@ class Asset extends Events {
      */
     async delete() {
         await api.assets.delete([this]);
+    }
+
+    /**
+     * Creates an instance of this template asset. Assumes this
+     * asset is a template asset.
+     *
+     * @param {Entity} parent - The parent entity
+     * @param {object} options - Options
+     * @param {number} options.index - The desired index under the parent to instantiate the template.
+     * @param {boolean} options.history - Whether to record a history action.
+     * @param {boolean} options.select - Whether to select the new entity.
+     * @param {object} options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
+     * @returns {Promise<Entity>} The new entity.
+     */
+    async instantiateTemplate(parent, options) {
+        const entities = await api.assets.instantiateTemplates([this], parent, options);
+        return entities[0];
     }
 
     /**
