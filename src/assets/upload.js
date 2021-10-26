@@ -97,7 +97,7 @@ async function uploadFile(data, settings = null, onProgress = null) {
         url = '/api/assets';
     }
 
-    const response = await new Promise(resolve => {
+    const response = await new Promise((resolve) => {
         let progress;
 
         function onProgressUpdate(value) {
@@ -132,11 +132,11 @@ async function uploadFile(data, settings = null, onProgress = null) {
                 try {
                     const json = JSON.parse(xhr.responseText);
                     let msg = json.message;
-                    if (! msg) {
+                    if (!msg) {
                         msg = json.error || (json.response && json.response.error);
                     }
 
-                    if (! msg) {
+                    if (!msg) {
                         msg = xhr.responseText;
                     }
 
@@ -147,17 +147,17 @@ async function uploadFile(data, settings = null, onProgress = null) {
             }
         });
 
-        xhr.upload.addEventListener('progress', evt => {
+        xhr.upload.addEventListener('progress', (evt) => {
             if (!evt.lengthComputable) return;
 
             onProgressUpdate(evt.loaded / evt.total);
         });
 
-        xhr.addEventListener('error', evt => {
+        xhr.addEventListener('error', (evt) => {
             onError(xhr.status, evt);
         });
 
-        xhr.addEventListener('abort', evt => {
+        xhr.addEventListener('abort', (evt) => {
             onError(xhr.status, evt);
         });
 

@@ -80,7 +80,7 @@ class Entities extends Events {
      * ```
      */
     list() {
-        return this._entities.array().map(e => e.apiEntity);
+        return this._entities.array().map((e) => e.apiEntity);
     }
 
     /**
@@ -138,7 +138,7 @@ class Entities extends Events {
         }
 
         // remove children first
-        entity.children.forEach(child => {
+        entity.children.forEach((child) => {
             this.remove(child, entityReferences);
         });
 
@@ -217,7 +217,7 @@ class Entities extends Events {
             }
         }
 
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
             entity._observer.destroy();
             this.emit('remove', entity);
         });

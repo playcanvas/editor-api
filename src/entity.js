@@ -260,7 +260,7 @@ class Entity extends Events {
      * ```
      */
     listByTag(...tags) {
-        return this.filter(entity => {
+        return this.filter((entity) => {
             const t = entity.get('tags');
             for (let i = 0; i < tags.length; i++) {
                 if (Array.isArray(tags[i])) {
@@ -332,7 +332,7 @@ class Entity extends Events {
         fn(this);
 
         const children = this.children;
-        children.forEach(child => {
+        children.forEach((child) => {
             if (child) {
                 child.depthFirst(fn);
             } else {
@@ -515,7 +515,7 @@ class Entity extends Events {
      * @description The children entities. Warning: this creates a new array every time it's called.
      */
     get children() {
-        return this.get('children').map(id => api.entities.get(id));
+        return this.get('children').map((id) => api.entities.get(id));
     }
 
     /**

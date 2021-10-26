@@ -55,14 +55,14 @@ function findEntityReferencesInComponents(entity) {
         }
     }
 
-    entity.depthFirst(entity => {
+    entity.depthFirst((entity) => {
         const componentNames = Object.keys(entity.get('components') || {});
-        componentNames.forEach(component => {
+        componentNames.forEach((component) => {
             if (!entityFieldsCache[component]) {
                 entityFieldsCache[component] = api.schema.components.getFieldsOfType(component, 'entity');
             }
 
-            entityFieldsCache[component].forEach(field => {
+            entityFieldsCache[component].forEach((field) => {
                 // TODO: handle paths that contain '*'
                 const path = `components.${component}.${field}`;
                 handleEntityReference(entity, path);
@@ -92,14 +92,14 @@ function findEntityReferencesInComponents(entity) {
 
                             if (attributeDef.array) {
                                 for (let i = 0; i < attributeValue.length; i++) {
-                                    attributeDef.schema.forEach(field => {
+                                    attributeDef.schema.forEach((field) => {
                                         if (field.type !== 'entity') return;
 
                                         handleScriptAttribute(entity, `${componentAttributePath}.${i}.${field.name}`, field, attributeValue[i]?.[field.name]);
                                     });
                                 }
                             } else {
-                                attributeDef.schema.forEach(field => {
+                                attributeDef.schema.forEach((field) => {
                                     if (field.type !== 'entity') return;
 
                                     handleScriptAttribute(entity, `${componentAttributePath}.${field.name}`, field, attributeValue[field.name]);
@@ -129,7 +129,7 @@ function updateReferences(entityReferences, oldValue, newValue) {
     const referencesToEntity = entityReferences[oldValue];
     if (!referencesToEntity) return;
 
-    referencesToEntity.forEach(reference => {
+    referencesToEntity.forEach((reference) => {
         const entity = api.entities.get(reference.entityId);
         if (entity) {
             const history = entity.history.enabled;

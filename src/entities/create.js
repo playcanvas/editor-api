@@ -57,7 +57,7 @@ function createEntity(data, options = {}) {
 
     // add children
     if (data.children) {
-        data.children.forEach(childData => {
+        data.children.forEach((childData) => {
             childData.parent = entity;
             const child = createEntity(childData, {
                 history: false,

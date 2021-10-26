@@ -6,7 +6,6 @@ import { Events } from '@playcanvas/observer';
  * @category Internal
  */
 class RealtimeAsset extends Events {
-
     /** @typedef {import("../realtime").Realtime} Realtime */
     /** @typedef {import("./connection").RealtimeConnection} RealtimeConnection */
 

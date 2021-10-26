@@ -9,7 +9,7 @@ let evtMessenger = null;
 function getTotalEntityCount(entities) {
     let count = 0;
 
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
         entity.depthFirst(() => count++);
     });
 
@@ -32,7 +32,7 @@ function deleteInBackend(entities) {
     });
 
     if (!evtMessenger) {
-        evtMessenger = api.messenger.on('entity.delete', data => {
+        evtMessenger = api.messenger.on('entity.delete', (data) => {
             const callback = api.jobs.finish(data.job_id);
             if (callback) {
                 callback();
@@ -47,7 +47,7 @@ function deleteInBackend(entities) {
             branchId: api.branchId,
             sceneId: api.realtime.scenes.current.uniqueId,
             jobId: jobId,
-            entities: entities.map(e => e.get('resource_id'))
+            entities: entities.map((e) => e.get('resource_id'))
         }
     });
 
@@ -56,7 +56,7 @@ function deleteInBackend(entities) {
 
 function rememberPrevious(entities) {
     const previous = [];
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
         previous.push({
             entity: entity.jsonHierarchy(),
             index: entity.parent.get('children').indexOf(entity.get('resource_id'))
@@ -88,7 +88,7 @@ async function deleteEntities(entities, options = {}) {
     }
 
     // make sure we are not deleting root
-    entities.forEach(e => {
+    entities.forEach((e) => {
         if (e === api.entities.root) {
             throw new Error('Cannot delete root entity ' + e.get('resource_id'));
         }
@@ -96,9 +96,9 @@ async function deleteEntities(entities, options = {}) {
 
     // first only gather top level entities
     const ids = new Set();
-    entities.forEach(entity => ids.add(entity.get('resource_id')));
+    entities.forEach((entity) => ids.add(entity.get('resource_id')));
 
-    entities = entities.filter(entity => {
+    entities = entities.filter((entity) => {
         entity = entity.latest();
         if (!entity) return false;
 
@@ -139,7 +139,7 @@ async function deleteEntities(entities, options = {}) {
     // find entity references
     const entityReferences = findEntityReferencesInComponents(api.entities.root);
 
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
         api.entities.remove(entity, entityReferences);
     });
 
@@ -154,7 +154,7 @@ async function deleteEntities(entities, options = {}) {
                     });
                 });
 
-                entities.forEach(entity => {
+                entities.forEach((entity) => {
                     updateReferences(entityReferences, entity.get('resource_id'), entity.get('resource_id'));
                 });
 
@@ -167,7 +167,7 @@ async function deleteEntities(entities, options = {}) {
                 previous = null;
             },
             redo: () => {
-                entities = entities.map(e => e.latest()).filter(e => !!e);
+                entities = entities.map((e) => e.latest()).filter((e) => !!e);
                 previous = rememberPrevious(entities);
 
                 api.entities.delete(entities, {

@@ -172,7 +172,7 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     list() {
-        return this._assets.array().map(a => a.apiAsset);
+        return this._assets.array().map((a) => a.apiAsset);
     }
 
     /**
@@ -183,7 +183,7 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     listByTag(...tags) {
-        return this.filter(asset => {
+        return this.filter((asset) => {
             const t = asset.get('tags');
             for (let i = 0; i < tags.length; i++) {
                 if (Array.isArray(tags[i])) {
@@ -311,8 +311,8 @@ class Assets extends Events {
      */
     filter(fn) {
         return this._assets.data
-        .filter(observer => fn(observer.apiAsset))
-        .map(observer => observer.apiAsset);
+        .filter((observer) => fn(observer.apiAsset))
+        .map((observer) => observer.apiAsset);
     }
 
     /**
@@ -322,7 +322,7 @@ class Assets extends Events {
      * @returns {Asset} The asset
      */
     findOne(fn) {
-        const result = this._assets.data.find(observer => fn(observer.apiAsset));
+        const result = this._assets.data.find((observer) => fn(observer.apiAsset));
         return result ? result.apiAsset : null;
     }
 
@@ -369,7 +369,7 @@ class Assets extends Events {
             asset.load().then(() => {
                 this.add(asset);
                 onProgress();
-            }).catch(err => {
+            }).catch((err) => {
                 onProgress();
             });
         }
@@ -422,7 +422,7 @@ class Assets extends Events {
                 asset.loadAndSubscribe().then(() => {
                     this.add(asset);
                     onProgress();
-                }).catch(err => {
+                }).catch((err) => {
                     onProgress();
                 });
             }
@@ -439,7 +439,7 @@ class Assets extends Events {
      * @returns {Asset} The script asset
      */
     getAssetForScript(script) {
-        return this.findOne(asset => {
+        return this.findOne((asset) => {
             return asset.get('type') === 'script' &&
                    asset.has('data.scripts.' + script);
         });
@@ -470,8 +470,8 @@ class Assets extends Events {
             const result = await uploadFile(data, settings, onProgress || this._defaultUploadProgressCallback);
             let asset = this.get(result.id);
             if (!asset) {
-                asset = await new Promise(resolve => {
-                    this.once(`add[${result.id}]`, a => {
+                asset = await new Promise((resolve) => {
+                    this.once(`add[${result.id}]`, (a) => {
                         resolve(a);
                     });
                 });
@@ -529,7 +529,7 @@ class Assets extends Events {
             type: 'bundle',
             folder: options.folder,
             data: {
-                assets: (options.assets || []).map(a => a.get('id'))
+                assets: (options.assets || []).map((a) => a.get('id'))
             },
             preload: options.preload
         }, null, options.onProgress);
@@ -737,7 +737,7 @@ class Assets extends Events {
 
         const result = createScript(options.filename, options.text);
 
-        let asset = await this.upload({
+        const asset = await this.upload({
             name: result.filename,
             type: 'script',
             folder: options.folder,
@@ -754,7 +754,7 @@ class Assets extends Events {
         // wait for asset to have a file url
         if (this._parseScriptCallback) {
             if (!asset.get('file.url')) {
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     asset.once('file.url:set', resolve);
                 });
             }
@@ -790,7 +790,7 @@ class Assets extends Events {
     /**
      * Creates new sprite asset
      *
-     * @param {object} options = Options
+     * @param {object} options - Options
      * @param {string} options.name - The asset name
      * @param {number} options.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
      * @param {number[]} options.frameKeys - The sprite's frame keys
@@ -804,7 +804,7 @@ class Assets extends Events {
     createSprite(options = {}) {
         const data = {};
         data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
-        data.frameKeys = options.frameKeys ? options.frameKeys.map(val => val.toString()) : [];
+        data.frameKeys = options.frameKeys ? options.frameKeys.map((val) => val.toString()) : [];
         data.textureAtlasAsset = options.textureAtlas ? options.textureAtlas.get('id') : null;
         data.renderMode = options.renderMode !== undefined ? options.renderMode : 0;
 
@@ -880,7 +880,7 @@ class Assets extends Events {
     async delete(assets) {
         const response = await fetch('/api/assets', {
             body: JSON.stringify({
-                assets: assets.map(a => a.get('id')),
+                assets: assets.map((a) => a.get('id')),
                 branchId: api.branchId
             }),
             method: 'DELETE',
@@ -893,7 +893,7 @@ class Assets extends Events {
             throw new Error(response.status + ': ' + response.statusText);
         }
 
-        assets.forEach(a => this.remove(a));
+        assets.forEach((a) => this.remove(a));
     }
 
     /**

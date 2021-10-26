@@ -55,9 +55,9 @@ function gatherDependencies(entity, data) {
     if (!ASSET_PATHS) {
         // get asset paths for all components
         ASSET_PATHS = [];
-        api.schema.components.list().forEach(component => {
+        api.schema.components.list().forEach((component) => {
             const paths = api.schema.components.getFieldsOfType(component, 'asset');
-            paths.forEach(path => {
+            paths.forEach((path) => {
                 ASSET_PATHS.push('components.' + component + '.' + path);
             });
         });

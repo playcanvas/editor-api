@@ -81,7 +81,7 @@ class Asset extends Events {
     }
 
     _onSet(path, value) {
-        if (this._suspendOnSet || ! path.startsWith('file') || path.endsWith('.url') || ! this.get('file'))
+        if (this._suspendOnSet || !path.startsWith('file') || path.endsWith('.url') || !this.get('file'))
             return;
 
         this._suspendOnSet = true;
