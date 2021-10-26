@@ -367,8 +367,8 @@ class Assets extends Events {
         for (let i = 0; i < total; i++) {
             const asset = new Asset(assets[i]);
             asset.load().then(() => {
-                onProgress();
                 this.add(asset);
+                onProgress();
             }).catch(err => {
                 onProgress();
             });
@@ -420,8 +420,8 @@ class Assets extends Events {
             for (let i = startBatch; i < startBatch + batchSize && i < total; i++) {
                 const asset = new Asset(assets[i]);
                 asset.loadAndSubscribe().then(() => {
-                    onProgress();
                     this.add(asset);
+                    onProgress();
                 }).catch(err => {
                     onProgress();
                 });
