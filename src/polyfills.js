@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 if (!Array.prototype.equals) {
     Object.defineProperty(Array.prototype, 'equals', {
         enumerable: false,
