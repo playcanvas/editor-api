@@ -25,7 +25,7 @@
     "@babel/core": "^7.15.8",
     "@babel/eslint-parser": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
-    "@playcanvas/eslint-config": "^1.0.10",
+    "@playcanvas/eslint-config": "^1.0.12",
     "@playcanvas/observer": "1.1.0",
     "@rollup/plugin-babel": "^5.3.0",
     "chai": "4.3.4",
