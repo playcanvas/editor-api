@@ -80,7 +80,7 @@ class Entities extends Events {
      * ```
      */
     list() {
-        return this._entities.array().map((e) => e.apiEntity);
+        return this._entities.array().map(e => e.apiEntity);
     }
 
     /**

@@ -54,13 +54,13 @@ class SelectionHistory {
             name: name,
             undo: () => {
                 // set previous selection making sure every item still exists
-                this._selection.set(previousSelection.map((item) => item.latest()).filter((item) => !!item), {
+                this._selection.set(previousSelection.map(item => item.latest()).filter(item => !!item), {
                     history: false
                 });
             },
             redo: () => {
                 // set new selection making sure every item still exists
-                this._selection.set(newSelection.map((item) => item.latest()).filter((item) => !!item), {
+                this._selection.set(newSelection.map(item => item.latest()).filter(item => !!item), {
                     history: false
                 });
             }
@@ -141,7 +141,7 @@ class Selection extends Events {
      * @param {any} item - The item
      * @param {object} options - Options
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
-     * * @example
+     * @example
      * ```javascript
      * // remove root entity from selection
      * editor.selection.remove(editor.entities.root);
@@ -288,13 +288,13 @@ class Selection extends Events {
         }
         this._history.wrapAction('modify selection', () => {
             // remove items no longer selected
-            const removed = this._items.filter((item) => !items.includes(item));
+            const removed = this._items.filter(item => !items.includes(item));
             removed.forEach((item) => {
                 this.remove(item);
             });
 
             // add new items
-            items.forEach((item) => this.add(item));
+            items.forEach(item => this.add(item));
         });
         this._history.enabled = history;
     }
@@ -303,7 +303,7 @@ class Selection extends Events {
      * Gets the selected items. This creates a new array every time it is called.
      *
      * @type {any[]}
-     * * @example
+     * @example
      * ```javascript
      * editor.selection.items.add(editor.entities.root);
      * const selectedEntities = editor.selection.items;

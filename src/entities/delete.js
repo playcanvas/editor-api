@@ -47,7 +47,7 @@ function deleteInBackend(entities) {
             branchId: api.branchId,
             sceneId: api.realtime.scenes.current.uniqueId,
             jobId: jobId,
-            entities: entities.map((e) => e.get('resource_id'))
+            entities: entities.map(e => e.get('resource_id'))
         }
     });
 
@@ -96,7 +96,7 @@ async function deleteEntities(entities, options = {}) {
 
     // first only gather top level entities
     const ids = new Set();
-    entities.forEach((entity) => ids.add(entity.get('resource_id')));
+    entities.forEach(entity => ids.add(entity.get('resource_id')));
 
     entities = entities.filter((entity) => {
         entity = entity.latest();
@@ -167,7 +167,7 @@ async function deleteEntities(entities, options = {}) {
                 previous = null;
             },
             redo: () => {
-                entities = entities.map((e) => e.latest()).filter((e) => !!e);
+                entities = entities.map(e => e.latest()).filter(e => !!e);
                 previous = rememberPrevious(entities);
 
                 api.entities.delete(entities, {
