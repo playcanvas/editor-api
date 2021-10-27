@@ -5,20 +5,13 @@
  */
 class utils {
     /**
-     * @private
-     */
-    constructor() {
-
-    }
-
-    /**
      * Deep copy an object
      *
      * @param {object} data - The data to copy
      * @returns {object} A copy of the data
      */
     static deepCopy(data) {
-        if (data == null || typeof(data) !== 'object')
+        if (data == null || typeof data !== 'object')
             return data;
 
         if (data instanceof Array) {

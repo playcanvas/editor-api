@@ -9,7 +9,7 @@ function createTemplate(rootEntity) {
     const rootId = rootEntity.get('resource_id');
 
     // go through each entity and generate new resource_ids
-    rootEntity.depthFirst(entity => {
+    rootEntity.depthFirst((entity) => {
         const id = entity.get('resource_id');
         const newId = Guid.create();
         oldToNewIds[id] = newId;
@@ -65,7 +65,7 @@ function createTemplate(rootEntity) {
         if (parent) {
             entities[id].set('parent', oldToNewIds[parent]);
         }
-        entities[id].set('children', entities[id].get('children').map(child => oldToNewIds[child]));
+        entities[id].set('children', entities[id].get('children').map((child) => oldToNewIds[child]));
 
         const templateEntIds = entities[id].get('template_ent_ids');
         if (templateEntIds) {

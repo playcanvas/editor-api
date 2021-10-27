@@ -15,7 +15,7 @@ function reparentEntities(data, options = {}) {
         options.history = true;
     }
 
-    const records = data.map(entry => {
+    const records = data.map((entry) => {
         const parentOld = entry.entity.parent;
         const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
         const record = {
@@ -130,7 +130,7 @@ function reparentEntities(data, options = {}) {
         }
 
         // remove all children from old parents
-        validRecords.forEach(record => {
+        validRecords.forEach((record) => {
             const parentOld = record.entity.latest().parent;
             const history = parentOld.history.enabled;
             parentOld.history.enabled = false;
@@ -139,7 +139,7 @@ function reparentEntities(data, options = {}) {
         });
 
         // reparent
-        validRecords.forEach(record => {
+        validRecords.forEach((record) => {
             const data = latest(record);
 
             doReparent(
@@ -201,7 +201,7 @@ function reparentEntities(data, options = {}) {
             }
 
             // remove all children from parents
-            validRecords.forEach(record => {
+            validRecords.forEach((record) => {
                 const parent = record.entity.latest().parent;
                 const history = parent.history.enabled;
                 parent.history.enabled = false;
@@ -210,7 +210,7 @@ function reparentEntities(data, options = {}) {
             });
 
             // reparent
-            validRecords.forEach(record => {
+            validRecords.forEach((record) => {
                 const data = latest(record);
 
                 doReparent(

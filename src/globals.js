@@ -2,12 +2,6 @@
  * Global variables
  */
 class globals {
-
-    /**
-     * @private
-     */
-    constructor() { }
-
     /**
      * The history API
      *

@@ -167,18 +167,18 @@ function duplicateInBackend(entities, options) {
     });
 
     if (!evtMessenger) {
-        evtMessenger = api.messenger.on('entity.copy', data => {
+        evtMessenger = api.messenger.on('entity.copy', (data) => {
             const callback = api.jobs.finish(data.job_id);
             if (!callback) return;
 
-            const result = data.multTaskResults.map(d => d.newRootId);
+            const result = data.multTaskResults.map((d) => d.newRootId);
             callback(result);
         });
     }
 
     function redo() {
         const jobId = api.jobs.start((newEntityIds) => {
-            const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, newEntities => {
+            const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, (newEntities) => {
                 entities = newEntities;
 
                 if (deferred) {
@@ -203,7 +203,7 @@ function duplicateInBackend(entities, options) {
                 branchId: api.branchId,
                 sceneId: api.realtime.scenes.current.uniqueId,
                 jobId: jobId,
-                entities: originalEntities.map(e => e.get('resource_id'))
+                entities: originalEntities.map((e) => e.get('resource_id'))
             }
         });
     }
@@ -258,7 +258,7 @@ async function duplicateEntities(entities, options) {
 
     // build index
     const records = {};
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
         const id = entity.get('resource_id');
         records[id] = {
             entity: entity,
@@ -313,7 +313,7 @@ async function duplicateEntities(entities, options) {
         }
 
         // duplicate
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
             const duplicatedIdsMap = {};
 
             const newEntity = duplicateEntity(
@@ -337,8 +337,8 @@ async function duplicateEntities(entities, options) {
                 undo: () => {
                     // remember previous entities
                     previous = {};
-                    newEntities.forEach(entity => {
-                        entity.depthFirst(e => {
+                    newEntities.forEach((entity) => {
+                        entity.depthFirst((e) => {
                             previous[e.get('resource_id')] = e.json();
                         });
                     });
@@ -356,7 +356,7 @@ async function duplicateEntities(entities, options) {
                 redo: () => {
                     function recreateEntityData(data) {
                         data = Object.assign({}, data);
-                        data.children = data.children.map(id => recreateEntityData(previous[id]));
+                        data.children = data.children.map((id) => recreateEntityData(previous[id]));
                         return data;
                     }
 

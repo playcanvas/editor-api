@@ -5,7 +5,6 @@
  * @category Internal
  */
 class Guid {
-
     /**
      * Create an RFC4122 version 4 compliant GUID.
      *
