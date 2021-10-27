@@ -65,7 +65,7 @@ function createTemplate(rootEntity) {
         if (parent) {
             entities[id].set('parent', oldToNewIds[parent]);
         }
-        entities[id].set('children', entities[id].get('children').map((child) => oldToNewIds[child]));
+        entities[id].set('children', entities[id].get('children').map(child => oldToNewIds[child]));
 
         const templateEntIds = entities[id].get('template_ent_ids');
         if (templateEntIds) {

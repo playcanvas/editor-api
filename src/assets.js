@@ -172,7 +172,7 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     list() {
-        return this._assets.array().map((a) => a.apiAsset);
+        return this._assets.array().map(a => a.apiAsset);
     }
 
     /**
@@ -311,8 +311,8 @@ class Assets extends Events {
      */
     filter(fn) {
         return this._assets.data
-        .filter((observer) => fn(observer.apiAsset))
-        .map((observer) => observer.apiAsset);
+        .filter(observer => fn(observer.apiAsset))
+        .map(observer => observer.apiAsset);
     }
 
     /**
@@ -322,7 +322,7 @@ class Assets extends Events {
      * @returns {Asset} The asset
      */
     findOne(fn) {
-        const result = this._assets.data.find((observer) => fn(observer.apiAsset));
+        const result = this._assets.data.find(observer => fn(observer.apiAsset));
         return result ? result.apiAsset : null;
     }
 
@@ -529,7 +529,7 @@ class Assets extends Events {
             type: 'bundle',
             folder: options.folder,
             data: {
-                assets: (options.assets || []).map((a) => a.get('id'))
+                assets: (options.assets || []).map(a => a.get('id'))
             },
             preload: options.preload
         }, null, options.onProgress);
@@ -804,7 +804,7 @@ class Assets extends Events {
     createSprite(options = {}) {
         const data = {};
         data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
-        data.frameKeys = options.frameKeys ? options.frameKeys.map((val) => val.toString()) : [];
+        data.frameKeys = options.frameKeys ? options.frameKeys.map(val => val.toString()) : [];
         data.textureAtlasAsset = options.textureAtlas ? options.textureAtlas.get('id') : null;
         data.renderMode = options.renderMode !== undefined ? options.renderMode : 0;
 
@@ -880,7 +880,7 @@ class Assets extends Events {
     async delete(assets) {
         const response = await fetch('/api/assets', {
             body: JSON.stringify({
-                assets: assets.map((a) => a.get('id')),
+                assets: assets.map(a => a.get('id')),
                 branchId: api.branchId
             }),
             method: 'DELETE',
@@ -893,7 +893,7 @@ class Assets extends Events {
             throw new Error(response.status + ': ' + response.statusText);
         }
 
-        assets.forEach((a) => this.remove(a));
+        assets.forEach(a => this.remove(a));
     }
 
     /**

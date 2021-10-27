@@ -171,7 +171,7 @@ function duplicateInBackend(entities, options) {
             const callback = api.jobs.finish(data.job_id);
             if (!callback) return;
 
-            const result = data.multTaskResults.map((d) => d.newRootId);
+            const result = data.multTaskResults.map(d => d.newRootId);
             callback(result);
         });
     }
@@ -203,7 +203,7 @@ function duplicateInBackend(entities, options) {
                 branchId: api.branchId,
                 sceneId: api.realtime.scenes.current.uniqueId,
                 jobId: jobId,
-                entities: originalEntities.map((e) => e.get('resource_id'))
+                entities: originalEntities.map(e => e.get('resource_id'))
             }
         });
     }
@@ -356,7 +356,7 @@ async function duplicateEntities(entities, options) {
                 redo: () => {
                     function recreateEntityData(data) {
                         data = Object.assign({}, data);
-                        data.children = data.children.map((id) => recreateEntityData(previous[id]));
+                        data.children = data.children.map(id => recreateEntityData(previous[id]));
                         return data;
                     }
 

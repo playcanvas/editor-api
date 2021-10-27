@@ -23,14 +23,14 @@ function wait(entityIds, timeoutMs, callback) {
     });
 
     if (earlyOut) {
-        callback(entityIds.map((id) => index[id]));
+        callback(entityIds.map(id => index[id]));
         return () => { };
     }
 
     let timeout = null;
 
     const checkAllThere = () => {
-        return entityIds.filter((id) => !index[id]).length === 0;
+        return entityIds.filter(id => !index[id]).length === 0;
     };
 
     let evtAdd;
@@ -55,7 +55,7 @@ function wait(entityIds, timeoutMs, callback) {
 
         if (checkAllThere()) {
             cancel();
-            callback(entityIds.map((id) => index[id]));
+            callback(entityIds.map(id => index[id]));
         }
     };
 

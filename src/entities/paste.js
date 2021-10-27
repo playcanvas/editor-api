@@ -356,7 +356,7 @@ function pasteInBackend(data, parent, options) {
             const callback = api.jobs.finish(data.job_id);
             if (!callback) return;
 
-            const result = data.multTaskResults.map((d) => d.newRootId);
+            const result = data.multTaskResults.map(d => d.newRootId);
             callback(result);
         });
     }
@@ -554,7 +554,7 @@ async function pasteEntities(parent, options = {}) {
 
                 if (deletedHierarchy.length) {
                     api.entities.delete(
-                        deletedHierarchy.map((data) => api.entities.get(data.resource_id)), {
+                        deletedHierarchy.map(data => api.entities.get(data.resource_id)), {
                             history: false
                         }
                     );
@@ -573,8 +573,8 @@ async function pasteEntities(parent, options = {}) {
 
                 // restore selection
                 previousSelection = previousSelection
-                .map((item) => item.latest())
-                .filter((item) => !!item);
+                .map(item => item.latest())
+                .filter(item => !!item);
 
                 api.selection.set(previousSelection, { history: false });
 

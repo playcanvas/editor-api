@@ -515,7 +515,7 @@ class Entity extends Events {
      * @description The children entities. Warning: this creates a new array every time it's called.
      */
     get children() {
-        return this.get('children').map((id) => api.entities.get(id));
+        return this.get('children').map(id => api.entities.get(id));
     }
 
     /**
