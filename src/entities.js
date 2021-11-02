@@ -9,6 +9,7 @@ import { reparentEntities } from './entities/reparent';
 import { deleteEntities } from './entities/delete';
 import { updateReferences } from './entities/references';
 import { wait } from './entities/wait';
+import { addScript, removeScript } from './entities/scripts';
 
 /**
  * Data to create new Entity
@@ -342,6 +343,37 @@ class Entities extends Events {
      */
     waitToExist(entityIds, timeoutMs, callback) {
         return wait(entityIds, timeoutMs, callback);
+    }
+
+    /**
+     * Like {@link Entity.addScript} but works on multiple entities using
+     * a single history action.
+     *
+     * @param {Entity[]} entities - The entities.
+     * @param {string} scriptName - The name of the script.
+     * @param {object} options - Options
+     * @param {object} options.attributes - The values of attributes. Each key is the name
+     * of the attributes and each value is the value for that attribute. Leave undefined to
+     * let the Editor set default values depending on the attribute types.
+     * @param {boolean} options.history - Whether to add a history action. Defaults to true.
+     * @param {number} options.index - The desired index in the entity's scripts order to add this script.
+     * @returns {Promise<>} A promise
+     */
+    addScript(entities, scriptName, options = {}) {
+        return addScript(entities, scriptName, options);
+    }
+
+    /**
+     * Like {@link Entity.removeScript} but works on multiple entities using
+     * a single history action.
+     *
+     * @param {Entity[]} entities - The entities.
+     * @param {string} scriptName - The name of the script.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     */
+    removeScript(entities, scriptName, options = {}) {
+        removeScript(entities, scriptName, options);
     }
 
     /**

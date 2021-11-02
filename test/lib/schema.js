@@ -46,6 +46,20 @@ window.schema = {
                                 }
                             }
                         }
+                    },
+                    script: {
+                        enabled: {
+                            $type: 'boolean',
+                            $default: true
+                        },
+                        order: {
+                            $type: ['string'],
+                            $default: []
+                        },
+                        scripts: {
+                            $type: 'map',
+                            $default: {}
+                        }
                     }
                 }
             }

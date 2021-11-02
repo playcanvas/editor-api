@@ -1,12 +1,47 @@
 describe('api.Entity tests', function () {
 
+    let sandbox;
+
     this.beforeEach(() => {
+        sandbox = sinon.createSandbox();
         api.globals.entities = new api.Entities();
+    });
+
+    this.afterEach(() => {
+        sandbox.restore();
+
+        api.globals.schema = null;
+        api.globals.realtime = null;
+        api.globals.jobs = null;
+        api.globals.history = null;
     });
 
     function addChildEntity(child, parent) {
         child.set('parent', parent.get('resource_id'));
         parent.insert('children', child.get('resource_id'));
+    }
+
+    function stubAddScript() {
+        api.globals.schema = new api.Schema(schema);
+        api.globals.realtime = new api.Realtime();
+        api.globals.jobs = new api.Jobs();
+
+        sandbox.stub(api.globals, 'messenger').value({
+            once: (name, fn) => {
+                setTimeout(() => {
+                    fn({
+                        status: 'success'
+                    });
+                });
+            }
+        });
+
+        sandbox.stub(api.globals.realtime.scenes, 'current').value({
+            id: () => 1,
+            addEntity: () => {},
+            removeEntity: () => {},
+            whenNothingPending: (fn) => fn()
+        });
     }
 
     it('get returns value', function () {
@@ -315,5 +350,549 @@ describe('api.Entity tests', function () {
         const expected = root.json();
         expected.children = [ null ];
         expect(root.jsonHierarchy()).to.deep.equal(expected);
+    });
+
+    it('addScript adds script component if it does not exist', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('addScript adds script if script component exists', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        root.addComponent('script');
+
+        await root.addScript('test');
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('addScript adds script to desired index', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        root.addComponent('script');
+
+        await root.addScript('test');
+        await root.addScript('test2');
+        await root.addScript('test3', { index: 0 });
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test3', 'test', 'test2'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    },
+                    test2: {
+                        enabled: true,
+                        attributes: {}
+                    },
+                    test3: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('addScript sets default attribute values', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test', { attributes: { attr1: 'value' } });
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {
+                            attr1: 'value'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    it('addScript does nothing if script already exists', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+        await root.addScript('test'); // again
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('addScript works for multiple entities', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('undo addScript removes script and script component if script component was added', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test', { history: true });
+
+        api.globals.history.undo();
+        expect(root.get('components')).to.deep.equal({});
+    });
+
+    it('undo addScript removes script and script component if script component was added in one of multiple entities', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        child.addComponent('script');
+        await api.globals.entities.addScript([root, child], 'test');
+
+        api.globals.history.undo();
+        expect(root.get('components')).to.deep.equal({});
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('undo addScript removes script only if script component existed', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        root.addComponent('script');
+        await root.addScript('test', { history: true });
+
+        api.globals.history.undo();
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('undo addScript on multiple entities works if one of the entities is missing', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+        await child.delete({ history: false });
+
+        api.globals.history.undo();
+        expect(root.get('components')).to.deep.equal({});
+    });
+
+    it('redo addScript adds script again and script component again', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test', { history: true });
+
+        api.globals.history.undo();
+        api.globals.history.redo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('redo addScript adds script again and script component again for multiple entities', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create();
+        await api.globals.entities.addScript([root, child], 'test', { history: true });
+
+        api.globals.history.undo();
+        api.globals.history.redo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('redo addScript on multiple entities works if one of the entities is missing', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+        await child.delete({ history: false });
+
+        api.globals.history.undo();
+        api.globals.history.redo();
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('removeScript removes script from entity', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+
+        root.removeScript('test');
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('removeScript removes script from multiple entities', async function () {
+        stubAddScript();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+
+        api.globals.entities.removeScript([root, child], 'test');
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('undo removeScript adds script back', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+
+        root.removeScript('test');
+        api.globals.history.undo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('undo removeScript adds script back with its previous attribute values', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test', { attributes: { attr1: 'value' } });
+
+        root.removeScript('test');
+        api.globals.history.undo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {
+                            attr1: 'value'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    it('undo removeScript adds script back to multiple entities', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+
+        api.globals.entities.removeScript([root, child], 'test');
+        api.globals.history.undo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+    });
+
+    it('redo removeScript removes script again', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+
+        root.removeScript('test');
+        api.globals.history.undo();
+        api.globals.history.redo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('redo removeScript removes script again from multiple entities', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        const child = api.globals.entities.create({ parent: root });
+        await api.globals.entities.addScript([root, child], 'test');
+
+        api.globals.entities.removeScript([root, child], 'test');
+        api.globals.history.undo();
+        api.globals.history.redo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: [],
+                scripts: {}
+            }
+        });
+    });
+
+    it('undo removeScript does nothing if script component no longer exists', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+
+        root.removeScript('test');
+
+        root.history.enabled = false;
+        root.removeComponent('script');
+        root.history.enabled = true;
+
+        api.globals.history.undo();
+
+        expect(root.get('components')).to.deep.equal({});
+    });
+
+    it('undo removeScript adds script back to its old index', async function () {
+        stubAddScript();
+        api.globals.history = new api.History();
+
+        const root = api.globals.entities.create();
+        await root.addScript('test');
+        await root.addScript('test2');
+
+        const child = api.globals.entities.create({ parent: root });
+        await child.addScript('test2');
+        await child.addScript('test');
+
+        api.globals.entities.removeScript([root, child], 'test');
+        api.globals.history.undo();
+
+        expect(root.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test', 'test2'],
+                scripts: {
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    },
+                    test2: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
+
+        expect(child.get('components')).to.deep.equal({
+            script: {
+                enabled: true,
+                order: ['test2', 'test'],
+                scripts: {
+                    test2: {
+                        enabled: true,
+                        attributes: {}
+                    },
+                    test: {
+                        enabled: true,
+                        attributes: {}
+                    }
+                }
+            }
+        });
     });
 });

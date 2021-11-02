@@ -502,6 +502,35 @@ class Entity extends Events {
     }
 
     /**
+     * Adds a script to the script component of this entity.
+     * If a script component does not exist, this method will add the script
+     * component as well.
+     *
+     * @param {string} scriptName - The name of the script.
+     * @param {object} options - Options
+     * @param {object} options.attributes - The values of attributes. Each key is the name
+     * of the attributes and each value is the value for that attribute. Leave undefined to
+     * let the Editor set default values depending on the attribute types.
+     * @param {boolean} options.history - Whether to add a history action. Defaults to true.
+     * @param {number} options.index - The desired index in the entity's scripts order to add this script.
+     * @returns {Promise<>} A promise
+     */
+    addScript(scriptName, options = {}) {
+        return api.entities.addScript([this], scriptName, options);
+    }
+
+    /**
+     * Removes a script from the entity's script component.
+     *
+     * @param {string} scriptName - The name of the script.
+     * @param {object} options - Options
+     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     */
+    removeScript(scriptName, options = {}) {
+        api.entities.removeScript([this], scriptName, options);
+    }
+
+    /**
      * @type {Entity}
      * @description The parent entity
      */
