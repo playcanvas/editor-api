@@ -1,6 +1,6 @@
 {
   "name": "editor-api",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "The PlayCanvas Editor API",
   "main": "index.js",
   "module": "index.mjs",
