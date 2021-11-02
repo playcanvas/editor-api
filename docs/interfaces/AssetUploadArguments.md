@@ -27,7 +27,7 @@ The parent folder asset where the asset should be placed.
 
 #### Defined in
 
-[src/assets.js:12](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L12)
+[src/assets.js:13](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L13)
 
 ___
 
@@ -39,7 +39,7 @@ The filename of the uploaded file.
 
 #### Defined in
 
-[src/assets.js:13](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L13)
+[src/assets.js:14](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L14)
 
 ___
 
@@ -51,7 +51,7 @@ The file being uploaded.
 
 #### Defined in
 
-[src/assets.js:14](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L14)
+[src/assets.js:15](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L15)
 
 ___
 
@@ -63,7 +63,7 @@ The type of the asset we are uploading. See [here](AssetProperties.md) for avail
 
 #### Defined in
 
-[src/assets.js:15](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L15)
+[src/assets.js:16](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L16)
 
 ___
 
@@ -75,7 +75,7 @@ The name of the asset.
 
 #### Defined in
 
-[src/assets.js:16](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L16)
+[src/assets.js:17](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L17)
 
 ___
 
@@ -87,7 +87,7 @@ The tags of the asset.
 
 #### Defined in
 
-[src/assets.js:17](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L17)
+[src/assets.js:18](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L18)
 
 ___
 
@@ -99,7 +99,7 @@ The id of the source asset.
 
 #### Defined in
 
-[src/assets.js:18](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L18)
+[src/assets.js:19](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L19)
 
 ___
 
@@ -111,7 +111,7 @@ The asset data. This depends on the asset type. See [here](AssetProperties.md) f
 
 #### Defined in
 
-[src/assets.js:19](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L19)
+[src/assets.js:20](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L20)
 
 ___
 
@@ -123,7 +123,7 @@ Whether to preload the asset. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:20](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L20)
+[src/assets.js:21](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L21)
 
 ___
 
@@ -135,4 +135,4 @@ If an asset id is specified then this asset will be updated instead of creating 
 
 #### Defined in
 
-[src/assets.js:21](https://github.com/playcanvas/editor-api/blob/4a0a671/src/assets.js#L21)
+[src/assets.js:22](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L22)

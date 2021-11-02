@@ -35,7 +35,7 @@ Creates new instance of API
 
 #### Defined in
 
-[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema.js#L13)
+[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema.js#L13)
 
 ## Accessors
 
@@ -51,7 +51,7 @@ Gets the component schema
 
 #### Defined in
 
-[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema.js#L24)
+[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema.js#L24)
 
 ___
 
@@ -67,7 +67,7 @@ Gets the assets schema
 
 #### Defined in
 
-[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema.js#L33)
+[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema.js#L33)
 
 ## Internal Methods
 
@@ -92,4 +92,4 @@ The type
 
 #### Defined in
 
-[src/schema.js:45](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema.js#L45)
+[src/schema.js:45](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema.js#L45)

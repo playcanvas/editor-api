@@ -10,6 +10,10 @@ Contains various utility methods
 
 - [deepCopy](utils.md#deepcopy)
 
+### Constructors
+
+- [constructor](utils.md#constructor)
+
 ## Methods
 
 ### deepCopy
@@ -32,4 +36,10 @@ A copy of the data
 
 #### Defined in
 
-[src/utils.js:20](https://github.com/playcanvas/editor-api/blob/4a0a671/src/utils.js#L20)
+[src/utils.js:13](https://github.com/playcanvas/editor-api/blob/43e144d/src/utils.js#L13)
+
+## Constructors
+
+### constructor
+
+• **new utils**()

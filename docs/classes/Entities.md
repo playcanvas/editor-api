@@ -27,6 +27,8 @@ The entities editor API
 - [copyToClipboard](Entities.md#copytoclipboard)
 - [pasteFromClipboard](Entities.md#pastefromclipboard)
 - [waitToExist](Entities.md#waittoexist)
+- [addScript](Entities.md#addscript)
+- [removeScript](Entities.md#removescript)
 
 ### Internal Methods
 
@@ -52,7 +54,7 @@ Events.constructor
 
 #### Defined in
 
-[src/entities.js:47](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L47)
+[src/entities.js:48](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L48)
 
 ## Public Methods
 
@@ -81,7 +83,7 @@ The entity
 
 #### Defined in
 
-[src/entities.js:67](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L67)
+[src/entities.js:68](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L68)
 
 ___
 
@@ -105,7 +107,7 @@ The entities
 
 #### Defined in
 
-[src/entities.js:82](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L82)
+[src/entities.js:83](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L83)
 
 ___
 
@@ -145,7 +147,7 @@ The new entity
 
 #### Defined in
 
-[src/entities.js:250](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L250)
+[src/entities.js:251](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L251)
 
 ___
 
@@ -174,7 +176,7 @@ await editor.entities.delete([entity1, entity2]);
 
 #### Defined in
 
-[src/entities.js:266](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L266)
+[src/entities.js:267](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L267)
 
 ___
 
@@ -209,7 +211,7 @@ editor.entities.reparent([{
 
 #### Defined in
 
-[src/entities.js:287](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L287)
+[src/entities.js:288](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L288)
 
 ___
 
@@ -240,7 +242,7 @@ The duplicated entities
 
 #### Defined in
 
-[src/entities.js:303](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L303)
+[src/entities.js:304](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L304)
 
 ___
 
@@ -263,7 +265,7 @@ to paste these entities later on.
 
 #### Defined in
 
-[src/entities.js:315](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L315)
+[src/entities.js:316](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L316)
 
 ___
 
@@ -290,7 +292,7 @@ The new entities
 
 #### Defined in
 
-[src/entities.js:328](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L328)
+[src/entities.js:329](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L329)
 
 ___
 
@@ -318,7 +320,63 @@ callback when the entities are added.
 
 #### Defined in
 
-[src/entities.js:343](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L343)
+[src/entities.js:344](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L344)
+
+___
+
+### addScript
+
+▸ **addScript**(`entities`, `scriptName`, `options?`): `Promise`<`any`\>
+
+Like [Entity.addScript](Entity.md#addscript) but works on multiple entities using
+a single history action.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entities` | [`Entity`](Entity.md)[] | The entities. |
+| `scriptName` | `string` | The name of the script. |
+| `options` | `Object` | Options |
+| `options.attributes` | `any` | The values of attributes. Each key is the name of the attributes and each value is the value for that attribute. Leave undefined to let the Editor set default values depending on the attribute types. |
+| `options.history` | `boolean` | Whether to add a history action. Defaults to true. |
+| `options.index` | `number` | The desired index in the entity's scripts order to add this script. |
+
+#### Returns
+
+`Promise`<`any`\>
+
+A promise
+
+#### Defined in
+
+[src/entities.js:362](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L362)
+
+___
+
+### removeScript
+
+▸ **removeScript**(`entities`, `scriptName`, `options?`): `void`
+
+Like [Entity.removeScript](Entity.md#removescript) but works on multiple entities using
+a single history action.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entities` | [`Entity`](Entity.md)[] | The entities. |
+| `scriptName` | `string` | The name of the script. |
+| `options` | `Object` | Options |
+| `options.history` | `boolean` | Whether to record a history action. Defaults to true. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/entities.js:375](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L375)
 
 ___
 
@@ -342,7 +400,7 @@ Adds entity to list
 
 #### Defined in
 
-[src/entities.js:92](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L92)
+[src/entities.js:93](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L93)
 
 ___
 
@@ -364,7 +422,7 @@ Called when an entity is added from the server
 
 #### Defined in
 
-[src/entities.js:120](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L120)
+[src/entities.js:121](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L121)
 
 ___
 
@@ -387,7 +445,7 @@ Removes entity from the list
 
 #### Defined in
 
-[src/entities.js:135](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L135)
+[src/entities.js:136](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L136)
 
 ___
 
@@ -409,7 +467,7 @@ Called when an entity is removed from the server
 
 #### Defined in
 
-[src/entities.js:184](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L184)
+[src/entities.js:185](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L185)
 
 ___
 
@@ -425,4 +483,4 @@ Removes all entities from the list
 
 #### Defined in
 
-[src/entities.js:206](https://github.com/playcanvas/editor-api/blob/4a0a671/src/entities.js#L206)
+[src/entities.js:207](https://github.com/playcanvas/editor-api/blob/43e144d/src/entities.js#L207)

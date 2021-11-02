@@ -26,6 +26,7 @@ Represents an Asset. For a list of Asset properties see [here](AssetProperties.m
 - [load](Asset.md#load)
 - [loadAndSubscribe](Asset.md#loadandsubscribe)
 - [delete](Asset.md#delete)
+- [instantiateTemplate](Asset.md#instantiatetemplate)
 
 ### Constructors
 
@@ -58,7 +59,7 @@ The file URL
 
 #### Defined in
 
-[src/asset.js:277](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L277)
+[src/asset.js:294](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L294)
 
 ___
 
@@ -82,7 +83,7 @@ True if path exists
 
 #### Defined in
 
-[src/asset.js:110](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L110)
+[src/asset.js:110](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L110)
 
 ___
 
@@ -106,7 +107,7 @@ The value
 
 #### Defined in
 
-[src/asset.js:120](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L120)
+[src/asset.js:120](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L120)
 
 ___
 
@@ -131,7 +132,7 @@ Whether the value was set
 
 #### Defined in
 
-[src/asset.js:131](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L131)
+[src/asset.js:131](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L131)
 
 ___
 
@@ -155,7 +156,7 @@ Whether the value was unset
 
 #### Defined in
 
-[src/asset.js:141](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L141)
+[src/asset.js:141](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L141)
 
 ___
 
@@ -181,7 +182,7 @@ Whether the value was inserted
 
 #### Defined in
 
-[src/asset.js:153](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L153)
+[src/asset.js:153](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L153)
 
 ___
 
@@ -206,7 +207,7 @@ Whether the value was removed
 
 #### Defined in
 
-[src/asset.js:164](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L164)
+[src/asset.js:164](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L164)
 
 ___
 
@@ -224,7 +225,7 @@ Returns JSON representation of entity data
 
 #### Defined in
 
-[src/asset.js:173](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L173)
+[src/asset.js:173](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L173)
 
 ___
 
@@ -242,7 +243,7 @@ The asset
 
 #### Defined in
 
-[src/asset.js:182](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L182)
+[src/asset.js:182](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L182)
 
 ___
 
@@ -258,7 +259,7 @@ Loads asset from the server without subscribing to realtime changes.
 
 #### Defined in
 
-[src/asset.js:189](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L189)
+[src/asset.js:189](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L189)
 
 ___
 
@@ -274,7 +275,7 @@ Loads the asset's data from sharedb and subscribes to changes
 
 #### Defined in
 
-[src/asset.js:214](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L214)
+[src/asset.js:214](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L214)
 
 ___
 
@@ -290,7 +291,37 @@ Deletes this asset
 
 #### Defined in
 
-[src/asset.js:257](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L257)
+[src/asset.js:257](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L257)
+
+___
+
+### instantiateTemplate
+
+▸ **instantiateTemplate**(`parent`, `options`): `Promise`<[`Entity`](Entity.md)\>
+
+Creates an instance of this template asset. Assumes this
+asset is a template asset.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `parent` | [`Entity`](Entity.md) | The parent entity |
+| `options` | `Object` | Options |
+| `options.index` | `number` | The desired index under the parent to instantiate the template. |
+| `options.history` | `boolean` | Whether to record a history action. |
+| `options.select` | `boolean` | Whether to select the new entity. |
+| `options.extraData` | `any` | Extra data passed to the backend. Used by the Editor on specific cases. |
+
+#### Returns
+
+`Promise`<[`Entity`](Entity.md)\>
+
+The new entity.
+
+#### Defined in
+
+[src/asset.js:273](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L273)
 
 ## Constructors
 
@@ -312,7 +343,7 @@ Events.constructor
 
 #### Defined in
 
-[src/asset.js:15](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L15)
+[src/asset.js:15](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L15)
 
 ## Accessors
 
@@ -328,4 +359,4 @@ Gets observer history for this assset
 
 #### Defined in
 
-[src/asset.js:266](https://github.com/playcanvas/editor-api/blob/4a0a671/src/asset.js#L266)
+[src/asset.js:283](https://github.com/playcanvas/editor-api/blob/43e144d/src/asset.js#L283)

@@ -30,7 +30,7 @@ Provides methods to access the Assets schema
 
 #### Defined in
 
-[src/schema/assets.js:14](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema/assets.js#L14)
+[src/schema/assets.js:14](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema/assets.js#L14)
 
 ## Methods
 
@@ -54,4 +54,4 @@ The default data
 
 #### Defined in
 
-[src/schema/assets.js:25](https://github.com/playcanvas/editor-api/blob/4a0a671/src/schema/assets.js#L25)
+[src/schema/assets.js:25](https://github.com/playcanvas/editor-api/blob/43e144d/src/schema/assets.js#L25)
