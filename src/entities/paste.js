@@ -242,7 +242,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                             if (attr.type === 'asset' && data.project !== api.projectId) {
                                 if (attr.value) {
                                     if (attr.value instanceof Array) {
-                                        for (j = 0; j < attr.value.length; j++) {
+                                        for (let j = 0; j < attr.value.length; j++) {
                                             entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value.' + j, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
@@ -252,7 +252,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
 
                                 if (attr.defaultValue) {
                                     if (attr.defaultValue instanceof Array) {
-                                        for (j = 0; j < attr.defaultValue.length; j++) {
+                                        for (let j = 0; j < attr.defaultValue.length; j++) {
                                             entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue.' + j, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
