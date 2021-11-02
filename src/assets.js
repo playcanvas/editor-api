@@ -4,6 +4,7 @@ import { Events, ObserverList } from '@playcanvas/observer';
 import { uploadFile } from './assets/upload';
 import { createTemplate } from './assets/createTemplate';
 import { createScript } from './assets/createScript';
+import { instantiateTemplates } from './assets/instantiateTemplates';
 
 /**
  * Arguments passed when uploading an asset file.
@@ -894,6 +895,23 @@ class Assets extends Events {
         }
 
         assets.forEach(a => this.remove(a));
+    }
+
+    /**
+     * Instantiates the specified template assets under the specified
+     * parent entity.
+     *
+     * @param {Asset[]} assets - The template assets.
+     * @param {Entity} parent - The parent entity
+     * @param {object} options - Options
+     * @param {number} options.index - The desired index under the parent to instantiate the templates.
+     * @param {boolean} options.history - Whether to record a history action.
+     * @param {boolean} options.select - Whether to select the new entities.
+     * @param {object} options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
+     * @returns {Promise<Entity[]>} The new entities
+     */
+    instantiateTemplates(assets, parent, options = {}) {
+        return instantiateTemplates(assets, parent, options);
     }
 
     /**

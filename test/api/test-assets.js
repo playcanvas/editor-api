@@ -4,6 +4,11 @@ describe('Assets API tests', function () {
 
     beforeEach(function () {
         api.globals.schema = null;
+        api.globals.entities = null;
+        api.globals.jobs = null;
+        api.globals.realtime = null;
+        api.globals.messenger = null;
+        api.globals.history = null;
         api.globals.assets = new api.Assets();
         assets = api.globals.assets;
         sandbox = sinon.createSandbox();
@@ -950,5 +955,63 @@ ${className}.prototype.update = function(dt) {
         expect(data.branchId).to.equal('branch');
 
         expect(api.globals.assets.list()).to.deep.equal([]);
+    });
+
+    it('instantiateTemplates returns new entities', async function () {
+        const asset = new api.Asset({
+            id: 1,
+            type: 'template'
+        });
+        api.globals.assets.add(asset);
+
+        api.globals.entities = new api.Entities();
+        api.globals.jobs = new api.Jobs();
+        api.globals.realtime = new api.Realtime();
+        api.globals.history = new api.History();
+
+        let newEntity;
+
+        sandbox.stub(api.globals, 'messenger').value({
+            on: (name, fn) => {
+                setTimeout(() => {
+                    newEntity = api.globals.entities.create();
+                    fn({
+                        status: 'success',
+                        job_id: Object.keys(api.globals.jobs._jobsInProgress)[0],
+                        multTaskResults: [{
+                            newRootId: newEntity.get('resource_id')
+                        }]
+                    });
+                });
+            }
+        });
+
+        sandbox.stub(api.globals.realtime.scenes, 'current').value({
+            id: () => 1,
+            addEntity: () => {},
+            removeEntity: () => {},
+            whenNothingPending: (fn) => fn()
+        });
+
+        const root = api.globals.entities.create();
+
+        const entities = await api.globals.assets.instantiateTemplates([asset], root);
+        expect(entities).to.deep.equal([newEntity]);
+
+        // test undo
+        api.globals.history.undo();
+        expect(newEntity.latest()).to.equal(null);
+
+        // test redo
+        const promise = new Promise(resolve => {
+            api.globals.entities.on('add', e => {
+                resolve(e);
+            });
+        });
+
+        api.globals.history.redo();
+
+        const redoEntity = await promise;
+        expect(redoEntity).to.not.equal(null);
     });
 });
