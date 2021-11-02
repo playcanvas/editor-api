@@ -2,11 +2,6 @@
     "extends": [
         "@playcanvas/eslint-config"
     ],
-    "env": {
-        "node": true,
-        "browser": true,
-        "es6": true
-    },
     "globals": {
         "share": "readonly"
     },
@@ -20,13 +15,6 @@
         "requireConfigFile": false
     },
     "rules": {
-        "brace-style": [
-            "error",
-            "1tbs",
-            {
-                "allowSingleLine": true
-            }
-        ],
         "indent": [
             "error",
             4,
@@ -39,7 +27,6 @@
                 "SwitchCase": 1
             }
         ],
-        "prefer-const": "error",
         "jsdoc/check-tag-names": ["error", {
             "definedTags": ["category"]
         }],
