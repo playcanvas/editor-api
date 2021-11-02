@@ -24,7 +24,7 @@ async function instantiateTemplates(assets, parent, options) {
         // resolve promise
         if (msg.status === 'success') {
             const newEntityIds = msg.multTaskResults.map(d => d.newRootId);
-            api.entities.waitToExist(newEntityIds, 5000, entities => {
+            api.entities.waitToExist(newEntityIds, 5000, (entities) => {
                 deferred.resolve(entities);
             });
         } else {
@@ -34,7 +34,7 @@ async function instantiateTemplates(assets, parent, options) {
 
     // subscribe to messenger for backend response
     if (!evtMessenger) {
-        evtMessenger = api.messenger.on('template.instance', msg => {
+        evtMessenger = api.messenger.on('template.instance', (msg) => {
             const callback = api.jobs.finish(msg.job_id);
             if (callback) {
                 callback(msg);
@@ -53,7 +53,7 @@ async function instantiateTemplates(assets, parent, options) {
             jobId: jobId,
             children: parent.get('children'),
             childIndex: options.index,
-            templates: assets.map(asset => {
+            templates: assets.map((asset) => {
                 return {
                     id: parseInt(asset.get('uniqueId'), 10),
                     opts: options.extraData
@@ -73,7 +73,7 @@ async function instantiateTemplates(assets, parent, options) {
                 entities = entities.map(e => e.latest()).filter(e => !!e);
                 if (entities.length) {
                     api.entities.delete(entities, { history: false })
-                    .catch(err => {
+                    .catch((err) => {
                         console.error(err);
                     });
                 }
@@ -87,10 +87,10 @@ async function instantiateTemplates(assets, parent, options) {
 
                 // re-instantiate templates
                 instantiateTemplates(assets, parent, newOptions)
-                .then(newEntities => {
+                .then((newEntities) => {
                     entities = newEntities;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                 });
             }
