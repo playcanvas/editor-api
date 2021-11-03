@@ -198,7 +198,7 @@ class RealtimeConnection extends Events {
     }
 
     _onMessageFs(msg) {
-        data = msg.data.slice('fs:'.length);
+        let data = msg.data.slice('fs:'.length);
         const ind = data.indexOf(':');
         if (ind !== -1) {
             const op = data.slice(0, ind);
