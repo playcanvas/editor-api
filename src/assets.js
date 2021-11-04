@@ -760,7 +760,21 @@ class Assets extends Events {
                 });
             }
 
-            await this._parseScriptCallback(asset);
+            const scripts = await this._parseScriptCallback(asset);
+            // check if all scripts have been set to the asset
+            // because of possible network delays.
+            // if not then wait until those scripts have been set
+            // before returning
+            const wait = [];
+            scripts.forEach((script) => {
+                if (!asset.has(`data.scripts.${script}`)) {
+                    wait.push(new Promise((resolve) => {
+                        asset.once(`data.scripts.${script}:set`, resolve);
+                    }));
+                }
+            });
+
+            await Promise.all(wait);
         }
 
         return asset;
@@ -984,7 +998,7 @@ class Assets extends Events {
      * Sets the callback which parses script assets. When this
      * callback is set, new script assets will be parsed after they
      * are created. The function takes the asset as a parameter and returns
-     * a promise when it is done parsing.
+     * a promise with a list of script names when it is done parsing.
      *
      * @type {Function<Asset>}
      */
