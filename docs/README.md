@@ -1,8 +1,7 @@
 PlayCanvas Editor API / [Exports](modules.md)
 
 # Overview
-
-This is the PlayCanvas Editor API. You can find API documentation [here](docs/modules.md).
+This is the PlayCanvas Editor API. You can find API documentation [here](modules.md).
 
 # Installing
 Run:
