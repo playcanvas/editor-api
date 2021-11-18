@@ -67,14 +67,46 @@ window.schema = {
     },
     animstategraphData: {
         testData: {
-            type: 'number',
+            $type: 'number',
             $default: 0
         }
     },
     materialData: {
         diffuse: {
-            type: ["number"],
+            $type: ["number"],
             $default: [0, 0, 0]
+        }
+    },
+    modelData: {
+        mapping: {
+            $type: [{
+                material: {
+                    $type: 'number',
+                    $editorType: 'asset'
+                }
+            }]
+        }
+    },
+    testData: {
+        assetRef: {
+            $type: 'number',
+            $editorType: 'asset',
+            $default: null
+        },
+        assetArrayRef: {
+            $type: ['number'],
+            $editorType: 'array:asset',
+            $default: []
+        },
+        nestedAssetRef: {
+            $type: 'map',
+            $of: {
+                asset: {
+                    $type: 'number',
+                    $editorType: 'asset',
+                    $default: null
+                }
+            }
         }
     }
 };
