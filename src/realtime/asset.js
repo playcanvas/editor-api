@@ -44,7 +44,7 @@ class RealtimeAsset extends Events {
     }
 
     /**
-     * Unloads scene from sharedb and unsubscribes from changes.
+     * Unloads asset from sharedb and unsubscribes from changes.
      */
     unload() {
         if (!this._document) return;
