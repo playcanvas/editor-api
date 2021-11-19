@@ -17,6 +17,8 @@
 - [ComponentSchema](classes/ComponentSchema.md)
 - [SelectionHistory](classes/SelectionHistory.md)
 - [Selection](classes/Selection.md)
+- [Settings](classes/Settings.md)
+- [SceneSettings](classes/SceneSettings.md)
 
 ### Internal Classes
 

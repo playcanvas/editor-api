@@ -29,6 +29,10 @@ These are the properties that you can access on an [Entity](Entity.md):
 | `components.anim.animationAssets` | `object` | A dictionary that holds the animation assets used by this component. Each key is a string which represents a path to a particular state in the graph e.g. "LocomotionLayer:Walking". | `{}`| 
 | `components.anim.animationAssets.*.asset` | `number` | The `id` of the The animation asset. | `null`| 
 | `components.anim.enabled` | `boolean` | Whether the component is enabled. | `true`| 
+| `components.anim.masks` | `object` | The layer masks associated with this component. | `{}`| 
+| `components.anim.masks.*.mask` | `object` | A set of paths to bones in the current model that should be animated by the layer. | `{}`| 
+| `components.anim.masks.*.mask.*.children` | `boolean` | Whether the children of this bone should also be included in the mask. |  | 
+| `components.anim.masks.*.mask.*.value` | `boolean` | Whether this bone should also be included in the mask. |  | 
 | `components.anim.rootBone` | `string` | The `resource_id` of the entity that this anim component should use as the root of the animation hierarchy. | `null`| 
 | `components.anim.speed` | `number` | A multiplier for animation playback speed. 0 will freeze animation playback, and 1 represents the normal playback speed. | `1`| 
 

@@ -29,7 +29,7 @@ throughout the whole project instead of just the same folder. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:38](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L38)
+[src/assets.js:38](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L38)
 
 ___
 
@@ -41,7 +41,7 @@ Whether to overwrite existing model or create a new one. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:40](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L40)
+[src/assets.js:40](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L40)
 
 ___
 
@@ -53,7 +53,7 @@ Whether to overwrite existing animations or create new ones. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:41](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L41)
+[src/assets.js:41](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L41)
 
 ___
 
@@ -65,7 +65,7 @@ Whether to overwrite existing materials or create new ones. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:42](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L42)
+[src/assets.js:42](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L42)
 
 ___
 
@@ -77,7 +77,7 @@ Whether to overwrite existing textures or create new ones. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:43](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L43)
+[src/assets.js:43](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L43)
 
 ___
 
@@ -89,7 +89,7 @@ Whether to resize embedded textures to power of 2. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:44](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L44)
+[src/assets.js:44](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L44)
 
 ___
 
@@ -101,7 +101,7 @@ Whether to convert models to GLB. Defaults to true.
 
 #### Defined in
 
-[src/assets.js:45](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L45)
+[src/assets.js:45](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L45)
 
 ___
 
@@ -113,7 +113,7 @@ The desired animation sample rate. Defaults to 10.
 
 #### Defined in
 
-[src/assets.js:46](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L46)
+[src/assets.js:46](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L46)
 
 ___
 
@@ -125,7 +125,7 @@ The animation curve tolerance. Defaults to 0.
 
 #### Defined in
 
-[src/assets.js:47](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L47)
+[src/assets.js:47](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L47)
 
 ___
 
@@ -137,7 +137,7 @@ Whether to enable cubic curves. Defaults to false.
 
 #### Defined in
 
-[src/assets.js:48](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L48)
+[src/assets.js:48](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L48)
 
 ___
 
@@ -149,4 +149,4 @@ Whether to use the fbx filename for animation names. Defaults to false.
 
 #### Defined in
 
-[src/assets.js:49](https://github.com/playcanvas/editor-api/blob/43e144d/src/assets.js#L49)
+[src/assets.js:49](https://github.com/playcanvas/editor-api/blob/a50e91b/src/assets.js#L49)
