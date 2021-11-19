@@ -1,5 +1,6 @@
 import { globals as api } from './globals';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
+import { replace } from './assets/replace';
 
 /**
  * Represents an Asset. For a list of Asset properties see [here](AssetProperties.md).
@@ -273,6 +274,18 @@ class Asset extends Events {
     async instantiateTemplate(parent, options) {
         const entities = await api.assets.instantiateTemplates([this], parent, options);
         return entities[0];
+    }
+
+    /**
+     * Replaces any references to this asset with
+     * references to the new asset specified.
+     *
+     * @param {Asset} asset - The new asset.
+     * @param {object} options - Options.
+     * @param {boolean} options.history - Whether to record a history action.
+     */
+    replace(asset, options = {}) {
+        replace(this, asset, options);
     }
 
     /**

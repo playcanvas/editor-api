@@ -1,18 +1,9 @@
 import { globals as api } from '../globals';
+import { utils } from '../utils';
 
-const entityFieldsCache = {};
+const fieldsCache = {};
 
-
-/**
- * Return a map of all entity reference properties in the graph. This will
- * include references of the entity and also references of its children
- *
- * @private
- * @typedef {import("../entity").Entity} Entity
- * @param {Entity} entity - The entity
- * @returns {object} The entity references
- */
-function findEntityReferencesInComponents(entity) {
+function findReferencesInComponents(entity, refType) {
     const result = {};
 
     function addReference(entity, path, value) {
@@ -41,7 +32,7 @@ function findEntityReferencesInComponents(entity) {
         }
     }
 
-    function handleEntityReference(entity, path) {
+    function handleReference(entity, path) {
         const value = entity.get(path);
         if (!value) return;
         if (Array.isArray(value)) {
@@ -58,14 +49,18 @@ function findEntityReferencesInComponents(entity) {
     entity.depthFirst((entity) => {
         const componentNames = Object.keys(entity.get('components') || {});
         componentNames.forEach((component) => {
-            if (!entityFieldsCache[component]) {
-                entityFieldsCache[component] = api.schema.components.getFieldsOfType(component, 'entity');
+            if (!fieldsCache[refType]) {
+                fieldsCache[refType] = {};
+            }
+            if (!fieldsCache[refType][component]) {
+                fieldsCache[refType][component] = api.schema.components.getFieldsOfType(component, refType);
             }
 
-            entityFieldsCache[component].forEach((field) => {
-                // TODO: handle paths that contain '*'
-                const path = `components.${component}.${field}`;
-                handleEntityReference(entity, path);
+            fieldsCache[refType][component].forEach((field) => {
+                // expand path will handle paths that contain '*'
+                utils.expandPath(entity, `components.${component}.${field}`, (entity, path) => {
+                    handleReference(entity, path);
+                });
             });
 
             // get script attributes
@@ -93,19 +88,19 @@ function findEntityReferencesInComponents(entity) {
                             if (attributeDef.array) {
                                 for (let i = 0; i < attributeValue.length; i++) {
                                     attributeDef.schema.forEach((field) => {
-                                        if (field.type !== 'entity') return;
+                                        if (field.type !== refType) return;
 
                                         handleScriptAttribute(entity, `${componentAttributePath}.${i}.${field.name}`, field, attributeValue[i]?.[field.name]);
                                     });
                                 }
                             } else {
                                 attributeDef.schema.forEach((field) => {
-                                    if (field.type !== 'entity') return;
+                                    if (field.type !== refType) return;
 
                                     handleScriptAttribute(entity, `${componentAttributePath}.${field.name}`, field, attributeValue[field.name]);
                                 });
                             }
-                        } else if (attributeDef.type === 'entity') {
+                        } else if (attributeDef.type === refType) {
                             handleScriptAttribute(entity, componentAttributePath, attributeDef, attributeValue);
                         }
                     }
@@ -115,28 +110,55 @@ function findEntityReferencesInComponents(entity) {
     });
 
     return result;
+
+
+}
+
+
+/**
+ * Return a map of all entity reference properties in the graph. This will
+ * include references of the entity and also references of its children
+ *
+ * @private
+ * @typedef {import("../entity").Entity} Entity
+ * @param {Entity} entity - The entity
+ * @returns {object} The entity references
+ */
+function findEntityReferencesInComponents(entity) {
+    return findReferencesInComponents(entity, 'entity');
 }
 
 /**
- * Updates entity references to the old entity to point to the new entity
+ * Return a map of all asset reference properties in the graph.
  *
  * @private
- * @param {object} entityReferences - A map of entity references
- * @param {string} oldValue - The entity id that we want to replace
- * @param {string} newValue - The new entity id that we want our references to point to
+ * @typedef {import("../entity").Entity} Entity
+ * @param {Entity} entity - The entity
+ * @returns {object} The asset references
  */
-function updateReferences(entityReferences, oldValue, newValue) {
-    const referencesToEntity = entityReferences[oldValue];
+function findAssetReferencesInComponents(entity) {
+    return findReferencesInComponents(entity, 'asset');
+}
+
+/**
+ * Updates references to the old value to point to the new value
+ *
+ * @private
+ * @param {object} references - A map of references that we got
+ * from findEntityReferencesInComponents or findAssetReferencesInComponents.
+ * @param {string|number} oldValue - The value that we want to replace
+ * @param {string|number} newValue - The value that we want our references to point to
+ */
+function updateReferences(references, oldValue, newValue) {
+    const referencesToEntity = references[oldValue];
     if (!referencesToEntity) return;
 
     referencesToEntity.forEach((reference) => {
         const entity = api.entities.get(reference.entityId);
-        if (entity) {
+        if (entity && entity.has(reference.path)) {
             const history = entity.history.enabled;
             entity.history.enabled = false;
-            if (entity.has(reference.path)) {
-                entity.set(reference.path, newValue);
-            }
+            entity.set(reference.path, newValue);
             entity.history.enabled = history;
         }
     });
@@ -145,5 +167,6 @@ function updateReferences(entityReferences, oldValue, newValue) {
 
 export {
     findEntityReferencesInComponents,
+    findAssetReferencesInComponents,
     updateReferences
 };

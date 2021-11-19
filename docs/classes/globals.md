@@ -13,6 +13,7 @@ Global variables
 - [schema](globals.md#schema)
 - [assets](globals.md#assets)
 - [entities](globals.md#entities)
+- [settings](globals.md#settings)
 - [projectId](globals.md#projectid)
 - [branchId](globals.md#branchid)
 
@@ -43,7 +44,7 @@ The history API
 
 #### Defined in
 
-[src/globals.js:10](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L10)
+[src/globals.js:10](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L10)
 
 ___
 
@@ -55,7 +56,7 @@ The selection API
 
 #### Defined in
 
-[src/globals.js:17](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L17)
+[src/globals.js:17](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L17)
 
 ___
 
@@ -67,7 +68,7 @@ The schema API
 
 #### Defined in
 
-[src/globals.js:24](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L24)
+[src/globals.js:24](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L24)
 
 ___
 
@@ -79,7 +80,7 @@ The assets API
 
 #### Defined in
 
-[src/globals.js:39](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L39)
+[src/globals.js:39](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L39)
 
 ___
 
@@ -91,7 +92,19 @@ The entities API
 
 #### Defined in
 
-[src/globals.js:46](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L46)
+[src/globals.js:46](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L46)
+
+___
+
+### settings
+
+▪ `Static` **settings**: [`Settings`](Settings.md)
+
+The settings API
+
+#### Defined in
+
+[src/globals.js:53](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L53)
 
 ___
 
@@ -103,7 +116,7 @@ The current project id
 
 #### Defined in
 
-[src/globals.js:85](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L85)
+[src/globals.js:92](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L92)
 
 ___
 
@@ -115,7 +128,7 @@ The current branch id
 
 #### Defined in
 
-[src/globals.js:92](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L92)
+[src/globals.js:99](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L99)
 
 ___
 
@@ -129,7 +142,7 @@ The realtime API
 
 #### Defined in
 
-[src/globals.js:32](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L32)
+[src/globals.js:32](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L32)
 
 ___
 
@@ -141,7 +154,7 @@ The messenger API
 
 #### Defined in
 
-[src/globals.js:54](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L54)
+[src/globals.js:61](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L61)
 
 ___
 
@@ -153,7 +166,7 @@ The jobs API
 
 #### Defined in
 
-[src/globals.js:62](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L62)
+[src/globals.js:69](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L69)
 
 ___
 
@@ -165,7 +178,7 @@ The main clipboard
 
 #### Defined in
 
-[src/globals.js:70](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L70)
+[src/globals.js:77](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L77)
 
 ___
 
@@ -177,7 +190,7 @@ The user's access token
 
 #### Defined in
 
-[src/globals.js:78](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L78)
+[src/globals.js:85](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L85)
 
 ___
 
@@ -189,7 +202,7 @@ Whether this project is using legacy scripts
 
 #### Defined in
 
-[src/globals.js:100](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L100)
+[src/globals.js:107](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L107)
 
 ## Methods
 
@@ -219,7 +232,7 @@ True if the user confirmed, false otherwise
 
 #### Defined in
 
-[src/globals.js:114](https://github.com/playcanvas/editor-api/blob/43e144d/src/globals.js#L114)
+[src/globals.js:121](https://github.com/playcanvas/editor-api/blob/a50e91b/src/globals.js#L121)
 
 ## Constructors
 
