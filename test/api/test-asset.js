@@ -9,6 +9,8 @@ describe('Asset API tests', function () {
         api.globals.history = null;
         api.globals.assets = null;
         api.globals.schema = null;
+        api.globals.realtime = null;
+        api.globals.settings = null;
     });
 
     it('replace replaces component references', function () {
@@ -242,5 +244,36 @@ describe('Asset API tests', function () {
 
         expect(model.get('meta')).to.deep.equal({ userMapping: { '0': true } });
         expect(model2.get('meta')).to.deep.equal({ userMapping: { '0': true } });
+    });
+
+    it('replace replaces skybox in scene settings', function () {
+        api.globals.realtime = new api.Realtime();
+        api.globals.settings = new api.Settings();
+        api.globals.schema = new api.Schema(schema);
+
+        const asset = new api.Asset({ id: 1, type: 'cubemap' });
+        api.globals.assets.add(asset);
+
+        const asset2 = new api.Asset({ id: 2, type: 'cubemap' });
+        api.globals.assets.add(asset2);
+
+        api.globals.settings.scene.set('render.skybox', 1);
+
+        asset.replace(asset2);
+
+        expect(api.globals.settings.scene.get('render.skybox')).to.equal(2);
+
+        // undo
+        api.globals.history.undo();
+        expect(api.globals.settings.scene.get('render.skybox')).to.equal(1);
+
+        // redo
+        api.globals.history.redo();
+        expect(api.globals.settings.scene.get('render.skybox')).to.equal(2);
+
+        // check unrelated skybox is not updated
+        api.globals.settings.scene.set('render.skybox', 3);
+        asset.replace(asset2);
+        expect(api.globals.settings.scene.get('render.skybox')).to.equal(3);
     });
 });

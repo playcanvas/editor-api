@@ -6,6 +6,8 @@ export * from './src/entities';
 export * from './src/entity';
 export * from './src/assets';
 export * from './src/asset';
+export * from './src/settings';
+export * from './src/settings/scene';
 export * from './src/history';
 export * from './src/selection';
 export * from './src/schema';

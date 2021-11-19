@@ -5,7 +5,7 @@ import { utils } from '../utils';
 const REGEX_MODEL_DATA_MAPPING = /^data\.mapping\.(\d+)\.material$/;
 
 // Replace references in components or script attributes
-function replaceEntityRefs(oldAsset, newAsset, options) {
+function replaceEntityRefs(oldAsset, newAsset) {
     const oldId = parseInt(oldAsset.get('id'), 10);
     const newId = parseInt(newAsset.get('id'), 10);
 
@@ -30,7 +30,7 @@ function replaceEntityRefs(oldAsset, newAsset, options) {
     return records;
 }
 
-function replaceAssetRefs(oldAsset, newAsset, options) {
+function replaceAssetRefs(oldAsset, newAsset) {
     const oldId = parseInt(oldAsset.get('id'), 10);
     const newId = parseInt(newAsset.get('id'), 10);
     const records = [];
@@ -117,6 +117,27 @@ function replaceAssetRefs(oldAsset, newAsset, options) {
     return records;
 }
 
+function replaceSceneSettingsRefs(oldAsset, newAsset) {
+    const oldId = parseInt(oldAsset.get('id'), 10);
+    const newId = parseInt(newAsset.get('id'), 10);
+    const records = [];
+
+    if (api.settings.scene.get('render.skybox') === oldId) {
+        records.push({
+            obj: api.settings.scene,
+            path: 'render.skybox',
+            value: oldId
+        });
+
+        const history = api.settings.scene.history.enabled;
+        api.settings.scene.history.enabled = false;
+        api.settings.scene.set('render.skybox', newId);
+        api.settings.scene.history.enabled = history;
+    }
+
+    return records;
+}
+
 function replace(oldAsset, newAsset, options) {
     options = options || {};
     if (options.history === undefined) {
@@ -126,9 +147,13 @@ function replace(oldAsset, newAsset, options) {
     let records = [];
 
     if (api.entities && api.entities.root) {
-        records = records.concat(replaceEntityRefs(oldAsset, newAsset, options));
+        records = records.concat(replaceEntityRefs(oldAsset, newAsset));
     }
-    records = records.concat(replaceAssetRefs(oldAsset, newAsset, options));
+    records = records.concat(replaceAssetRefs(oldAsset, newAsset));
+
+    if (api.settings) {
+        records = records.concat(replaceSceneSettingsRefs(oldAsset, newAsset));
+    }
 
     if (api.history && options.history) {
         api.history.add({
@@ -137,7 +162,7 @@ function replace(oldAsset, newAsset, options) {
                 if (!records) return;
 
                 records.forEach((record) => {
-                    const obj = record.obj.latest();
+                    const obj = record.obj.latest ? record.obj.latest() : record.obj;
                     if (!obj || !obj.has(record.path)) return;
 
                     const history = obj.history.enabled;
