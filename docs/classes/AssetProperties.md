@@ -43,7 +43,7 @@ These are the properties that you can access on an [Asset](Asset.md):
 
 | Path | Type | Description | Default Value | 
 | :------ | :------ | :------ | :------ |
-| `data.layers` | `object` | A set of AnimStateGraph layers. | `{"0":{"name":"Base","states":[0,1,2,3],"transitions":[0]}}`| 
+| `data.layers` | `object` | A set of AnimStateGraph layers. | `{"0":{"name":"Base","states":[0,1,2,3],"transitions":[0],"blendType":"OVERWRITE","weight":1}}`| 
 | `data.layers.*.blendType` | `string` | Defines the way in which this layer should blend with previous layers. Can be: `pc.ANIM_LAYER_OVERWRITE`, `pc.ANIM_LAYER_ADDITIVE`. |  | 
 | `data.layers.*.name` | `string` | The name of the AnimStateGraph layer. |  | 
 | `data.layers.*.states` | `Array<number>` | The id's of the states that this layer contains. |  | 

@@ -46,6 +46,13 @@ class globals {
     static entities;
 
     /**
+     * The settings API
+     *
+     * @type {import("./settings").Settings}
+     */
+    static settings;
+
+    /**
      * The messenger API
      *
      * @type {import("./messenger").Messenger}
