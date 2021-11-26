@@ -78,6 +78,11 @@ function reparentEntities(data, options = {}) {
         }
         parent.history.enabled = history.parent;
 
+        // BUG TRACKING: missing children
+        if (!api.entities.get(entity.get('resource_id'))) {
+            console.error(`BUG TRACKING: reparenting missing child guid ${entity.get('resource_id')} to parent ${parent.get('resource_id')}`);
+        }
+
         entity.history.enabled = false;
         entity.set('parent', parent.get('resource_id'));
 
