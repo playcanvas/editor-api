@@ -398,6 +398,11 @@ class Entity extends Events {
         const result = this.insert('children', entity.get('resource_id'), index);
         this.history.enabled = history;
 
+        // BUG TRACKING: missing children
+        if (!api.entities.get(entity.get('resource_id'))) {
+            console.error(`BUG TRACKING: inserting missing child guid ${entity.get('resource_id')} to parent ${this.get('resource_id')}`);
+        }
+
         if (result) {
             history = entity.history.enabled;
             entity.history.enabled = false;
