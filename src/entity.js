@@ -39,11 +39,6 @@ class Entity extends Events {
         }
         if (data.template_ent_ids) {
             observerData.template_ent_ids = data.template_ent_ids;
-
-            // consistency check
-            if (!data.template_ent_ids[observerData.resource_id]) {
-                console.error(`Entity ${observerData.resource_id} has invalid template references and needs to be recreated`);
-            }
         }
 
         this._observer = new Observer(observerData);
