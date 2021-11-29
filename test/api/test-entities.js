@@ -1074,6 +1074,49 @@ describe('api.Entities tests', function () {
         expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
     });
 
+    it('duplicate updates nested template_ent_ids', async function () {
+        api.globals.schema = new api.Schema(schema);
+
+        const root = api.globals.entities.create();
+        const entity = api.globals.entities.create({ parent: root });
+        const child = api.globals.entities.create({ parent: entity });
+
+        // create template_ent_ids for parent
+        const templateEntIds = {};
+        templateEntIds[entity.get('resource_id')] = api.Guid.create();
+        templateEntIds[child.get('resource_id')] = api.Guid.create();
+
+        // create a missing reference as well
+        const missing = api.Guid.create();
+        templateEntIds[missing] = api.Guid.create();
+        entity.set('template_ent_ids', templateEntIds);
+
+        // create template_ent_ids for child
+        const childTemplateEntIds = {};
+        childTemplateEntIds[child.get('resource_id')] = api.Guid.create();
+        // create a missing reference as well
+        const missing2 = api.Guid.create();
+        childTemplateEntIds[missing2] = api.Guid.create();
+        child.set('template_ent_ids', childTemplateEntIds);
+
+        const dup = await entity.duplicate();
+
+        const newTemplateEntIds = dup.get('template_ent_ids');
+        expect(Object.keys(newTemplateEntIds).length).to.equal(3);
+        expect(newTemplateEntIds[dup.get('resource_id')]).to.equal(templateEntIds[entity.get('resource_id')]);
+        expect(newTemplateEntIds[dup.children[0].get('resource_id')]).to.equal(templateEntIds[child.get('resource_id')]);
+        delete newTemplateEntIds[dup.get('resource_id')];
+        delete newTemplateEntIds[dup.children[0].get('resource_id')];
+        expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
+
+        const dupChild = dup.children[0];
+        const newChildTemplateEntIds = dupChild.get('template_ent_ids');
+        expect(Object.keys(newChildTemplateEntIds).length).to.equal(2);
+        expect(newChildTemplateEntIds[dupChild.get('resource_id')]).to.equal(childTemplateEntIds[child.get('resource_id')]);
+        delete newChildTemplateEntIds[dupChild.get('resource_id')];
+        expect(newChildTemplateEntIds[Object.keys(newChildTemplateEntIds)[0]]).to.equal(childTemplateEntIds[missing2]);
+    });
+
     it('duplicate filters children if parents are selected', async function () {
         api.globals.schema = new api.Schema(schema);
 
