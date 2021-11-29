@@ -1107,6 +1107,7 @@ describe('api.Entities tests', function () {
         expect(newTemplateEntIds[dup.children[0].get('resource_id')]).to.equal(templateEntIds[child.get('resource_id')]);
         delete newTemplateEntIds[dup.get('resource_id')];
         delete newTemplateEntIds[dup.children[0].get('resource_id')];
+        expect(Object.keys(newTemplateEntIds)[0]).to.not.equal(missing);
         expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
 
         const dupChild = dup.children[0];
@@ -1114,6 +1115,7 @@ describe('api.Entities tests', function () {
         expect(Object.keys(newChildTemplateEntIds).length).to.equal(2);
         expect(newChildTemplateEntIds[dupChild.get('resource_id')]).to.equal(childTemplateEntIds[child.get('resource_id')]);
         delete newChildTemplateEntIds[dupChild.get('resource_id')];
+        expect(Object.keys(newChildTemplateEntIds)[0]).to.not.equal(missing2);
         expect(newChildTemplateEntIds[Object.keys(newChildTemplateEntIds)[0]]).to.equal(childTemplateEntIds[missing2]);
     });
 
