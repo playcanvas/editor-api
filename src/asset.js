@@ -46,6 +46,13 @@ class Asset extends Events {
 
         this._observer.on('has_thumbnail:set', this._resetThumbnailUrls.bind(this));
 
+        // this can happen when the asset is created without a type because
+        // the type is not yet available e.g. when listing Assets using the REST API
+        // or when fields are set out of order e.g. has_thumbnail set before type
+        if (!data.type) {
+            this._observer.once('type:set', this._resetThumbnailUrls.bind(this));
+        }
+
         this._suspendOnSet = false;
         this._observer.on('*:set', this._onSet.bind(this));
 
