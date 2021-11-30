@@ -60,7 +60,7 @@ The file URL
 
 #### Defined in
 
-[src/asset.js:307](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L307)
+[src/asset.js:307](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L307)
 
 ___
 
@@ -84,7 +84,7 @@ True if path exists
 
 #### Defined in
 
-[src/asset.js:111](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L111)
+[src/asset.js:111](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L111)
 
 ___
 
@@ -108,7 +108,7 @@ The value
 
 #### Defined in
 
-[src/asset.js:121](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L121)
+[src/asset.js:121](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L121)
 
 ___
 
@@ -133,7 +133,7 @@ Whether the value was set
 
 #### Defined in
 
-[src/asset.js:132](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L132)
+[src/asset.js:132](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L132)
 
 ___
 
@@ -157,7 +157,7 @@ Whether the value was unset
 
 #### Defined in
 
-[src/asset.js:142](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L142)
+[src/asset.js:142](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L142)
 
 ___
 
@@ -183,7 +183,7 @@ Whether the value was inserted
 
 #### Defined in
 
-[src/asset.js:154](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L154)
+[src/asset.js:154](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L154)
 
 ___
 
@@ -208,7 +208,7 @@ Whether the value was removed
 
 #### Defined in
 
-[src/asset.js:165](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L165)
+[src/asset.js:165](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L165)
 
 ___
 
@@ -226,7 +226,7 @@ Returns JSON representation of entity data
 
 #### Defined in
 
-[src/asset.js:174](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L174)
+[src/asset.js:174](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L174)
 
 ___
 
@@ -244,7 +244,7 @@ The asset
 
 #### Defined in
 
-[src/asset.js:183](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L183)
+[src/asset.js:183](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L183)
 
 ___
 
@@ -260,7 +260,7 @@ Loads asset from the server without subscribing to realtime changes.
 
 #### Defined in
 
-[src/asset.js:190](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L190)
+[src/asset.js:190](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L190)
 
 ___
 
@@ -276,7 +276,7 @@ Loads the asset's data from sharedb and subscribes to changes
 
 #### Defined in
 
-[src/asset.js:215](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L215)
+[src/asset.js:215](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L215)
 
 ___
 
@@ -292,7 +292,7 @@ Deletes this asset
 
 #### Defined in
 
-[src/asset.js:258](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L258)
+[src/asset.js:258](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L258)
 
 ___
 
@@ -322,7 +322,7 @@ The new entity.
 
 #### Defined in
 
-[src/asset.js:274](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L274)
+[src/asset.js:274](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L274)
 
 ___
 
@@ -347,7 +347,7 @@ references to the new asset specified.
 
 #### Defined in
 
-[src/asset.js:287](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L287)
+[src/asset.js:287](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L287)
 
 ## Constructors
 
@@ -369,7 +369,7 @@ Events.constructor
 
 #### Defined in
 
-[src/asset.js:16](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L16)
+[src/asset.js:16](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L16)
 
 ## Accessors
 
@@ -385,4 +385,4 @@ Gets observer history for this assset
 
 #### Defined in
 
-[src/asset.js:296](https://github.com/playcanvas/editor-api/blob/a50e91b/src/asset.js#L296)
+[src/asset.js:296](https://github.com/playcanvas/editor-api/blob/1e69a27/src/asset.js#L296)

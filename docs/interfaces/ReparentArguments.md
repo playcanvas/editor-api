@@ -20,7 +20,7 @@ The entity to reparent
 
 #### Defined in
 
-[src/entities.js:34](https://github.com/playcanvas/editor-api/blob/a50e91b/src/entities.js#L34)
+[src/entities.js:34](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L34)
 
 ___
 
@@ -32,7 +32,7 @@ The new parent for the entity
 
 #### Defined in
 
-[src/entities.js:35](https://github.com/playcanvas/editor-api/blob/a50e91b/src/entities.js#L35)
+[src/entities.js:35](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L35)
 
 ___
 
@@ -44,4 +44,4 @@ The child index of the entity under the new parent
 
 #### Defined in
 
-[src/entities.js:36](https://github.com/playcanvas/editor-api/blob/a50e91b/src/entities.js#L36)
+[src/entities.js:36](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L36)
