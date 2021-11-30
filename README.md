@@ -28,7 +28,10 @@ The resulting .md file will be under docs/modules.md.
 
 NOTE: Build the docs after you commit any API changes, otherwise the code links in the docs might point to the wrong lines.
 
-NOTE: The `EntityProperties.md` and `AssetProperties.md` documents are created externally. When you build the docs, revert those 2 documents (or update them externally).
+NOTE: The following documents are created externally. When you build the docs, revert those documents (or update them externally):
+* `EntityProperties.md`
+* `AssetProperties.md`
+* `SceneSettingsProperties.md`
 
 # Tests
 
