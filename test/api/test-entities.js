@@ -1094,6 +1094,9 @@ describe('api.Entities tests', function () {
         // create template_ent_ids for child
         const childTemplateEntIds = {};
         childTemplateEntIds[child.get('resource_id')] = api.Guid.create();
+        // add missing reference from parent - this should be preserved in the new template_ent_ids
+        childTemplateEntIds[missing] = templateEntIds[missing];
+
         // create a missing reference as well
         const missing2 = api.Guid.create();
         childTemplateEntIds[missing2] = api.Guid.create();
@@ -1107,14 +1110,21 @@ describe('api.Entities tests', function () {
         expect(newTemplateEntIds[dup.children[0].get('resource_id')]).to.equal(templateEntIds[child.get('resource_id')]);
         delete newTemplateEntIds[dup.get('resource_id')];
         delete newTemplateEntIds[dup.children[0].get('resource_id')];
-        expect(Object.keys(newTemplateEntIds)[0]).to.not.equal(missing);
-        expect(newTemplateEntIds[Object.keys(newTemplateEntIds)[0]]).to.equal(templateEntIds[missing]);
+
+        const newMissingKey = Object.keys(newTemplateEntIds)[0];
+
+        expect(newMissingKey).to.not.equal(missing);
+        expect(newTemplateEntIds[newMissingKey]).to.equal(templateEntIds[missing]);
+
 
         const dupChild = dup.children[0];
         const newChildTemplateEntIds = dupChild.get('template_ent_ids');
-        expect(Object.keys(newChildTemplateEntIds).length).to.equal(2);
+        expect(Object.keys(newChildTemplateEntIds).length).to.equal(3);
         expect(newChildTemplateEntIds[dupChild.get('resource_id')]).to.equal(childTemplateEntIds[child.get('resource_id')]);
         delete newChildTemplateEntIds[dupChild.get('resource_id')];
+        expect(newChildTemplateEntIds[newMissingKey]).to.equal(childTemplateEntIds[missing]);
+        delete newChildTemplateEntIds[newMissingKey];
+
         expect(Object.keys(newChildTemplateEntIds)[0]).to.not.equal(missing2);
         expect(newChildTemplateEntIds[Object.keys(newChildTemplateEntIds)[0]]).to.equal(childTemplateEntIds[missing2]);
     });
