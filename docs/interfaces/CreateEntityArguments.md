@@ -27,7 +27,7 @@ The entity name
 
 #### Defined in
 
-[src/entities.js:18](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L18)
+[src/entities.js:18](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L18)
 
 ___
 
@@ -39,7 +39,7 @@ Component data. See [here](EntityProperties.md) for details on component data.
 
 #### Defined in
 
-[src/entities.js:19](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L19)
+[src/entities.js:19](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L19)
 
 ___
 
@@ -51,7 +51,7 @@ The parent Entity or its resource_id. If undefined then the root Entity will be 
 
 #### Defined in
 
-[src/entities.js:20](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L20)
+[src/entities.js:20](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L20)
 
 ___
 
@@ -63,7 +63,7 @@ Data for child entities.
 
 #### Defined in
 
-[src/entities.js:21](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L21)
+[src/entities.js:21](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L21)
 
 ___
 
@@ -75,7 +75,7 @@ Tags for the Entity.
 
 #### Defined in
 
-[src/entities.js:22](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L22)
+[src/entities.js:22](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L22)
 
 ___
 
@@ -87,7 +87,7 @@ Whether the Entity should be enabled.
 
 #### Defined in
 
-[src/entities.js:23](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L23)
+[src/entities.js:23](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L23)
 
 ___
 
@@ -99,7 +99,7 @@ The resource_id of the Entity. Leave undefined to generate a new one.
 
 #### Defined in
 
-[src/entities.js:24](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L24)
+[src/entities.js:24](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L24)
 
 ___
 
@@ -111,7 +111,7 @@ The position of the Entity in local space.
 
 #### Defined in
 
-[src/entities.js:25](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L25)
+[src/entities.js:25](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L25)
 
 ___
 
@@ -123,7 +123,7 @@ The rotation of the Entity in local space (euler angles in degrees).
 
 #### Defined in
 
-[src/entities.js:26](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L26)
+[src/entities.js:26](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L26)
 
 ___
 
@@ -135,4 +135,4 @@ The scale of the Entity in local space.
 
 #### Defined in
 
-[src/entities.js:27](https://github.com/playcanvas/editor-api/blob/1e69a27/src/entities.js#L27)
+[src/entities.js:27](https://github.com/playcanvas/editor-api/blob/4a90977/src/entities.js#L27)

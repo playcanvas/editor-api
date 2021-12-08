@@ -27,7 +27,7 @@ Constructor
 
 #### Defined in
 
-[src/localstorage.js:10](https://github.com/playcanvas/editor-api/blob/1e69a27/src/localstorage.js#L10)
+[src/localstorage.js:10](https://github.com/playcanvas/editor-api/blob/4a90977/src/localstorage.js#L10)
 
 ## Methods
 
@@ -51,7 +51,7 @@ The value
 
 #### Defined in
 
-[src/localstorage.js:20](https://github.com/playcanvas/editor-api/blob/1e69a27/src/localstorage.js#L20)
+[src/localstorage.js:20](https://github.com/playcanvas/editor-api/blob/4a90977/src/localstorage.js#L20)
 
 ___
 
@@ -74,7 +74,7 @@ Stores a key-value to localStorage
 
 #### Defined in
 
-[src/localstorage.js:48](https://github.com/playcanvas/editor-api/blob/1e69a27/src/localstorage.js#L48)
+[src/localstorage.js:48](https://github.com/playcanvas/editor-api/blob/4a90977/src/localstorage.js#L48)
 
 ___
 
@@ -96,7 +96,7 @@ Removes a key from localStorage
 
 #### Defined in
 
-[src/localstorage.js:62](https://github.com/playcanvas/editor-api/blob/1e69a27/src/localstorage.js#L62)
+[src/localstorage.js:62](https://github.com/playcanvas/editor-api/blob/4a90977/src/localstorage.js#L62)
 
 ___
 
@@ -120,4 +120,4 @@ True or false
 
 #### Defined in
 
-[src/localstorage.js:72](https://github.com/playcanvas/editor-api/blob/1e69a27/src/localstorage.js#L72)
+[src/localstorage.js:72](https://github.com/playcanvas/editor-api/blob/4a90977/src/localstorage.js#L72)

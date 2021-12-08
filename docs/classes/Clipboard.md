@@ -32,7 +32,7 @@ Constructor
 
 #### Defined in
 
-[src/clipboard.js:15](https://github.com/playcanvas/editor-api/blob/1e69a27/src/clipboard.js#L15)
+[src/clipboard.js:15](https://github.com/playcanvas/editor-api/blob/4a90977/src/clipboard.js#L15)
 
 ## Accessors
 
@@ -48,7 +48,7 @@ Gets whether the clipboard is empty
 
 #### Defined in
 
-[src/clipboard.js:26](https://github.com/playcanvas/editor-api/blob/1e69a27/src/clipboard.js#L26)
+[src/clipboard.js:26](https://github.com/playcanvas/editor-api/blob/4a90977/src/clipboard.js#L26)
 
 ___
 
@@ -64,7 +64,7 @@ Gets the value stored in the clipboard.
 
 #### Defined in
 
-[src/clipboard.js:35](https://github.com/playcanvas/editor-api/blob/1e69a27/src/clipboard.js#L35)
+[src/clipboard.js:35](https://github.com/playcanvas/editor-api/blob/4a90977/src/clipboard.js#L35)
 
 • `set` **value**(`value`): `void`
 
@@ -82,4 +82,4 @@ Sets the value to be stored in the clipboard. Pass null to clear the value from 
 
 #### Defined in
 
-[src/clipboard.js:44](https://github.com/playcanvas/editor-api/blob/1e69a27/src/clipboard.js#L44)
+[src/clipboard.js:44](https://github.com/playcanvas/editor-api/blob/4a90977/src/clipboard.js#L44)

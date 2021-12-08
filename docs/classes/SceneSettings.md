@@ -51,7 +51,7 @@ True if path exists
 
 #### Defined in
 
-[src/settings/scene.js:73](https://github.com/playcanvas/editor-api/blob/1e69a27/src/settings/scene.js#L73)
+[src/settings/scene.js:73](https://github.com/playcanvas/editor-api/blob/4a90977/src/settings/scene.js#L73)
 
 ___
 
@@ -80,7 +80,7 @@ The value
 
 #### Defined in
 
-[src/settings/scene.js:87](https://github.com/playcanvas/editor-api/blob/1e69a27/src/settings/scene.js#L87)
+[src/settings/scene.js:87](https://github.com/playcanvas/editor-api/blob/4a90977/src/settings/scene.js#L87)
 
 ___
 
@@ -110,7 +110,7 @@ Whether the value was set
 
 #### Defined in
 
-[src/settings/scene.js:102](https://github.com/playcanvas/editor-api/blob/1e69a27/src/settings/scene.js#L102)
+[src/settings/scene.js:102](https://github.com/playcanvas/editor-api/blob/4a90977/src/settings/scene.js#L102)
 
 ___
 
@@ -131,7 +131,7 @@ console.log(editor.settings.scene.json());
 
 #### Defined in
 
-[src/settings/scene.js:114](https://github.com/playcanvas/editor-api/blob/1e69a27/src/settings/scene.js#L114)
+[src/settings/scene.js:114](https://github.com/playcanvas/editor-api/blob/4a90977/src/settings/scene.js#L114)
 
 ## Accessors
 
@@ -147,4 +147,4 @@ Gets the history object for this entity
 
 #### Defined in
 
-[src/settings/scene.js:123](https://github.com/playcanvas/editor-api/blob/1e69a27/src/settings/scene.js#L123)
+[src/settings/scene.js:123](https://github.com/playcanvas/editor-api/blob/4a90977/src/settings/scene.js#L123)

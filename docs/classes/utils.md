@@ -36,7 +36,7 @@ A copy of the data
 
 #### Defined in
 
-[src/utils.js:13](https://github.com/playcanvas/editor-api/blob/1e69a27/src/utils.js#L13)
+[src/utils.js:13](https://github.com/playcanvas/editor-api/blob/4a90977/src/utils.js#L13)
 
 ## Constructors
 
