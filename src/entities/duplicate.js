@@ -20,6 +20,24 @@ const USE_BACKEND_LIMIT = 500;
  * @param {object} duplicatedIdsMap - Map of old id -> new id
  */
 function updateDuplicatedEntityReferences(newEntity, oldEntity, duplicatedIdsMap) {
+    // remap template_ent_ids for template instances
+    newEntity.depthFirst((entity) => {
+        const templateEntIds = entity.get('template_ent_ids');
+        if (templateEntIds) {
+            const newTemplateEntIds = {};
+            for (const oldId in templateEntIds) {
+                if (duplicatedIdsMap[oldId]) {
+                    newTemplateEntIds[duplicatedIdsMap[oldId]] = templateEntIds[oldId];
+                }
+            }
+
+            const history = entity.history.enabled;
+            entity.history.enabled = false;
+            entity.set('template_ent_ids', newTemplateEntIds);
+            entity.history.enabled = history;
+        }
+    });
+
     // update entity references
     const entityReferences = findEntityReferencesInComponents(newEntity);
     for (const id in entityReferences) {
@@ -299,10 +317,10 @@ async function duplicateEntities(entities, options) {
             previousSelection = api.selection.items;
         }
 
-        const duplicatedIdsMap = {};
-
         // duplicate
         entities.forEach((entity) => {
+            const duplicatedIdsMap = {};
+
             const newEntity = duplicateEntity(
                 entity,
                 entity.parent,
@@ -314,27 +332,6 @@ async function duplicateEntities(entities, options) {
             updateDuplicatedEntityReferences(newEntity, entity, duplicatedIdsMap);
 
             newEntities.push(newEntity);
-        });
-
-        // update template_ent_ids for duplicated entities
-        newEntities.forEach((entity) => {
-            entity.depthFirst((entity) => {
-                // remap template_ent_ids for template instances
-                const templateEntIds = entity.get('template_ent_ids');
-                if (templateEntIds) {
-                    const newTemplateEntIds = {};
-                    for (const oldId in templateEntIds) {
-                        if (duplicatedIdsMap[oldId]) {
-                            newTemplateEntIds[duplicatedIdsMap[oldId]] = templateEntIds[oldId];
-                        }
-                    }
-
-                    const history = entity.history.enabled;
-                    entity.history.enabled = false;
-                    entity.set('template_ent_ids', newTemplateEntIds);
-                    entity.history.enabled = history;
-                }
-            });
         });
 
         if (options.history && api.history) {
