@@ -1039,6 +1039,26 @@ describe('api.Entities tests', function () {
             }
         });
 
+        const child = api.globals.entities.create({ parent: entity });
+        child.addComponent('script', {
+            scripts: {
+                test: {
+                    attributes: {
+                        entity: id,
+                        entityArray: [id, id],
+                        json: {
+                            entity: id,
+                            entityArray: [id, id]
+                        },
+                        jsonArray: [{
+                            entity: id,
+                            entityArray: [id, id]
+                        }]
+                    }
+                }
+            }
+        });
+
         const dup = await entity.duplicate();
         const newId = dup.get('resource_id');
         expect(dup.get('components.script.scripts.test.attributes.entity')).to.equal(newId);
@@ -1047,6 +1067,14 @@ describe('api.Entities tests', function () {
         expect(dup.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newId, newId]);
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
         expect(dup.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
+
+        const dupChild = dup.children[0];
+        expect(dupChild.get('components.script.scripts.test.attributes.entity')).to.equal(newId);
+        expect(dupChild.get('components.script.scripts.test.attributes.entityArray')).to.deep.equal([newId, newId]);
+        expect(dupChild.get('components.script.scripts.test.attributes.json.entity')).to.equal(newId);
+        expect(dupChild.get('components.script.scripts.test.attributes.json.entityArray')).to.deep.equal([newId, newId]);
+        expect(dupChild.get('components.script.scripts.test.attributes.jsonArray.0.entity')).to.equal(newId);
+        expect(dupChild.get('components.script.scripts.test.attributes.jsonArray.0.entityArray')).to.deep.equal([newId, newId]);
     });
 
     it('duplicate updates template_ent_ids', async function () {
