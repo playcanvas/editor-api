@@ -33,7 +33,7 @@ class Asset extends Events {
             path: []
         }, data);
 
-        this._observer = new Observer(data, options);
+        this._observer = new Observer(data, options || {});
         this._observer.apiAsset = this;
         this._observer.addEmitter(this);
 
