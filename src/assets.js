@@ -332,13 +332,16 @@ class Assets extends Events {
      * subscribe to realtime changes.
      *
      * @category Internal
+     * @param {object} options - Options
+     * @param {string} options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
+     * the assets returned to a smaller subset depending on the view.
      */
-    async loadAll() {
+    async loadAll(options = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
 
-        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=designer`);
+        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=${options.view || 'designer'}`);
         if (!response.ok) {
             console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
             return;
@@ -380,14 +383,17 @@ class Assets extends Events {
      * Loads all assets in the current project / branch
      * and subscribes to changes.
      *
+     * @param {object} options - Options
+     * @param {string} options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
+     * the assets returned to a smaller subset depending on the view.
      * @category Internal
      */
-    async loadAllAndSubscribe() {
+    async loadAllAndSubscribe(options = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
 
-        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=designer`);
+        const response = await fetch(`/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=${options.view || 'designer'}`);
         if (!response.ok) {
             console.error(`Could not load assets: [${response.status}] - ${response.statusText}`);
             return;
