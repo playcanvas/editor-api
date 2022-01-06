@@ -361,10 +361,11 @@ class Assets extends Events {
 
         const onProgress = () => {
             loaded++;
-            this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
             if (loaded === total) {
                 this.emit('load:progress', 1);
                 this.emit('load:all');
+            } else {
+                this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
             }
         };
 
@@ -419,7 +420,7 @@ class Assets extends Events {
                 this.emit('load:progress', 1);
                 this.emit('load:all');
             } else {
-                this.emit('load:progress', ((loaded + 1) / (total + 1)) * 0.5 + 0.5);
+                this.emit('load:progress', (loaded / total) * 0.5 + 0.5);
             }
         };
 
