@@ -122,7 +122,7 @@ Toggle item selection
 **`example`**
 ```javascript
 // toggle root entity selection
-editor.selection.toogle(editor.entities.root);
+editor.selection.toggle(editor.entities.root);
 ```
 
 #### Parameters
