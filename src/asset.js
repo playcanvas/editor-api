@@ -296,7 +296,7 @@ class Asset extends Events {
     }
 
     /**
-     * Gets observer history for this assset
+     * Gets observer history for this asset
      *
      * @type {ObserverHistory}
      */

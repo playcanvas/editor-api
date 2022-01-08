@@ -10,7 +10,7 @@ async function addScript(entities, scriptName, options) {
         const historyEnabled = entity.history.enabled;
         entity.history.enabled = false;
 
-        // add script compononent
+        // add script component
         if (!entity.has('components.script')) {
             entity.addComponent('script');
             addedComponentsTo.add(entity.get('resource_id'));
