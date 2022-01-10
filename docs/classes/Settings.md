@@ -34,7 +34,7 @@ Events.constructor
 
 #### Defined in
 
-[src/settings.js:11](https://github.com/playcanvas/editor-api/blob/76b7284/src/settings.js#L11)
+[src/settings.js:11](https://github.com/playcanvas/editor-api/blob/b27c301/src/settings.js#L11)
 
 ## Accessors
 
@@ -50,4 +50,4 @@ Gets the settings for the currently loaded scene.
 
 #### Defined in
 
-[src/settings.js:22](https://github.com/playcanvas/editor-api/blob/76b7284/src/settings.js#L22)
+[src/settings.js:22](https://github.com/playcanvas/editor-api/blob/b27c301/src/settings.js#L22)
