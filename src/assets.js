@@ -896,6 +896,29 @@ class Assets extends Events {
     }
 
     /**
+     * Creates new node material source asset
+     *
+     * @typedef {import("./entity").Entity} Entity
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {Function} options.onProgress - Function to report progress
+     * @returns {Promise<Asset>} The new asset
+     */
+    async createNodeMaterialSource(options = {}) {
+        return this.upload({
+            name: options.name || 'New Node Material',
+            type: 'nodeMaterialSource',
+            folder: options.folder,
+            filename: 'asset.nms',
+            file: new Blob([JSON.stringify(options.json || {})], { type: 'application/json' }),
+            data: { },
+            preload: false,
+            source: true
+        }, null, options.onProgress);
+    }
+
+    /**
      * Deletes specified assets
      *
      * @param {Asset[]} assets - The assets
