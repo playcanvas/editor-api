@@ -1,6 +1,6 @@
 {
   "name": "@playcanvas/editor-api",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "The PlayCanvas Editor API",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
