@@ -905,10 +905,10 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    async createNodeMaterialSource(options = {}) {
+    async createNodeMaterial(options = {}) {
         return this.upload({
             name: options.name || 'New Node Material',
-            type: 'nodeMaterialSource',
+            type: 'nodematerial',
             folder: options.folder,
             filename: 'asset.nms',
             file: new Blob([JSON.stringify(options.json || {})], { type: 'application/json' }),
