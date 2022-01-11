@@ -37,9 +37,10 @@ class SceneSettings extends Events {
 
         this._history = new ObserverHistory({
             item: this._observer,
-            prefix: 'settings',
+            prefix: 'settings.',
             history: api.history
         });
+        this._observer.history = this._history;
     }
 
     /**

@@ -109,7 +109,7 @@ class globals {
     /**
      * Alert function called when user confirmation is needed
      * for an action. Defaults to the default browser popup but
-     * can be overriden to show your custom popup instead.
+     * can be overridden to show your custom popup instead.
      *
      * @param {string} text - The confirm dialog text
      * @param {object} options - Options for the popup
