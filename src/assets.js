@@ -797,6 +797,7 @@ class Assets extends Events {
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {Function} options.onProgress - Function to report progress
+     * @param {number} [options.sourceAssetId] - Id of the source asset, if there is one.
      * @returns {Promise<Asset>} The new asset
      */
     createShader(options = {}) {
@@ -806,7 +807,8 @@ class Assets extends Events {
             folder: options.folder,
             preload: options.preload,
             filename: 'asset.glsl',
-            file: new Blob([options.text || '\n'], { type: 'text/x-glsl' })
+            file: new Blob([options.text || '\n'], { type: 'text/x-glsl' }),
+            source_asset_id: options.sourceAssetId || null
         }, null, options.onProgress);
     }
 
@@ -898,7 +900,6 @@ class Assets extends Events {
     /**
      * Creates new node material source asset
      *
-     * @typedef {import("./entity").Entity} Entity
      * @param {object} options - Options
      * @param {string} options.name - The asset name
      * @param {Asset} options.folder - The parent folder asset
@@ -915,6 +916,27 @@ class Assets extends Events {
             data: { },
             preload: false,
             source: true
+        }, null, options.onProgress);
+    }
+
+    /**
+     * Creates new custom material asset
+     *
+     * @param {object} options - Options
+     * @param {string} options.name - The asset name
+     * @param {object} options.data - The material data
+     * @param {Asset} options.folder - The parent folder asset
+     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
+     * @param {Function} options.onProgress - Function to report progress
+     * @returns {Promise<Asset>} The new asset
+     */
+    async createCustomMaterial(options = {}) {
+        return this.upload({
+            name: options.name || 'New Custom Material',
+            type: 'custommaterial',
+            folder: options.folder,
+            data: options.data,
+            preload: options.preload
         }, null, options.onProgress);
     }
 
