@@ -47,6 +47,8 @@ import { instantiateTemplates } from './assets/instantiateTemplates';
  * @property {boolean} animCurveTolerance - The animation curve tolerance. Defaults to 0.
  * @property {boolean} animEnableCubic - Whether to enable cubic curves. Defaults to false.
  * @property {boolean} animUseFbxFilename - Whether to use the fbx filename for animation names. Defaults to false.
+ * @property {boolean} unwrapUv - Whether to generate a set of unwrapped uv coordinates. Defaults to false.
+ * @property {number} unwrapUvTexelsPerMeter - When unwrapUv is enabled, the number of texels per meter required. Defaults to 16.
  */
 
 /**

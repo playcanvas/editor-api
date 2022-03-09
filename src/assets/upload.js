@@ -36,6 +36,8 @@ function createFormData(data, settings) {
         form.append('animCurveTolerance', getSetting(settings, 'animCurveTolerance', 0));
         form.append('animEnableCubic', getSetting(settings, 'animEnableCubic', false));
         form.append('animUseFbxFilename', getSetting(settings, 'animUseFbxFilename', false));
+        form.append('unwrapUv', getSetting(settings, 'unwrapUv', false));
+        form.append('unwrapUvTexelsPerMeter', getSetting(settings, 'unwrapUvTexelsPerMeter', 16));
     }
 
     return form;
