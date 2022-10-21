@@ -179,7 +179,7 @@ class Assets extends Events {
     /**
      * Finds all assets with specified tags
      *
-     * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
+     * @param {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
      * tags will be included. If an argument is an array of tags then assets that contain ALL of the tags in the array will be included.
      * @returns {Asset[]} The assets
      */
