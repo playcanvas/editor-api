@@ -179,7 +179,7 @@ class Assets extends Events {
     /**
      * Finds all assets with specified tags
      *
-     * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
+     * @param {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
      * tags will be included. If an argument is an array of tags then assets that contain ALL of the tags in the array will be included.
      * @returns {Asset[]} The assets
      */
@@ -937,15 +937,6 @@ class Assets extends Events {
     }
 
     /**
-     * Gets the default callback called when on asset upload succeeds.
-     *
-     * @type {Function<number, Asset>}
-     */
-    get defaultUploadCompletedCallback() {
-        return this._defaultUploadCompletedCallback;
-    }
-
-    /**
      * Sets the default callback called when on asset upload succeeds.
      * The function takes 2 arguments: the upload id, and the new asset.
      *
@@ -956,12 +947,12 @@ class Assets extends Events {
     }
 
     /**
-     * Gets the default callback called when on asset upload progress.
+     * Gets the default callback called when on asset upload succeeds.
      *
-     * @type {Function<number, number>}
+     * @type {Function<number, Asset>}
      */
-    get defaultUploadProgressCallback() {
-        return this._defaultUploadProgressCallback;
+    get defaultUploadCompletedCallback() {
+        return this._defaultUploadCompletedCallback;
     }
 
     /**
@@ -975,12 +966,12 @@ class Assets extends Events {
     }
 
     /**
-     * Gets the default callback called when on asset upload fails.
+     * Gets the default callback called when on asset upload progress.
      *
-     * @type {Function<number, Error>}
+     * @type {Function<number, number>}
      */
-    get defaultUploadErrorCallback() {
-        return this._defaultUploadErrorCallback;
+    get defaultUploadProgressCallback() {
+        return this._defaultUploadProgressCallback;
     }
 
     /**
@@ -994,12 +985,12 @@ class Assets extends Events {
     }
 
     /**
-     * Gets the callback which parses script assets.
+     * Gets the default callback called when on asset upload fails.
      *
-     * @type {Function<Asset>}
+     * @type {Function<number, Error>}
      */
-    get parseScriptCallback() {
-        return this._parseScriptCallback;
+    get defaultUploadErrorCallback() {
+        return this._defaultUploadErrorCallback;
     }
 
     /**
@@ -1012,6 +1003,15 @@ class Assets extends Events {
      */
     set parseScriptCallback(value) {
         this._parseScriptCallback = value;
+    }
+
+    /**
+     * Gets the callback which parses script assets.
+     *
+     * @type {Function<Asset>}
+     */
+    get parseScriptCallback() {
+        return this._parseScriptCallback;
     }
 }
 

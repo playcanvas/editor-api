@@ -105,12 +105,12 @@ class History extends Events {
      *
      * @type {boolean}
      */
-    get canUndo() {
-        return this._history.canUndo;
-    }
-
     set canUndo(value) {
         this._history.canUndo = value;
+    }
+
+    get canUndo() {
+        return this._history.canUndo;
     }
 
     /**
@@ -118,12 +118,12 @@ class History extends Events {
      *
      * @type {boolean}
      */
-    get canRedo() {
-        return this._history.canRedo;
-    }
-
     set canRedo(value) {
         this._history.canRedo = value;
+    }
+
+    get canRedo() {
+        return this._history.canRedo;
     }
 }
 

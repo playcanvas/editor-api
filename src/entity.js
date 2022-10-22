@@ -246,7 +246,7 @@ class Entity extends Events {
     /**
      * Finds all entities with specified tags
      *
-     * @param  {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
+     * @param {...string|...string[]} tags - The tags. If multiple tags are specified then entities that contain ANY of the specified
      * tags will be included. If an argument is an array of tags then entities that contain ALL of the tags in the array will be included.
      * @returns {Entity[]} The entities
      * @example

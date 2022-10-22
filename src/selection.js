@@ -22,12 +22,12 @@ class SelectionHistory {
      *
      * @type {boolean}
      */
-    get enabled() {
-        return this._enabled;
-    }
-
     set enabled(value) {
         this._enabled = value;
+    }
+
+    get enabled() {
+        return this._enabled;
     }
 
     /**
@@ -327,12 +327,12 @@ class Selection extends Events {
      *
      * @type {boolean}
      */
-    get enabled() {
-        return this._enabled;
-    }
-
     set enabled(value) {
         this._enabled = value;
+    }
+
+    get enabled() {
+        return this._enabled;
     }
 
     /**
