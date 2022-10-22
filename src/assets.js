@@ -994,9 +994,10 @@ class Assets extends Events {
     }
 
     /**
-     * The callback which parses script assets. When this callback is set, new script assets will
-     * be parsed after they are created. The function takes the asset as a parameter and returns a
-     * promise with a list of script names when it is done parsing.
+     * Sets the callback which parses script assets. When this
+     * callback is set, new script assets will be parsed after they
+     * are created. The function takes the asset as a parameter and returns
+     * a promise with a list of script names when it is done parsing.
      *
      * @type {Function<Asset>}
      */
@@ -1004,6 +1005,11 @@ class Assets extends Events {
         this._parseScriptCallback = value;
     }
 
+    /**
+     * Gets the callback which parses script assets.
+     *
+     * @type {Function<Asset>}
+     */
     get parseScriptCallback() {
         return this._parseScriptCallback;
     }

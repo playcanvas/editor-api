@@ -28,7 +28,7 @@ class Clipboard {
     }
 
     /**
-     * The value to be stored in the clipboard. Set null to clear the value from storage.
+     * Sets the value to be stored in the clipboard. Pass null to clear the value from storage.
      *
      * @type {object}
      */
@@ -40,6 +40,11 @@ class Clipboard {
         }
     }
 
+    /**
+     * Gets the value stored in the clipboard.
+     *
+     * @type {object}
+     */
     get value() {
         return this._storage.get(this._name);
     }
