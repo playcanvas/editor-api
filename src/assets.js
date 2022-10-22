@@ -937,8 +937,8 @@ class Assets extends Events {
     }
 
     /**
-     * The default callback called when on asset upload succeeds. The function takes 2 arguments:
-     * the upload id, and the new asset.
+     * Sets the default callback called when on asset upload succeeds.
+     * The function takes 2 arguments: the upload id, and the new asset.
      *
      * @type {Function<number, Asset>}
      */
@@ -946,13 +946,18 @@ class Assets extends Events {
         this._defaultUploadCompletedCallback = value;
     }
 
+    /**
+     * Gets the default callback called when on asset upload succeeds.
+     *
+     * @type {Function<number, Asset>}
+     */
     get defaultUploadCompletedCallback() {
         return this._defaultUploadCompletedCallback;
     }
 
     /**
-     * The default callback called when on asset upload progress. The function takes 2 arguments:
-     * the upload id and the progress.
+     * Sets the default callback called when on asset upload progress.
+     * The function takes 2 arguments: the upload id and the progress.
      *
      * @type {Function<number, number>}
      */
@@ -960,13 +965,18 @@ class Assets extends Events {
         this._defaultUploadProgressCallback = value;
     }
 
+    /**
+     * Gets the default callback called when on asset upload progress.
+     *
+     * @type {Function<number, number>}
+     */
     get defaultUploadProgressCallback() {
         return this._defaultUploadProgressCallback;
     }
 
     /**
-     * The default callback called when on asset upload fails. The function takes 2 arguments: the
-     * upload id and the error.
+     * Sets the default callback called when on asset upload progress.
+     * The function takes 2 arguments: the upload id, and the error.
      *
      * @type {Function<number, Error>}
      */
@@ -974,6 +984,11 @@ class Assets extends Events {
         this._defaultUploadErrorCallback = value;
     }
 
+    /**
+     * Gets the default callback called when on asset upload fails.
+     *
+     * @type {Function<number, Error>}
+     */
     get defaultUploadErrorCallback() {
         return this._defaultUploadErrorCallback;
     }
