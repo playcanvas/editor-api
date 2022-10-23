@@ -21,6 +21,7 @@
     "url": "git+https://github.com/playcanvas/editor-api.git"
   },
   "files": [
+    "dist/index.d.ts",
     "dist/index.js",
     "dist/index.mjs",
     "README.md",
