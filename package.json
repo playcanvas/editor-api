@@ -1,24 +1,23 @@
 {
   "name": "@playcanvas/editor-api",
   "version": "1.0.23",
+  "author": "PlayCanvas <support@playcanvas.com>",
+  "homepage": "https://github.com/playcanvas/editor-api#readme",
   "description": "The PlayCanvas Editor API",
+  "keywords": [
+    "playcanvas",
+    "editor",
+    "api"
+  ],
+  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "scripts": {
-    "test": "karma start test/karma.conf.js --single-run",
-    "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
-    "build": "rollup -c",
-    "build:docs": "typedoc --options typedoc.json",
-    "lint": "eslint --ext .js src"
+  "bugs": {
+    "url": "https://github.com/playcanvas/editor-api/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/playcanvas/editor-api.git"
-  },
-  "author": "PlayCanvas <support@playcanvas.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/playcanvas/editor-api/issues"
   },
   "files": [
     "dist/index.js",
@@ -26,7 +25,6 @@
     "README.md",
     "LICENSE.md"
   ],
-  "homepage": "https://github.com/playcanvas/editor-api#readme",
   "devDependencies": {
     "@babel/core": "^7.19.6",
     "@babel/eslint-parser": "^7.19.1",
@@ -46,5 +44,12 @@
     "typedoc": "^0.23.17",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "test": "karma start test/karma.conf.js --single-run",
+    "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
+    "build": "rollup -c",
+    "build:docs": "typedoc --options typedoc.json",
+    "lint": "eslint --ext .js src"
   }
 }
