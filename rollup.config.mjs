@@ -1,4 +1,5 @@
 import babel from '@rollup/plugin-babel';
+import dts from 'rollup-plugin-dts';
 
 const umd = {
     external: ['@playcanvas/observer'],
@@ -46,4 +47,18 @@ const module = {
     }
 };
 
-export default [umd, module];
+const types = {
+    input: 'types/index.d.ts',
+    output: [{
+        file: 'dist/index.d.ts',
+        footer: 'export as namespace editor;',
+        format: 'es'
+    }],
+    plugins: [
+        dts()
+    ]
+};
+
+export default (args) => {
+    return process.env.target === 'types' ? [types] : [umd, module];
+};
