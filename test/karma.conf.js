@@ -14,7 +14,7 @@ module.exports = function (config) {
             'node_modules/chai/chai.js',
 
             'test/lib/schema.js',
-            'node_modules/@playcanvas/observer/index.js',
+            'node_modules/@playcanvas/observer/dist/index.js',
             'dist/index.js',
 
             {
