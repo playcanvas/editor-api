@@ -60,10 +60,5 @@ const types = {
 };
 
 export default (args) => {
-    const envTarget = process.env.target ? process.env.target.toLowerCase() : null;
-    if (envTarget === 'types') {
-        return [types];
-    }
-
-    return [umd, module];
+    return process.env.target === 'types' ? [types] : [umd, module];
 };
