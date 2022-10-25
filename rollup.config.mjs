@@ -47,11 +47,16 @@ const module = {
     }
 };
 
+const footer = `export as namespace api;
+declare global {
+    const editor: typeof globals;
+}`;
+
 const types = {
     input: 'types/index.d.ts',
     output: [{
         file: 'dist/index.d.ts',
-        footer: 'export as namespace editor;',
+        footer: footer,
         format: 'es'
     }],
     plugins: [
