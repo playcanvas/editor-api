@@ -647,19 +647,24 @@ class Assets extends Events {
      * @param {object} options - Options
      * @param {string} options.name - The asset name
      * @param {object} options.json - The JSON
+     * @param {number} options.spaces - The number of spaces used for indentation. Defaults to 0
+     * (tightly packed output).
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
     createJson(options = {}) {
+        const spaces = options.spaces !== undefined ? options.spaces : 0;
+        const str = JSON.stringify(options.json || {}, null, spaces);
+
         return this.upload({
             name: options.name || 'New Json',
             type: 'json',
             folder: options.folder,
             preload: options.preload,
             filename: 'asset.json',
-            file: new Blob([JSON.stringify(options.json || {})], { type: 'application/json' })
+            file: new Blob([str], { type: 'application/json' })
         }, null, options.onProgress);
     }
 
@@ -692,7 +697,8 @@ class Assets extends Events {
                 }]
             },
             folder: options.folder,
-            preload: options.preload
+            preload: options.preload,
+            spaces: 4
         }, null, options.onProgress);
     }
 
