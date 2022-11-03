@@ -655,7 +655,7 @@ class Assets extends Events {
      * @returns {Promise<Asset>} The new asset
      */
     createJson(options = {}) {
-        const spaces = options.spaces !== undefined ? options.spaces : 0;
+        const spaces = options.spaces ?? 0;
         const str = JSON.stringify(options.json || {}, null, spaces);
 
         return this.upload({
