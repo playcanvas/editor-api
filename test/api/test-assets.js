@@ -482,7 +482,7 @@ ${className}.prototype.update = function(dt) {
                     "key plural": ["One key translation", "Translation for {number} keys"]
                 }
             }]
-        }));
+        }, null, 4));
         expect(data.get('type')).to.equal('json');
         expect(data.get('name')).to.equal('name');
         expect(data.get('parent')).to.equal('10');
