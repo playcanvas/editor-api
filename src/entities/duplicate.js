@@ -340,6 +340,15 @@ async function duplicateEntities(entities, options) {
             api.history.add({
                 name: 'duplicate entities',
                 undo: () => {
+                    // make sure we get the entities that are in the scene
+                    newEntities = newEntities.map((entity) => {
+                        return entity.latest();
+                    });
+
+                    newEntities = newEntities.filter((entity) => {
+                        return entity !== null;
+                    });
+
                     // remember previous entities
                     previous = {};
                     newEntities.forEach((entity) => {
