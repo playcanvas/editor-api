@@ -345,10 +345,6 @@ async function duplicateEntities(entities, options) {
                         return entity.latest();
                     });
 
-                    newEntities = newEntities.filter((entity) => {
-                        return entity !== null;
-                    });
-
                     // remember previous entities
                     previous = {};
                     newEntities.forEach((entity) => {
