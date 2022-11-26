@@ -187,7 +187,7 @@ async function deleteEntities(entities, options = {}) {
             } else {
                 resolve();
             }
-        });   
+        });
     }
 }
 
