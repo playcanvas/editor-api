@@ -178,10 +178,9 @@ async function deleteEntities(entities, options = {}) {
         });
     }
 
-
     if (options.waitSubmitted) {
 
-        // wait for scene ops to finish 
+        // wait for scene ops to finish
         await new Promise((resolve) => {
             if (api.realtime.scenes.current) {
                 api.realtime.scenes.current.whenNothingPending(resolve);
@@ -189,7 +188,7 @@ async function deleteEntities(entities, options = {}) {
                 resolve();
             }
         });   
-    } 
+    }
 }
 
 export { deleteEntities };
