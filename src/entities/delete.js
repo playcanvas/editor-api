@@ -77,6 +77,7 @@ function rememberPrevious(entities) {
  * @param {Entity[]|Entity} entities - The entities
  * @param {object} [options] - Options
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+ * @param {boolean} [options.waitSubmitted] - Whether to wait till ops submitted.
  */
 async function deleteEntities(entities, options = {}) {
     if (options.history === undefined) {
@@ -176,6 +177,19 @@ async function deleteEntities(entities, options = {}) {
             }
         });
     }
+
+
+    if (options.waitSubmitted) {
+
+        // wait for scene ops to finish 
+        await new Promise((resolve) => {
+            if (api.realtime.scenes.current) {
+                api.realtime.scenes.current.whenNothingPending(resolve);
+            } else {
+                resolve();
+            }
+        });   
+    } 
 }
 
 export { deleteEntities };
