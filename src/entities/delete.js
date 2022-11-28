@@ -180,7 +180,9 @@ async function deleteEntities(entities, options = {}) {
 
     if (options.waitSubmitted) {
 
-        // wait for scene ops to finish
+        // wait for scene operational transforms to finish:
+        // sometimes we need to execute the next operation on the backend
+        // just after delete - use waitSubmitted to guarantee the order of operations
         await new Promise((resolve) => {
             if (api.realtime.scenes.current) {
                 api.realtime.scenes.current.whenNothingPending(resolve);
