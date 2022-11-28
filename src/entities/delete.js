@@ -77,6 +77,7 @@ function rememberPrevious(entities) {
  * @param {Entity[]|Entity} entities - The entities
  * @param {object} [options] - Options
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
+ * @param {boolean} [options.waitSubmitted] - Whether to wait till ops submitted.
  */
 async function deleteEntities(entities, options = {}) {
     if (options.history === undefined) {
@@ -173,6 +174,20 @@ async function deleteEntities(entities, options = {}) {
                 api.entities.delete(entities, {
                     history: false
                 });
+            }
+        });
+    }
+
+    if (options.waitSubmitted) {
+
+        // wait for scene operational transforms to finish:
+        // sometimes we need to execute the next operation on the backend
+        // just after delete - use waitSubmitted to guarantee the order of operations
+        await new Promise((resolve) => {
+            if (api.realtime.scenes.current) {
+                api.realtime.scenes.current.whenNothingPending(resolve);
+            } else {
+                resolve();
             }
         });
     }
