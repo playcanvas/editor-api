@@ -60,7 +60,7 @@ class History extends Events {
      * });
      * ```
      */
-     addExecute(action) {
+    addExecute(action) {
         this._history.addExecute(action);
     }
 
