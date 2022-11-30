@@ -53,15 +53,15 @@ class History extends Events {
      * @example
      * ```javascript
      * const prevSelection = editor.selection.items;
-     * editor.history.addExecute({
+     * editor.history.addAndExecute({
      *     name: 'clear selection',
      *     redo: () => { editor.selection.clear({ history: false }); },
      *     undo: () => { editor.selection.set(prevSelection, { history: false }); },
      * });
      * ```
      */
-    addExecute(action) {
-        this._history.addExecute(action);
+    addAndExecute(action) {
+        this._history.addAndExecute(action);
     }
 
     /**
