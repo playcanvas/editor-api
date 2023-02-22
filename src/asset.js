@@ -312,7 +312,7 @@ class Asset extends Events {
      * @returns {string} The file URL
      */
     static getFileUrl(id, filename) {
-        return `/api/assets/${id}/file/${filename}?branchId=${api.branchId}`;
+        return `/api/assets/${id}/file/${encodeURIComponent(filename)}?branchId=${api.branchId}`;
     }
 }
 
