@@ -12,16 +12,13 @@ The history API responsible for undo / redo.
 
 ## Table of contents
 
-### Internal Constructors
+### Constructors
 
 - [constructor](History.md#constructor)
 
-### Methods
+### Properties
 
-- [add](History.md#add)
-- [undo](History.md#undo)
-- [redo](History.md#redo)
-- [clear](History.md#clear)
+- [suspendEvents](History.md#suspendevents)
 
 ### Accessors
 
@@ -30,41 +27,211 @@ The history API responsible for undo / redo.
 - [canUndo](History.md#canundo)
 - [canRedo](History.md#canredo)
 
-## Internal Constructors
+### Methods
 
-### constructor
+- [on](History.md#on)
+- [once](History.md#once)
+- [emit](History.md#emit)
+- [unbind](History.md#unbind)
+- [addEmitter](History.md#addemitter)
+- [removeEmitter](History.md#removeemitter)
+- [add](History.md#add)
+- [addAndExecute](History.md#addandexecute)
+- [undo](History.md#undo)
+- [redo](History.md#redo)
+- [clear](History.md#clear)
 
-• **new History**()
+## Public
 
-Creates new instance of the API
+### suspendEvents
 
-**`category`** Internal
+• **suspendEvents**: `boolean`
 
-#### Overrides
+If true the observer will not emit events when values are set.
 
-Events.constructor
+#### Inherited from
+
+Events.suspendEvents
 
 #### Defined in
 
-[src/history.js:21](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L21)
+node_modules/@playcanvas/observer/dist/observer.d.ts:37
 
-## Methods
+___
+
+### on
+
+▸ **on**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.on
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:43
+
+___
+
+### once
+
+▸ **once**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.once
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:49
+
+___
+
+### emit
+
+▸ **emit**(`name`, `arg0?`, `arg1?`, `arg2?`, `arg3?`, `arg4?`, `arg5?`, `arg6?`, `arg7?`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `arg0?` | `any` | First argument |
+| `arg1?` | `any` | Second argument |
+| `arg2?` | `any` | Third argument |
+| `arg3?` | `any` | Fourth argument |
+| `arg4?` | `any` | Fifth argument |
+| `arg5?` | `any` | Sixth argument |
+| `arg6?` | `any` | Seventh argument |
+| `arg7?` | `any` | Eights argument |
+
+#### Returns
+
+`Events`
+
+Self for chaining.
+
+#### Inherited from
+
+Events.emit
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:62
+
+___
+
+### unbind
+
+▸ **unbind**(`name`, `fn`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`Events`
+
+- This
+
+#### Inherited from
+
+Events.unbind
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:68
+
+___
+
+### addEmitter
+
+▸ **addEmitter**(`emitter`): `void`
+
+Adds another emitter. Any events fired by this instance
+will also be fired on the additional emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.addEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:74
+
+___
+
+### removeEmitter
+
+▸ **removeEmitter**(`emitter`): `void`
+
+Removes emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.removeEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:79
+
+___
 
 ### add
 
 ▸ **add**(`action`): `void`
 
 Adds history action
-
-**`example`**
-```javascript
-const prevSelection = editor.selection.items;
-editor.history.add({
-    name: 'clear selection',
-    redo: () => { editor.selection.clear({ history: false }); },
-    undo: () => { editor.selection.set(prevSelection, { history: false }); },
-});
-```
 
 #### Parameters
 
@@ -76,9 +243,53 @@ editor.history.add({
 
 `void`
 
+**`Example`**
+
+```javascript
+const prevSelection = editor.selection.items;
+editor.history.add({
+    name: 'clear selection',
+    redo: () => { editor.selection.clear({ history: false }); },
+    undo: () => { editor.selection.set(prevSelection, { history: false }); },
+});
+```
+
 #### Defined in
 
-[src/history.js:45](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L45)
+[src/history.js:45](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L45)
+
+___
+
+### addAndExecute
+
+▸ **addAndExecute**(`action`): `void`
+
+Adds history action and execute redo
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `action` | [`HistoryAction`](../interfaces/HistoryAction.md) | The action |
+
+#### Returns
+
+`void`
+
+**`Example`**
+
+```javascript
+const prevSelection = editor.selection.items;
+editor.history.addAndExecute({
+    name: 'clear selection',
+    redo: () => { editor.selection.clear({ history: false }); },
+    undo: () => { editor.selection.set(prevSelection, { history: false }); },
+});
+```
+
+#### Defined in
+
+[src/history.js:63](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L63)
 
 ___
 
@@ -88,18 +299,19 @@ ___
 
 Undo last action
 
-**`example`**
-```javascript
-editor.history.undo();
-```
-
 #### Returns
 
 `void`
 
+**`Example`**
+
+```javascript
+editor.history.undo();
+```
+
 #### Defined in
 
-[src/history.js:57](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L57)
+[src/history.js:75](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L75)
 
 ___
 
@@ -109,18 +321,19 @@ ___
 
 Redo last action
 
-**`example`**
-```javascript
-editor.history.redo();
-```
-
 #### Returns
 
 `void`
 
+**`Example`**
+
+```javascript
+editor.history.redo();
+```
+
 #### Defined in
 
-[src/history.js:69](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L69)
+[src/history.js:87](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L87)
 
 ___
 
@@ -130,20 +343,21 @@ ___
 
 Clear history
 
-**`example`**
-```javascript
-editor.history.clear();
-```
-
 #### Returns
 
 `void`
 
+**`Example`**
+
+```javascript
+editor.history.clear();
+```
+
 #### Defined in
 
-[src/history.js:81](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L81)
+[src/history.js:99](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L99)
 
-## Accessors
+___
 
 ### currentAction
 
@@ -157,7 +371,7 @@ Gets the current action
 
 #### Defined in
 
-[src/history.js:90](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L90)
+[src/history.js:108](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L108)
 
 ___
 
@@ -173,23 +387,11 @@ Gets the last action
 
 #### Defined in
 
-[src/history.js:99](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L99)
+[src/history.js:117](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L117)
 
 ___
 
 ### canUndo
-
-• `get` **canUndo**(): `boolean`
-
-Whether there are any actions to undo
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/history.js:108](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L108)
 
 • `set` **canUndo**(`value`): `void`
 
@@ -207,23 +409,11 @@ Whether there are any actions to undo
 
 #### Defined in
 
-[src/history.js:112](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L112)
+[src/history.js:126](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L126)
 
 ___
 
 ### canRedo
-
-• `get` **canRedo**(): `boolean`
-
-Whether there are actions to redo
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/history.js:121](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L121)
 
 • `set` **canRedo**(`value`): `void`
 
@@ -241,4 +431,24 @@ Whether there are actions to redo
 
 #### Defined in
 
-[src/history.js:125](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L125)
+[src/history.js:139](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L139)
+
+## Internal
+
+### constructor
+
+• **new History**(): [`History`](History.md)
+
+Creates new instance of the API
+
+#### Returns
+
+[`History`](History.md)
+
+#### Overrides
+
+Events.constructor
+
+#### Defined in
+
+[src/history.js:21](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L21)

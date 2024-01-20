@@ -1,5 +1,5 @@
 import { Events } from '@playcanvas/observer';
-import { SceneSettings } from './settings/scene';
+import { SceneSettings } from './settings/scene.js';
 
 /**
  * The settings editor API

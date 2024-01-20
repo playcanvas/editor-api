@@ -1,5 +1,5 @@
-import { ComponentSchema } from './schema/components';
-import { AssetsSchema } from './schema/assets';
+import { ComponentSchema } from './schema/components.js';
+import { AssetsSchema } from './schema/assets.js';
 
 /**
  * Provides methods to access the Editor schema.

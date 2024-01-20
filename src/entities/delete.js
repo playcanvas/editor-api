@@ -1,5 +1,5 @@
-import { globals as api } from '../globals';
-import { findEntityReferencesInComponents, updateReferences } from './references';
+import { globals as api } from '../globals.js';
+import { findEntityReferencesInComponents, updateReferences } from './references.js';
 
 const USE_BACKEND_LIMIT = 500;
 

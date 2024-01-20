@@ -16,14 +16,36 @@ The Assets Editor API
 
 - [constructor](Assets.md#constructor)
 
-### Public Methods
+### Properties
 
+- [suspendEvents](Assets.md#suspendevents)
+
+### Accessors
+
+- [defaultUploadCompletedCallback](Assets.md#defaultuploadcompletedcallback)
+- [defaultUploadProgressCallback](Assets.md#defaultuploadprogresscallback)
+- [defaultUploadErrorCallback](Assets.md#defaultuploaderrorcallback)
+- [parseScriptCallback](Assets.md#parsescriptcallback)
+
+### Methods
+
+- [on](Assets.md#on)
+- [once](Assets.md#once)
+- [emit](Assets.md#emit)
+- [unbind](Assets.md#unbind)
+- [addEmitter](Assets.md#addemitter)
+- [removeEmitter](Assets.md#removeemitter)
 - [get](Assets.md#get)
 - [getUnique](Assets.md#getunique)
 - [list](Assets.md#list)
 - [listByTag](Assets.md#listbytag)
+- [add](Assets.md#add)
+- [remove](Assets.md#remove)
+- [clear](Assets.md#clear)
 - [filter](Assets.md#filter)
 - [findOne](Assets.md#findone)
+- [loadAll](Assets.md#loadall)
+- [loadAllAndSubscribe](Assets.md#loadallandsubscribe)
 - [getAssetForScript](Assets.md#getassetforscript)
 - [createAnimStateGraph](Assets.md#createanimstategraph)
 - [createBundle](Assets.md#createbundle)
@@ -42,26 +64,195 @@ The Assets Editor API
 - [delete](Assets.md#delete)
 - [instantiateTemplates](Assets.md#instantiatetemplates)
 
-### Internal Methods
+## Public
 
-- [add](Assets.md#add)
-- [remove](Assets.md#remove)
-- [clear](Assets.md#clear)
-- [loadAll](Assets.md#loadall)
-- [loadAllAndSubscribe](Assets.md#loadallandsubscribe)
+### suspendEvents
 
-### Accessors
+• **suspendEvents**: `boolean`
 
-- [defaultUploadCompletedCallback](Assets.md#defaultuploadcompletedcallback)
-- [defaultUploadProgressCallback](Assets.md#defaultuploadprogresscallback)
-- [defaultUploadErrorCallback](Assets.md#defaultuploaderrorcallback)
-- [parseScriptCallback](Assets.md#parsescriptcallback)
+If true the observer will not emit events when values are set.
 
-## Constructors
+#### Inherited from
+
+Events.suspendEvents
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:37
+
+___
+
+### on
+
+▸ **on**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.on
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:43
+
+___
+
+### once
+
+▸ **once**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.once
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:49
+
+___
+
+### emit
+
+▸ **emit**(`name`, `arg0?`, `arg1?`, `arg2?`, `arg3?`, `arg4?`, `arg5?`, `arg6?`, `arg7?`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `arg0?` | `any` | First argument |
+| `arg1?` | `any` | Second argument |
+| `arg2?` | `any` | Third argument |
+| `arg3?` | `any` | Fourth argument |
+| `arg4?` | `any` | Fifth argument |
+| `arg5?` | `any` | Sixth argument |
+| `arg6?` | `any` | Seventh argument |
+| `arg7?` | `any` | Eights argument |
+
+#### Returns
+
+`Events`
+
+Self for chaining.
+
+#### Inherited from
+
+Events.emit
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:62
+
+___
+
+### unbind
+
+▸ **unbind**(`name`, `fn`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`Events`
+
+- This
+
+#### Inherited from
+
+Events.unbind
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:68
+
+___
+
+### addEmitter
+
+▸ **addEmitter**(`emitter`): `void`
+
+Adds another emitter. Any events fired by this instance
+will also be fired on the additional emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.addEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:74
+
+___
+
+### removeEmitter
+
+▸ **removeEmitter**(`emitter`): `void`
+
+Removes emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.removeEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:79
+
+___
 
 ### constructor
 
-• **new Assets**(`options?`)
+• **new Assets**(`options?`): [`Assets`](Assets.md)
 
 Constructor
 
@@ -72,15 +263,19 @@ Constructor
 | `options` | `Object` | Options |
 | `options.autoSubscribe` | `boolean` | Whether to auto subscribe to asset changes when assets are loaded. |
 
+#### Returns
+
+[`Assets`](Assets.md)
+
 #### Overrides
 
 Events.constructor
 
 #### Defined in
 
-[src/assets.js:62](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L62)
+[src/assets.js:62](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L62)
 
-## Public Methods
+___
 
 ### get
 
@@ -102,7 +297,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:154](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L154)
+[src/assets.js:154](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L154)
 
 ___
 
@@ -126,7 +321,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:165](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L165)
+[src/assets.js:165](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L165)
 
 ___
 
@@ -144,13 +339,13 @@ The assets
 
 #### Defined in
 
-[src/assets.js:175](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L175)
+[src/assets.js:175](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L175)
 
 ___
 
 ### listByTag
 
-▸ **listByTag**(...`tags`): [`Asset`](Asset.md)[]
+▸ **listByTag**(`...tags`): [`Asset`](Asset.md)[]
 
 Finds all assets with specified tags
 
@@ -168,7 +363,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:186](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L186)
+[src/assets.js:186](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L186)
 
 ___
 
@@ -182,7 +377,7 @@ Gets assets that satisfy function
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `fn` | `Function` | The function (takes an asset as an argument and returns boolean). |
+| `fn` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | The function (takes an asset as an argument and returns boolean). |
 
 #### Returns
 
@@ -192,7 +387,7 @@ The assets
 
 #### Defined in
 
-[src/assets.js:313](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L313)
+[src/assets.js:313](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L313)
 
 ___
 
@@ -206,7 +401,7 @@ Finds first asset that satisfies function
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `fn` | `Function` | A function that takes an asset as an argument and returns boolean. |
+| `fn` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | A function that takes an asset as an argument and returns boolean. |
 
 #### Returns
 
@@ -216,7 +411,7 @@ The asset
 
 #### Defined in
 
-[src/assets.js:325](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L325)
+[src/assets.js:325](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L325)
 
 ___
 
@@ -240,13 +435,13 @@ The script asset
 
 #### Defined in
 
-[src/assets.js:448](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L448)
+[src/assets.js:450](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L450)
 
 ___
 
 ### createAnimStateGraph
 
-▸ **createAnimStateGraph**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createAnimStateGraph**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new anim state graph asset.
 
@@ -259,23 +454,23 @@ Creates new anim state graph asset.
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
 | `options.data` | `any` | The asset data. See [here](AssetProperties.md) for Animstategraph data. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:512](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L512)
+[src/assets.js:514](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L514)
 
 ___
 
 ### createBundle
 
-▸ **createBundle**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createBundle**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new bundle asset
 
@@ -288,23 +483,23 @@ Creates new bundle asset
 | `options.assets` | [`Asset`](Asset.md)[] | The assets that the bundle will contain |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:533](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L533)
+[src/assets.js:535](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L535)
 
 ___
 
 ### createCss
 
-▸ **createCss**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createCss**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new CSS asset
 
@@ -317,23 +512,23 @@ Creates new CSS asset
 | `options.text` | `string` | The CSS |
 | `options.folder` | `string` | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:556](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L556)
+[src/assets.js:558](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L558)
 
 ___
 
 ### createCubemap
 
-▸ **createCubemap**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createCubemap**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new cubemap asset
 
@@ -349,23 +544,23 @@ Creates new cubemap asset
 | `options.anisotropy` | `number` | Cubemap anisotropy value. Defaults to 1. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:582](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L582)
+[src/assets.js:584](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L584)
 
 ___
 
 ### createFolder
 
-▸ **createFolder**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createFolder**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates a new folder asset
 
@@ -376,23 +571,23 @@ Creates a new folder asset
 | `options` | `Object` | Options |
 | `options.name` | `string` | The asset name |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:612](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L612)
+[src/assets.js:614](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L614)
 
 ___
 
 ### createHtml
 
-▸ **createHtml**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createHtml**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new HTML asset
 
@@ -405,23 +600,23 @@ Creates new HTML asset
 | `options.text` | `string` | The HTML |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:631](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L631)
+[src/assets.js:633](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L633)
 
 ___
 
 ### createJson
 
-▸ **createJson**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createJson**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new JSON asset
 
@@ -432,25 +627,26 @@ Creates new JSON asset
 | `options` | `Object` | Options |
 | `options.name` | `string` | The asset name |
 | `options.json` | `any` | The JSON |
+| `options.spaces` | `number` | The number of spaces used for indentation. Defaults to 0 (tightly packed output). |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:653](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L653)
+[src/assets.js:657](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L657)
 
 ___
 
 ### createI18n
 
-▸ **createI18n**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createI18n**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new localization JSON asset
 
@@ -463,23 +659,23 @@ Creates new localization JSON asset
 | `options.localizationData` | `any` | The localization data. If null then default data will be used. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:675](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L675)
+[src/assets.js:682](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L682)
 
 ___
 
 ### createMaterial
 
-▸ **createMaterial**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createMaterial**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new material asset
 
@@ -492,23 +688,23 @@ Creates new material asset
 | `options.data` | `any` | The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:708](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L708)
+[src/assets.js:716](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L716)
 
 ___
 
 ### createScript
 
-▸ **createScript**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createScript**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new script asset
 
@@ -520,22 +716,25 @@ Creates new script asset
 | `options.filename` | `string` | The filename of the script. This will also be the name of the script asset. If not defined it will be generated from the name of the script. |
 | `options.text` | `string` | The contents of the script. If none then boilerplate code will be used. |
 | `options.data` | `any` | The script data. See [here](AssetProperties.md) for Script data. |
+| `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
+| `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:740](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L740)
+[src/assets.js:748](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L748)
 
 ___
 
 ### createShader
 
-▸ **createShader**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createShader**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new shader asset
 
@@ -548,23 +747,23 @@ Creates new shader asset
 | `options.text` | `string` | The GLSL |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:800](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L800)
+[src/assets.js:808](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L808)
 
 ___
 
 ### createSprite
 
-▸ **createSprite**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createSprite**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new sprite asset
 
@@ -580,23 +779,23 @@ Creates new sprite asset
 | `options.renderMode` | `number` | The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE. |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:825](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L825)
+[src/assets.js:833](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L833)
 
 ___
 
 ### createText
 
-▸ **createText**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createText**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new text asset
 
@@ -609,23 +808,23 @@ Creates new text asset
 | `options.text` | `string` | The text |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:852](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L852)
+[src/assets.js:860](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L860)
 
 ___
 
 ### createTemplate
 
-▸ **createTemplate**(`options?`): `Promise`<[`Asset`](Asset.md)\>
+▸ **createTemplate**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 Creates new template asset
 
@@ -638,23 +837,23 @@ Creates new template asset
 | `options.entity` | [`Entity`](Entity.md) | The entity to create the template from |
 | `options.folder` | [`Asset`](Asset.md) | The parent folder asset |
 | `options.preload` | `boolean` | Whether to preload the asset. Defaults to true. |
-| `options.onProgress` | `Function` | Function to report progress |
+| `options.onProgress` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) | Function to report progress |
 
 #### Returns
 
-`Promise`<[`Asset`](Asset.md)\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Asset`](Asset.md)\>
 
 The new asset
 
 #### Defined in
 
-[src/assets.js:875](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L875)
+[src/assets.js:883](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L883)
 
 ___
 
 ### delete
 
-▸ **delete**(`assets`): `Promise`<`void`\>
+▸ **delete**(`assets`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 Deletes specified assets
 
@@ -666,17 +865,17 @@ Deletes specified assets
 
 #### Returns
 
-`Promise`<`void`\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 #### Defined in
 
-[src/assets.js:901](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L901)
+[src/assets.js:909](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L909)
 
 ___
 
 ### instantiateTemplates
 
-▸ **instantiateTemplates**(`assets`, `parent`, `options?`): `Promise`<[`Entity`](Entity.md)[]\>
+▸ **instantiateTemplates**(`assets`, `parent`, `options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Entity`](Entity.md)[]\>
 
 Instantiates the specified template assets under the specified
 parent entity.
@@ -695,17 +894,157 @@ parent entity.
 
 #### Returns
 
-`Promise`<[`Entity`](Entity.md)[]\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<[`Entity`](Entity.md)[]\>
 
 The new entities
 
 #### Defined in
 
-[src/assets.js:933](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L933)
+[src/assets.js:941](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L941)
 
 ___
 
-## Internal Methods
+### defaultUploadCompletedCallback
+
+• `get` **defaultUploadCompletedCallback**(): [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+Gets the default callback called when on asset upload succeeds.
+
+#### Returns
+
+[`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+#### Defined in
+
+[src/assets.js:960](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L960)
+
+• `set` **defaultUploadCompletedCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload succeeds.
+The function takes 2 arguments: the upload id, and the new asset.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:951](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L951)
+
+___
+
+### defaultUploadProgressCallback
+
+• `get` **defaultUploadProgressCallback**(): [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+Gets the default callback called when on asset upload progress.
+
+#### Returns
+
+[`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+#### Defined in
+
+[src/assets.js:979](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L979)
+
+• `set` **defaultUploadProgressCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload progress.
+The function takes 2 arguments: the upload id and the progress.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:970](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L970)
+
+___
+
+### defaultUploadErrorCallback
+
+• `get` **defaultUploadErrorCallback**(): [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+Gets the default callback called when on asset upload fails.
+
+#### Returns
+
+[`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+#### Defined in
+
+[src/assets.js:998](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L998)
+
+• `set` **defaultUploadErrorCallback**(`value`): `void`
+
+Sets the default callback called when on asset upload progress.
+The function takes 2 arguments: the upload id, and the error.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:989](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L989)
+
+___
+
+### parseScriptCallback
+
+• `get` **parseScriptCallback**(): [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+Gets the callback which parses script assets.
+
+#### Returns
+
+[`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
+
+#### Defined in
+
+[src/assets.js:1019](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L1019)
+
+• `set` **parseScriptCallback**(`value`): `void`
+
+Sets the callback which parses script assets. When this
+callback is set, new script assets will be parsed after they
+are created. The function takes the asset as a parameter and returns
+a promise with a list of script names when it is done parsing.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function ) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/assets.js:1010](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L1010)
+
+## Internal
 
 ### add
 
@@ -725,7 +1064,7 @@ Adds asset to the list
 
 #### Defined in
 
-[src/assets.js:220](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L220)
+[src/assets.js:220](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L220)
 
 ___
 
@@ -747,7 +1086,7 @@ Removes asset from the list
 
 #### Defined in
 
-[src/assets.js:272](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L272)
+[src/assets.js:272](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L272)
 
 ___
 
@@ -763,13 +1102,13 @@ Removes all assets from the list
 
 #### Defined in
 
-[src/assets.js:293](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L293)
+[src/assets.js:293](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L293)
 
 ___
 
 ### loadAll
 
-▸ **loadAll**(`options?`): `Promise`<`void`\>
+▸ **loadAll**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 Loads all assets in the current project / branch. Does not
 subscribe to realtime changes.
@@ -783,17 +1122,17 @@ subscribe to realtime changes.
 
 #### Returns
 
-`Promise`<`void`\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 #### Defined in
 
-[src/assets.js:339](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L339)
+[src/assets.js:339](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L339)
 
 ___
 
 ### loadAllAndSubscribe
 
-▸ **loadAllAndSubscribe**(`options?`): `Promise`<`void`\>
+▸ **loadAllAndSubscribe**(`options?`): [`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 Loads all assets in the current project / branch
 and subscribes to changes.
@@ -807,150 +1146,8 @@ and subscribes to changes.
 
 #### Returns
 
-`Promise`<`void`\>
+[`Promise`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise )\<`void`\>
 
 #### Defined in
 
-[src/assets.js:391](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L391)
-
-## Accessors
-
-### defaultUploadCompletedCallback
-
-• `get` **defaultUploadCompletedCallback**(): `Function`
-
-Gets the default callback called when on asset upload succeeds.
-
-#### Returns
-
-`Function`
-
-#### Defined in
-
-[src/assets.js:942](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L942)
-
-• `set` **defaultUploadCompletedCallback**(`value`): `void`
-
-Sets the default callback called when on asset upload succeeds.
-The function takes 2 arguments: the upload id, and the new asset.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `Function` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/assets.js:952](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L952)
-
-___
-
-### defaultUploadProgressCallback
-
-• `get` **defaultUploadProgressCallback**(): `Function`
-
-Gets the default callback called when on asset upload progress.
-
-#### Returns
-
-`Function`
-
-#### Defined in
-
-[src/assets.js:961](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L961)
-
-• `set` **defaultUploadProgressCallback**(`value`): `void`
-
-Sets the default callback called when on asset upload progress.
-The function takes 2 arguments: the upload id and the progress.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `Function` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/assets.js:971](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L971)
-
-___
-
-### defaultUploadErrorCallback
-
-• `get` **defaultUploadErrorCallback**(): `Function`
-
-Gets the default callback called when on asset upload fails.
-
-#### Returns
-
-`Function`
-
-#### Defined in
-
-[src/assets.js:980](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L980)
-
-• `set` **defaultUploadErrorCallback**(`value`): `void`
-
-Sets the default callback called when on asset upload progress.
-The function takes 2 arguments: the upload id, and the error.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `Function` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/assets.js:990](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L990)
-
-___
-
-### parseScriptCallback
-
-• `get` **parseScriptCallback**(): `Function`
-
-Gets the callback which parses script assets.
-
-#### Returns
-
-`Function`
-
-#### Defined in
-
-[src/assets.js:999](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L999)
-
-• `set` **parseScriptCallback**(`value`): `void`
-
-Sets the callback which parses script assets. When this
-callback is set, new script assets will be parsed after they
-are created. The function takes the asset as a parameter and returns
-a promise with a list of script names when it is done parsing.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `Function` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/assets.js:1011](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L1011)
+[src/assets.js:392](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L392)

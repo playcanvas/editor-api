@@ -1,5 +1,5 @@
 import { Events } from '@playcanvas/observer';
-import { Guid } from './guid';
+import { Guid } from './guid.js';
 
 /**
  * Facilitates tracking of asynchronous jobs.

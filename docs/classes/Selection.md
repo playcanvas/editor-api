@@ -12,18 +12,13 @@ Selection API. Allows selecting Entities, Assets etc.
 
 ## Table of contents
 
-### Internal Constructors
+### Constructors
 
 - [constructor](Selection.md#constructor)
 
-### Methods
+### Properties
 
-- [add](Selection.md#add)
-- [remove](Selection.md#remove)
-- [toggle](Selection.md#toggle)
-- [has](Selection.md#has)
-- [clear](Selection.md#clear)
-- [set](Selection.md#set)
+- [suspendEvents](Selection.md#suspendevents)
 
 ### Accessors
 
@@ -33,37 +28,212 @@ Selection API. Allows selecting Entities, Assets etc.
 - [count](Selection.md#count)
 - [history](Selection.md#history)
 
-## Internal Constructors
+### Methods
 
-### constructor
+- [on](Selection.md#on)
+- [once](Selection.md#once)
+- [emit](Selection.md#emit)
+- [unbind](Selection.md#unbind)
+- [addEmitter](Selection.md#addemitter)
+- [removeEmitter](Selection.md#removeemitter)
+- [add](Selection.md#add)
+- [remove](Selection.md#remove)
+- [toggle](Selection.md#toggle)
+- [has](Selection.md#has)
+- [clear](Selection.md#clear)
+- [set](Selection.md#set)
 
-• **new Selection**()
+## Public
 
-Constructor
+### suspendEvents
 
-**`category`** Internal
+• **suspendEvents**: `boolean`
 
-#### Overrides
+If true the observer will not emit events when values are set.
 
-Events.constructor
+#### Inherited from
+
+Events.suspendEvents
 
 #### Defined in
 
-[src/selection.js:80](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L80)
+node_modules/@playcanvas/observer/dist/observer.d.ts:37
 
-## Methods
+___
+
+### on
+
+▸ **on**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.on
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:43
+
+___
+
+### once
+
+▸ **once**(`name`, `fn`): `EventHandle`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`EventHandle`
+
+EventHandle
+
+#### Inherited from
+
+Events.once
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:49
+
+___
+
+### emit
+
+▸ **emit**(`name`, `arg0?`, `arg1?`, `arg2?`, `arg3?`, `arg4?`, `arg5?`, `arg6?`, `arg7?`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `arg0?` | `any` | First argument |
+| `arg1?` | `any` | Second argument |
+| `arg2?` | `any` | Third argument |
+| `arg3?` | `any` | Fourth argument |
+| `arg4?` | `any` | Fifth argument |
+| `arg5?` | `any` | Sixth argument |
+| `arg6?` | `any` | Seventh argument |
+| `arg7?` | `any` | Eights argument |
+
+#### Returns
+
+`Events`
+
+Self for chaining.
+
+#### Inherited from
+
+Events.emit
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:62
+
+___
+
+### unbind
+
+▸ **unbind**(`name`, `fn`): `Events`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | Name |
+| `fn` | `HandleEvent` | Callback function |
+
+#### Returns
+
+`Events`
+
+- This
+
+#### Inherited from
+
+Events.unbind
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:68
+
+___
+
+### addEmitter
+
+▸ **addEmitter**(`emitter`): `void`
+
+Adds another emitter. Any events fired by this instance
+will also be fired on the additional emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.addEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:74
+
+___
+
+### removeEmitter
+
+▸ **removeEmitter**(`emitter`): `void`
+
+Removes emitter.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `emitter` | `Events` | The emitter |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+Events.removeEmitter
+
+#### Defined in
+
+node_modules/@playcanvas/observer/dist/observer.d.ts:79
+
+___
 
 ### add
 
 ▸ **add**(`item`, `options?`): `void`
 
 Add item to selection
-
-**`example`**
-```javascript
-// add root entity to selection
-editor.selection.add(editor.entities.root);
-```
 
 #### Parameters
 
@@ -77,9 +247,16 @@ editor.selection.add(editor.entities.root);
 
 `void`
 
+**`Example`**
+
+```javascript
+// add root entity to selection
+editor.selection.add(editor.entities.root);
+```
+
 #### Defined in
 
-[src/selection.js:114](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L114)
+[src/selection.js:114](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L114)
 
 ___
 
@@ -89,12 +266,6 @@ ___
 
 Remove item from selection
 
-**`example`**
-```javascript
-// remove root entity from selection
-editor.selection.remove(editor.entities.root);
-```
-
 #### Parameters
 
 | Name | Type | Description |
@@ -107,9 +278,16 @@ editor.selection.remove(editor.entities.root);
 
 `void`
 
+**`Example`**
+
+```javascript
+// remove root entity from selection
+editor.selection.remove(editor.entities.root);
+```
+
 #### Defined in
 
-[src/selection.js:150](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L150)
+[src/selection.js:150](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L150)
 
 ___
 
@@ -119,12 +297,6 @@ ___
 
 Toggle item selection
 
-**`example`**
-```javascript
-// toggle root entity selection
-editor.selection.toggle(editor.entities.root);
-```
-
 #### Parameters
 
 | Name | Type | Description |
@@ -137,9 +309,16 @@ editor.selection.toggle(editor.entities.root);
 
 `void`
 
+**`Example`**
+
+```javascript
+// toggle root entity selection
+editor.selection.toggle(editor.entities.root);
+```
+
 #### Defined in
 
-[src/selection.js:185](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L185)
+[src/selection.js:185](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L185)
 
 ___
 
@@ -148,11 +327,6 @@ ___
 ▸ **has**(`item`): `boolean`
 
 Checks if item is in selection
-
-**`example`**
-```javascript
-const isRootSelected = editor.selection.has(editor.entities.root);
-```
 
 #### Parameters
 
@@ -166,9 +340,15 @@ const isRootSelected = editor.selection.has(editor.entities.root);
 
 If item is in selection
 
+**`Example`**
+
+```javascript
+const isRootSelected = editor.selection.has(editor.entities.root);
+```
+
 #### Defined in
 
-[src/selection.js:221](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L221)
+[src/selection.js:221](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L221)
 
 ___
 
@@ -177,11 +357,6 @@ ___
 ▸ **clear**(`options?`): `void`
 
 Clears selection
-
-**`example`**
-```javascript
-editor.selection.clear();
-```
 
 #### Parameters
 
@@ -194,9 +369,15 @@ editor.selection.clear();
 
 `void`
 
+**`Example`**
+
+```javascript
+editor.selection.clear();
+```
+
 #### Defined in
 
-[src/selection.js:235](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L235)
+[src/selection.js:235](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L235)
 
 ___
 
@@ -205,12 +386,6 @@ ___
 ▸ **set**(`items`, `options?`): `void`
 
 Sets current selection
-
-**`example`**
-```javascript
-// select root entity
-editor.selection.set([editor.entities.root]);
-```
 
 #### Parameters
 
@@ -224,11 +399,18 @@ editor.selection.set([editor.entities.root]);
 
 `void`
 
+**`Example`**
+
+```javascript
+// select root entity
+editor.selection.set([editor.entities.root]);
+```
+
 #### Defined in
 
-[src/selection.js:278](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L278)
+[src/selection.js:278](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L278)
 
-## Accessors
+___
 
 ### items
 
@@ -236,19 +418,20 @@ editor.selection.set([editor.entities.root]);
 
 Gets the selected items. This creates a new array every time it is called.
 
-**`example`**
+#### Returns
+
+`any`[]
+
+**`Example`**
+
 ```javascript
 editor.selection.items.add(editor.entities.root);
 const selectedEntities = editor.selection.items;
 ```
 
-#### Returns
-
-`any`[]
-
 #### Defined in
 
-[src/selection.js:312](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L312)
+[src/selection.js:312](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L312)
 
 ___
 
@@ -264,23 +447,11 @@ Gets the first selected item. Short for this.items[0].
 
 #### Defined in
 
-[src/selection.js:321](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L321)
+[src/selection.js:321](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L321)
 
 ___
 
 ### enabled
-
-• `get` **enabled**(): `boolean`
-
-Enables / disables the selection methods
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/selection.js:330](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L330)
 
 • `set` **enabled**(`value`): `void`
 
@@ -298,7 +469,7 @@ Enables / disables the selection methods
 
 #### Defined in
 
-[src/selection.js:334](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L334)
+[src/selection.js:330](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L330)
 
 ___
 
@@ -314,7 +485,7 @@ Gets the number of selected items
 
 #### Defined in
 
-[src/selection.js:343](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L343)
+[src/selection.js:343](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L343)
 
 ___
 
@@ -330,4 +501,24 @@ Gets the selection history
 
 #### Defined in
 
-[src/selection.js:352](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L352)
+[src/selection.js:352](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L352)
+
+## Internal
+
+### constructor
+
+• **new Selection**(): [`Selection`](Selection.md)
+
+Constructor
+
+#### Returns
+
+[`Selection`](Selection.md)
+
+#### Overrides
+
+Events.constructor
+
+#### Defined in
+
+[src/selection.js:80](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L80)

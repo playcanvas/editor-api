@@ -1,4 +1,4 @@
-import { utils } from '../utils';
+import { utils } from '../utils.js';
 
 /**
  * Provides methods to access the Assets schema
@@ -7,7 +7,6 @@ class AssetsSchema {
     /** @typedef {import("../schema").Schema} Schema */
 
     /**
-     *
      * @category Internal
      * @param {Schema} schema - The schema API
      */

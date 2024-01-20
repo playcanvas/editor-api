@@ -1,4 +1,4 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 function getSetting(settings, name, defaultValue) {
     return settings && settings[name] !== undefined ? settings[name] : defaultValue;

@@ -1,6 +1,6 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 import { Observer } from '@playcanvas/observer';
-import { Guid } from '../guid';
+import { Guid } from '../guid.js';
 
 const USE_BACKEND_LIMIT = 500;
 const TIME_WAIT_ENTITIES = 5000;

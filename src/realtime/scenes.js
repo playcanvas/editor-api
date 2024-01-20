@@ -1,4 +1,4 @@
-import { RealtimeScene } from './scene';
+import { RealtimeScene } from './scene.js';
 import { Events } from '@playcanvas/observer';
 
 /**

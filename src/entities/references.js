@@ -1,5 +1,5 @@
-import { globals as api } from '../globals';
-import { utils } from '../utils';
+import { globals as api } from '../globals.js';
+import { utils } from '../utils.js';
 
 const fieldsCache = {};
 

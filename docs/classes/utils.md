@@ -10,15 +10,11 @@ Contains various utility methods
 
 - [deepCopy](utils.md#deepcopy)
 
-### Constructors
-
-- [constructor](utils.md#constructor)
-
 ## Methods
 
 ### deepCopy
 
-▸ `Static` **deepCopy**(`data`): `any`
+▸ **deepCopy**(`data`): `any`
 
 Deep copy an object
 
@@ -36,10 +32,4 @@ A copy of the data
 
 #### Defined in
 
-[src/utils.js:13](https://github.com/playcanvas/editor-api/blob/b27c301/src/utils.js#L13)
-
-## Constructors
-
-### constructor
-
-• **new utils**()
+[src/utils.js:13](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/utils.js#L13)

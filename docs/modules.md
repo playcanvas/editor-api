@@ -4,26 +4,16 @@
 
 ## Table of contents
 
-### Public Classes
+### Classes
 
 - [Asset](classes/Asset.md)
 - [Assets](classes/Assets.md)
+- [Clipboard](classes/Clipboard.md)
 - [Entities](classes/Entities.md)
 - [Entity](classes/Entity.md)
 - [globals](classes/globals.md)
-- [History](classes/History.md)
-- [Schema](classes/Schema.md)
-- [AssetsSchema](classes/AssetsSchema.md)
-- [ComponentSchema](classes/ComponentSchema.md)
-- [SelectionHistory](classes/SelectionHistory.md)
-- [Selection](classes/Selection.md)
-- [Settings](classes/Settings.md)
-- [SceneSettings](classes/SceneSettings.md)
-
-### Internal Classes
-
-- [Clipboard](classes/Clipboard.md)
 - [Guid](classes/Guid.md)
+- [History](classes/History.md)
 - [Jobs](classes/Jobs.md)
 - [LocalStorage](classes/LocalStorage.md)
 - [Messenger](classes/Messenger.md)
@@ -33,6 +23,13 @@
 - [RealtimeConnection](classes/RealtimeConnection.md)
 - [RealtimeScene](classes/RealtimeScene.md)
 - [RealtimeScenes](classes/RealtimeScenes.md)
+- [Schema](classes/Schema.md)
+- [AssetsSchema](classes/AssetsSchema.md)
+- [ComponentSchema](classes/ComponentSchema.md)
+- [SelectionHistory](classes/SelectionHistory.md)
+- [Selection](classes/Selection.md)
+- [Settings](classes/Settings.md)
+- [SceneSettings](classes/SceneSettings.md)
 - [utils](classes/utils.md)
 
 ### Interfaces

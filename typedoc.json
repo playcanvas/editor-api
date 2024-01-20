@@ -2,12 +2,16 @@
     "name": "PlayCanvas Editor API",
     "entryPoints": ["index.js"],
     "out": "docs",
-    "entryDocument": "README.md",
+    "readme": "README.md",
     "darkHighlightTheme": "dark-plus",
     "excludeInternal": true,
     "excludePrivate": true,
     "excludeNotDocumented": true,
     "sort": "source-order",
     "defaultCategory": "Public",
-    "categoryOrder": ["Public", "*"]
+    "categoryOrder": ["Public", "*"],
+    "plugin": [
+        "typedoc-plugin-markdown",
+        "typedoc-plugin-mdn-links"
+    ]
 }

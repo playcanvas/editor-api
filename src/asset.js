@@ -1,6 +1,6 @@
-import { globals as api } from './globals';
+import { globals as api } from './globals.js';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
-import { replace } from './assets/replace';
+import { replace } from './assets/replace.js';
 
 /**
  * Represents an Asset. For a list of Asset properties see [here](AssetProperties.md).

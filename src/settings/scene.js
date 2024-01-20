@@ -1,5 +1,5 @@
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 /**
  * Represents the settings for the currently loaded scene.

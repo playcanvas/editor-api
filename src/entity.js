@@ -1,6 +1,6 @@
-import { globals as api } from './globals';
+import { globals as api } from './globals.js';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
-import { Guid } from './guid';
+import { Guid } from './guid.js';
 
 /**
  * Represents an Entity. For a list of Entity properties see [here](EntityProperties.md).
