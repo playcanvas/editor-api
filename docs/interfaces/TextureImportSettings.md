@@ -1,6 +1,6 @@
 [PlayCanvas Editor API](../README.md) / [Exports](../modules.md) / TextureImportSettings
 
-# Interface: TextureImportSettings<\>
+# Interface: TextureImportSettings\<\>
 
 ## Table of contents
 
@@ -19,7 +19,7 @@ Whether to resize the texture to power of 2.
 
 #### Defined in
 
-[src/assets.js:29](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L29)
+[src/assets.js:29](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L29)
 
 ___
 
@@ -32,4 +32,4 @@ throughout the whole project instead of just the same folder.
 
 #### Defined in
 
-[src/assets.js:30](https://github.com/playcanvas/editor-api/blob/b27c301/src/assets.js#L30)
+[src/assets.js:30](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/assets.js#L30)

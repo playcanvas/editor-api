@@ -1,5 +1,5 @@
-import { globals as api } from '../globals';
-import { Entity } from '../entity';
+import { globals as api } from '../globals.js';
+import { Entity } from '../entity.js';
 
 /**
  * Creates new entity and adds it to the hierarchy

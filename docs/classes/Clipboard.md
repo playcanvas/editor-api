@@ -20,7 +20,7 @@ which stores a value in localStorage under that name
 
 ### constructor
 
-• **new Clipboard**(`name`)
+• **new Clipboard**(`name`): [`Clipboard`](Clipboard.md)
 
 Constructor
 
@@ -30,9 +30,13 @@ Constructor
 | :------ | :------ | :------ |
 | `name` | `string` | The name of the clipboard. |
 
+#### Returns
+
+[`Clipboard`](Clipboard.md)
+
 #### Defined in
 
-[src/clipboard.js:15](https://github.com/playcanvas/editor-api/blob/b27c301/src/clipboard.js#L15)
+[src/clipboard.js:15](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/clipboard.js#L15)
 
 ## Accessors
 
@@ -48,7 +52,7 @@ Gets whether the clipboard is empty
 
 #### Defined in
 
-[src/clipboard.js:26](https://github.com/playcanvas/editor-api/blob/b27c301/src/clipboard.js#L26)
+[src/clipboard.js:26](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/clipboard.js#L26)
 
 ___
 
@@ -64,7 +68,7 @@ Gets the value stored in the clipboard.
 
 #### Defined in
 
-[src/clipboard.js:35](https://github.com/playcanvas/editor-api/blob/b27c301/src/clipboard.js#L35)
+[src/clipboard.js:48](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/clipboard.js#L48)
 
 • `set` **value**(`value`): `void`
 
@@ -82,4 +86,4 @@ Sets the value to be stored in the clipboard. Pass null to clear the value from 
 
 #### Defined in
 
-[src/clipboard.js:44](https://github.com/playcanvas/editor-api/blob/b27c301/src/clipboard.js#L44)
+[src/clipboard.js:35](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/clipboard.js#L35)

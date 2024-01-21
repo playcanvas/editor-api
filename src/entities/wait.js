@@ -1,4 +1,4 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 /**
  * Waits for specified entity ids to be added to the scene.

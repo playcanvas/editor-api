@@ -1,4 +1,4 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 async function addScript(entities, scriptName, options) {
     entities = entities.filter(e => !e.has('components.script.scripts.' + scriptName));

@@ -1,10 +1,10 @@
-import { Asset } from './asset';
-import { globals as api } from './globals';
+import { Asset } from './asset.js';
+import { globals as api } from './globals.js';
 import { Events, ObserverList } from '@playcanvas/observer';
-import { uploadFile } from './assets/upload';
-import { createTemplate } from './assets/createTemplate';
-import { createScript } from './assets/createScript';
-import { instantiateTemplates } from './assets/instantiateTemplates';
+import { uploadFile } from './assets/upload.js';
+import { createTemplate } from './assets/createTemplate.js';
+import { createScript } from './assets/createScript.js';
+import { instantiateTemplates } from './assets/instantiateTemplates.js';
 
 /**
  * Arguments passed when uploading an asset file.
@@ -740,7 +740,7 @@ class Assets extends Events {
      * from the name of the script.
      * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
      * @param {object} options.data - The script data. See [here](AssetProperties.md) for Script data.
-     * @param {Asset} optionsfolder - The parent folder asset
+     * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset

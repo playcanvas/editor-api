@@ -15,15 +15,15 @@ Provides methods to access the Editor schema.
 - [components](Schema.md#components)
 - [assets](Schema.md#assets)
 
-### Internal Methods
+### Methods
 
 - [getType](Schema.md#gettype)
 
-## Constructors
+## Public
 
 ### constructor
 
-• **new Schema**(`schema`)
+• **new Schema**(`schema`): [`Schema`](Schema.md)
 
 Creates new instance of API
 
@@ -33,11 +33,15 @@ Creates new instance of API
 | :------ | :------ | :------ |
 | `schema` | `any` | The Editor schema object |
 
+#### Returns
+
+[`Schema`](Schema.md)
+
 #### Defined in
 
-[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema.js#L13)
+[src/schema.js:13](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema.js#L13)
 
-## Accessors
+___
 
 ### components
 
@@ -51,7 +55,7 @@ Gets the component schema
 
 #### Defined in
 
-[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema.js#L24)
+[src/schema.js:24](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema.js#L24)
 
 ___
 
@@ -67,9 +71,9 @@ Gets the assets schema
 
 #### Defined in
 
-[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema.js#L33)
+[src/schema.js:33](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema.js#L33)
 
-## Internal Methods
+## Internal
 
 ### getType
 
@@ -92,4 +96,4 @@ The type
 
 #### Defined in
 
-[src/schema.js:45](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema.js#L45)
+[src/schema.js:45](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema.js#L45)

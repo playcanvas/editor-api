@@ -1,4 +1,4 @@
-import { RealtimeAsset } from './asset';
+import { RealtimeAsset } from './asset.js';
 import { Events } from '@playcanvas/observer';
 
 /**

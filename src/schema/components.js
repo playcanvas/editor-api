@@ -1,4 +1,4 @@
-import { utils } from '../utils';
+import { utils } from '../utils.js';
 
 /**
  * Provides methods to access the components schema

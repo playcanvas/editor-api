@@ -6,7 +6,7 @@ Provides methods to access the Assets schema
 
 ## Table of contents
 
-### Internal Constructors
+### Constructors
 
 - [constructor](AssetsSchema.md#constructor)
 
@@ -15,25 +15,7 @@ Provides methods to access the Assets schema
 - [getDefaultData](AssetsSchema.md#getdefaultdata)
 - [getFieldsOfType](AssetsSchema.md#getfieldsoftype)
 
-## Internal Constructors
-
-### constructor
-
-• **new AssetsSchema**(`schema`)
-
-**`category`** Internal
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `schema` | [`Schema`](Schema.md) | The schema API |
-
-#### Defined in
-
-[src/schema/assets.js:14](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/assets.js#L14)
-
-## Methods
+## Public
 
 ### getDefaultData
 
@@ -55,7 +37,7 @@ The default data
 
 #### Defined in
 
-[src/schema/assets.js:25](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/assets.js#L25)
+[src/schema/assets.js:25](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/assets.js#L25)
 
 ___
 
@@ -64,11 +46,6 @@ ___
 ▸ **getFieldsOfType**(`assetType`, `type`): `string`[]
 
 Gets a list of fields of a particular type for an asset type
-
-**`example`**
-```javascript
-const materialAssetPaths = editor.schema.assets.getFieldsOfType('material', 'asset');
-```
 
 #### Parameters
 
@@ -83,6 +60,32 @@ const materialAssetPaths = editor.schema.assets.getFieldsOfType('material', 'ass
 
 A list of fields
 
+**`Example`**
+
+```javascript
+const materialAssetPaths = editor.schema.assets.getFieldsOfType('material', 'asset');
+```
+
 #### Defined in
 
-[src/schema/assets.js:55](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/assets.js#L55)
+[src/schema/assets.js:55](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/assets.js#L55)
+
+## Internal
+
+### constructor
+
+• **new AssetsSchema**(`schema`): [`AssetsSchema`](AssetsSchema.md)
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `schema` | [`Schema`](Schema.md) | The schema API |
+
+#### Returns
+
+[`AssetsSchema`](AssetsSchema.md)
+
+#### Defined in
+
+[src/schema/assets.js:14](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/assets.js#L14)

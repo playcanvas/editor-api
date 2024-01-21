@@ -1,6 +1,6 @@
 [PlayCanvas Editor API](../README.md) / [Exports](../modules.md) / HistoryAction
 
-# Interface: HistoryAction<\>
+# Interface: HistoryAction\<\>
 
 ## Table of contents
 
@@ -20,28 +20,28 @@ The action name
 
 #### Defined in
 
-[src/history.js:7](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L7)
+[src/history.js:7](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L7)
 
 ___
 
 ### undo
 
-• **undo**: `Function`
+• **undo**: [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
 
 The undo function
 
 #### Defined in
 
-[src/history.js:8](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L8)
+[src/history.js:8](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L8)
 
 ___
 
 ### redo
 
-• **redo**: `Function`
+• **redo**: [`Function`]( https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function )
 
 The redo function
 
 #### Defined in
 
-[src/history.js:9](https://github.com/playcanvas/editor-api/blob/b27c301/src/history.js#L9)
+[src/history.js:9](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/history.js#L9)

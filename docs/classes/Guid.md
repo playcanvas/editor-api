@@ -11,15 +11,11 @@ probability of creating two that clash is vanishingly small.
 
 - [create](Guid.md#create)
 
-### Constructors
-
-- [constructor](Guid.md#constructor)
-
 ## Methods
 
 ### create
 
-▸ `Static` **create**(): `string`
+▸ **create**(): `string`
 
 Create an RFC4122 version 4 compliant GUID.
 
@@ -31,10 +27,4 @@ A new GUID.
 
 #### Defined in
 
-[src/guid.js:13](https://github.com/playcanvas/editor-api/blob/b27c301/src/guid.js#L13)
-
-## Constructors
-
-### constructor
-
-• **new Guid**()
+[src/guid.js:13](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/guid.js#L13)

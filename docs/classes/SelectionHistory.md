@@ -6,7 +6,7 @@ Enables undo / redo of selection changes
 
 ## Table of contents
 
-### Internal Constructors
+### Constructors
 
 - [constructor](SelectionHistory.md#constructor)
 
@@ -14,41 +14,9 @@ Enables undo / redo of selection changes
 
 - [enabled](SelectionHistory.md#enabled)
 
-## Internal Constructors
-
-### constructor
-
-• **new SelectionHistory**(`selection`)
-
-Constructor
-
-**`category`** Internal
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `selection` | [`Selection`](Selection.md) | The selection API |
-
-#### Defined in
-
-[src/selection.js:14](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L14)
-
-## Accessors
+## Public
 
 ### enabled
-
-• `get` **enabled**(): `boolean`
-
-Disables / enables selection undo / redo
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/selection.js:25](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L25)
 
 • `set` **enabled**(`value`): `void`
 
@@ -66,4 +34,26 @@ Disables / enables selection undo / redo
 
 #### Defined in
 
-[src/selection.js:29](https://github.com/playcanvas/editor-api/blob/b27c301/src/selection.js#L29)
+[src/selection.js:25](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L25)
+
+## Internal
+
+### constructor
+
+• **new SelectionHistory**(`selection`): [`SelectionHistory`](SelectionHistory.md)
+
+Constructor
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `selection` | [`Selection`](Selection.md) | The selection API |
+
+#### Returns
+
+[`SelectionHistory`](SelectionHistory.md)
+
+#### Defined in
+
+[src/selection.js:14](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/selection.js#L14)

@@ -1,6 +1,6 @@
-import { globals as api } from '../globals';
-import { findAssetReferencesInComponents, updateReferences } from '../entities/references';
-import { utils } from '../utils';
+import { globals as api } from '../globals.js';
+import { findAssetReferencesInComponents, updateReferences } from '../entities/references.js';
+import { utils } from '../utils.js';
 
 const REGEX_MODEL_DATA_MAPPING = /^data\.mapping\.(\d+)\.material$/;
 

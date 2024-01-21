@@ -1,4 +1,4 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 /**
  * Reparents entities under new parent.

@@ -1,4 +1,4 @@
-import { globals as api } from '../globals';
+import { globals as api } from '../globals.js';
 
 /** @typedef {import("../entity").Entity} Entity */
 

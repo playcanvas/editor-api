@@ -1,6 +1,6 @@
-import { RealtimeConnection } from './realtime/connection';
-import { RealtimeScenes } from './realtime/scenes';
-import { RealtimeAssets } from './realtime/assets';
+import { RealtimeConnection } from './realtime/connection.js';
+import { RealtimeScenes } from './realtime/scenes.js';
+import { RealtimeAssets } from './realtime/assets.js';
 import { Events } from '@playcanvas/observer';
 
 /**

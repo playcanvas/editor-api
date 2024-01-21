@@ -1,7 +1,7 @@
-import { findEntityReferencesInComponents } from '../entities/references';
-import { Entity } from '../entity';
-import { globals as api } from '../globals';
-import { Guid } from '../guid';
+import { findEntityReferencesInComponents } from '../entities/references.js';
+import { Entity } from '../entity.js';
+import { globals as api } from '../globals.js';
+import { Guid } from '../guid.js';
 
 function createTemplate(rootEntity) {
     const entities = {};

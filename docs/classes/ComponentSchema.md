@@ -6,7 +6,7 @@ Provides methods to access the components schema
 
 ## Table of contents
 
-### Internal Constructors
+### Constructors
 
 - [constructor](ComponentSchema.md#constructor)
 
@@ -16,38 +16,13 @@ Provides methods to access the components schema
 - [getFieldsOfType](ComponentSchema.md#getfieldsoftype)
 - [list](ComponentSchema.md#list)
 
-## Internal Constructors
-
-### constructor
-
-• **new ComponentSchema**(`schema`)
-
-Creates new instance of API
-
-**`category`** Internal
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `schema` | [`Schema`](Schema.md) | The schema API |
-
-#### Defined in
-
-[src/schema/components.js:15](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/components.js#L15)
-
-## Methods
+## Public
 
 ### getDefaultData
 
 ▸ **getDefaultData**(`component`): `any`
 
 Gets default data for a component
-
-**`example`**
-```javascript
-const modelData = editor.schema.components.getDefaultData('model');
-```
 
 #### Parameters
 
@@ -61,9 +36,15 @@ const modelData = editor.schema.components.getDefaultData('model');
 
 The default data
 
+**`Example`**
+
+```javascript
+const modelData = editor.schema.components.getDefaultData('model');
+```
+
 #### Defined in
 
-[src/schema/components.js:43](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/components.js#L43)
+[src/schema/components.js:43](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/components.js#L43)
 
 ___
 
@@ -72,11 +53,6 @@ ___
 ▸ **getFieldsOfType**(`componentName`, `type`): `string`[]
 
 Gets a list of fields of a particular type for a component
-
-**`example`**
-```javascript
-const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
-```
 
 #### Parameters
 
@@ -91,9 +67,15 @@ const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'e
 
 A list of fields
 
+**`Example`**
+
+```javascript
+const buttonEntityFields = editor.schema.components.getFieldsOfType('button', 'entity');
+```
+
 #### Defined in
 
-[src/schema/components.js:69](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/components.js#L69)
+[src/schema/components.js:69](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/components.js#L69)
 
 ___
 
@@ -111,4 +93,26 @@ The components
 
 #### Defined in
 
-[src/schema/components.js:103](https://github.com/playcanvas/editor-api/blob/b27c301/src/schema/components.js#L103)
+[src/schema/components.js:103](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/components.js#L103)
+
+## Internal
+
+### constructor
+
+• **new ComponentSchema**(`schema`): [`ComponentSchema`](ComponentSchema.md)
+
+Creates new instance of API
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `schema` | [`Schema`](Schema.md) | The schema API |
+
+#### Returns
+
+[`ComponentSchema`](ComponentSchema.md)
+
+#### Defined in
+
+[src/schema/components.js:15](https://github.com/playcanvas/editor-api/blob/2f0bc85/src/schema/components.js#L15)

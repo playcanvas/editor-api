@@ -1,4 +1,4 @@
-import { LocalStorage } from './localstorage';
+import { LocalStorage } from './localstorage.js';
 
 /**
  * Represents a custom clipboard with a specific name

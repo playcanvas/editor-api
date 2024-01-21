@@ -1,6 +1,6 @@
-import { globals as api } from '../globals';
-import { findEntityReferencesInComponents, updateReferences } from './references';
-import { Guid } from '../guid';
+import { globals as api } from '../globals.js';
+import { findEntityReferencesInComponents, updateReferences } from './references.js';
+import { Guid } from '../guid.js';
 
 /** @typedef {import("../entity").Entity} Entity */
 
