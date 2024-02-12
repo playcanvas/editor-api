@@ -75,12 +75,12 @@ ${className}.prototype.update = function(dt) {
 
 };
 
-// swap method called for script hot-reloading
-// inherit your script state here
+// uncomment the swap method to enable hot-reloading for this script
+// update the method body to copy state from the old instance
 // ${className}.prototype.swap = function(old) { };
 
-// to learn more about script anatomy, please read:
-// https://developer.playcanvas.com/en/user-manual/scripting/
+// learn more about scripting here:
+// https://developer.playcanvas.com/user-manual/scripting/
     `.trim();
 }
 
