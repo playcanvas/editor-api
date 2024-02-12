@@ -1,7 +1,8 @@
 const VALID_FILENAME = /^([^0-9.#<>$+%!`&='{}@\\/:*?"<>|\n])([^#<>$+%!`&='{}@\\/:*?"<>|\n])*$/i;
 
 /**
- * Creates filename and script content from provided arguments.
+ * Creates filename and script content from provided arguments. If the provide filename contains a '.mjs'
+ * suffix, it will generate an ESM based class syntax.
  *
  * @param {string} filename - The desired filename.
  * @param {string} text - The desired contents of the script. If not provided boilerplate code will be used.
@@ -97,15 +98,15 @@ export class ${className} extends pc.ScriptType {
 
     }
 
-    // swap method called for script hot-reloading
-    // inherit your script state here
+    // uncomment the swap method to enable hot-reloading for this script
+    // update the method body to copy state from the old instance
     // swap(old) { };
 }
 
-// to learn more about script anatomy, please read:
-// https://developer.playcanvas.com/en/user-manual/scripting/
+// learn more about script anatomy here:
+// https://developer.playcanvas.com/user-manual/scripting/
     `.trim();
-    
+
 }
 
 export { createScript };
