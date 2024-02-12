@@ -50,8 +50,9 @@ function createScript(filename, text) {
     if (!/.js$/i.test(filename)) {
         filename += '.js';
     }
-
-    const content = text || createBoilerplate(className, scriptName);
+    const isEsm = filename.endsWith('.mjs');
+    const boilerPlateGenerator = isEsm ? createEsmBoilerplate : createBoilerplate;
+    const content = text || boilerPlateGenerator(className, scriptName);
 
     return {
         filename,
@@ -80,6 +81,31 @@ ${className}.prototype.update = function(dt) {
 // to learn more about script anatomy, please read:
 // https://developer.playcanvas.com/en/user-manual/scripting/
     `.trim();
+}
+
+function createEsmBoilerplate(className, scriptName) {
+    return `
+export class ${className} extends pc.ScriptType {
+
+    static name = '${scriptName}';
+
+    initialize() {
+
+    }
+
+    update() {
+
+    }
+
+    // swap method called for script hot-reloading
+    // inherit your script state here
+    // swap(old) { };
+}
+
+// to learn more about script anatomy, please read:
+// https://developer.playcanvas.com/en/user-manual/scripting/
+    `.trim();
+    
 }
 
 export { createScript };
