@@ -103,7 +103,7 @@ export class ${className} extends pc.ScriptType {
     // swap(old) { };
 }
 
-// learn more about script anatomy here:
+// learn more about scripting here:
 // https://developer.playcanvas.com/user-manual/scripting/
     `.trim();
 
