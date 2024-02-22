@@ -94,7 +94,7 @@ export class ${className} extends pc.ScriptType {
 
     }
 
-    update() {
+    update(dt) {
 
     }
 
