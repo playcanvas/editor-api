@@ -1,17 +1,42 @@
 {
-    "name": "PlayCanvas Editor API",
-    "entryPoints": ["index.js"],
-    "out": "docs",
-    "readme": "README.md",
-    "darkHighlightTheme": "dark-plus",
-    "excludeInternal": true,
-    "excludePrivate": true,
+    "entryPoints": [
+        "./index.js",
+    ],
     "excludeNotDocumented": true,
-    "sort": "source-order",
-    "defaultCategory": "Public",
-    "categoryOrder": ["Public", "*"],
+    "excludeNotDocumentedKinds": [
+        "Module",
+        "Namespace",
+        "Enum",
+        // "EnumMember", // Not enabled by default
+        "Variable",
+        "Function",
+        "Class",
+        "Interface",
+        "Constructor",
+        "Property",
+        "Method",
+        "CallSignature",
+        "IndexSignature",
+        "ConstructorSignature",
+        "Accessor",
+        // We only document getters/setters with one JSDoc block so if there is a setter,
+        // the getter will appear undocumented (setters always appear before getters).
+        // "GetSignature",
+        "SetSignature",
+        "TypeAlias",
+        "Reference"
+    ],
+    "gaID": "UA-23605814-1",
+    "githubPages": true,
+    "name": "PlayCanvas Editor API Reference",
+    "navigationLinks": {
+        "Developer Site": "https://developer.playcanvas.com/",
+        "Discord": "https://discord.gg/RSaMRzg",
+        "Forum": "https://forum.playcanvas.com/",
+        "GitHub": "https://github.com/playcanvas"
+    },
     "plugin": [
-        "typedoc-plugin-markdown",
         "typedoc-plugin-mdn-links"
-    ]
+    ],
+    "sortEntryPoints": false
 }
