@@ -3,7 +3,30 @@ import { globals as api } from '../globals.js';
 
 /**
  * Represents the settings for the currently loaded scene.
- * For a list of properties see [here](SceneSettingsProperties.md).
+ *
+ * Here is a list of properties that can be accessed using the `get` and `set` methods:
+ *
+ * | Path                            | Type            | Description                                                                                        | Default Value |
+ * | ------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- | ------------- |
+ * | `physics`                       | `object`        | Physics related settings for the scene.                                                            |               |
+ * | `physics.gravity`               | `Array<number>` | An array of 3 numbers that represents the gravity force.                                           |               |
+ * | `render`                        | `object`        | Render settings for the scene.                                                                     |               |
+ * | `render.exposure`               | `number`        | The exposure value tweaks the overall brightness of the scene.                                     |               |
+ * | `render.fog`                    | `string`        | The type of fog used in the scene. Can be one of `pc.FOG_NONE`, `pc.FOG_LINEAR`, `pc.FOG_EXP`, `pc.FOG_EXP2`. |  |
+ * | `render.fog_color`              | `Array<number>` | An array of 3 numbers representing the color of the fog.                                           |               |
+ * | `render.fog_density`            | `number`        | The density of the fog. This property is only valid if the fog property is set to `pc.FOG_EXP` or `pc.FOG_EXP2`. |  |
+ * | `render.fog_end`                | `number`        | The distance from the viewpoint where linear fog reaches its maximum. This property is only valid if the fog property is set to `pc.FOG_LINEAR`. |  |
+ * | `render.fog_start`              | `number`        | The distance from the viewpoint where linear fog begins. This property is only valid if the fog property is set to `pc.FOG_LINEAR`. |  |
+ * | `render.gamma_correction`       | `number`        | The gamma correction to apply when rendering the scene. Can be one of `pc.GAMMA_NONE`, `pc.GAMMA_SRGB`. |  |
+ * | `render.global_ambient`         | `Array<number>` | An array of 3 numbers representing the color of the scene's ambient light.                          |               |
+ * | `render.lightmapMaxResolution`  | `number`        | The maximum lightmap resolution.                                                                   |               |
+ * | `render.lightmapMode`           | `number`        | The lightmap baking mode. Can be one of `pc.BAKE_COLOR`, `pc.BAKE_COLORDIR`.                       |               |
+ * | `render.lightmapSizeMultiplier` | `number`        | The lightmap resolution multiplier.                                                                |               |
+ * | `render.skybox`                 | `number`        | The `id` of the cubemap texture to be used as the scene's skybox.                                  |               |
+ * | `render.skyboxIntensity`        | `number`        | Multiplier for skybox intensity.                                                                   |               |
+ * | `render.skyboxMip`              | `number`        | The mip level of the skybox to be displayed. Only valid for prefiltered cubemap skyboxes.         |               |
+ * | `render.skyboxRotation`         | `Array<number>` | An array of 3 numbers representing the rotation of the skybox.                                     | `[0,0,0]`     |
+ * | `render.tonemapping`            | `number`        | The tonemapping transform to apply when writing fragments to the frame buffer. Can be: `pc.TONEMAP_LINEAR`, `pc.TONEMAP_FILMIC`, `pc.TONEMAP_HEJL`, `pc.TONEMAP_ACES`. |  |
  */
 class SceneSettings extends Events {
     /**
@@ -46,9 +69,8 @@ class SceneSettings extends Events {
     /**
      * Called when a scene is loaded.
      *
+     * @param {import("../realtime/scene.js").RealtimeScene} scene - The loaded scene
      * @private
-     * @typedef {import("../realtime/scene").RealtimeScene} RealtimeScene
-     * @param {RealtimeScene} scene - The loaded scene
      */
     _onLoadScene(scene) {
         this._initializeObserver();
@@ -61,11 +83,10 @@ class SceneSettings extends Events {
     }
 
     /**
-     * Checks if path exists. See [here](SceneSettingsProperties.md) for a list of properties.
+     * Checks if path exists. See the {@link SceneSettings} overview for a full list of properties.
      *
      * @param {string} path - The path
      * @returns {boolean} True if path exists
-     *
      * @example
      * ```javascript
      * console.log(editor.settings.scene.has('render.fog'));
@@ -76,7 +97,7 @@ class SceneSettings extends Events {
     }
 
     /**
-     * Gets value at path. See [here](SceneSettingsProperties.md) for a list of properties.
+     * Gets value at path. See the {@link SceneSettings} overview for a full list of properties.
      *
      * @param {string} path - The path
      * @returns {any} The value
@@ -90,7 +111,7 @@ class SceneSettings extends Events {
     }
 
     /**
-     * Sets value at path. See [here](SceneSettingsProperties.md) for a list of properties.
+     * Sets value at path. See the {@link SceneSettings} overview for a full list of properties.
      *
      * @param {string} path - The path
      * @param {any} value - The value
@@ -108,6 +129,7 @@ class SceneSettings extends Events {
      * Returns JSON representation of scene settings data
      *
      * @returns {object} - The data
+     * @example
      * ```javascript
      * console.log(editor.settings.scene.json());
      * ```

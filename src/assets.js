@@ -13,11 +13,11 @@ import { instantiateTemplates } from './assets/instantiateTemplates.js';
  * @property {Asset} folder - The parent folder asset where the asset should be placed.
  * @property {string} filename - The filename of the uploaded file.
  * @property {File} file - The file being uploaded.
- * @property {string} type - The type of the asset we are uploading. See [here](AssetProperties.md) for available asset types.
+ * @property {string} type - The type of the asset we are uploading. See {@link Asset} for available asset types.
  * @property {string} name - The name of the asset.
  * @property {string[]} tags - The tags of the asset.
  * @property {number} sourceAssetId - The id of the source asset.
- * @property {object} data - The asset data. This depends on the asset type. See [here](AssetProperties.md) for asset data depending on the type.
+ * @property {object} data - The asset data. This depends on the asset type. See {@link Asset} for asset data depending on the type.
  * @property {boolean} preload - Whether to preload the asset. Defaults to true.
  * @property {number} id - If an asset id is specified then this asset will be updated instead of creating a new asset.
  */
@@ -506,7 +506,7 @@ class Assets extends Events {
      * @param {object} options - Options
      * @param {string} options.name - The asset name
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {object} options.data - The asset data. See [here](AssetProperties.md) for Animstategraph data.
+     * @param {object} options.data - The asset data. See {@link Asset} for Animstategraph data.
      * @param {Asset} options.folder - The parent folder asset
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
@@ -707,7 +707,7 @@ class Assets extends Events {
      *
      * @param {object} options - Options
      * @param {string} options.name - The asset name
-     * @param {object} options.data - The material data. Default values will be used for missing fields. See [here](AssetProperties.md) for material data.
+     * @param {object} options.data - The material data. Default values will be used for missing fields. See {@link Asset} for material data.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {Function} options.onProgress - Function to report progress
@@ -739,7 +739,7 @@ class Assets extends Events {
      * @param {string} options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
      * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
-     * @param {object} options.data - The script data. See [here](AssetProperties.md) for Script data.
+     * @param {object} options.data - The script data. See {@link Asset} for Script data.
      * @param {Asset} options.folder - The parent folder asset
      * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
      * @param {Function} options.onProgress - Function to report progress

@@ -16,7 +16,7 @@ import { addScript, removeScript } from './entities/scripts.js';
  *
  * @typedef {object} CreateEntityArguments
  * @property {string} name - The entity name
- * @property {object} components - Component data. See [here](EntityProperties.md) for details on component data.
+ * @property {object} components - Component data. See {@link Entity} for details on component data.
  * @property {Entity|string} parent - The parent Entity or its resource_id. If undefined then the root Entity will be used as the parent.
  * @property {CreateEntityArguments[]} children - Data for child entities.
  * @property {string[]} tags - Tags for the Entity.

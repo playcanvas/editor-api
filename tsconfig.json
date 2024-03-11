@@ -1,11 +1,19 @@
 {
-    "include": ["**/*.js"],
-    "exclude": ["dist/**"],
     "compilerOptions": {
+        "noImplicitAny": true,
         "allowJs": true,
-        "declaration": true,
-        "module": "ES6",
-        "moduleResolution": "node",
-        "noEmit": true
-    }
+        "target": "es6",
+        "jsx": "react",
+        "lib": [
+            "es2019",
+            "dom",
+            "dom.iterable"
+        ],
+        "esModuleInterop" : true,
+        "sourceMap": true,
+        "moduleResolution": "node"
+    },
+    "include": [
+        "**/*.js",
+    ]
 }
