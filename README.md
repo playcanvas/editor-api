@@ -1,17 +1,20 @@
 # Overview
 
-This is the PlayCanvas Editor API. You can find API documentation [here](docs/modules.md).
+This is the PlayCanvas Editor API. You can find API documentation [here](https://api.playcanvas.com/modules/Editor.html).
 
 # Installing
+
 Run:
-```
+
+```sh
 npm install
 ```
 
 # Building
 
 Run:
-```
+
+```sh
 npm run build
 ```
 
@@ -20,27 +23,21 @@ This will create a UMD build under `dist/index.js` and an ES6 module under `dist
 # Docs
 
 To build the documentation run:
+
+```sh
+npm run docs
 ```
-npm run build:docs
-```
-
-The resulting .md file will be under docs/modules.md.
-
-NOTE: Build the docs after you commit any API changes, otherwise the code links in the docs might point to the wrong lines.
-
-NOTE: The following documents are created externally. When you build the docs, revert those documents (or update them externally):
-* `EntityProperties.md`
-* `AssetProperties.md`
-* `SceneSettingsProperties.md`
 
 # Tests
 
 To run tests run:
-```
+
+```sh
 npm test
 ```
 
 To step through the tests using Chrome run:
-```
+
+```sh
 npm run test:debug
 ```
