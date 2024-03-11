@@ -45,7 +45,6 @@
     "rollup-plugin-dts": "^6.1.0",
     "sinon": "^17.0.1",
     "typedoc": "^0.25.7",
-    "typedoc-plugin-markdown": "^3.17.1",
     "typedoc-plugin-mdn-links": "^3.1.12",
     "typescript": "^5.3.3"
   },
@@ -53,8 +52,8 @@
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "build:docs": "typedoc --options typedoc.json",
     "build:types": "tsc index.js --outDir types --allowJs --declaration --emitDeclarationOnly && rollup -c --environment target:types",
+    "docs": "typedoc",
     "lint": "eslint --ext .js src"
   }
 }
