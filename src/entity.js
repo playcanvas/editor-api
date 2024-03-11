@@ -9,153 +9,153 @@ import { Guid } from './guid.js';
  *
  * Common Entity Properties:
  *
- * | Path               | Type            | Description                                                                                                     | Default Value | 
+ * | Path               | Type            | Description                                                                                                     | Default Value |
  * | :----------------- | :-------------- | :-------------------------------------------------------------------------------------------------------------- | :------------ |
- * | `children`         | `Array<string>` | An array that contains the `resource_id`'s of the entity's children.                                            | `[]`          | 
- * | `enabled`          | `boolean`       | Whether the entity is enabled.                                                                                  | `true`        | 
- * | `name`             | `string`        | The name of the entity.                                                                                         |               | 
- * | `parent`           | `string`        | The `resource_id` of the parent entity.                                                                         |               | 
- * | `position`         | `Array<number>` | The position of the entity in local space (x, y, z).                                                            | `[0,0,0]`     | 
- * | `resource_id`      | `string`        | The unique GUID of the entity.                                                                                  |               | 
- * | `rotation`         | `Array<number>` | The rotation of the entity in local space (rx, ry, rz euler angles in degrees).                                 | `[0,0,0]`     | 
- * | `scale`            | `Array<number>` | The scale of the entity in local space (sx, sy, sz).                                                            | `[1,1,1]`     | 
- * | `tags`             | `Array<string>` | The tags of the entity.                                                                                         | `[]`          | 
- * | `template_ent_ids` | `object`        | A dictionary of <`resource_id`, `resource_id`> pairs that maps the entity (and its children) to the respective Entities in the template asset. | | 
- * | `template_id`      | `number`        | The `id` of the Template asset that this entity is linked to.                                                   |               | 
- * | `components`       | `object`        | A dictionary that contains the components of the entity and their data.                                         |               | 
+ * | `children`         | `Array<string>` | An array that contains the `resource_id`'s of the entity's children.                                            | `[]`          |
+ * | `enabled`          | `boolean`       | Whether the entity is enabled.                                                                                  | `true`        |
+ * | `name`             | `string`        | The name of the entity.                                                                                         |               |
+ * | `parent`           | `string`        | The `resource_id` of the parent entity.                                                                         |               |
+ * | `position`         | `Array<number>` | The position of the entity in local space (x, y, z).                                                            | `[0,0,0]`     |
+ * | `resource_id`      | `string`        | The unique GUID of the entity.                                                                                  |               |
+ * | `rotation`         | `Array<number>` | The rotation of the entity in local space (rx, ry, rz euler angles in degrees).                                 | `[0,0,0]`     |
+ * | `scale`            | `Array<number>` | The scale of the entity in local space (sx, sy, sz).                                                            | `[1,1,1]`     |
+ * | `tags`             | `Array<string>` | The tags of the entity.                                                                                         | `[]`          |
+ * | `template_ent_ids` | `object`        | A dictionary of <`resource_id`, `resource_id`> pairs that maps the entity (and its children) to the respective Entities in the template asset. | |
+ * | `template_id`      | `number`        | The `id` of the Template asset that this entity is linked to.                                                   |               |
+ * | `components`       | `object`        | A dictionary that contains the components of the entity and their data.                                         |               |
  *
  * Anim Component Properties:
  *
  * | Path                                      | Type      | Description                                                                                                               | Default Value |
  * | :---------------------------------------- | :-------- | :------------------------------------------------------------------------------------------------------------------------ | :------------ |
- * | `components.anim`                         | `object`  | The data for the anim component.                                                                                          |               | 
- * | `components.anim.activate`                | `boolean` | If true, the component will start playing the anim state graph on load.                                                   | `true`        | 
- * | `components.anim.animationAssets`         | `object`  | A dictionary that holds the animation assets used by this component. Each key is a string representing a path to a state. | `{}`          | 
- * | `components.anim.animationAssets.*.asset` | `number`  | The `id` of the animation asset.                                                                                          | `null`        | 
- * | `components.anim.enabled`                 | `boolean` | Whether the component is enabled.                                                                                         | `true`        | 
- * | `components.anim.masks`                   | `object`  | The layer masks associated with this component.                                                                           | `{}`          | 
- * | `components.anim.masks.*.mask`            | `object`  | A set of paths to bones in the current model that should be animated by the layer.                                        | `{}`          | 
- * | `components.anim.masks.*.mask.*.children` | `boolean` | Whether the children of this bone should also be included in the mask.                                                    |               | 
- * | `components.anim.masks.*.mask.*.value`    | `boolean` | Whether this bone should also be included in the mask.                                                                    |               | 
- * | `components.anim.rootBone`                | `string`  | The `resource_id` of the entity that this anim component should use as the root of the animation hierarchy.               | `null`        | 
+ * | `components.anim`                         | `object`  | The data for the anim component.                                                                                          |               |
+ * | `components.anim.activate`                | `boolean` | If true, the component will start playing the anim state graph on load.                                                   | `true`        |
+ * | `components.anim.animationAssets`         | `object`  | A dictionary that holds the animation assets used by this component. Each key is a string representing a path to a state. | `{}`          |
+ * | `components.anim.animationAssets.*.asset` | `number`  | The `id` of the animation asset.                                                                                          | `null`        |
+ * | `components.anim.enabled`                 | `boolean` | Whether the component is enabled.                                                                                         | `true`        |
+ * | `components.anim.masks`                   | `object`  | The layer masks associated with this component.                                                                           | `{}`          |
+ * | `components.anim.masks.*.mask`            | `object`  | A set of paths to bones in the current model that should be animated by the layer.                                        | `{}`          |
+ * | `components.anim.masks.*.mask.*.children` | `boolean` | Whether the children of this bone should also be included in the mask.                                                    |               |
+ * | `components.anim.masks.*.mask.*.value`    | `boolean` | Whether this bone should also be included in the mask.                                                                    |               |
+ * | `components.anim.rootBone`                | `string`  | The `resource_id` of the entity that this anim component should use as the root of the animation hierarchy.               | `null`        |
  * | `components.anim.speed`                   | `number`  | A multiplier for animation playback speed. 0 will freeze animation playback, and 1 represents the normal playback speed.  | `1`           |
  *
  * Animation Component Properties:
  *
  * | Path                            | Type            | Description                                                                                                       | Default Value |
  * | :------------------------------ | :-------------- | :---------------------------------------------------------------------------------------------------------------- | :------------ |
- * | `components.animation`          | `object`        | The data for the (legacy) animation component.                                                                    |               | 
- * | `components.animation.activate` | `boolean`       | If true, the component will start playing the animation on load.                                                  | `true`        | 
- * | `components.animation.assets`   | `Array<number>` | An array of Animation asset `id`'s.                                                                               | `[]`          | 
- * | `components.animation.enabled`  | `boolean`       | Whether the component is enabled.                                                                                 | `true`        | 
- * | `components.animation.loop`     | `boolean`       | If true, the animation will continue to loop back to the start on completion. Otherwise, it will stop on its final frame. | `true` | 
+ * | `components.animation`          | `object`        | The data for the (legacy) animation component.                                                                    |               |
+ * | `components.animation.activate` | `boolean`       | If true, the component will start playing the animation on load.                                                  | `true`        |
+ * | `components.animation.assets`   | `Array<number>` | An array of Animation asset `id`'s.                                                                               | `[]`          |
+ * | `components.animation.enabled`  | `boolean`       | Whether the component is enabled.                                                                                 | `true`        |
+ * | `components.animation.loop`     | `boolean`       | If true, the animation will continue to loop back to the start on completion. Otherwise, it will stop on its final frame. | `true` |
  * | `components.animation.speed`    | `number`        | A multiplier for animation playback speed. 0 will freeze animation playback, and 1 is the normal playback speed.  | `1`           |
  *
  * AudioListener Component Properties:
- * 
+ *
  * | Path                                 | Type      | Description                               | Default Value |
  * | :----------------------------------- | :-------- | :---------------------------------------- | :------------ |
- * | `components.audiolistener`           | `object`  | The data for the audiolistener component. |               | 
+ * | `components.audiolistener`           | `object`  | The data for the audiolistener component. |               |
  * | `components.audiolistener.enabled`   | `boolean` | Whether the component is enabled.         | `true`        |
  *
  * Button Component Properties:
  *
  * | Path                                      | Type             | Description                                                                                                             | Default Value |
  * | :---------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------- | :------------ |
- * | `components.button`                       | `object`         | The data for the button component.                                                                                      |               | 
- * | `components.button.active`                | `boolean`        | If false, the button will be visible but will not respond to hover or touch interactions.                               | `true`        | 
- * | `components.button.enabled`               | `boolean`        | Whether the component is enabled.                                                                                       | `true`        | 
- * | `components.button.fadeDuration`          | `number`         | Duration to be used when fading between tints, in milliseconds.                                                         | `0`           | 
- * | `components.button.hitPadding`            | `Array<number>`  | An array of 4 numbers controlling the padding to be used in hit-test calculations.                                      | `[0,0,0,0]`   | 
- * | `components.button.hoverSpriteAsset`      | `number`         | The `id` of the sprite asset to be used as the button image when the user hovers over it.                               | `null`        | 
- * | `components.button.hoverSpriteFrame`      | `number`         | Frame to be used from the hover sprite.                                                                                 | `0`           | 
- * | `components.button.hoverTint`             | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the user hovers over it.                    | `[1,1,1,1]`   | 
- * | `components.button.imageEntity`           | `string`         | The `resource_id` of the entity to be used as the button background. Must have an element component of type `image`.    | `null`        | 
- * | `components.button.inactiveSpriteAsset`   | `number`         | The `id` of the sprite asset to be used as the button image when the button is not interactive.                         | `null`        | 
- * | `components.button.inactiveSpriteFrame`   | `number`         | Frame to be used from the inactive sprite.                                                                              | `0`           | 
- * | `components.button.inactiveTint`          | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the button is not interactive.              | `[1,1,1,1]`   | 
- * | `components.button.pressedSpriteAsset`    | `number`         | The `id` of the sprite asset to be used as the button image when the user presses it.                                   | `null`        | 
- * | `components.button.pressedSpriteFrame`    | `number`         | Frame to be used from the pressed sprite.                                                                               | `0`           | 
- * | `components.button.pressedTint`           | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the user presses it.                        | `[1,1,1,1]`   | 
+ * | `components.button`                       | `object`         | The data for the button component.                                                                                      |               |
+ * | `components.button.active`                | `boolean`        | If false, the button will be visible but will not respond to hover or touch interactions.                               | `true`        |
+ * | `components.button.enabled`               | `boolean`        | Whether the component is enabled.                                                                                       | `true`        |
+ * | `components.button.fadeDuration`          | `number`         | Duration to be used when fading between tints, in milliseconds.                                                         | `0`           |
+ * | `components.button.hitPadding`            | `Array<number>`  | An array of 4 numbers controlling the padding to be used in hit-test calculations.                                      | `[0,0,0,0]`   |
+ * | `components.button.hoverSpriteAsset`      | `number`         | The `id` of the sprite asset to be used as the button image when the user hovers over it.                               | `null`        |
+ * | `components.button.hoverSpriteFrame`      | `number`         | Frame to be used from the hover sprite.                                                                                 | `0`           |
+ * | `components.button.hoverTint`             | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the user hovers over it.                    | `[1,1,1,1]`   |
+ * | `components.button.imageEntity`           | `string`         | The `resource_id` of the entity to be used as the button background. Must have an element component of type `image`.    | `null`        |
+ * | `components.button.inactiveSpriteAsset`   | `number`         | The `id` of the sprite asset to be used as the button image when the button is not interactive.                         | `null`        |
+ * | `components.button.inactiveSpriteFrame`   | `number`         | Frame to be used from the inactive sprite.                                                                              | `0`           |
+ * | `components.button.inactiveTint`          | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the button is not interactive.              | `[1,1,1,1]`   |
+ * | `components.button.pressedSpriteAsset`    | `number`         | The `id` of the sprite asset to be used as the button image when the user presses it.                                   | `null`        |
+ * | `components.button.pressedSpriteFrame`    | `number`         | Frame to be used from the pressed sprite.                                                                               | `0`           |
+ * | `components.button.pressedTint`           | `Array<number>`  | Array of 4 numbers controlling the color to be used on the button image when the user presses it.                        | `[1,1,1,1]`   |
  * | `components.button.transitionMode`        | `number`         | Controls how the button responds when the user hovers over it/presses it.                                               | `0`           |
  *
  * Camera Component Properties:
  *
  * | Path                                 | Type            | Description                                                                                                                                | Default Value   |
  * | :----------------------------------- | :-------------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :-------------- |
- * | `components.camera`                  | `object`        | The data for the camera component.                                                                                                         |                 | 
- * | `components.camera.clearColor`       | `Array<number>` | The color used to clear the camera's render target.                                                                                        | `[0.118,0.118,0.118,1]` | 
- * | `components.camera.clearColorBuffer` | `boolean`       | If true, the camera will explicitly clear its render target to the chosen clear color before rendering the scene.                          | `true`          | 
- * | `components.camera.clearDepthBuffer` | `boolean`       | If true, the camera will explicitly clear the depth buffer of its render target before rendering the scene.                                | `true`          | 
- * | `components.camera.enabled`          | `boolean`       | Whether the component is enabled.                                                                                                          | `true`          | 
- * | `components.camera.farClip`          | `number`        | The distance in camera space from the camera's eye point to the far plane.                                                                 | `1000`          | 
- * | `components.camera.fov`              | `number`        | The angle (in degrees) between top and bottom clip planes of a perspective camera.                                                         | `45`            | 
- * | `components.camera.frustumCulling`   | `boolean`       | Controls the culling of mesh instances against the camera frustum. If true, culling is enabled. If false, all mesh instances are rendered. | `true`          | 
- * | `components.camera.layers`           | `Array<number>` | An array of layer id's that this camera will render.                                                                                       | `[0,1,2,3,4]`   | 
- * | `components.camera.nearClip`         | `number`        | The distance in camera space from the camera's eye point to the near plane.                                                                | `0.1`           | 
- * | `components.camera.orthoHeight`      | `number`        | The distance in world units between the top and bottom clip planes of an orthographic camera.                                              | `4`             | 
- * | `components.camera.priority`         | `number`        | A number that defines the order in which camera views are rendered by the engine. Smaller numbers are rendered first.                      | `0`             | 
- * | `components.camera.projection`       | `number`        | The projection type of the camera. Can be `pc.PROJECTION_PERSPECTIVE` or `pc.PROJECTION_ORTHOGRAPHIC`.                                     | `0`             | 
+ * | `components.camera`                  | `object`        | The data for the camera component.                                                                                                         |                 |
+ * | `components.camera.clearColor`       | `Array<number>` | The color used to clear the camera's render target.                                                                                        | `[0.118,0.118,0.118,1]` |
+ * | `components.camera.clearColorBuffer` | `boolean`       | If true, the camera will explicitly clear its render target to the chosen clear color before rendering the scene.                          | `true`          |
+ * | `components.camera.clearDepthBuffer` | `boolean`       | If true, the camera will explicitly clear the depth buffer of its render target before rendering the scene.                                | `true`          |
+ * | `components.camera.enabled`          | `boolean`       | Whether the component is enabled.                                                                                                          | `true`          |
+ * | `components.camera.farClip`          | `number`        | The distance in camera space from the camera's eye point to the far plane.                                                                 | `1000`          |
+ * | `components.camera.fov`              | `number`        | The angle (in degrees) between top and bottom clip planes of a perspective camera.                                                         | `45`            |
+ * | `components.camera.frustumCulling`   | `boolean`       | Controls the culling of mesh instances against the camera frustum. If true, culling is enabled. If false, all mesh instances are rendered. | `true`          |
+ * | `components.camera.layers`           | `Array<number>` | An array of layer id's that this camera will render.                                                                                       | `[0,1,2,3,4]`   |
+ * | `components.camera.nearClip`         | `number`        | The distance in camera space from the camera's eye point to the near plane.                                                                | `0.1`           |
+ * | `components.camera.orthoHeight`      | `number`        | The distance in world units between the top and bottom clip planes of an orthographic camera.                                              | `4`             |
+ * | `components.camera.priority`         | `number`        | A number that defines the order in which camera views are rendered by the engine. Smaller numbers are rendered first.                      | `0`             |
+ * | `components.camera.projection`       | `number`        | The projection type of the camera. Can be `pc.PROJECTION_PERSPECTIVE` or `pc.PROJECTION_ORTHOGRAPHIC`.                                     | `0`             |
  * | `components.camera.rect`             | `Array<number>` | An array that represents the viewport onto the camera's attached render target defined by normalized coordinates.                          | `[0,0,1,1]`     |
  *
  * Collision Component Properties:
  *
  * | Path                                 | Type            | Description                                                                                              | Default Value   |
  * | :----------------------------------- | :-------------- | :------------------------------------------------------------------------------------------------------- | :-------------- |
- * | `components.collision`               | `object`        | The data for the collision component.                                                                    |                 | 
- * | `components.collision.asset`         | `number`        | The `id` of the model asset that will be used as a source for the triangle-based collision mesh.         | `null`          | 
- * | `components.collision.axis`          | `number`        | Aligns the capsule/cylinder with the local-space X, Y or Z axis of the entity.                           | `1`             | 
- * | `components.collision.enabled`       | `boolean`       | Whether the component is enabled.                                                                        | `true`          | 
- * | `components.collision.halfExtents`   | `Array<number>` | The half-extents of the collision box: local space half-width, half-height, and half-depth.               | `[0.5,0.5,0.5]` | 
- * | `components.collision.height`        | `number`        | The tip-to-tip height of the capsule/cylinder.                                                           | `2`             | 
- * | `components.collision.radius`        | `number`        | The radius of the capsule/cylinder body.                                                                 | `0.5`           | 
- * | `components.collision.renderAsset`   | `number`        | The `id` of the render asset that will be used as a source for the triangle-based collision mesh.        | `null`          | 
+ * | `components.collision`               | `object`        | The data for the collision component.                                                                    |                 |
+ * | `components.collision.asset`         | `number`        | The `id` of the model asset that will be used as a source for the triangle-based collision mesh.         | `null`          |
+ * | `components.collision.axis`          | `number`        | Aligns the capsule/cylinder with the local-space X, Y or Z axis of the entity.                           | `1`             |
+ * | `components.collision.enabled`       | `boolean`       | Whether the component is enabled.                                                                        | `true`          |
+ * | `components.collision.halfExtents`   | `Array<number>` | The half-extents of the collision box: local space half-width, half-height, and half-depth.               | `[0.5,0.5,0.5]` |
+ * | `components.collision.height`        | `number`        | The tip-to-tip height of the capsule/cylinder.                                                           | `2`             |
+ * | `components.collision.radius`        | `number`        | The radius of the capsule/cylinder body.                                                                 | `0.5`           |
+ * | `components.collision.renderAsset`   | `number`        | The `id` of the render asset that will be used as a source for the triangle-based collision mesh.        | `null`          |
  * | `components.collision.type`          | `string`        | The type of collision primitive. Can be: box, sphere, capsule, cylinder, mesh.                           | `"box"`         |
  *
  * Element Component Properties:
  *
  * | Path                                    | Type             | Description                                                                                              | Default Value   |
  * | :-------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------- | :-------------- |
- * | `components.element`                    | `object`         | The data for the element component.                                                                      |                 | 
- * | `components.element.alignment`          | `Array<number>`  | An array of 2 numbers controlling the horizontal and vertical alignment of the text relative to its element transform. | `[0.5,0.5]`     | 
- * | `components.element.anchor`             | `Array<number>`  | An array of 4 numbers controlling the left, bottom, right and top anchors of the element.                | `[0.5,0.5,0.5,0.5]` | 
- * | `components.element.autoFitHeight`      | `boolean`        | If true then the font size of the element will scale automatically so that it fits the element's height. | `false`         | 
- * | `components.element.autoFitWidth`       | `boolean`        | If true then the font size and the line height of the element will scale automatically so that it fits the element's width. | `false`       | 
- * | `components.element.autoHeight`         | `boolean`        | Make the height of the element match the height of the text content automatically.                       | `false`         | 
- * | `components.element.autoWidth`          | `boolean`        | Make the width of the element match the width of the text content automatically.                         | `false`         | 
- * | `components.element.batchGroupId`       | `number`         | The batch group id that this element belongs to.                                                         | `null`          | 
- * | `components.element.color`              | `Array<number>`  | An array of 3 numbers controlling the color of the element.                                              | `[1,1,1]`       | 
- * | `components.element.enableMarkup`       | `boolean`        | Flag for enabling markup processing. Only works for text types.                                          | `false`         | 
- * | `components.element.enabled`            | `boolean`        | Whether the component is enabled.                                                                        | `true`          | 
- * | `components.element.fontAsset`          | `number`         | The `id` of the font asset used by the element.                                                          | `null`          | 
- * | `components.element.fontSize`           | `number`         | The size of the font used by the element.                                                                | `32`            | 
- * | `components.element.height`             | `number`         | The height of the element.                                                                               | `32`            | 
- * | `components.element.key`                | `string`         | The localization key of the element.                                                                     | `null`          | 
- * | `components.element.layers`             | `Array<number>`  | An array of layer id's that this element belongs to.                                                     | `[4]`           | 
- * | `components.element.lineHeight`         | `number`         | The height of each line of text.                                                                         | `32`            | 
- * | `components.element.margin`             | `Array<number>`  | An array of 4 numbers controlling the spacing between each edge of the element and the respective anchor. | `[-16,-16,-16,-16]` | 
- * | `components.element.mask`               | `boolean`        | Switch image element into a mask.                                                                        | `false`         | 
- * | `components.element.materialAsset`      | `number`         | The `id` of the material asset used by this element.                                                     | `null`          | 
- * | `components.element.maxFontSize`        | `number`         | The maximum size of the font that the element can scale to when using `autoFitWidth` or `autoFitHeight`. | `32`            | 
- * | `components.element.maxLines`           | `number`         | The maximum number of lines that this element can display.                                               | `null`          | 
- * | `components.element.minFontSize`        | `number`         | The minimum size of the font that the element can scale to when using `autoFitWidth` or `autoFitHeight`. | `8`             | 
- * | `components.element.opacity`            | `number`         | The opacity of the element.                                                                              | `1`             | 
- * | `components.element.outlineColor`       | `Array<number>`  | An array of 4 numbers controlling the text outline effect color and opacity.                             | `[0,0,0,1]`     | 
- * | `components.element.outlineThickness`   | `number`         | The text outline effect width. Ranges from 0 to 1. To disable outline effect set to 0.                  | `0`             | 
- * | `components.element.pivot`              | `Array<number>`  | An array of 2 numbers controlling the origin of the element.                                             | `[0.5,0.5]`     | 
- * | `components.element.pixelsPerUnit`      | `number`         | The number of pixels that correspond to one PlayCanvas unit.                                             | `null`          | 
- * | `components.element.rect`               | `Array<number>`  | An array of 4 numbers controlling the u, v, width and height of the rectangle that represents the portion of the texture that this image maps to. | `[0,0,1,1]` | 
- * | `components.element.shadowColor`        | `Array<number>`  | An array of 4 numbers controlling the text shadow cast effect color and opacity.                         | `[0,0,0,1]`     | 
- * | `components.element.shadowOffset`       | `Array<number>`  | An array of 2 numbers controlling the horizontal and vertical shift of the text shadow cast effect.     | `[0,0]`         | 
- * | `components.element.spacing`            | `number`         | The spacing between each letter of the text.                                                             | `1`             | 
- * | `components.element.spriteAsset`        | `number`         | The `id` of the sprite asset to be used by the element.                                                  | `null`          | 
- * | `components.element.spriteFrame`        | `number`         | The frame from the sprite asset to render.                                                               | `0`             | 
- * | `components.element.text`               | `string`         | The text content of the element.                                                                         | `""`            | 
- * | `components.element.textureAsset`       | `number`         | The `id` of the texture asset to be used by the element.                                                 | `null`          | 
- * | `components.element.type`               | `string`         | The type of the element. Can be: `pc.ELEMENTTYPE_GROUP`, `pc.ELEMENTTYPE_IMAGE`, `pc.ELEMENTTYPE_TEXT`.  | `"text"`        | 
- * | `components.element.useInput`           | `boolean`        | Enable this if you want the element to receive input events.                                             | `false`         | 
- * | `components.element.width`              | `number`         | The width of the element.                                                                                | `32`            | 
- * | `components.element.wrapLines`          | `boolean`        | Whether to automatically wrap lines based on the element width.                                          | `true`          | 
+ * | `components.element`                    | `object`         | The data for the element component.                                                                      |                 |
+ * | `components.element.alignment`          | `Array<number>`  | An array of 2 numbers controlling the horizontal and vertical alignment of the text relative to its element transform. | `[0.5,0.5]`     |
+ * | `components.element.anchor`             | `Array<number>`  | An array of 4 numbers controlling the left, bottom, right and top anchors of the element.                | `[0.5,0.5,0.5,0.5]` |
+ * | `components.element.autoFitHeight`      | `boolean`        | If true then the font size of the element will scale automatically so that it fits the element's height. | `false`         |
+ * | `components.element.autoFitWidth`       | `boolean`        | If true then the font size and the line height of the element will scale automatically so that it fits the element's width. | `false`       |
+ * | `components.element.autoHeight`         | `boolean`        | Make the height of the element match the height of the text content automatically.                       | `false`         |
+ * | `components.element.autoWidth`          | `boolean`        | Make the width of the element match the width of the text content automatically.                         | `false`         |
+ * | `components.element.batchGroupId`       | `number`         | The batch group id that this element belongs to.                                                         | `null`          |
+ * | `components.element.color`              | `Array<number>`  | An array of 3 numbers controlling the color of the element.                                              | `[1,1,1]`       |
+ * | `components.element.enableMarkup`       | `boolean`        | Flag for enabling markup processing. Only works for text types.                                          | `false`         |
+ * | `components.element.enabled`            | `boolean`        | Whether the component is enabled.                                                                        | `true`          |
+ * | `components.element.fontAsset`          | `number`         | The `id` of the font asset used by the element.                                                          | `null`          |
+ * | `components.element.fontSize`           | `number`         | The size of the font used by the element.                                                                | `32`            |
+ * | `components.element.height`             | `number`         | The height of the element.                                                                               | `32`            |
+ * | `components.element.key`                | `string`         | The localization key of the element.                                                                     | `null`          |
+ * | `components.element.layers`             | `Array<number>`  | An array of layer id's that this element belongs to.                                                     | `[4]`           |
+ * | `components.element.lineHeight`         | `number`         | The height of each line of text.                                                                         | `32`            |
+ * | `components.element.margin`             | `Array<number>`  | An array of 4 numbers controlling the spacing between each edge of the element and the respective anchor. | `[-16,-16,-16,-16]` |
+ * | `components.element.mask`               | `boolean`        | Switch image element into a mask.                                                                        | `false`         |
+ * | `components.element.materialAsset`      | `number`         | The `id` of the material asset used by this element.                                                     | `null`          |
+ * | `components.element.maxFontSize`        | `number`         | The maximum size of the font that the element can scale to when using `autoFitWidth` or `autoFitHeight`. | `32`            |
+ * | `components.element.maxLines`           | `number`         | The maximum number of lines that this element can display.                                               | `null`          |
+ * | `components.element.minFontSize`        | `number`         | The minimum size of the font that the element can scale to when using `autoFitWidth` or `autoFitHeight`. | `8`             |
+ * | `components.element.opacity`            | `number`         | The opacity of the element.                                                                              | `1`             |
+ * | `components.element.outlineColor`       | `Array<number>`  | An array of 4 numbers controlling the text outline effect color and opacity.                             | `[0,0,0,1]`     |
+ * | `components.element.outlineThickness`   | `number`         | The text outline effect width. Ranges from 0 to 1. To disable outline effect set to 0.                  | `0`             |
+ * | `components.element.pivot`              | `Array<number>`  | An array of 2 numbers controlling the origin of the element.                                             | `[0.5,0.5]`     |
+ * | `components.element.pixelsPerUnit`      | `number`         | The number of pixels that correspond to one PlayCanvas unit.                                             | `null`          |
+ * | `components.element.rect`               | `Array<number>`  | An array of 4 numbers controlling the u, v, width and height of the rectangle that represents the portion of the texture that this image maps to. | `[0,0,1,1]` |
+ * | `components.element.shadowColor`        | `Array<number>`  | An array of 4 numbers controlling the text shadow cast effect color and opacity.                         | `[0,0,0,1]`     |
+ * | `components.element.shadowOffset`       | `Array<number>`  | An array of 2 numbers controlling the horizontal and vertical shift of the text shadow cast effect.     | `[0,0]`         |
+ * | `components.element.spacing`            | `number`         | The spacing between each letter of the text.                                                             | `1`             |
+ * | `components.element.spriteAsset`        | `number`         | The `id` of the sprite asset to be used by the element.                                                  | `null`          |
+ * | `components.element.spriteFrame`        | `number`         | The frame from the sprite asset to render.                                                               | `0`             |
+ * | `components.element.text`               | `string`         | The text content of the element.                                                                         | `""`            |
+ * | `components.element.textureAsset`       | `number`         | The `id` of the texture asset to be used by the element.                                                 | `null`          |
+ * | `components.element.type`               | `string`         | The type of the element. Can be: `pc.ELEMENTTYPE_GROUP`, `pc.ELEMENTTYPE_IMAGE`, `pc.ELEMENTTYPE_TEXT`.  | `"text"`        |
+ * | `components.element.useInput`           | `boolean`        | Enable this if you want the element to receive input events.                                             | `false`         |
+ * | `components.element.width`              | `number`         | The width of the element.                                                                                | `32`            |
+ * | `components.element.wrapLines`          | `boolean`        | Whether to automatically wrap lines based on the element width.                                          | `true`          |
  *
  * LayoutChild Component Properties:
  *
