@@ -86,9 +86,9 @@ ${className}.prototype.update = function(dt) {
 
 function createEsmBoilerplate(className, scriptName) {
     return `
-export class ${className} extends pc.ScriptType {
+import { Script } from 'playcanvas';
 
-    static name = '${scriptName}';
+export class ${className} extends Script {
 
     initialize() {
 
