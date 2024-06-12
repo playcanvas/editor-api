@@ -18,7 +18,7 @@ class SelectionHistory {
     }
 
     /**
-     * Disables / enables selection undo / redo
+     * Sets enabled state of selection undo / redo.
      *
      * @type {boolean}
      */
@@ -26,6 +26,11 @@ class SelectionHistory {
         this._enabled = value;
     }
 
+    /**
+     * Gets enabled state of selection undo / redo.
+     *
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
@@ -323,7 +328,7 @@ class Selection extends Events {
     }
 
     /**
-     * Enables / disables the selection methods
+     * Sets enabled state of the selection methods.
      *
      * @type {boolean}
      */
@@ -331,6 +336,11 @@ class Selection extends Events {
         this._enabled = value;
     }
 
+    /**
+     * Gets enabled state of the selection methods.
+     *
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }

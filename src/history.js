@@ -119,7 +119,7 @@ class History extends Events {
     }
 
     /**
-     * Whether there are any actions to undo
+     * Sets whether there are actions to undo.
      *
      * @type {boolean}
      */
@@ -127,12 +127,17 @@ class History extends Events {
         this._history.canUndo = value;
     }
 
+    /**
+     * Gets whether there are actions to undo.
+     *
+     * @type {boolean}
+     */
     get canUndo() {
         return this._history.canUndo;
     }
 
     /**
-     * Whether there are actions to redo
+     * Sets whether there are actions to redo.
      *
      * @type {boolean}
      */
@@ -140,6 +145,11 @@ class History extends Events {
         this._history.canRedo = value;
     }
 
+    /**
+     * Gets whether there are actions to redo.
+     *
+     * @type {boolean}
+     */
     get canRedo() {
         return this._history.canRedo;
     }
