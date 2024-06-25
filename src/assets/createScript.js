@@ -89,11 +89,9 @@ function createEsmBoilerplate(className, scriptName) {
 import { Script } from 'playcanvas';
 
 /**
- * The 'Script' class is the fundamental base class for all scripts within PlayCanvas. It provides
- * the minimal interface required for a script to be compatible with both the Engine and the
- * Editor.
- * 
- * Learn more about script {@link https://developer.playcanvas.com/user-manual/scripting/}
+ * The {@link https://api.playcanvas.com/classes/Engine.Script.html | Script} class is
+ * the base class for all PlayCanvas scripts. Learn more about writing scripts in the
+ * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
  */
 export class ${className} extends Script {
     /**
