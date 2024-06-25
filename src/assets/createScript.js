@@ -81,7 +81,7 @@ ${className}.prototype.update = function(dt) {
 
 // learn more about scripting here:
 // https://developer.playcanvas.com/user-manual/scripting/
-    `.trim();
+`.trim();
 }
 
 function createEsmBoilerplate(className, scriptName) {
@@ -90,23 +90,37 @@ import { Script } from 'playcanvas';
 
 export class ${className} extends Script {
 
+    /**
+     * Called when script is about to run for the first time.
+     */
     initialize() {
-
     }
 
+    /**
+     * Called for enabled (running state) scripts on each tick.
+     * 
+     * @param {number} dt - The delta time in seconds since the last frame.
+     */
     update(dt) {
-
     }
 
-    // uncomment the swap method to enable hot-reloading for this script
-    // update the method body to copy state from the old instance
-    // swap(old) { };
+    /**
+     * Called when a Script that already exists in the registry gets redefined. If the new
+     * Script has a 'swap' method in its prototype, then it will be executed to perform
+     * hot-reload at runtime.
+     * 
+     * Uncomment the method to enable hot-reloading for this script.
+     * 
+     * @param {${className}} old - The old script instance.
+     */
+    // swap(old) {
+    // }
 }
 
-// learn more about scripting here:
-// https://developer.playcanvas.com/user-manual/scripting/
-    `.trim();
-
+/**
+ * Learn more about script {@link https://developer.playcanvas.com/user-manual/scripting/}
+ */
+`.trim();
 }
 
 export { createScript };
