@@ -107,16 +107,6 @@ export class ${className} extends Script {
      */
     update(dt) {
     }
-
-    /**
-     * Called when a script that already exists in the registry gets redefined. If the new script
-     * has a `swap` method in its prototype, then it will be executed to perform hot-reload at
-     * runtime. Uncomment the method to enable hot-reloading for this script.
-     * 
-     * @param {${className}} old - The old script instance.
-     */
-    // swap(old) {
-    // }
 }
 `.trim();
 }
