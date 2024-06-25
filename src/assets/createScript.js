@@ -81,32 +81,34 @@ ${className}.prototype.update = function(dt) {
 
 // learn more about scripting here:
 // https://developer.playcanvas.com/user-manual/scripting/
-    `.trim();
+`.trim();
 }
 
 function createEsmBoilerplate(className, scriptName) {
     return `
 import { Script } from 'playcanvas';
 
+/**
+ * The {@link https://api.playcanvas.com/classes/Engine.Script.html | Script} class is
+ * the base class for all PlayCanvas scripts. Learn more about writing scripts in the
+ * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
+ */
 export class ${className} extends Script {
-
+    /**
+     * Called when the script is about to run for the first time.
+     */
     initialize() {
-
     }
 
+    /**
+     * Called for enabled (running state) scripts on each tick.
+     * 
+     * @param {number} dt - The delta time in seconds since the last frame.
+     */
     update(dt) {
-
     }
-
-    // uncomment the swap method to enable hot-reloading for this script
-    // update the method body to copy state from the old instance
-    // swap(old) { };
 }
-
-// learn more about scripting here:
-// https://developer.playcanvas.com/user-manual/scripting/
-    `.trim();
-
+`.trim();
 }
 
 export { createScript };
