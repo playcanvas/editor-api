@@ -97,7 +97,7 @@ import { Script } from 'playcanvas';
  */
 export class ${className} extends Script {
     /**
-     * Called when script is about to run for the first time.
+     * Called when the script is about to run for the first time.
      */
     initialize() {
     }
