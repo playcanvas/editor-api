@@ -89,7 +89,6 @@ function createEsmBoilerplate(className, scriptName) {
 import { Script } from 'playcanvas';
 
 export class ${className} extends Script {
-
     /**
      * Called when script is about to run for the first time.
      */
