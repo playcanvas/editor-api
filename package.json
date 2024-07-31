@@ -56,6 +56,6 @@
     "build": "rollup -c",
     "build:types": "rollup -c --environment target:types",
     "docs": "typedoc",
-    "lint": "eslint --ext .js src"
+    "lint": "eslint --ext .js,.mjs src"
   }
 }
