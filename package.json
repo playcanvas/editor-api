@@ -54,7 +54,7 @@
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "build:types": "tsc index.js --outDir types --allowJs --declaration --emitDeclarationOnly && rollup -c --environment target:types",
+    "build:types": "rollup -c --environment target:types",
     "docs": "typedoc",
     "lint": "eslint --ext .js src"
   }

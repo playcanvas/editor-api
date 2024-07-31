@@ -62,6 +62,7 @@ const types = {
         format: 'es'
     }],
     plugins: [
+        runTsc('tsconfig.build.json'),
         dts()
     ]
 };
