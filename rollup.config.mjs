@@ -1,5 +1,8 @@
 import { babel } from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import { dts } from 'rollup-plugin-dts';
+import polyfills from 'rollup-plugin-polyfill-node';
 
 import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
 
@@ -15,6 +18,9 @@ const umd = {
         }
     },
     plugins: [
+        commonjs(),
+        polyfills(),
+        resolve(),
         babel({
             babelHelpers: 'bundled',
             babelrc: false,
@@ -46,7 +52,12 @@ const module = {
         globals: {
             '@playcanvas/observer': 'observer'
         }
-    }
+    },
+    plugins: [
+        commonjs(),
+        polyfills(),
+        resolve()
+    ]
 };
 
 const footer = `export as namespace api;
