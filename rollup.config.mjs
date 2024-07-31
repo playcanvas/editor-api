@@ -5,7 +5,7 @@ import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
 
 const umd = {
     external: ['@playcanvas/observer'],
-    input: 'index.js',
+    input: 'src/index.js',
     output: {
         file: 'dist/index.js',
         format: 'umd',
@@ -39,7 +39,7 @@ const umd = {
 
 const module = {
     external: ['@playcanvas/observer'],
-    input: 'index.js',
+    input: 'src/index.js',
     output: {
         file: 'dist/index.mjs',
         format: 'module',
