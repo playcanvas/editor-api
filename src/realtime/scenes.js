@@ -1,5 +1,6 @@
-import { RealtimeScene } from './scene.js';
 import { Events } from '@playcanvas/observer';
+
+import { RealtimeScene } from './scene.js';
 
 /**
  * Provides methods to load scenes from sharedb

@@ -13,7 +13,6 @@
         "sourceMap": true,
         "moduleResolution": "node"
     },
-    "include": [
-        "**/*.js",
-    ]
+    "include": ["**/*.js"],
+    "exclude": ["dist/*"]
 }

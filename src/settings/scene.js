@@ -1,4 +1,5 @@
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
+
 import { globals as api } from '../globals.js';
 
 /**

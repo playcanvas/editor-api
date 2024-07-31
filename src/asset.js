@@ -1,6 +1,7 @@
-import { globals as api } from './globals.js';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
+
 import { replace } from './assets/replace.js';
+import { globals as api } from './globals.js';
 
 /**
  * Represents an Asset.
@@ -391,7 +392,7 @@ class Asset extends Events {
 
         this._history = new ObserverHistory({
             item: this._observer,
-            prefix: 'asset.' + this.get('id') + '.',
+            prefix: `asset.${this.get('id')}.`,
             history: api.history
         });
 
@@ -416,8 +417,9 @@ class Asset extends Events {
     }
 
     _onSet(path, value) {
-        if (this._suspendOnSet || !path.startsWith('file') || path.endsWith('.url') || !this.get('file'))
+        if (this._suspendOnSet || !path.startsWith('file') || path.endsWith('.url') || !this.get('file')) {
             return;
+        }
 
         this._suspendOnSet = true;
 
@@ -523,9 +525,9 @@ class Asset extends Events {
      * Loads asset from the server without subscribing to realtime changes.
      */
     async load() {
-        const response = await fetch('/api/assets/' + this.get('id') + '?branchId=' + api.branchId);
+        const response = await fetch(`/api/assets/${this.get('id')}?branchId=${api.branchId}`);
         if (!response.ok) {
-            throw new Error(response.status + ': ' + response.statusText);
+            throw new Error(`${response.status}: ${response.statusText}`);
         }
 
         const data = await response.json();

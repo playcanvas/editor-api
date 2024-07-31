@@ -1,5 +1,7 @@
-import babel from '@rollup/plugin-babel';
-import dts from 'rollup-plugin-dts';
+import { babel } from '@rollup/plugin-babel';
+import { dts } from 'rollup-plugin-dts';
+
+import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
 
 const umd = {
     external: ['@playcanvas/observer'],

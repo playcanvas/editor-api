@@ -1,5 +1,5 @@
-import { globals as api } from '../globals.js';
 import { findEntityReferencesInComponents, updateReferences } from './references.js';
+import { globals as api } from '../globals.js';
 
 const USE_BACKEND_LIMIT = 500;
 
@@ -91,7 +91,7 @@ async function deleteEntities(entities, options = {}) {
     // make sure we are not deleting root
     entities.forEach((e) => {
         if (e === api.entities.root) {
-            throw new Error('Cannot delete root entity ' + e.get('resource_id'));
+            throw new Error(`Cannot delete root entity ${e.get('resource_id')}`);
         }
     });
 

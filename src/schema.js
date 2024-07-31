@@ -1,5 +1,5 @@
-import { ComponentSchema } from './schema/components.js';
 import { AssetsSchema } from './schema/assets.js';
+import { ComponentSchema } from './schema/components.js';
 
 /**
  * Provides methods to access the Editor schema.
@@ -66,7 +66,7 @@ class Schema {
                 }
             }
 
-            return 'array:' + this.getType(field[0]);
+            return `array:${this.getType(field[0])}`;
         }
 
         if (field.$type) {

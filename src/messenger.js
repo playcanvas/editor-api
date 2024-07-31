@@ -1,5 +1,6 @@
-import { globals as api } from './globals.js';
 import { Events } from '@playcanvas/observer';
+
+import { globals as api } from './globals.js';
 
 /**
  * The Messenger API. The messenger receives messages

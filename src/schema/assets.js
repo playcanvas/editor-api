@@ -22,7 +22,7 @@ class AssetsSchema {
      * @returns {object} The default data
      */
     getDefaultData(type) {
-        const field = type + 'Data';
+        const field = `${type}Data`;
 
         if (!field || !this._schema[field]) return null;
 
@@ -57,7 +57,7 @@ class AssetsSchema {
         const recurse = (schemaField, path, prefix = '') => {
             if (!schemaField) return;
 
-            if (schemaField.$editorType === type || schemaField.$editorType === 'array:' + type) {
+            if (schemaField.$editorType === type || schemaField.$editorType === `array:${type}`) {
                 result.push(prefix + path);
                 return;
             }
@@ -65,19 +65,19 @@ class AssetsSchema {
             for (const field in schemaField) {
                 if (field.startsWith('$')) continue;
 
-                const p = (path ? path + '.' : '') + field;
+                const p = (path ? `${path}.` : '') + field;
                 const fieldType = this._schemaApi.getType(schemaField[field]);
-                if (fieldType === type || fieldType === 'array:' + type) {
+                if (fieldType === type || fieldType === `array:${type}`) {
                     result.push(prefix + p);
                 } else if (fieldType === 'object' && schemaField[field].$of) {
-                    recurse(schemaField[field].$of, p + '.*', prefix);
+                    recurse(schemaField[field].$of, `${p}.*`, prefix);
                 } else if (fieldType === 'array:object' && Array.isArray(schemaField[field].$type)) {
-                    recurse(schemaField[field].$type[0], p + '.*', prefix);
+                    recurse(schemaField[field].$type[0], `${p}.*`, prefix);
                 }
             }
         };
 
-        recurse(this._schema[assetType + 'Data'], '', 'data.');
+        recurse(this._schema[`${assetType}Data`], '', 'data.');
 
         return result;
     }

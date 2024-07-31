@@ -1,4 +1,4 @@
-const VALID_FILENAME = /^([^0-9.#<>$+%!`&='{}@\\/:*?"<>|\n])([^#<>$+%!`&='{}@\\/:*?"<>|\n])*$/i;
+const VALID_FILENAME = /^[^0-9.#<>$+%!`&='{}@\\/:*?"|\n][^#<>$+%!`&='{}@\\/:*?"|\n]*$/;
 
 /**
  * Creates filename and script content from provided arguments. If the provide filename contains a '.mjs'
@@ -16,13 +16,14 @@ function createScript(filename, text) {
     const tokens = [];
     const name = filename.slice(0, -3);
     const str = name.replace(/([^A-Z])([A-Z][^A-Z])/g, '$1 $2').replace(/([A-Z0-9]{2,})/g, ' $1');
-    const parts = str.split(/(\s|\-|_|\.)/g);
+    const parts = str.split(/([\s\-_.])/);
 
     // filter valid tokens
     for (let i = 0; i < parts.length; i++) {
         parts[i] = parts[i].toLowerCase().trim();
-        if (parts[i] && parts[i] !== '-' && parts[i] !== '_' && parts[i] !== '.')
+        if (parts[i] && parts[i] !== '-' && parts[i] !== '_' && parts[i] !== '.') {
             tokens.push(parts[i]);
+        }
     }
 
     if (tokens.length) {
@@ -45,7 +46,7 @@ function createScript(filename, text) {
     }
 
     if (!filename) {
-        filename = scriptName + '.js';
+        filename = `${scriptName}.js`;
     }
 
     if (!/.js$/i.test(filename)) {

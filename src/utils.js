@@ -11,8 +11,9 @@ class utils {
      * @returns {object} A copy of the data
      */
     static deepCopy(data) {
-        if (data == null || typeof data !== 'object')
+        if (data == null || typeof data !== 'object') {
             return data;
+        }
 
         if (data instanceof Array) {
             var arr = [];
@@ -24,8 +25,9 @@ class utils {
 
         const obj = {};
         for (const key in data) {
-            if (data.hasOwnProperty(key))
+            if (data.hasOwnProperty(key)) {
                 obj[key] = this.deepCopy(data[key]);
+            }
         }
         return obj;
     }
@@ -36,7 +38,7 @@ class utils {
 
             function process(item, key) {
                 let current = item;
-                let p = (pathSoFar ? pathSoFar + '.' : '') + key;
+                let p = (pathSoFar ? `${pathSoFar}.` : '') + key;
                 for (let i = startIndex; i < pathParts.length; i++) {
                     // if we found another star recurse
                     if (pathParts[i] === '*') {
@@ -58,7 +60,7 @@ class utils {
                         return;
                     }
 
-                    p += '.' + pathParts[i];
+                    p += `.${pathParts[i]}`;
                 }
 
                 // call callback with the path we've found so far
@@ -104,7 +106,7 @@ class utils {
         let i;
         for (i = 1; i < parts.length; i++) {
             if (parts[i] === '*') break;
-            firstPartialPath += '.' + parts[i];
+            firstPartialPath += `.${parts[i]}`;
         }
 
         if (!obj.has(firstPartialPath)) return;

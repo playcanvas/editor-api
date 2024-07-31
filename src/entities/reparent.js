@@ -44,8 +44,9 @@ function reparentEntities(data, options = {}) {
 
     const isValidRecord = (entity, parentOld, parent) => {
         const resourceId = entity.get('resource_id');
-        if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld))
+        if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld)) {
             return false;
+        }
 
         // check if not reparenting to own child
         let deny = false;

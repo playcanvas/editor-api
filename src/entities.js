@@ -1,15 +1,16 @@
-import { globals as api } from './globals.js';
-import { Entity } from './entity.js';
 import { Events, ObserverList } from '@playcanvas/observer';
-import { createEntity } from './entities/create.js';
-import { pasteEntities } from './entities/paste.js';
-import { duplicateEntities } from './entities/duplicate.js';
+
 import { copyEntities } from './entities/copy.js';
-import { reparentEntities } from './entities/reparent.js';
+import { createEntity } from './entities/create.js';
 import { deleteEntities } from './entities/delete.js';
+import { duplicateEntities } from './entities/duplicate.js';
+import { pasteEntities } from './entities/paste.js';
 import { updateReferences } from './entities/references.js';
-import { wait } from './entities/wait.js';
+import { reparentEntities } from './entities/reparent.js';
 import { addScript, removeScript } from './entities/scripts.js';
+import { wait } from './entities/wait.js';
+import { Entity } from './entity.js';
+import { globals as api } from './globals.js';
 
 /**
  * Data to create new Entity

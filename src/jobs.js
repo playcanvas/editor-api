@@ -1,4 +1,5 @@
 import { Events } from '@playcanvas/observer';
+
 import { Guid } from './guid.js';
 
 /**

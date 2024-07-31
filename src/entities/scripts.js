@@ -1,7 +1,7 @@
 import { globals as api } from '../globals.js';
 
 async function addScript(entities, scriptName, options) {
-    entities = entities.filter(e => !e.has('components.script.scripts.' + scriptName));
+    entities = entities.filter(e => !e.has(`components.script.scripts.${scriptName}`));
     if (!entities.length) return;
 
     const addedComponentsTo = new Set();
@@ -72,7 +72,7 @@ async function addScript(entities, scriptName, options) {
     });
 
     // wait for messenger response
-    api.messenger.once('scriptAttrsFinished:' + jobId, (msg) => {
+    api.messenger.once(`scriptAttrsFinished:${jobId}`, (msg) => {
         api.jobs.finish(jobId)(msg);
     });
 
@@ -82,7 +82,7 @@ async function addScript(entities, scriptName, options) {
         entities = entities.slice();
 
         api.history.add({
-            name: 'entities.components.script.scripts.' + scriptName,
+            name: `entities.components.script.scripts.${scriptName}`,
             redo: () => {
                 const newOptions = Object.assign({}, options);
                 newOptions.history = false;
@@ -128,7 +128,7 @@ function removeScript(entities, scriptName, options) {
                 prevIndex = order.indexOf(scriptName);
             }
 
-            const prevScript = entity.get('components.script.scripts.' + scriptName);
+            const prevScript = entity.get(`components.script.scripts.${scriptName}`);
 
             prev[entity.get('resource_id')] = { prevIndex, prevScript };
         });
@@ -140,14 +140,14 @@ function removeScript(entities, scriptName, options) {
     entities.forEach((entity) => {
         const historyEnabled = entity.history.enabled;
         entity.history.enabled = false;
-        entity.unset('components.script.scripts.' + scriptName);
+        entity.unset(`components.script.scripts.${scriptName}`);
         entity.removeValue('components.script.order', scriptName);
         entity.history.enabled = historyEnabled;
     });
 
     if (api.history && history) {
         api.history.add({
-            name: 'entities.components.script.scripts.' + scriptName,
+            name: `entities.components.script.scripts.${scriptName}`,
             undo: () => {
                 entities = entities.map(e => e.latest()).filter(e => e && e.has('components.script') && prev[e.get('resource_id')]);
 
@@ -175,7 +175,7 @@ function removeScript(entities, scriptName, options) {
                         prevIndex = order.indexOf(scriptName);
                     }
 
-                    const prevScript = entity.get('components.script.scripts.' + scriptName);
+                    const prevScript = entity.get(`components.script.scripts.${scriptName}`);
                     prev[entity.get('resource_id')] = { prevIndex, prevScript };
                 });
 

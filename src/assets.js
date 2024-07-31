@@ -1,10 +1,11 @@
-import { Asset } from './asset.js';
-import { globals as api } from './globals.js';
 import { Events, ObserverList } from '@playcanvas/observer';
-import { uploadFile } from './assets/upload.js';
-import { createTemplate } from './assets/createTemplate.js';
+
+import { Asset } from './asset.js';
 import { createScript } from './assets/createScript.js';
+import { createTemplate } from './assets/createTemplate.js';
 import { instantiateTemplates } from './assets/instantiateTemplates.js';
+import { uploadFile } from './assets/upload.js';
+import { globals as api } from './globals.js';
 
 /**
  * Arguments passed when uploading an asset file.
@@ -68,8 +69,9 @@ class Assets extends Events {
             index: 'id',
             sorted: (a, b) => {
                 const f = (b._data.type === 'folder') - (a._data.type === 'folder');
-                if (f !== 0)
+                if (f !== 0) {
                     return f;
+                }
                 if ((a._data.name || '').toLowerCase() > (b._data.name || '').toLowerCase()) {
                     return 1;
                 } else if ((a._data.name || '').toLowerCase() < (b._data.name || '').toLowerCase()) {
@@ -234,8 +236,9 @@ class Assets extends Events {
             let pos = this._assets.positionNextClosest(asset._observer, (a, b) => {
                 const f = (b._data.type === 'folder') - (a._data.type === 'folder');
 
-                if (f !== 0)
+                if (f !== 0) {
                     return f;
+                }
 
                 if ((a === b ? oldName : (a._data.name || '').toLowerCase()) > name) {
                     return 1;
@@ -246,14 +249,17 @@ class Assets extends Events {
 
             });
 
-            if (pos === -1 && (ind + 1) === this._assets.data.length)
+            if (pos === -1 && (ind + 1) === this._assets.data.length) {
                 return;
+            }
 
-            if (ind !== -1 && (ind + 1 === pos) || (ind === pos))
+            if (ind !== -1 && (ind + 1 === pos) || (ind === pos)) {
                 return;
+            }
 
-            if (ind < pos)
+            if (ind < pos) {
                 pos--;
+            }
 
             this._assets.move(asset._observer, pos);
             this.emit('move', asset, pos);
@@ -450,7 +456,7 @@ class Assets extends Events {
     getAssetForScript(script) {
         return this.findOne((asset) => {
             return asset.get('type') === 'script' &&
-                   asset.has('data.scripts.' + script);
+                   asset.has(`data.scripts.${script}`);
         });
     }
 
@@ -919,7 +925,7 @@ class Assets extends Events {
         });
 
         if (!response.ok) {
-            throw new Error(response.status + ': ' + response.statusText);
+            throw new Error(`${response.status}: ${response.statusText}`);
         }
 
         assets.forEach(a => this.remove(a));

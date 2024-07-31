@@ -1,5 +1,5 @@
-import { globals as api } from '../globals.js';
 import { findEntityReferencesInComponents, updateReferences } from './references.js';
+import { globals as api } from '../globals.js';
 import { Guid } from '../guid.js';
 
 /** @typedef {import("../entity").Entity} Entity */
@@ -147,7 +147,7 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     }
 
     // add children too
-    children.forEach(function (childId) {
+    children.forEach((childId) => {
         duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap);
     });
 
