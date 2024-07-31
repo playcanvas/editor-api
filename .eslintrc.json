@@ -4,9 +4,6 @@
         "eslint:recommended",
         "plugin:regexp/recommended"
     ],
-    "globals": {
-        "share": "readonly"
-    },
     "parser": "@babel/eslint-parser",
     "parserOptions": {
         "ecmaVersion": 11,

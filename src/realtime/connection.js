@@ -1,6 +1,7 @@
 import { Events } from '@playcanvas/observer';
 
 import { globals as api } from '../globals.js';
+import { share } from '../sharedb.js';
 
 const RECONNECT_INTERVAL = 3;
 const MAX_ATTEMPTS = 3;
