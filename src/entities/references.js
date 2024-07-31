@@ -38,7 +38,7 @@ function findReferencesInComponents(entity, refType) {
         if (Array.isArray(value)) {
             value.forEach((id, i) => {
                 if (id) {
-                    addReference(entity, path + '.' + i, id);
+                    addReference(entity, `${path}.${i}`, id);
                 }
             });
         } else {

@@ -1,5 +1,5 @@
-import { globals as api } from '../globals.js';
 import { Entity } from '../entity.js';
+import { globals as api } from '../globals.js';
 
 /**
  * Creates new entity and adds it to the hierarchy
@@ -91,7 +91,7 @@ function createEntity(data, options = {}) {
 
     if (options.history && api.history) {
         api.history.add({
-            name: 'new entity ' + entity.get('resource_id'),
+            name: `new entity ${entity.get('resource_id')}`,
             // undo new entity
             undo: () => {
                 entity = entity.latest();

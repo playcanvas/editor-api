@@ -1,5 +1,6 @@
-import { RealtimeAsset } from './asset.js';
 import { Events } from '@playcanvas/observer';
+
+import { RealtimeAsset } from './asset.js';
 
 /**
  * Provides methods to load assets from sharedb

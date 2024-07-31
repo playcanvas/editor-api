@@ -90,7 +90,7 @@ async function uploadFile(data, settings = null, onProgress = null) {
     const form = createFormData(data, settings);
     if (data.id) {
         method = 'PUT';
-        url = '/api/assets/' + data.id;
+        url = `/api/assets/${data.id}`;
     } else {
         appendCreateFields(form, data);
         method = 'POST';
@@ -168,7 +168,7 @@ async function uploadFile(data, settings = null, onProgress = null) {
     });
 
     if (!response.ok) {
-        throw new Error(`${response.status}${response.error ? ': ' + response.error : ''}`);
+        throw new Error(`${response.status}${response.error ? `: ${response.error}` : ''}`);
     }
 
     return response.json;

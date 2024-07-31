@@ -1,19 +1,18 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
         "allowJs": true,
-        "target": "es6",
+        "esModuleInterop" : true,
         "jsx": "react",
         "lib": [
             "es2019",
             "dom",
             "dom.iterable"
         ],
-        "esModuleInterop" : true,
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "outDir": "types",
         "sourceMap": true,
-        "moduleResolution": "node"
+        "target": "es6",
     },
-    "include": [
-        "**/*.js",
-    ]
+    "include": ["src/**/*.js", "test/**/*.js", "rollup.config.js"],
 }

@@ -58,7 +58,7 @@ function gatherDependencies(entity, data) {
         api.schema.components.list().forEach((component) => {
             const paths = api.schema.components.getFieldsOfType(component, 'asset');
             paths.forEach((path) => {
-                ASSET_PATHS.push('components.' + component + '.' + path);
+                ASSET_PATHS.push(`components.${component}.${path}`);
             });
         });
     }
@@ -83,9 +83,10 @@ function gatherDependencies(entity, data) {
             if (!obj) continue;
 
             for (const key in obj) {
-                var fullKey = parts[0] + '.' + key + '.' + parts[1];
-                if (!entity.has(fullKey))
+                var fullKey = `${parts[0]}.${key}.${parts[1]}`;
+                if (!entity.has(fullKey)) {
                     continue;
+                }
 
                 const assets = entity.get(fullKey);
                 if (!assets) continue;
@@ -137,7 +138,7 @@ function gatherDependencies(entity, data) {
                     if (!asset) continue;
 
                     // search for asset script attributes in script asset
-                    const assetData = asset.get('data.scripts.' + key + '.attributes');
+                    const assetData = asset.get(`data.scripts.${key}.attributes`);
                     if (!assetData) continue;
 
                     for (const name in assetData) {
@@ -182,22 +183,26 @@ function gatherDependencies(entity, data) {
 function sortEntities(entities) {
     entities.sort((a, b) => {
         let parentA = a.get('parent');
-        if (!parentA)
+        if (!parentA) {
             return -1;
+        }
 
         parentA = api.entities.get(parentA);
-        if (!parentA)
+        if (!parentA) {
             return -1;
+        }
 
         const indA = parentA.get('children').indexOf(a.get('resource_id'));
 
         let parentB = b.get('parent');
-        if (!parentB)
+        if (!parentB) {
             return 1;
+        }
 
         parentB = api.entities.get(parentB);
-        if (!parentB)
+        if (!parentB) {
             return -1;
+        }
 
         const indB = parentB.get('children').indexOf(b.get('resource_id'));
 
@@ -263,8 +268,9 @@ function copyEntities(entities) {
 
     for (const key in selection) {
         // set parent of each copied entity to null
-        if (data.hierarchy[key])
+        if (data.hierarchy[key]) {
             data.hierarchy[key].parent = null;
+        }
     }
 
     // save to local storage

@@ -1,7 +1,8 @@
+import { Events } from '@playcanvas/observer';
+
+import { RealtimeAssets } from './realtime/assets.js';
 import { RealtimeConnection } from './realtime/connection.js';
 import { RealtimeScenes } from './realtime/scenes.js';
-import { RealtimeAssets } from './realtime/assets.js';
-import { Events } from '@playcanvas/observer';
 
 /**
  * Provides methods to communicate and load / save data to the realtime server

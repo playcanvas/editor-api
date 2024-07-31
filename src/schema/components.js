@@ -72,7 +72,7 @@ class ComponentSchema {
         const recurse = (schemaField, path) => {
             if (!schemaField) return;
 
-            if (schemaField.$editorType === type || schemaField.$editorType === 'array:' + type) {
+            if (schemaField.$editorType === type || schemaField.$editorType === `array:${type}`) {
                 result.push(path);
                 return;
             }
@@ -80,12 +80,12 @@ class ComponentSchema {
             for (const field in schemaField) {
                 if (field.startsWith('$')) continue;
 
-                const p = (path ? path + '.' : '') + field;
+                const p = (path ? `${path}.` : '') + field;
                 const fieldType = this._schemaApi.getType(schemaField[field]);
-                if (fieldType === type || fieldType === 'array:' + type) {
+                if (fieldType === type || fieldType === `array:${type}`) {
                     result.push(p);
                 } else if (fieldType === 'object' && schemaField[field].$of) {
-                    recurse(schemaField[field].$of, p + '.*');
+                    recurse(schemaField[field].$of, `${p}.*`);
                 }
             }
         };

@@ -1,5 +1,6 @@
-import { globals as api } from './globals.js';
 import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
+
+import { globals as api } from './globals.js';
 import { Guid } from './guid.js';
 
 /**
@@ -488,7 +489,7 @@ class Entity extends Events {
 
         this._history = new ObserverHistory({
             item: this._observer,
-            prefix: 'entity.' + this.get('resource_id') + '.',
+            prefix: `entity.${this.get('resource_id')}.`,
             history: api.history
         });
         this._observer.history = this._history;

@@ -1,6 +1,8 @@
 {
     "extends": [
-        "@playcanvas/eslint-config"
+        "@playcanvas/eslint-config",
+        "eslint:recommended",
+        "plugin:regexp/recommended"
     ],
     "globals": {
         "share": "readonly"
@@ -15,21 +17,24 @@
         "requireConfigFile": false
     },
     "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "FunctionExpression": {
-                    "body": 1,
-                    "parameters": 2
-                },
-                "MemberExpression": 0,
-                "SwitchCase": 1
-            }
-        ],
-        "jsdoc/check-tag-names": ["error", {
-            "definedTags": ["category"]
+        "accessor-pairs": ["error", { "setWithoutGet": false, "getWithoutSet": false }],
+        "curly": ["error", "multi-line"],
+        "import/order": ["error", {
+          "groups": ["builtin", "external", "internal", ["parent", "sibling"], "index", "unknown"],
+          "newlines-between": "always",
+          "alphabetize": { "order": "asc", "caseInsensitive": true }
         }],
-        "jsdoc/check-examples": "off"
+        "indent": ["error", 4, {
+          "FunctionExpression": { "body": 1, "parameters": 2 },
+          "MemberExpression": 0,
+          "SwitchCase": 1
+        }],
+        "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
+        "jsdoc/check-examples": "off",
+        "no-prototype-builtins": "off",
+        "no-use-before-define": "off",
+        "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
+        "prefer-template": "error",
+        "require-atomic-updates": "warn"
     }
 }

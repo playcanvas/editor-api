@@ -36,6 +36,8 @@
     "@rollup/plugin-babel": "^6.0.4",
     "chai": "^4.4.1",
     "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-regexp": "^2.6.0",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
     "karma-mocha": "2.0.1",
@@ -52,8 +54,8 @@
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "build:types": "tsc index.js --outDir types --allowJs --declaration --emitDeclarationOnly && rollup -c --environment target:types",
+    "build:types": "rollup -c --environment target:types",
     "docs": "typedoc",
-    "lint": "eslint --ext .js src"
+    "lint": "eslint --ext .js,.mjs src"
   }
 }

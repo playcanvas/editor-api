@@ -1,5 +1,6 @@
-import { globals as api } from '../globals.js';
 import { Observer } from '@playcanvas/observer';
+
+import { globals as api } from '../globals.js';
 import { Guid } from '../guid.js';
 
 const USE_BACKEND_LIMIT = 500;
@@ -25,8 +26,9 @@ function remapAsset(assetId, assetsIndex) {
     let result = parseInt(assetId, 10);
 
     const assetData = assetsIndex[assetId];
-    if (!assetData)
+    if (!assetData) {
         return result;
+    }
 
     const len = assetData.path.length;
     const name = assetData.path[len - 1];
@@ -49,8 +51,9 @@ function remapAsset(assetId, assetsIndex) {
             }
         }
 
-        if (!folder)
+        if (!folder) {
             return result;
+        }
 
         pathToId.push(parseInt(folder.get('id'), 10));
     }
@@ -76,8 +79,9 @@ function remapAsset(assetId, assetsIndex) {
                     }
                 }
 
-                if (!pathsEqual)
+                if (!pathsEqual) {
                     continue;
+                }
             }
 
             result = parseInt(asset.get('id'), 10);
@@ -105,7 +109,7 @@ function remapField(entity, path, mapping, sameProject) {
         if (!obj) return;
 
         for (const key in obj) {
-            const fullKey = parts[0] + '.' + key + '.' + parts[1];
+            const fullKey = `${parts[0]}.${key}.${parts[1]}`;
             if (!entity.has(fullKey)) continue;
 
             const value = entity.get(fullKey);
@@ -210,7 +214,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
             api.schema.components.list().forEach((component) => {
                 const paths = api.schema.components.getFieldsOfType(component, 'asset');
                 paths.forEach((path) => {
-                    ASSET_PATHS.push('components.' + component + '.' + path);
+                    ASSET_PATHS.push(`components.${component}.${path}`);
                 });
             });
         }
@@ -243,27 +247,29 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                                 if (attr.value) {
                                     if (attr.value instanceof Array) {
                                         for (let j = 0; j < attr.value.length; j++) {
-                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value.' + j, mapValue(attr.value[j], assetMapping, sameProject));
+                                            entity.set(`components.script.scripts.${i}.attributes.${name}.value.${j}`, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
-                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', mapValue(attr.value, assetMapping, sameProject));
+                                        entity.set(`components.script.scripts.${i}.attributes.${name}.value`, mapValue(attr.value, assetMapping, sameProject));
                                     }
                                 }
 
                                 if (attr.defaultValue) {
                                     if (attr.defaultValue instanceof Array) {
                                         for (let j = 0; j < attr.defaultValue.length; j++) {
-                                            entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue.' + j, mapValue(attr.value[j], assetMapping, sameProject));
+                                            entity.set(`components.script.scripts.${i}.attributes.${name}.defaultValue.${j}`, mapValue(attr.value[j], assetMapping, sameProject));
                                         }
                                     } else {
-                                        entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', mapValue(attr.value, assetMapping, sameProject));
+                                        entity.set(`components.script.scripts.${i}.attributes.${name}.defaultValue`, mapValue(attr.value, assetMapping, sameProject));
                                     }
                                 }
                             } else if (attr.type === 'entity') {
-                                if (entityMapping[attr.value])
-                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.value', mapValue(attr.value, entityMapping, sameProject));
-                                if (entityMapping[attr.defaultValue])
-                                    entity.set('components.script.scripts.' + i + '.attributes.' + name + '.defaultValue', mapValue(attr.defaultValue, entityMapping, sameProject));
+                                if (entityMapping[attr.value]) {
+                                    entity.set(`components.script.scripts.${i}.attributes.${name}.value`, mapValue(attr.value, entityMapping, sameProject));
+                                }
+                                if (entityMapping[attr.defaultValue]) {
+                                    entity.set(`components.script.scripts.${i}.attributes.${name}.defaultValue`, mapValue(attr.defaultValue, entityMapping, sameProject));
+                                }
                             }
                         }
                     }
@@ -278,7 +284,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
                             if (!attrs) continue;
 
                             for (const key in attrs) {
-                                const attrData = asset.get('data.scripts.' + script + '.attributes.' + key);
+                                const attrData = asset.get(`data.scripts.${script}.attributes.${key}`);
                                 if (attrData) {
                                     // handle json script attributes
                                     if (attrData.type === 'json' && Array.isArray(attrData.schema)) {
@@ -519,8 +525,9 @@ async function pasteEntities(parent, options = {}) {
             select: false
         });
 
-        if (select)
+        if (select) {
             selectedEntities.push(entity);
+        }
     }
 
     if (selectedEntities.length) {
