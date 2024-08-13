@@ -1,5 +1,6 @@
 import { AssetsSchema } from './schema/assets.js';
 import { ComponentSchema } from './schema/components.js';
+import { SettingsSchema } from './schema/settings.js';
 
 /**
  * Provides methods to access the Editor schema.
@@ -14,6 +15,7 @@ class Schema {
         this._schema = schema;
         this._componentSchema = new ComponentSchema(this);
         this._assetsSchema = new AssetsSchema(this);
+        this._settingsSchema = new SettingsSchema(this);
     }
 
     /**
@@ -32,6 +34,15 @@ class Schema {
      */
     get assets() {
         return this._assetsSchema;
+    }
+
+    /**
+     * Gets the settings schema
+     *
+     * @type {SettingsSchema}
+     */
+    get settings() {
+        return this._settingsSchema;
     }
 
     /**
