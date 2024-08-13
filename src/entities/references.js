@@ -65,7 +65,7 @@ function findReferencesInComponents(entity, refType) {
 
             // get script attributes
             if (!api.hasLegacyScripts && api.assets && component === 'script') {
-                const scriptComponent = entity.get(`components.script`);
+                const scriptComponent = entity.get('components.script');
                 for (const scriptName in scriptComponent.scripts) {
                     // get script asset
                     const scriptAsset = api.assets.getAssetForScript(scriptName);

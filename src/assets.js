@@ -287,7 +287,7 @@ class Assets extends Events {
             api.realtime.assets.unload(asset.get('uniqueId'));
         }
 
-        this.emit(`remove`, asset);
+        this.emit('remove', asset);
         this.emit(`remove[${asset.get('id')}]`);
     }
 
@@ -689,16 +689,16 @@ class Assets extends Events {
         return this.createJson({
             name: options.name,
             json: options.localizationData || {
-                "header": {
-                    "version": 1
+                'header': {
+                    'version': 1
                 },
-                "data": [{
-                    "info": {
-                        "locale": "en-US"
+                'data': [{
+                    'info': {
+                        'locale': 'en-US'
                     },
-                    "messages": {
-                        "key": "Single key translation",
-                        "key plural": ["One key translation", "Translation for {number} keys"]
+                    'messages': {
+                        'key': 'Single key translation',
+                        'key plural': ['One key translation', 'Translation for {number} keys']
                     }
                 }]
             },
