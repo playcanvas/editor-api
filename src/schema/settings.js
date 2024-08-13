@@ -17,12 +17,6 @@ class SettingsSchema {
         this._schema = this._schemaApi._schema.settings;
     }
 
-    /**
-     * @private
-     * @param {*} obj - The object to get the default data from
-     * @param {string} scope - The field scope
-     * @returns {*} - The default data
-     */
     _getDefaultData(obj, scope) {
         const result = {};
         for (const key in obj) {
@@ -48,6 +42,10 @@ class SettingsSchema {
      * Get the default settings for the project
      *
      * @returns {*} The default settings for the project
+     * @example
+     * ```javascript
+     * const modelData = editor.schema.settings.getDefaultProjectSettings();
+     * ```
      */
     getDefaultProjectSettings() {
         return this._getDefaultData(this._schema, 'project');
@@ -57,15 +55,23 @@ class SettingsSchema {
      * Get the default settings for the user
      *
      * @returns {*} The default settings for the user
+     * @example
+     * ```javascript
+     * const modelData = editor.schema.settings.getDefaultUserSettings();
+     * ```
      */
     getDefaultUserSettings() {
         return this._getDefaultData(this._schema, 'user');
     }
 
     /**
-     * Get the default settings for the project user
+     * Get the default settings for the user in the project
      *
      * @returns {*} The default settings for the user in the project
+     * @example
+     * ```javascript
+     * const modelData = editor.schema.settings.getDefaultProjectUserSettings();
+     * ```
      */
     getDefaultProjectUserSettings() {
         return this._getDefaultData(this._schema, 'projectUser');
