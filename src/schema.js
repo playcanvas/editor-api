@@ -1,5 +1,6 @@
 import { AssetsSchema } from './schema/assets.js';
 import { ComponentSchema } from './schema/components.js';
+import { SceneSchema } from './schema/scene.js';
 import { SettingsSchema } from './schema/settings.js';
 
 /**
@@ -13,9 +14,19 @@ class Schema {
      */
     constructor(schema) {
         this._schema = schema;
-        this._componentSchema = new ComponentSchema(this);
         this._assetsSchema = new AssetsSchema(this);
+        this._componentSchema = new ComponentSchema(this);
+        this._sceneSchema = new SceneSchema(this);
         this._settingsSchema = new SettingsSchema(this);
+    }
+
+    /**
+     * Gets the assets schema
+     *
+     * @type {AssetsSchema}
+     */
+    get assets() {
+        return this._assetsSchema;
     }
 
     /**
@@ -28,12 +39,12 @@ class Schema {
     }
 
     /**
-     * Gets the assets schema
+     * Gets the scene schema
      *
-     * @type {AssetsSchema}
+     * @type {SceneSchema}
      */
-    get assets() {
-        return this._assetsSchema;
+    get scene() {
+        return this._sceneSchema;
     }
 
     /**
