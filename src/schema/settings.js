@@ -44,7 +44,7 @@ class SettingsSchema {
      * @returns {*} The default settings for the project
      * @example
      * ```javascript
-     * const modelData = editor.schema.settings.getDefaultProjectSettings();
+     * const projectSettings = editor.schema.settings.getDefaultProjectSettings();
      * ```
      */
     getDefaultProjectSettings() {
@@ -57,7 +57,7 @@ class SettingsSchema {
      * @returns {*} The default settings for the user
      * @example
      * ```javascript
-     * const modelData = editor.schema.settings.getDefaultUserSettings();
+     * const userSettings = editor.schema.settings.getDefaultUserSettings();
      * ```
      */
     getDefaultUserSettings() {
@@ -70,7 +70,7 @@ class SettingsSchema {
      * @returns {*} The default settings for the user in the project
      * @example
      * ```javascript
-     * const modelData = editor.schema.settings.getDefaultProjectUserSettings();
+     * const projectUserSettings = editor.schema.settings.getDefaultProjectUserSettings();
      * ```
      */
     getDefaultProjectUserSettings() {
