@@ -24,6 +24,7 @@ export * from './selection.js';
 export * from './schema.js';
 export * from './schema/components.js';
 export * from './schema/assets.js';
+export * from './schema/settings.js';
 export * from './realtime/connection.js';
 export * from './realtime/scene.js';
 export * from './realtime/scenes.js';
