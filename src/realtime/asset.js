@@ -64,12 +64,13 @@ class RealtimeAsset extends Events {
      * Submits sharedb operation
      *
      * @param {object} op - The operation
+     * @param {function} [callback] - The callback
      */
-    submitOp(op) {
+    submitOp(op, callback) {
         if (!this._loaded) return;
 
         try {
-            this._document.submitOp([op]);
+            this._document.submitOp([op], callback);
         } catch (err) {
             console.error(err);
             this._realtime.emit('error:asset', err, this._uniqueId);
