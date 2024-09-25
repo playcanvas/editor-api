@@ -1,4 +1,10 @@
 const VALID_FILENAME = /^[^0-9.#<>$+%!`&='{}@\\/:*?"|\n][^#<>$+%!`&='{}@\\/:*?"|\n]*$/;
+const extensionToBoilerplateMap = new Map([
+    ['.js', createBoilerplate],
+    ['.mjs', createEsmBoilerplate],
+    ['.ts', createTsBoilerplate],
+])
+const validExtensions = Array.from(extensionToBoilerplateMap.keys());
 
 /**
  * Creates filename and script content from provided arguments. If the provide filename contains a '.mjs'
@@ -49,11 +55,17 @@ function createScript(filename, text) {
         filename = `${scriptName}.js`;
     }
 
-    if (!/.js$/i.test(filename)) {
+    const hasValidExtension = validExtensions.some(ext => filename.endsWith(ext));
+    if (!hasValidExtension) {
         filename += '.js';
     }
-    const isEsm = filename.endsWith('.mjs');
-    const boilerPlateGenerator = isEsm ? createEsmBoilerplate : createBoilerplate;
+
+    // Extract extension from filename
+    const extension = filename.slice(filename.lastIndexOf('.'));
+    
+    // Get the correct boilerplate generator based on the file extension
+    const boilerPlateGenerator = extensionToBoilerplateMap.get(extension);
+    
     const content = text || boilerPlateGenerator(className, scriptName);
 
     return {
@@ -107,6 +119,32 @@ export class ${className} extends Script {
      * @param {number} dt - The delta time in seconds since the last frame.
      */
     update(dt) {
+    }
+}
+`.trim();
+
+function createTsBoilerplate(className, scriptName) {
+    return `
+import { Script } from 'playcanvas';
+
+/**
+ * The {@link https://api.playcanvas.com/classes/Engine.Script.html | Script} class is
+ * the base class for all PlayCanvas scripts. Learn more about writing scripts in the
+ * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
+ */
+export class ${className} extends Script {
+    /**
+     * Called when the script is about to run for the first time.
+     */
+    initialize(): void {
+    }
+
+    /**
+     * Called for enabled (running state) scripts on each tick.
+     * 
+     * @param {number} dt - The delta time in seconds since the last frame.
+     */
+    update(dt: number): void {
     }
 }
 `.trim();
