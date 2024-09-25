@@ -2,8 +2,8 @@ const VALID_FILENAME = /^[^0-9.#<>$+%!`&='{}@\\/:*?"|\n][^#<>$+%!`&='{}@\\/:*?"|
 const extensionToBoilerplateMap = new Map([
     ['.js', createBoilerplate],
     ['.mjs', createEsmBoilerplate],
-    ['.ts', createTsBoilerplate],
-])
+    ['.ts', createTsBoilerplate]
+]);
 const validExtensions = Array.from(extensionToBoilerplateMap.keys());
 
 /**
@@ -62,10 +62,10 @@ function createScript(filename, text) {
 
     // Extract extension from filename
     const extension = filename.slice(filename.lastIndexOf('.'));
-    
+
     // Get the correct boilerplate generator based on the file extension
     const boilerPlateGenerator = extensionToBoilerplateMap.get(extension);
-    
+
     const content = text || boilerPlateGenerator(className, scriptName);
 
     return {
@@ -122,6 +122,7 @@ export class ${className} extends Script {
     }
 }
 `.trim();
+}
 
 function createTsBoilerplate(className, scriptName) {
     return `
