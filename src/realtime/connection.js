@@ -100,7 +100,7 @@ class RealtimeConnection extends Events {
      * @param {string} data - The message data
      */
     send(data) {
-        if (this._socket && this._socket.readyState === 1) {
+        if (this._socket && this._socket.readyState === WebSocket.OPEN) {
             this._socket.send(data);
         }
     }
