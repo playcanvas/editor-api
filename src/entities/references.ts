@@ -1,12 +1,13 @@
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 import { utils } from '../utils';
 
-const fieldsCache = {};
+const fieldsCache: Record<string, any> = {};
 
-function findReferencesInComponents(entity, refType) {
-    const result = {};
+function findReferencesInComponents(entity: Entity, refType: string) {
+    const result: Record<string, any> = {};
 
-    function addReference(entity, path, value) {
+    function addReference(entity: Entity, path: string, value: any) {
         if (!result[value]) {
             result[value] = [];
         }
@@ -17,7 +18,7 @@ function findReferencesInComponents(entity, refType) {
         });
     }
 
-    function handleScriptAttribute(entity, path, attributeDefinition, attributeValue) {
+    function handleScriptAttribute(entity: Entity, path: string, attributeDefinition: { array: any; }, attributeValue: any[]) {
         if (!attributeValue) return;
         if (attributeDefinition.array) {
             attributeValue.forEach((id, i) => {
@@ -32,7 +33,7 @@ function findReferencesInComponents(entity, refType) {
         }
     }
 
-    function handleReference(entity, path) {
+    function handleReference(entity: Entity, path: string) {
         const value = entity.get(path);
         if (!value) return;
         if (Array.isArray(value)) {
@@ -46,7 +47,7 @@ function findReferencesInComponents(entity, refType) {
         }
     }
 
-    entity.depthFirst((entity) => {
+    entity.depthFirst((entity: Entity) => {
         const componentNames = Object.keys(entity.get('components') || {});
         componentNames.forEach((component) => {
             if (!fieldsCache[refType]) {
@@ -56,7 +57,7 @@ function findReferencesInComponents(entity, refType) {
                 fieldsCache[refType][component] = api.schema.components.getFieldsOfType(component, refType);
             }
 
-            fieldsCache[refType][component].forEach((field) => {
+            fieldsCache[refType][component].forEach((field: any) => {
                 // expand path will handle paths that contain '*'
                 utils.expandPath(entity, `components.${component}.${field}`, (entity, path) => {
                     handleReference(entity, path);
@@ -87,14 +88,14 @@ function findReferencesInComponents(entity, refType) {
 
                             if (attributeDef.array) {
                                 for (let i = 0; i < attributeValue.length; i++) {
-                                    attributeDef.schema.forEach((field) => {
+                                    attributeDef.schema.forEach((field: any) => {
                                         if (field.type !== refType) return;
 
                                         handleScriptAttribute(entity, `${componentAttributePath}.${i}.${field.name}`, field, attributeValue[i]?.[field.name]);
                                     });
                                 }
                             } else {
-                                attributeDef.schema.forEach((field) => {
+                                attributeDef.schema.forEach((field: any) => {
                                     if (field.type !== refType) return;
 
                                     handleScriptAttribute(entity, `${componentAttributePath}.${field.name}`, field, attributeValue[field.name]);
@@ -124,7 +125,7 @@ function findReferencesInComponents(entity, refType) {
  * @param {Entity} entity - The entity
  * @returns {object} The entity references
  */
-function findEntityReferencesInComponents(entity) {
+function findEntityReferencesInComponents(entity: Entity) {
     return findReferencesInComponents(entity, 'entity');
 }
 
@@ -136,7 +137,7 @@ function findEntityReferencesInComponents(entity) {
  * @param {Entity} entity - The entity
  * @returns {object} The asset references
  */
-function findAssetReferencesInComponents(entity) {
+function findAssetReferencesInComponents(entity: Entity) {
     return findReferencesInComponents(entity, 'asset');
 }
 
@@ -149,11 +150,11 @@ function findAssetReferencesInComponents(entity) {
  * @param {string|number} oldValue - The value that we want to replace
  * @param {string|number} newValue - The value that we want our references to point to
  */
-function updateReferences(references, oldValue, newValue) {
+function updateReferences(references: Record<string, any>, oldValue: string | number, newValue: string | number) {
     const referencesToEntity = references[oldValue];
     if (!referencesToEntity) return;
 
-    referencesToEntity.forEach((reference) => {
+    referencesToEntity.forEach((reference: { entityId: string; path: any; }) => {
         const entity = api.entities.get(reference.entityId);
         if (entity && entity.has(reference.path)) {
             const history = entity.history.enabled;

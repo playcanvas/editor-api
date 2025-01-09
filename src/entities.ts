@@ -70,7 +70,7 @@ type CreateEntityArguments = {
 /**
  * Data to reparent an entity under a new parent
  */
-type ReparentArguments = {
+export type ReparentArguments = {
     /**
      * The entity to reparent
      */

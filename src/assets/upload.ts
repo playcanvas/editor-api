@@ -1,10 +1,10 @@
 import { globals as api } from '../globals';
 
-function getSetting(settings, name, defaultValue) {
+function getSetting(settings: any, name: string, defaultValue: any) {
     return settings && settings[name] !== undefined ? settings[name] : defaultValue;
 }
 
-function createFormData(data, settings) {
+function createFormData(data: any, settings: any) {
     const form = new FormData();
 
     form.append('branchId', api.branchId);
@@ -41,8 +41,8 @@ function createFormData(data, settings) {
     return form;
 }
 
-function appendCreateFields(form, data) {
-    form.append('projectId', api.projectId);
+function appendCreateFields(form: FormData, data: any) {
+    form.append('projectId', api.projectId as unknown as string);
     form.append('type', data.type);
 
     if (data.name) {
@@ -83,7 +83,7 @@ function appendCreateFields(form, data) {
  * @param {Function} onProgress - Progress function
  * @returns {object} The JSON response from the server
  */
-async function uploadFile(data, settings = null, onProgress = null) {
+async function uploadFile(data: Record<string, any>, settings: object = null, onProgress: Function = null) {
     let method;
     let url;
 
@@ -97,10 +97,10 @@ async function uploadFile(data, settings = null, onProgress = null) {
         url = '/api/assets';
     }
 
-    const response = await new Promise((resolve) => {
-        let progress;
+    const response = await new Promise<XMLHttpRequest['response']>((resolve) => {
+        let progress: any;
 
-        function onProgressUpdate(value) {
+        function onProgressUpdate(value: number) {
             if (progress !== value) {
                 progress = value;
                 if (onProgress) {
@@ -109,7 +109,7 @@ async function uploadFile(data, settings = null, onProgress = null) {
             }
         }
 
-        function onError(status, err) {
+        function onError(status: number, err: ProgressEvent<XMLHttpRequestEventTarget>) {
             resolve({
                 ok: false,
                 status: status,

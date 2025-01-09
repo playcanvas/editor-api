@@ -1,4 +1,7 @@
+import { ReparentArguments } from '../entities';
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
+
 
 /**
  * Reparents entities under new parent.
@@ -10,7 +13,7 @@ import { globals as api } from '../globals';
  * @param {boolean} [options.preserveTransform] - Whether to preserve the transform of the entities
  * @param {boolean} [options.history] - Whether to record history. Defaults to true
  */
-function reparentEntities(data, options = {}) {
+function reparentEntities(data: ReparentArguments[], options: { preserveTransform?: boolean, history?: boolean } = {}) {
     if (options.history === undefined) {
         options.history = true;
     }
@@ -18,7 +21,7 @@ function reparentEntities(data, options = {}) {
     const records = data.map((entry) => {
         const parentOld = entry.entity.parent;
         const indexOld = parentOld.get('children').indexOf(entry.entity.get('resource_id'));
-        const record = {
+        const record: Record<string, any> = {
             entity: entry.entity,
             resourceId: entry.entity.get('resource_id'),
             parentOld: parentOld,
@@ -36,13 +39,13 @@ function reparentEntities(data, options = {}) {
     });
 
     // sort records by a field
-    const sortRecords = (by) => {
+    const sortRecords = (by: string) => {
         records.sort((a, b) => {
             return a[by] - b[by];
         });
     };
 
-    const isValidRecord = (entity, parentOld, parent) => {
+    const isValidRecord = (entity: Entity, parentOld: Entity, parent: Entity) => {
         const resourceId = entity.get('resource_id');
         if (parentOld.get('children').indexOf(resourceId) === -1 || (parent.get('children').indexOf(resourceId) !== -1 && parent !== parentOld)) {
             return false;
@@ -65,7 +68,7 @@ function reparentEntities(data, options = {}) {
     };
 
 
-    const doReparent = (entity, parent, indNew, position, rotation) => {
+    const doReparent = (entity: Entity, parent: Entity, indNew: number, position: any, rotation: any) => {
         const history = {
             parent: parent.history.enabled,
             entity: entity.history.enabled
@@ -75,7 +78,7 @@ function reparentEntities(data, options = {}) {
         if (indNew !== -1 && indNew <= parent.get('children').length) {
             parent.insert('children', entity.get('resource_id'), indNew);
         } else {
-            parent.insert('children', entity.get('resource_id'));
+            parent.insert('children', entity.get('resource_id'), undefined);
         }
         parent.history.enabled = history.parent;
 
@@ -103,7 +106,7 @@ function reparentEntities(data, options = {}) {
     const redo = () => {
         sortRecords('indNew');
 
-        const latest = (record) => {
+        const latest = (record: Record<string, any>) => {
             const entity = record.entity.latest();
             if (!entity) return;
 
@@ -114,7 +117,7 @@ function reparentEntities(data, options = {}) {
             return { entity, parent, parentOld };
         };
 
-        const validRecords = [];
+        const validRecords: any[] = [];
         records.forEach((record, i) => {
             const data = latest(record);
             if (!data) return;
@@ -171,7 +174,7 @@ function reparentEntities(data, options = {}) {
         const undo = () => {
             sortRecords('indOld');
 
-            const latest = (record) => {
+            const latest = (record: Record<string, any>) => {
                 const entity = record.entity.latest();
                 if (!entity) return;
 
@@ -184,7 +187,7 @@ function reparentEntities(data, options = {}) {
                 return { entity, parent, parentOld };
             };
 
-            const validRecords = [];
+            const validRecords: any[] = [];
 
             records.forEach((record) => {
                 const data = latest(record);
@@ -237,6 +240,7 @@ function reparentEntities(data, options = {}) {
 
         api.history.add({
             name: 'reparent entities',
+            combine: false,
             undo: undo,
             redo: redo
         });

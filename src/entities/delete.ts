@@ -1,12 +1,15 @@
+import { EventHandle } from '@playcanvas/observer';
+
 import { findEntityReferencesInComponents, updateReferences } from './references';
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
 const USE_BACKEND_LIMIT = 500;
 
-let evtMessenger = null;
+let evtMessenger: EventHandle = null;
 
 // Gets the count of the entities and their children
-function getTotalEntityCount(entities) {
+function getTotalEntityCount(entities: any[]) {
     let count = 0;
 
     entities.forEach((entity) => {
@@ -18,9 +21,9 @@ function getTotalEntityCount(entities) {
 
 // When we have a lot of entities to delete
 // do it in the backend
-function deleteInBackend(entities) {
-    const deferred = {
-        resolve: null
+function deleteInBackend(entities: any[]) {
+    const deferred: { resolve: (value?: unknown) => void } = {
+        resolve: () => {}
     };
 
     const promise = new Promise((resolve) => {
@@ -54,8 +57,8 @@ function deleteInBackend(entities) {
     return promise;
 }
 
-function rememberPrevious(entities) {
-    const previous = [];
+function rememberPrevious(entities: any[]) {
+    const previous: { entity: any; index: any; }[] = [];
     entities.forEach((entity) => {
         previous.push({
             entity: entity.jsonHierarchy(),
@@ -79,7 +82,7 @@ function rememberPrevious(entities) {
  * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
  * @param {boolean} [options.waitSubmitted] - Whether to wait till ops submitted.
  */
-async function deleteEntities(entities, options = {}) {
+async function deleteEntities(entities: Entity[] | Entity, options: { history?: boolean, waitSubmitted?: boolean } = {}) {
     if (options.history === undefined) {
         options.history = true;
     }
@@ -123,7 +126,7 @@ async function deleteEntities(entities, options = {}) {
         getTotalEntityCount(entities) > USE_BACKEND_LIMIT) {
 
         if (options.history) {
-            const ok = await api.confirmFn('Deleting this many entities is not undoable. Are you sure?');
+            const ok = await api.confirmFn('Deleting this many entities is not undoable. Are you sure?', undefined);
             if (ok) {
                 await deleteInBackend(entities);
             }
@@ -132,7 +135,7 @@ async function deleteEntities(entities, options = {}) {
     }
 
     // remember previous entities
-    let previous = null;
+    let previous: any[] = null;
     if (options.history && api.history) {
         previous = rememberPrevious(entities);
     }
@@ -147,6 +150,7 @@ async function deleteEntities(entities, options = {}) {
     if (previous) {
         api.history.add({
             name: 'delete entities',
+            combine: false,
             undo: () => {
                 entities = previous.map((data, i) => {
                     return api.entities.create(data.entity, {
@@ -168,7 +172,7 @@ async function deleteEntities(entities, options = {}) {
                 previous = null;
             },
             redo: () => {
-                entities = entities.map(e => e.latest()).filter(e => !!e);
+                entities = (entities as Entity[]).map(e => e.latest()).filter(e => !!e);
                 previous = rememberPrevious(entities);
 
                 api.entities.delete(entities, {
@@ -183,7 +187,7 @@ async function deleteEntities(entities, options = {}) {
         // wait for scene operational transforms to finish:
         // sometimes we need to execute the next operation on the backend
         // just after delete - use waitSubmitted to guarantee the order of operations
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
             if (api.realtime.scenes.current) {
                 api.realtime.scenes.current.whenNothingPending(resolve);
             } else {

@@ -13,7 +13,7 @@ import { globals as api } from '../globals';
  * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
  * @returns {Entity} The new entity
  */
-function createEntity(data, options = {}) {
+function createEntity(data: any, options: { index?: number, history?: boolean, select?: boolean } = {}): Entity {
     data = data || {};
 
     if (options.history === undefined) {
@@ -57,7 +57,7 @@ function createEntity(data, options = {}) {
 
     // add children
     if (data.children) {
-        data.children.forEach((childData) => {
+        data.children.forEach((childData: { parent: Entity; resource_id: any; }) => {
             childData.parent = entity;
             const child = createEntity(childData, {
                 history: false,
@@ -73,7 +73,7 @@ function createEntity(data, options = {}) {
         data.onCreate(entity);
     }
 
-    let prevSelection;
+    let prevSelection: any[];
 
     // remember previous selection
     if (options.history && api.history) {
@@ -92,6 +92,7 @@ function createEntity(data, options = {}) {
     if (options.history && api.history) {
         api.history.add({
             name: `new entity ${entity.get('resource_id')}`,
+            combine: false,
             // undo new entity
             undo: () => {
                 entity = entity.latest();

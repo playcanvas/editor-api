@@ -1,11 +1,12 @@
+import { EventHandle } from '@playcanvas/observer';
+
 import { findEntityReferencesInComponents, updateReferences } from './references';
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 import { Guid } from '../guid';
 
-/** @typedef {import("../entity").Entity} Entity */
-
 const TIME_WAIT_ENTITIES = 5000;
-let evtMessenger = null;
+let evtMessenger: EventHandle = null;
 
 const USE_BACKEND_LIMIT = 500;
 
@@ -19,12 +20,12 @@ const USE_BACKEND_LIMIT = 500;
  * @param {Entity} oldEntity - The old entity
  * @param {object} duplicatedIdsMap - Map of old id -> new id
  */
-function updateDuplicatedEntityReferences(newEntity, oldEntity, duplicatedIdsMap) {
+function updateDuplicatedEntityReferences(newEntity: Entity, oldEntity: Entity, duplicatedIdsMap: Record<string, string>) {
     // remap template_ent_ids for template instances
-    newEntity.depthFirst((entity) => {
+    newEntity.depthFirst((entity: Entity) => {
         const templateEntIds = entity.get('template_ent_ids');
         if (templateEntIds) {
-            const newTemplateEntIds = {};
+            const newTemplateEntIds: Record<string, any> = {};
             for (const oldId in templateEntIds) {
                 if (duplicatedIdsMap[oldId]) {
                     newTemplateEntIds[duplicatedIdsMap[oldId]] = templateEntIds[oldId];
@@ -39,7 +40,7 @@ function updateDuplicatedEntityReferences(newEntity, oldEntity, duplicatedIdsMap
     });
 
     // update entity references
-    const entityReferences = findEntityReferencesInComponents(newEntity);
+    const entityReferences = findEntityReferencesInComponents(newEntity) as Record<string, any>;
     for (const id in entityReferences) {
         const prevEntity = api.entities.get(id);
         // only update references to this entity if it is in the old entity's subtree
@@ -55,7 +56,7 @@ function updateDuplicatedEntityReferences(newEntity, oldEntity, duplicatedIdsMap
     }
 }
 
-function splitEntityNameAndNumber(entityName) {
+function splitEntityNameAndNumber(entityName: string) {
     let name = '';
     let number = 1;
 
@@ -83,7 +84,7 @@ function splitEntityNameAndNumber(entityName) {
     };
 }
 
-function isEntityNameTaken(name, entities) {
+function isEntityNameTaken(name: string, entities: Entity[]) {
     for (let j = 0; j < entities.length; j++) {
         const entity = entities[j];
         const entityName = entities[j].get('name');
@@ -94,7 +95,7 @@ function isEntityNameTaken(name, entities) {
     return false;
 }
 
-function getUniqueNameForDuplicatedEntity(entityName, entities) {
+function getUniqueNameForDuplicatedEntity(entityName: string, entities: Entity[]) {
     // if entityName === '1box23' then name === '1box' and number === 23,  if entityName === '1' then name === '' and number === 1
     const { name, number } = splitEntityNameAndNumber(entityName);
 
@@ -117,9 +118,9 @@ function getUniqueNameForDuplicatedEntity(entityName, entities) {
  * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
  * @returns {Entity} The new entity
  */
-function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
+function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicatedIdsMap: Record<string, string>, useUniqueName: boolean) {
     const originalResourceId = entity.get('resource_id');
-    const data = entity.json();
+    const data = entity.json() as Record<string, any>;
     const children = data.children;
 
     data.children = [];
@@ -129,7 +130,7 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     data.resource_id = Guid.create();
     data.parent = parent.get('resource_id');
 
-    entity = api.entities.create(data, {
+    entity = api.entities.create(data as any, {
         history: false,
         select: false,
         index: ind
@@ -147,21 +148,22 @@ function duplicateEntity(entity, parent, ind, duplicatedIdsMap, useUniqueName) {
     }
 
     // add children too
-    children.forEach((childId) => {
-        duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap);
+    children.forEach((childId: string) => {
+        duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap, undefined);
     });
 
     return entity;
 }
 
-function duplicateInBackend(entities, options) {
+function duplicateInBackend(entities: Entity[], options: { history?: boolean; }) {
     const originalEntities = entities;
-    let cancelWaitForEntities;
+    let cancelWaitForEntities: () => void;
 
-    let deferred = {
-        resolve: null,
-        reject: null
+    let deferred: { resolve: (value?: unknown) => void, reject: (reason?: any) => void } = {
+        resolve: () => {},
+        reject: () => {}
     };
+
 
     const promise = new Promise((resolve, reject) => {
         deferred.resolve = resolve;
@@ -173,13 +175,13 @@ function duplicateInBackend(entities, options) {
             const callback = api.jobs.finish(data.job_id);
             if (!callback) return;
 
-            const result = data.multTaskResults.map(d => d.newRootId);
+            const result = data.multTaskResults.map((d: { newRootId: any; }) => d.newRootId);
             callback(result);
         });
     }
 
     function redo() {
-        const jobId = api.jobs.start((newEntityIds) => {
+        const jobId = api.jobs.start((newEntityIds: string[]) => {
             const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, (newEntities) => {
                 entities = newEntities;
 
@@ -216,6 +218,7 @@ function duplicateInBackend(entities, options) {
     if (options.history && api.history) {
         api.history.add({
             name: 'duplicate entities',
+            combine: false,
             redo: redo,
             undo: () => {
                 if (cancelWaitForEntities) {
@@ -245,7 +248,7 @@ function duplicateInBackend(entities, options) {
  * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
  * @returns {Promise<Entity[]>} The duplicated entities
  */
-async function duplicateEntities(entities, options) {
+async function duplicateEntities(entities: Entity[], options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
     // copy entities for safety in undo / redo
     entities = entities.slice();
 
@@ -262,7 +265,7 @@ async function duplicateEntities(entities, options) {
     }
 
     // build index
-    const records = {};
+    const records: Record<string, { entity: Entity; index: number }> = {};
     entities.forEach((entity) => {
         const id = entity.get('resource_id');
         records[id] = {
@@ -291,7 +294,7 @@ async function duplicateEntities(entities, options) {
     // for each entity. It used to return our results in the
     // original order passed by the user because when we duplicate
     // we change the order of the entities to their order within their parent
-    const originalOrder = {};
+    const originalOrder: Record<string, [number, number]> = {};
     entities.forEach((e, i) => {
         originalOrder[e.get('resource_id')] = [i, null];
     });
@@ -305,14 +308,14 @@ async function duplicateEntities(entities, options) {
         originalOrder[e.get('resource_id')][1] = i;
     });
 
-    let newEntities = [];
+    let newEntities: any = [];
 
     // If we have a lot of entities duplicate in the backend
     if (api.messenger && api.jobs && entities.length > USE_BACKEND_LIMIT) {
         newEntities = await duplicateInBackend(entities, options);
     } else {
         // remember previous selection
-        let previousSelection;
+        let previousSelection: any[];
         if (options.history && api.history && api.selection && options.select) {
             previousSelection = api.selection.items;
         }
@@ -335,20 +338,21 @@ async function duplicateEntities(entities, options) {
         });
 
         if (options.history && api.history) {
-            let previous;
+            let previous: Record<string, any> = null;
 
             api.history.add({
                 name: 'duplicate entities',
+                combine: false,
                 undo: () => {
                     // make sure we get the entities that are in the scene
-                    newEntities = newEntities.map((entity) => {
+                    newEntities = newEntities.map((entity: Entity) => {
                         return entity.latest();
                     });
 
                     // remember previous entities
                     previous = {};
-                    newEntities.forEach((entity) => {
-                        entity.depthFirst((e) => {
+                    newEntities.forEach((entity: Entity) => {
+                        entity.depthFirst((e: Entity) => {
                             previous[e.get('resource_id')] = e.json();
                         });
                     });
@@ -364,14 +368,14 @@ async function duplicateEntities(entities, options) {
                     }
                 },
                 redo: () => {
-                    function recreateEntityData(data) {
+                    function recreateEntityData(data: { children: any[]; }) {
                         data = Object.assign({}, data);
                         data.children = data.children.map(id => recreateEntityData(previous[id]));
                         return data;
                     }
 
-                    newEntities = newEntities.map((entity, index) => {
-                        const data = recreateEntityData(previous[entity.get('resource_id')]);
+                    newEntities = newEntities.map((entity: Entity, index: number) => {
+                        const data = recreateEntityData(previous[entity.get('resource_id')]) as any;
                         entity = api.entities.create(data, {
                             history: false,
                             select: false,

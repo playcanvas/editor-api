@@ -1,8 +1,7 @@
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
-/** @typedef {import("../entity").Entity} Entity */
-
-let ASSET_PATHS;
+let ASSET_PATHS: string[] = null;
 const REGEX_CONTAINS_STAR = /\.\*\./;
 
 /**
@@ -12,7 +11,7 @@ const REGEX_CONTAINS_STAR = /\.\*\./;
  * @param {number[]} assetIds - The asset ids
  * @param {object} assets - The assets dictionary
  */
-function storeAssetPaths(assetIds, assets) {
+function storeAssetPaths(assetIds: number[], assets: Record<number, any>) {
     if (!Array.isArray(assetIds)) {
         assetIds = [assetIds];
     }
@@ -51,7 +50,7 @@ function storeAssetPaths(assetIds, assets) {
  * @param {Entity} entity - The entity
  * @param {object} data - The helper data
  */
-function gatherDependencies(entity, data) {
+function gatherDependencies(entity: Entity, data: Record<string, any>) {
     if (!ASSET_PATHS) {
         // get asset paths for all components
         ASSET_PATHS = [];
@@ -180,7 +179,7 @@ function gatherDependencies(entity, data) {
 }
 
 // Sorts entities by their index in their parent's children list
-function sortEntities(entities) {
+function sortEntities(entities: Entity[]) {
     entities.sort((a, b) => {
         let parentA = a.get('parent');
         if (!parentA) {
@@ -216,11 +215,11 @@ function sortEntities(entities) {
  *
  * @param {Entity[]} entities - The entities
  */
-function copyEntities(entities) {
+function copyEntities(entities: Entity[]) {
     const currentScene = api.realtime?.scenes?.current;
     if (!currentScene) throw new Error('No current scene loaded');
 
-    const data = {
+    const data: Record<string, any> = {
         project: api.projectId,
         scene: currentScene.uniqueId,
         branch: api.branchId,
@@ -231,7 +230,7 @@ function copyEntities(entities) {
     };
 
     // build index
-    const selection = {};
+    const selection: Record<string, Entity> = {};
     for (let i = 0; i < entities.length; i++) {
         selection[entities[i].get('resource_id')] = entities[i];
     }

@@ -1,6 +1,7 @@
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
-async function addScript(entities, scriptName, options) {
+async function addScript(entities: Entity[], scriptName: string, options: { enabled?: boolean, attributes?: Record<string, any>, index?: number, history?: boolean } = {}) {
     entities = entities.filter(e => !e.has(`components.script.scripts.${scriptName}`));
     if (!entities.length) return;
 
@@ -29,7 +30,7 @@ async function addScript(entities, scriptName, options) {
 
     // wait for scene script ops to finish before starting backend
     // for default attributes values
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         if (api.realtime.scenes.current) {
             api.realtime.scenes.current.whenNothingPending(resolve);
         } else {
@@ -38,9 +39,9 @@ async function addScript(entities, scriptName, options) {
     });
 
     // setup promise
-    const deferred = {
-        resolve: null,
-        reject: null
+    const deferred: { resolve: (value?: unknown) => void, reject: (reason?: any) => void } = {
+        resolve: () => {},
+        reject: () => {}
     };
 
     const promise = new Promise((resolve, reject) => {
@@ -49,7 +50,7 @@ async function addScript(entities, scriptName, options) {
     });
 
     // start job
-    const jobId = api.jobs.start((result) => {
+    const jobId = api.jobs.start((result: { status: string; }) => {
         if (result.status === 'success') {
             deferred.resolve();
         } else {
@@ -83,6 +84,7 @@ async function addScript(entities, scriptName, options) {
 
         api.history.add({
             name: `entities.components.script.scripts.${scriptName}`,
+            combine: false,
             redo: () => {
                 const newOptions = Object.assign({}, options);
                 newOptions.history = false;
@@ -115,10 +117,10 @@ async function addScript(entities, scriptName, options) {
     await promise;
 }
 
-function removeScript(entities, scriptName, options) {
+function removeScript(entities: Entity[], scriptName: string, options: { history?: boolean } = {}) {
     const history = (options.history || options.history === undefined);
 
-    let prev = {};
+    let prev: Record<string, any> = {};
 
     if (history) {
         entities.forEach((entity) => {
@@ -148,6 +150,7 @@ function removeScript(entities, scriptName, options) {
     if (api.history && history) {
         api.history.add({
             name: `entities.components.script.scripts.${scriptName}`,
+            combine: false,
             undo: () => {
                 entities = entities.map(e => e.latest()).filter(e => e && e.has('components.script') && prev[e.get('resource_id')]);
 

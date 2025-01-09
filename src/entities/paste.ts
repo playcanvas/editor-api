@@ -1,5 +1,6 @@
-import { Observer } from '@playcanvas/observer';
+import { EventHandle, Observer } from '@playcanvas/observer';
 
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 import { Guid } from '../guid';
 
@@ -7,8 +8,8 @@ const USE_BACKEND_LIMIT = 500;
 const TIME_WAIT_ENTITIES = 5000;
 const REGEX_CONTAINS_STAR = /\.\*\./;
 
-let ASSET_PATHS;
-let evtMessenger;
+let ASSET_PATHS: any[];
+let evtMessenger: EventHandle;
 
 /**
  * Try to find an assetId in this project that
@@ -19,7 +20,7 @@ let evtMessenger;
  * @param {object} assetsIndex - The assets index stored in localStorage that contains paths of assets
  * @returns {number} The asset id in this project
  */
-function remapAsset(assetId, assetsIndex) {
+function remapAsset(assetId: any, assetsIndex: Record<string, any>): number {
     if (!assetId) return null;
 
     // return the old asset id if not found
@@ -92,7 +93,7 @@ function remapAsset(assetId, assetsIndex) {
     return result;
 }
 
-function mapValue(value, mapping, sameProject) {
+function mapValue(value: string, mapping: Record<string, any>, sameProject: boolean) {
     if (sameProject) {
         return mapping[value] || value;
     }
@@ -100,7 +101,7 @@ function mapValue(value, mapping, sameProject) {
     return mapping[value] || null;
 }
 
-function remapField(entity, path, mapping, sameProject) {
+function remapField(entity: Entity, path: string, mapping: Record<string, any>, sameProject: boolean) {
     if (REGEX_CONTAINS_STAR.test(path)) {
         const parts = path.split('.*.');
         if (!entity.has(parts[0])) return;
@@ -139,7 +140,7 @@ function remapField(entity, path, mapping, sameProject) {
     }
 }
 
-function remapScriptAttribute(assetAttr, componentAttr, entity, path, entityMapping, assetMapping, sameProject) {
+function remapScriptAttribute(assetAttr: any, componentAttr: any, entity: Entity, path: string, entityMapping: Record<string, any>, assetMapping: Record<string, any>, sameProject: boolean) {
     if (assetAttr.type === 'asset') {
         if (sameProject) return;
 
@@ -175,7 +176,7 @@ function remapScriptAttribute(assetAttr, componentAttr, entity, path, entityMapp
  * @param {object} entityMapping - An index that maps old resource ids to new resource ids
  * @param {object} assetMapping - An index that maps old asset ids to new asset ids
  */
-function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMapping) {
+function remapEntitiesAndAssets(entity: Entity, parent: Entity, data: Record<string, any>, entityMapping: Record<string, any>, assetMapping: Record<string, any>) {
     const sameProject = (data.project === api.projectId);
     const resourceId = entity.get('resource_id');
 
@@ -193,7 +194,7 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
     // if this is a template instance remap template_ent_ids
     const templateEntIds = entity.get('template_ent_ids');
     if (templateEntIds) {
-        const newTemplateEntIds = {};
+        const newTemplateEntIds: Record<string, any> = {};
         for (const oldId in templateEntIds) {
             if (entityMapping[oldId]) {
                 newTemplateEntIds[entityMapping[oldId]] = templateEntIds[oldId];
@@ -343,11 +344,11 @@ function remapEntitiesAndAssets(entity, parent, data, entityMapping, assetMappin
  * @param {object} options - The paste options
  * @returns {Promise<Entity[]>} A promise
  */
-function pasteInBackend(data, parent, options) {
-    let entities;
-    let cancelWaitForEntities;
+function pasteInBackend(data: Record<string, any>, parent: Entity, options: { history?: boolean; } = {}) {
+    let entities: Entity[];
+    let cancelWaitForEntities: () => void;
 
-    let deferred = {
+    let deferred: { resolve: (value?: Entity[] | PromiseLike<Entity[]>) => void; reject: (reason?: any) => void } = {
         resolve: null,
         reject: null
     };
@@ -362,7 +363,7 @@ function pasteInBackend(data, parent, options) {
             const callback = api.jobs.finish(data.job_id);
             if (!callback) return;
 
-            const result = data.multTaskResults.map(d => d.newRootId);
+            const result = data.multTaskResults.map((d: { newRootId: any; }) => d.newRootId);
             callback(result);
         });
     }
@@ -371,7 +372,7 @@ function pasteInBackend(data, parent, options) {
         parent = parent.latest();
         if (!parent) return;
 
-        const jobId = api.jobs.start((newEntityIds) => {
+        const jobId = api.jobs.start((newEntityIds: string[]) => {
             const cancel = api.entities.waitToExist(newEntityIds, TIME_WAIT_ENTITIES, (newEntities) => {
                 entities = newEntities;
 
@@ -393,7 +394,7 @@ function pasteInBackend(data, parent, options) {
         });
 
         const children = parent.get('children');
-        const taskData = {
+        const taskData: Record<string, any> = {
             projectId: api.projectId,
             branchId: data.branch || api.branchId,
             parentId: parent.get('resource_id'),
@@ -429,6 +430,7 @@ function pasteInBackend(data, parent, options) {
         api.history.add({
             name: 'paste entities',
             redo: redo,
+            combine: false,
             undo: () => {
                 if (cancelWaitForEntities) {
                     cancelWaitForEntities();
@@ -456,13 +458,13 @@ function pasteInBackend(data, parent, options) {
  * @param {boolean} options.history - Whether to record a history action. Defaults to true.
  * @returns {Promise<Entity[]>} The new entities
  */
-async function pasteEntities(parent, options = {}) {
+async function pasteEntities(parent: Entity, options: { history?: boolean; } = {}) {
     if (options.history === undefined) {
         options.history = true;
     }
 
     // parse data from local storage
-    const data = api.clipboard.value;
+    const data = api.clipboard.value as any;
     if (!data || data.type !== 'entity') return;
 
     // paste on root if no parent specified
@@ -479,7 +481,7 @@ async function pasteEntities(parent, options = {}) {
     }
 
     // remap assets
-    const remappedAssets = {};
+    const remappedAssets: Record<string, any> = {};
     if (data.assets) {
         for (const key in data.assets) {
             remappedAssets[key] = remapAsset(key, data.assets);
@@ -487,7 +489,7 @@ async function pasteEntities(parent, options = {}) {
     }
 
     // change resource ids
-    const mapping = {};
+    const mapping: Record<string, any> = {};
     for (const guid in data.hierarchy) {
         mapping[guid] = Guid.create();
     }
@@ -504,8 +506,8 @@ async function pasteEntities(parent, options = {}) {
     }
 
     // add all entities with different resource ids
-    const selectedEntities = [];
-    const newEntities = {};
+    const selectedEntities: Entity[] = [];
+    const newEntities: Record<string, Entity> = {};
 
     for (const resourceId in data.hierarchy) {
         // create new observer for entity
@@ -515,9 +517,9 @@ async function pasteEntities(parent, options = {}) {
         const select = !data.hierarchy[observer.get('parent')];
 
         // change resource ids
-        remapEntitiesAndAssets(observer, parent, data, mapping, remappedAssets);
+        remapEntitiesAndAssets(observer as unknown as Entity, parent, data, mapping, remappedAssets);
 
-        const json = observer.json();
+        const json = observer.json() as any;
         newEntities[json.resource_id] = json;
 
         const entity = api.entities.create(json, {
@@ -536,11 +538,12 @@ async function pasteEntities(parent, options = {}) {
 
     // add history
     if (options.history && api.history) {
-        let deletedHierarchy = null;
-        let previousSelection = null;
+        let deletedHierarchy: any[] = null;
+        let previousSelection: any[] = null;
 
         api.history.add({
             name: 'paste entities',
+            combine: false,
             undo: () => {
                 parent = parent.latest();
                 if (!parent) return;

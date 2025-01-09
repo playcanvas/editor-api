@@ -42,7 +42,7 @@ class Messenger extends Events {
     }
 
     _onWelcome() {
-        this._messenger.projectWatch(api.projectId);
+        this._messenger.projectWatch(api.projectId as unknown as string);
     }
 
     _onMessage(data: { name: string; data: any; }) {
