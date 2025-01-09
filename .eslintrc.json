@@ -15,7 +15,7 @@
     },
     "rules": {
         "accessor-pairs": ["error", { "setWithoutGet": false, "getWithoutSet": false }],
-        "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
+        "jsdoc/check-tag-names": ["error", { "definedTags": ["category", "import"] }],
         "jsdoc/check-examples": "off",
         "no-prototype-builtins": "off",
         "no-use-before-define": "off",
