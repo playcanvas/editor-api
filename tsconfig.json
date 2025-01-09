@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
-        "allowJs": true,
         "esModuleInterop" : true,
-        "jsx": "react",
         "lib": [
             "es2019",
             "dom",
@@ -10,9 +8,9 @@
         ],
         "moduleResolution": "node",
         "noImplicitAny": true,
-        "outDir": "types",
+        "outDir": "dist",
         "sourceMap": true,
         "target": "es6",
     },
-    "include": ["src/**/*.js", "test/**/*.js", "rollup.config.js", "src/polyfills.ts"],
+    "include": ["src", "types", "test/**/*.js", "rollup.config.js", "types"],
 }

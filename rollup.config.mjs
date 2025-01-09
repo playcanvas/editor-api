@@ -1,14 +1,12 @@
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import { dts } from 'rollup-plugin-dts';
+import typescript from '@rollup/plugin-typescript';
 import polyfills from 'rollup-plugin-polyfill-node';
-
-import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
 
 const umd = {
     external: ['@playcanvas/observer'],
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
         file: 'dist/index.js',
         format: 'umd',
@@ -18,6 +16,7 @@ const umd = {
         }
     },
     plugins: [
+        typescript(),
         commonjs(),
         polyfills(),
         resolve(),
@@ -45,7 +44,7 @@ const umd = {
 
 const module = {
     external: ['@playcanvas/observer'],
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
         file: 'dist/index.mjs',
         format: 'module',
@@ -54,30 +53,13 @@ const module = {
         }
     },
     plugins: [
+        typescript(),
         commonjs(),
         polyfills(),
         resolve()
     ]
 };
 
-const footer = `export as namespace api;
-declare global {
-    const editor: typeof globals;
-}`;
-
-const types = {
-    input: 'types/index.d.ts',
-    output: [{
-        file: 'dist/index.d.ts',
-        footer: footer,
-        format: 'es'
-    }],
-    plugins: [
-        runTsc('tsconfig.build.json'),
-        dts()
-    ]
-};
-
-export default (args) => {
-    return process.env.target === 'types' ? [types] : [umd, module];
+export default () => {
+    return [umd, module];
 };

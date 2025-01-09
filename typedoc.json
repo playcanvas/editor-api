@@ -1,6 +1,6 @@
 {
     "entryPoints": [
-        "./src/index.js",
+        "./src/index.ts",
     ],
     "excludeNotDocumented": true,
     "excludeNotDocumentedKinds": [
