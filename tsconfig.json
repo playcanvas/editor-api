@@ -14,5 +14,5 @@
         "sourceMap": true,
         "target": "es6",
     },
-    "include": ["src/**/*.js", "test/**/*.js", "rollup.config.js"],
+    "include": ["src/**/*.js", "test/**/*.js", "rollup.config.js", "src/polyfills.ts"],
 }
