@@ -38,7 +38,7 @@
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@types/sharedb": "^5.1.0",
+    "@types/sharedb": "^3.2.1",
     "@typescript-eslint/parser": "^8.19.1",
     "chai": "^4.4.1",
     "eslint": "^9.16.0",
