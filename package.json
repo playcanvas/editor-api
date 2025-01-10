@@ -69,6 +69,6 @@
     "watch": "tsc -w",
     "docs": "typedoc",
     "lint": "eslint src",
-    "lint-fix": "eslint src --fix"
+    "lint:fix": "eslint src --fix"
   }
 }
