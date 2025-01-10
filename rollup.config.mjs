@@ -68,9 +68,7 @@ const module = {
 };
 
 const footer = `export as namespace api;
-export default () => {
 declare global {
-    return [umd, module];
     const editor: typeof globals;
 }`;
 
