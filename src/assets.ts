@@ -652,7 +652,7 @@ class Assets extends Events {
             type: 'bundle',
             folder: options.folder,
             data: {
-                assets: (options.assets || []).map(a => a.get('id'))
+                assets: (options.assets || []).map((a: any) => a.get('id'))
             },
             preload: options.preload
         }, null, options.onProgress);
@@ -948,7 +948,7 @@ class Assets extends Events {
     createSprite(options: any) {
         const data: any = {};
         data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
-        data.frameKeys = options.frameKeys ? options.frameKeys.map(val => val.toString()) : [];
+        data.frameKeys = options.frameKeys ? options.frameKeys.map((val: any) => val.toString()) : [];
         data.textureAtlasAsset = options.textureAtlas ? options.textureAtlas.get('id') : null;
         data.renderMode = options.renderMode !== undefined ? options.renderMode : 0;
 
