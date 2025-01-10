@@ -1,4 +1,5 @@
 import { Events } from '@playcanvas/observer';
+
 import { Realtime } from '../realtime';
 import { RealtimeConnection } from './connection';
 
