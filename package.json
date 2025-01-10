@@ -66,5 +66,8 @@
     "docs": "typedoc",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
