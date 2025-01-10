@@ -1,4 +1,4 @@
-import { EventHandle } from '@playcanvas/observer';
+import type { EventHandle } from '@playcanvas/observer/dist/observer.d';
 
 import { findEntityReferencesInComponents, updateReferences } from './references';
 import { Entity } from '../entity';
@@ -159,9 +159,9 @@ function duplicateInBackend(entities: Entity[], options: any) {
     const originalEntities = entities;
     let cancelWaitForEntities: () => void;
 
-    let deferred: { resolve: (value?: unknown) => void, reject: (reason?: any) => void } = {
-        resolve: () => {},
-        reject: () => {}
+    let deferred: any = {
+        resolve: null,
+        reject: null
     };
 
 

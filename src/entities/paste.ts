@@ -1,4 +1,5 @@
-import { EventHandle, Observer } from '@playcanvas/observer';
+import { Observer } from '@playcanvas/observer';
+import type { EventHandle } from '@playcanvas/observer/dist/observer.d';
 
 import { Entity } from '../entity';
 import { globals as api } from '../globals';
@@ -348,7 +349,7 @@ function pasteInBackend(data: Record<string, any>, parent: Entity, options: any 
     let entities: Entity[];
     let cancelWaitForEntities: () => void;
 
-    let deferred: { resolve: (value?: Entity[] | PromiseLike<Entity[]>) => void; reject: (reason?: any) => void } = {
+    let deferred: any = {
         resolve: null,
         reject: null
     };

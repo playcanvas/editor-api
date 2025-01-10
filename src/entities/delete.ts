@@ -1,4 +1,4 @@
-import { EventHandle } from '@playcanvas/observer';
+import type { EventHandle } from '@playcanvas/observer/dist/observer.d';
 
 import { findEntityReferencesInComponents, updateReferences } from './references';
 import { Entity } from '../entity';
@@ -22,8 +22,8 @@ function getTotalEntityCount(entities: any[]) {
 // When we have a lot of entities to delete
 // do it in the backend
 function deleteInBackend(entities: any[]) {
-    const deferred: { resolve: (value?: unknown) => void } = {
-        resolve: () => {}
+    const deferred: any = {
+        resolve: null
     };
 
     const promise = new Promise((resolve) => {

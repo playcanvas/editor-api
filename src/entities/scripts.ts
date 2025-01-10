@@ -39,9 +39,9 @@ async function addScript(entities: Entity[], scriptName: string, options: any = 
     });
 
     // setup promise
-    const deferred: { resolve: (value?: unknown) => void, reject: (reason?: any) => void } = {
-        resolve: () => {},
-        reject: () => {}
+    const deferred: any = {
+        resolve: null,
+        reject: null
     };
 
     const promise = new Promise((resolve, reject) => {

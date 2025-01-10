@@ -64,7 +64,6 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "docs": "typedoc",
-    "types": "tsc --project tsconfig.build.json",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   }
