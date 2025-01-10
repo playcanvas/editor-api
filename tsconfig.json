@@ -12,5 +12,5 @@
         "sourceMap": true,
         "target": "es6",
     },
-    "include": ["src", "types", "test/**/*.js", "rollup.config.js", "types"],
+    "include": ["src", "types", "test/**/*.js", "rollup.config.mjs"],
 }

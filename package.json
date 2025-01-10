@@ -16,7 +16,6 @@
   "bugs": {
     "url": "https://github.com/playcanvas/editor-api/issues"
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/playcanvas/editor-api.git"
@@ -62,8 +61,8 @@
   "scripts": {
     "test": "karma start test/karma.conf.js --single-run",
     "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
     "docs": "typedoc",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
