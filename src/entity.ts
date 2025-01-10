@@ -995,10 +995,6 @@ class Entity extends Events {
         api.entities.removeScript([this], scriptName, options);
     }
 
-    get observer() {
-        return this._observer;
-    }
-
     /**
      * The parent entity.
      *

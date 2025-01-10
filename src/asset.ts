@@ -643,10 +643,6 @@ class Asset extends Events {
         replace(this, asset, options);
     }
 
-    get observer() {
-        return this._observer;
-    }
-
     /**
      * Gets observer history for this asset.
      *
