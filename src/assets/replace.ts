@@ -38,7 +38,7 @@ function replaceAssetRefs(oldAsset: Asset, newAsset: Asset) {
 
     const pathsByType: Record<string, any> = {};
 
-    api.assets.list().forEach((asset) => {
+    api.assets.list().forEach((asset: any) => {
         const type = asset.get('type');
         if (!pathsByType[type]) {
             pathsByType[type] = api.schema.assets.getFieldsOfType(type, 'asset');

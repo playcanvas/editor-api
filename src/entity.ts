@@ -604,7 +604,7 @@ class Entity extends Events {
      * ```
      */
     insert(path: string, value: any, index: number) {
-        return this._observer.insert(path, value, index, undefined, undefined);
+        return (this._observer as any).insert(path, value, index, undefined, undefined);
     }
 
     /**
@@ -619,7 +619,7 @@ class Entity extends Events {
      * ```
      */
     removeValue(path: string, value: any) {
-        return this._observer.removeValue(path, value, undefined, undefined);
+        return (this._observer as any).removeValue(path, value, undefined, undefined);
     }
 
     /**
@@ -885,7 +885,7 @@ class Entity extends Events {
         let history = entity.history.enabled;
         entity.history.enabled = false;
         try {
-            entity._observer.set('parent', null, true); // silent set otherwise we run into C3 error
+            (entity as any)._observer.set('parent', null, true); // silent set otherwise we run into C3 error
         } catch (err) {
             console.error(`Error when setting parent to null for entity ${entity.get('resource_id')}`);
             console.error(err);

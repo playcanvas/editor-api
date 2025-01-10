@@ -63,7 +63,7 @@ class SceneSettings extends Events {
         }
 
         if (this._history) {
-            this._history.destroy();
+            (this._history as any).destroy();
         }
 
         this._history = new ObserverHistory({
@@ -84,7 +84,7 @@ class SceneSettings extends Events {
         this._initializeObserver();
 
         this._history.enabled = false;
-        this._observer.patch(scene.data.settings, undefined);
+        (this._observer as any).patch(scene.data.settings, undefined);
         this._history.enabled = true;
 
         this.emit('load');

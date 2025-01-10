@@ -121,7 +121,7 @@ class Entities extends Events {
      * ```
      */
     get(id: string) {
-        const e = this._entities.get(id);
+        const e = (this._entities as any).get(id);
         return e ? e.apiEntity : null;
     }
 
@@ -136,7 +136,7 @@ class Entities extends Events {
      * ```
      */
     list() {
-        return this._entities.array().map(e => e.apiEntity);
+        return (this._entities as any).array().map((e: { apiEntity: any; }) => e.apiEntity);
     }
 
     /**
@@ -153,7 +153,7 @@ class Entities extends Events {
             return;
         }
 
-        this._entities.add(entity.observer);
+        (this._entities as any).add((entity as any)._observer);
         if (!entity.get('parent')) {
             if (this._root) {
                 console.error(`More than one root entities in Scene. Current root is Entity "${this._root.get('name')}" [${this._root.get('resource_id')}] but Entity "${entity.get('name')}" [${id}] also has a null parent`);
@@ -212,8 +212,8 @@ class Entities extends Events {
 
         // remove from observer list
         try {
-            this._entities.remove(entity.observer);
-            entity.observer.destroy();
+            (this._entities as any).remove((entity as any)._observer);
+            (entity as any)._observer.destroy();
         } catch (err) {
             console.error(err);
         }
@@ -244,8 +244,8 @@ class Entities extends Events {
             });
         }
 
-        this._entities.remove(entity.observer);
-        entity.observer.destroy();
+        (this._entities as any).remove((entity as any)._observer);
+        (entity as any)._observer.destroy();
 
         if (this._root === entity) {
             this._root = null;
@@ -262,7 +262,7 @@ class Entities extends Events {
     clear() {
         this._root = null;
         const entities = this.list();
-        this._entities.clear();
+        (this._entities as any).clear();
 
         if (api.selection) {
             if (api.selection.items[0] instanceof Entity)  {
@@ -273,8 +273,8 @@ class Entities extends Events {
             }
         }
 
-        entities.forEach((entity) => {
-            entity._observer.destroy();
+        entities.forEach((entity: any) => {
+            (entity as any)._observer.destroy();
             this.emit('remove', entity);
         });
 

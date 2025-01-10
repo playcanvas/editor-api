@@ -1,5 +1,5 @@
 import { Events, History as apiHistory } from '@playcanvas/observer';
-import type { HistoryAction } from '@playcanvas/observer/types/history';
+import type { HistoryAction } from '@playcanvas/observer/dist/observer.d';
 
 /**
  * The history API responsible for undo / redo.
@@ -55,7 +55,7 @@ class History extends Events {
      * ```
      */
     addAndExecute(action: HistoryAction) {
-        this._history.addAndExecute(action);
+        (this._history as any).addAndExecute(action);
     }
 
     /**

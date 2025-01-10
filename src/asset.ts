@@ -385,7 +385,7 @@ class Asset extends Events {
         this._observer.apiAsset = this;
         this._observer.addEmitter(this);
 
-        this._observer.latestFn = () => {
+        (this._observer as any).latestFn = () => {
             const latest = api.assets.get(this.get('id'));
             return latest && latest._observer;
         };
@@ -509,7 +509,7 @@ class Asset extends Events {
      * @returns {boolean} Whether the value was inserted
      */
     insert(path: any, value: any, index: any) {
-        return this._observer.insert(path, value, index, undefined, undefined);
+        return (this._observer as any).insert(path, value, index, undefined, undefined);
     }
 
     /**
@@ -520,7 +520,7 @@ class Asset extends Events {
      * @returns {boolean} Whether the value was removed
      */
     removeValue(path: any, value: any) {
-        return this._observer.removeValue(path, value, undefined, undefined);
+        return (this._observer as any).removeValue(path, value, undefined, undefined);
     }
 
     /**

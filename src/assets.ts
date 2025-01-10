@@ -173,7 +173,7 @@ class Assets extends Events {
 
         this._uniqueIdToItemId = {};
 
-        this._assets = new ObserverList({
+        (this._assets as any) = new ObserverList({
             index: 'id',
             sorted: ((a: any, b: any) => {
                 const f = +(b._data.type === 'folder') - +(a._data.type === 'folder');
@@ -262,7 +262,7 @@ class Assets extends Events {
      * @returns {Asset} The asset
      */
     get(id: number) {
-        const a = this._assets.get(id);
+        const a = (this._assets as any).get(id);
         return a ? a.apiAsset : null;
     }
 
@@ -283,7 +283,7 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     list() {
-        return this._assets.array().map(a => a.apiAsset);
+        return (this._assets as any).array().map((a: { apiAsset: any; }) => a.apiAsset);
     }
 
     /**
@@ -330,18 +330,18 @@ class Assets extends Events {
     add(asset: Asset) {
         asset._initializeHistory();
 
-        const pos = this._assets.add(asset.observer);
+        const pos = (this._assets as any).add((asset as any)._observer);
         if (pos === null) return;
 
         const id = asset.get('id');
         this._uniqueIdToItemId[asset.get('uniqueId')] = id;
 
-        asset.observer.on('name:set', (name: string, oldName: string) => {
+        (asset as any)._observer.on('name:set', (name: string, oldName: string) => {
             name = (name || '').toLowerCase();
             oldName = (oldName || '').toLowerCase();
 
-            const ind = this._assets.data.indexOf(asset.observer);
-            let pos = this._assets.positionNextClosest(asset.observer, (a: any, b: any) => {
+            const ind = (this._assets as any).data.indexOf((asset as any)._observer);
+            let pos = (this._assets as any).positionNextClosest((asset as any)._observer, (a: any, b: any) => {
                 const f = +(b._data.type === 'folder') - +(a._data.type === 'folder');
 
                 if (f !== 0) {
@@ -357,7 +357,7 @@ class Assets extends Events {
 
             });
 
-            if (pos === -1 && (ind + 1) === this._assets.data.length) {
+            if (pos === -1 && (ind + 1) === (this._assets as any).data.length) {
                 return;
             }
 
@@ -369,7 +369,7 @@ class Assets extends Events {
                 pos--;
             }
 
-            this._assets.move(asset.observer, pos);
+            (this._assets as any).move((asset as any)._observer, pos);
             this.emit('move', asset, pos);
         });
 
@@ -384,12 +384,12 @@ class Assets extends Events {
      * @param {Asset} asset - The asset
      */
     remove(asset: Asset) {
-        if (!this._assets.has(asset.observer)) return;
+        if (!(this._assets as any).has((asset as any)._observer)) return;
 
-        this._assets.remove(asset.observer);
+        (this._assets as any).remove((asset as any)._observer);
 
         delete this._uniqueIdToItemId[asset.get('uniqueId')];
-        asset.observer.destroy();
+        (asset as any)._observer.destroy();
 
         if (api.realtime) {
             api.realtime.assets.unload(asset.get('uniqueId'));
@@ -408,7 +408,7 @@ class Assets extends Events {
         const assets = this.list();
         if (!assets.length) return;
 
-        this._assets.clear();
+        (this._assets as any).clear();
 
         let i = assets.length;
         while (i--) {
@@ -425,9 +425,9 @@ class Assets extends Events {
      * @returns {Asset[]} The assets
      */
     filter(fn: Function) {
-        return this._assets.data
-        .filter(observer => fn(observer.apiAsset))
-        .map(observer => observer.apiAsset);
+        return (this._assets as any).data
+        .filter((observer: { apiAsset: any; }) => fn(observer.apiAsset))
+        .map((observer: { apiAsset: any; }) => observer.apiAsset);
     }
 
     /**
@@ -437,7 +437,7 @@ class Assets extends Events {
      * @returns {Asset} The asset
      */
     findOne(fn: Function) {
-        const result = this._assets.data.find(observer => fn(observer.apiAsset));
+        const result = (this._assets as any).data.find((observer: { apiAsset: any; }) => fn(observer.apiAsset));
         return result ? result.apiAsset : null;
     }
 

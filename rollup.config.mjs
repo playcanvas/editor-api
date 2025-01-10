@@ -16,7 +16,9 @@ const umd = {
         }
     },
     plugins: [
-        typescript(),
+        typescript({
+            sourceMap: false
+        }),
         commonjs(),
         polyfills(),
         resolve(),
@@ -53,7 +55,9 @@ const module = {
         }
     },
     plugins: [
-        typescript(),
+        typescript({
+            sourceMap: false
+        }),
         commonjs(),
         polyfills(),
         resolve()
