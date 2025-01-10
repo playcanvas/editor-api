@@ -75,7 +75,7 @@ declare global {
 }`;
 
 const types = {
-    input: 'dist/types/index.d.ts',
+    input: 'types/index.d.ts',
     output: [{
         file: 'dist/index.d.ts',
         footer: footer,
