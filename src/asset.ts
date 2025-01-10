@@ -4,8 +4,18 @@ import { replace } from './assets/replace';
 import { Entity } from './entity';
 import { globals as api } from './globals';
 
-type AssetObserver = Observer & {
+/**
+ * Represents an observer for an asset, extending the base Observer.
+ */
+export type AssetObserver = Observer & {
+    /**
+     * The history of changes made to the observer.
+     */
     history: ObserverHistory;
+
+    /**
+     * The API asset associated with this observer.
+     */
     apiAsset: Asset;
 };
 

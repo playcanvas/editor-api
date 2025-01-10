@@ -3,25 +3,24 @@ import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
 import { globals as api } from './globals';
 import { Guid } from './guid';
 
-type EntityData = {
-    children?: string[];
-    enabled?: boolean;
-    name?: string;
-    parent?: string;
-    position?: number[];
-    resource_id?: string;
-    rotation?: number[];
-    scale?: number[];
-    tags?: string[];
-    template_ent_ids?: Record<string, string>;
-    template_id?: number;
-    components?: Record<string, any>;
-}
+/**
+ * Represents an observer for an entity, extending the base Observer.
+ */
+export type EntityObserver = Observer & {
+    /**
+     * The API entity associated with this observer.
+     */
+    apiEntity: Entity;
 
-type EntityObserver = Observer & {
-    apiEntity: Entity,
-    history: ObserverHistory,
-    latestFn: () => Observer
+    /**
+     * The history of changes made to the observer.
+     */
+    history: ObserverHistory;
+
+    /**
+     * A function that returns the latest observer.
+     */
+    latestFn: () => Observer;
 };
 
 /**
@@ -459,9 +458,9 @@ class Entity extends Events {
      * Creates new Entity
      *
      * @category Internal
-     * @param {EntityData} data - Optional entity data
+     * @param {any} data - Optional entity data
      */
-    constructor(data: EntityData = {}) {
+    constructor(data: any = {}) {
         super();
 
         let name = data.name;
@@ -648,7 +647,7 @@ class Entity extends Events {
      * ```
      */
     jsonHierarchy() {
-        const result = this.json() as EntityData;
+        const result = this.json() as any;
         const children = this.children;
         for (let i = 0; i < children.length; i++) {
             result.children[i] = children[i] && children[i].jsonHierarchy();

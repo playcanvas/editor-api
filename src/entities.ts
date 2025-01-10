@@ -15,7 +15,7 @@ import { globals as api } from './globals';
 /**
  * Data to create a new Entity
  */
-type CreateEntityArguments = {
+export type CreateEntityArguments = {
     /**
      * The entity name
      */
