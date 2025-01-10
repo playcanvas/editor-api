@@ -8,7 +8,7 @@ import { Guid } from './guid';
  * @category Internal
  */
 class Jobs extends Events {
-    private _jobsInProgress: Record<string, Function>;
+    private _jobsInProgress: Record<string, Function> = {};
 
     /**
      * Adds a new job. The specified function will be returned when the
