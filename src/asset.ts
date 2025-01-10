@@ -617,7 +617,7 @@ class Asset extends Events {
      * @param {object} options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
      * @returns {Promise<Entity>} The new entity.
      */
-    async instantiateTemplate(parent: Entity, options: { index: number; history: boolean; select: boolean; extraData: any }) {
+    async instantiateTemplate(parent: Entity, options: any) {
         const entities = await api.assets.instantiateTemplates([this], parent, options);
         return entities[0];
     }
@@ -629,7 +629,7 @@ class Asset extends Events {
      * @param {object} options - Options.
      * @param {boolean} options.history - Whether to record a history action.
      */
-    replace(asset: Asset, options: { history?: boolean } = {}) {
+    replace(asset: Asset, options: any = {}) {
         replace(this, asset, options);
     }
 

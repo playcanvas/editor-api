@@ -155,7 +155,7 @@ function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicated
     return entity;
 }
 
-function duplicateInBackend(entities: Entity[], options: { history?: boolean; }) {
+function duplicateInBackend(entities: Entity[], options: any) {
     const originalEntities = entities;
     let cancelWaitForEntities: () => void;
 
@@ -248,7 +248,7 @@ function duplicateInBackend(entities: Entity[], options: { history?: boolean; })
  * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
  * @returns {Promise<Entity[]>} The duplicated entities
  */
-async function duplicateEntities(entities: Entity[], options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
+async function duplicateEntities(entities: Entity[], options: any = {}) {
     // copy entities for safety in undo / redo
     entities = entities.slice();
 

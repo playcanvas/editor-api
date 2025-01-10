@@ -2,12 +2,36 @@ import { Events } from '@playcanvas/observer';
 
 import { globals as api } from './globals';
 
-type MessagerClient = Events & {
+/**
+ * The MessagerClient interface extends the Events class and defines the methods and properties
+ * required for the Messenger client.
+ */
+export type MessagerClient = Events & {
+    /**
+     * Connects to the specified URL.
+     * @param {string} url - The URL to connect to.
+     */
     connect(url: string): void;
+
+    /**
+     * Indicates whether the client is connected.
+     */
     isConnected: boolean;
+
+    /**
+     * Authenticates the client with the specified access token and role.
+     * @param {string} accessToken - The access token for authentication.
+     * @param {string} role - The role for authentication.
+     */
     authenticate(accessToken: string, role: string): void;
+
+    /**
+     * Watches the specified project.
+     * @param {string} projectId - The ID of the project to watch.
+     */
     projectWatch(projectId: string): void;
-}
+};
+
 
 /**
  * The Messenger API. The messenger receives messages

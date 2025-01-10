@@ -168,7 +168,7 @@ class Assets extends Events {
      * @param {object} options - Options
      * @param {boolean} options.autoSubscribe - Whether to auto subscribe to asset changes when assets are loaded.
      */
-    constructor(options: { autoSubscribe?: boolean } = {}) {
+    constructor(options: any = {}) {
         super();
 
         this._uniqueIdToItemId = {};
@@ -450,7 +450,7 @@ class Assets extends Events {
      * @param {string} options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
      * the assets returned to a smaller subset depending on the view.
      */
-    async loadAll(options: { view?: string } = {}) {
+    async loadAll(options: any = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
@@ -503,7 +503,7 @@ class Assets extends Events {
      * the assets returned to a smaller subset depending on the view.
      * @category Internal
      */
-    async loadAllAndSubscribe(options: { view?: string } = {}) {
+    async loadAllAndSubscribe(options: any = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
@@ -625,7 +625,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createAnimStateGraph(options: { name?: string; preload?: boolean; data?: any; folder?: Asset; onProgress?: Function; }) {
+    createAnimStateGraph(options: any) {
         return this.upload({
             name: options.name || 'New Anim State Graph',
             type: 'animstategraph',
@@ -646,7 +646,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createBundle(options: { name?: string; assets?: Asset[]; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createBundle(options: any) {
         return this.upload({
             name: options.name || 'New Bundle',
             type: 'bundle',
@@ -669,7 +669,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createCss(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createCss(options: any) {
         return this.upload({
             name: options.name || 'New Css',
             type: 'css',
@@ -695,7 +695,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createCubemap(options: { name?: string; textures?: Asset[]; minFilter?: number; magFilter?: number; anisotropy?: number; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createCubemap(options: any) {
         const textures = (options.textures || new Array(6)).slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
@@ -725,7 +725,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createFolder(options: { name?: string; folder?: Asset; onProgress?: Function; }) {
+    createFolder(options: any) {
         return this.upload({
             name: options.name || 'New Folder',
             type: 'folder',
@@ -744,7 +744,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createHtml(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createHtml(options: any) {
         return this.upload({
             name: options.name || 'New Html',
             type: 'html',
@@ -768,7 +768,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createJson(options: { name?: string; json?: object; spaces?: number; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createJson(options: any) {
         const spaces = options.spaces ?? 0;
         const str = JSON.stringify(options.json || {}, null, spaces);
 
@@ -793,7 +793,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createI18n(options: { name?: string; localizationData?: object; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createI18n(options: any) {
         return this.createJson({
             name: options.name,
             json: options.localizationData || {
@@ -828,7 +828,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createMaterial(options: { name?: string; data?: any; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createMaterial(options: any) {
         const defaultData = api.schema.assets.getDefaultData('material') as any;
         if (options.data) {
             for (const key in defaultData) {
@@ -860,7 +860,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    async createScript(options: { filename?: string; text?: string; data?: object; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    async createScript(options: any) {
         if (!options.filename) {
             throw new Error('createScript: missing required filename');
         }
@@ -920,7 +920,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createShader(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createShader(options: any) {
         return this.upload({
             name: options.name || 'New Shader',
             type: 'shader',
@@ -945,7 +945,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createSprite(options: { name?: string; pixelsPerUnit?: number; frameKeys?: number[]; textureAtlas?: Asset; renderMode?: number; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createSprite(options: any) {
         const data: any = {};
         data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
         data.frameKeys = options.frameKeys ? options.frameKeys.map(val => val.toString()) : [];
@@ -972,7 +972,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    createText(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    createText(options: any) {
         return this.upload({
             name: options.name || 'New Text',
             type: 'text',
@@ -995,7 +995,7 @@ class Assets extends Events {
      * @param {Function} options.onProgress - Function to report progress
      * @returns {Promise<Asset>} The new asset
      */
-    async createTemplate(options: { name?: string; entity: Entity; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
+    async createTemplate(options: any) {
         const {
             entities,
             oldToNewIds

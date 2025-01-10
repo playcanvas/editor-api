@@ -13,7 +13,7 @@ import { globals as api } from '../globals';
  * @param {boolean} [options.preserveTransform] - Whether to preserve the transform of the entities
  * @param {boolean} [options.history] - Whether to record history. Defaults to true
  */
-function reparentEntities(data: ReparentArguments[], options: { preserveTransform?: boolean, history?: boolean } = {}) {
+function reparentEntities(data: ReparentArguments[], options: any = {}) {
     if (options.history === undefined) {
         options.history = true;
     }

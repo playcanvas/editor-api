@@ -344,7 +344,7 @@ function remapEntitiesAndAssets(entity: Entity, parent: Entity, data: Record<str
  * @param {object} options - The paste options
  * @returns {Promise<Entity[]>} A promise
  */
-function pasteInBackend(data: Record<string, any>, parent: Entity, options: { history?: boolean; } = {}) {
+function pasteInBackend(data: Record<string, any>, parent: Entity, options: any = {}) {
     let entities: Entity[];
     let cancelWaitForEntities: () => void;
 
@@ -458,7 +458,7 @@ function pasteInBackend(data: Record<string, any>, parent: Entity, options: { hi
  * @param {boolean} options.history - Whether to record a history action. Defaults to true.
  * @returns {Promise<Entity[]>} The new entities
  */
-async function pasteEntities(parent: Entity, options: { history?: boolean; } = {}) {
+async function pasteEntities(parent: Entity, options: any = {}) {
     if (options.history === undefined) {
         options.history = true;
     }

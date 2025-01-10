@@ -2,8 +2,6 @@ import { Events } from '@playcanvas/observer';
 
 import { globals as api } from './globals';
 
-type Options = { history?: boolean };
-
 /**
  * Enables undo / redo of selection changes
  */
@@ -122,7 +120,7 @@ class Selection extends Events {
      * editor.selection.add(editor.entities.root);
      * ```
      */
-    add(item: any, options: Options = {}) {
+    add(item: any, options: any = {}) {
         if (!this.enabled) return;
         if (this.has(item)) return;
 
@@ -155,7 +153,7 @@ class Selection extends Events {
      * editor.selection.remove(editor.entities.root);
      * ```
      */
-    remove(item: any, options: Options = {}) {
+    remove(item: any, options: any = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {
@@ -187,7 +185,7 @@ class Selection extends Events {
      * editor.selection.toggle(editor.entities.root);
      * ```
      */
-    toggle(item: any, options: Options = {}) {
+    toggle(item: any, options: any = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {
@@ -233,7 +231,7 @@ class Selection extends Events {
      * editor.selection.clear();
      * ```
      */
-    clear(options: Options = {}) {
+    clear(options: any = {}) {
         if (!this.enabled) return;
 
         const length = this._items.length;
@@ -272,7 +270,7 @@ class Selection extends Events {
      * editor.selection.set([editor.entities.root]);
      * ```
      */
-    set(items: any[], options: Options = {}) {
+    set(items: any[], options: any = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {

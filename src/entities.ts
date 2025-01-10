@@ -303,7 +303,7 @@ class Entities extends Events {
      * });
      *```
      */
-    create(data: CreateEntityArguments = null, options: { index?: number, history?: boolean, select?: boolean } = {}) {
+    create(data: CreateEntityArguments = null, options: any = {}) {
         return createEntity(data, options);
     }
 
@@ -319,7 +319,7 @@ class Entities extends Events {
      * await editor.entities.delete([entity1, entity2]);
      * ```
      */
-    async delete(entities: Entity[] | Entity, options: { history?: boolean } = {}) {
+    async delete(entities: Entity[] | Entity, options: any = {}) {
         await deleteEntities(entities, options);
     }
 
@@ -340,7 +340,7 @@ class Entities extends Events {
      * }])
      * ```
      */
-    reparent(data: ReparentArguments[], options: { preserveTransform?: boolean, history?: boolean } = {}) {
+    reparent(data: ReparentArguments[], options: any = {}) {
         reparentEntities(data, options);
     }
 
@@ -356,7 +356,7 @@ class Entities extends Events {
      * @example
      * const duplicated = await editor.entities.duplicate(entities);
      */
-    async duplicate(entities: Entity[], options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
+    async duplicate(entities: Entity[], options: any = {}) {
         const result = await duplicateEntities(entities, options);
         return result;
 
@@ -381,7 +381,7 @@ class Entities extends Events {
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
      * @returns {Promise<Entity[]>} The new entities
      */
-    pasteFromClipboard(parent: Entity, options: { history?: boolean } = {}) {
+    pasteFromClipboard(parent: Entity, options: any = {}) {
         return pasteEntities(parent, options);
     }
 
@@ -414,7 +414,7 @@ class Entities extends Events {
      * @param {number} options.index - The desired index in the entity's scripts order to add this script.
      * @returns {Promise<>} A promise
      */
-    addScript(entities: Entity[], scriptName: string, options: { attributes?: object, history?: boolean, index?: number } = {}) {
+    addScript(entities: Entity[], scriptName: string, options: any = {}) {
         return addScript(entities, scriptName, options);
     }
 
@@ -427,7 +427,7 @@ class Entities extends Events {
      * @param {object} options - Options
      * @param {boolean} options.history - Whether to record a history action. Defaults to true.
      */
-    removeScript(entities: Entity[], scriptName: string, options: { history?: boolean } = {}) {
+    removeScript(entities: Entity[], scriptName: string, options: any = {}) {
         removeScript(entities, scriptName, options);
     }
 

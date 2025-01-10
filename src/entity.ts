@@ -936,7 +936,7 @@ class Entity extends Events {
      * door.reparent(greenHouse);
      * ```
      */
-    reparent(parent: Entity, index: number | null = null, options: { history?: boolean, preserveTransform?: boolean } = {}) {
+    reparent(parent: Entity, index: number | null = null, options: any = {}) {
         api.entities.reparent([{
             entity: this,
             parent: parent,

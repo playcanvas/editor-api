@@ -13,7 +13,7 @@ import { globals as api } from '../globals';
  * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
  * @returns {Entity} The new entity
  */
-function createEntity(data: any, options: { index?: number, history?: boolean, select?: boolean } = {}): Entity {
+function createEntity(data: any, options: any = {}): Entity {
     data = data || {};
 
     if (options.history === undefined) {

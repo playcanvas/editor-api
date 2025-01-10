@@ -1,7 +1,7 @@
 import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
-async function addScript(entities: Entity[], scriptName: string, options: { enabled?: boolean, attributes?: Record<string, any>, index?: number, history?: boolean } = {}) {
+async function addScript(entities: Entity[], scriptName: string, options: any = {}) {
     entities = entities.filter(e => !e.has(`components.script.scripts.${scriptName}`));
     if (!entities.length) return;
 
@@ -117,7 +117,7 @@ async function addScript(entities: Entity[], scriptName: string, options: { enab
     await promise;
 }
 
-function removeScript(entities: Entity[], scriptName: string, options: { history?: boolean } = {}) {
+function removeScript(entities: Entity[], scriptName: string, options: any = {}) {
     const history = (options.history || options.history === undefined);
 
     let prev: Record<string, any> = {};
