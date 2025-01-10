@@ -1,0 +1,9 @@
+{
+    "files": ["src/index.ts"],
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "dist/types"
+    },
+    "include": ["types"]
+}

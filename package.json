@@ -49,7 +49,7 @@
     "mocha": "^10.2.0",
     "ot-text": "github:playcanvas/ot-text",
     "rollup": "^4.9.5",
-    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "sharedb": "^3.2.1",
     "sinon": "^17.0.1",
@@ -64,6 +64,7 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "docs": "typedoc",
+    "types": "tsc --project tsconfig.build.json",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   }
