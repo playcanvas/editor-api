@@ -8,6 +8,7 @@ import type { Realtime } from './realtime';
 import type { Schema } from './schema';
 import type { Selection } from './selection';
 import type { Settings } from './settings';
+
 /**
  * Global variables
  */
