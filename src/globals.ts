@@ -8,13 +8,6 @@ import type { Realtime } from './realtime';
 import type { Schema } from './schema';
 import type { Selection } from './selection';
 import type { Settings } from './settings';
-
-type ConfirmOptions = {
-    yesText?: string;
-    noText?: string;
-    noDismiss?: boolean;
-};
-
 /**
  * Global variables
  */
@@ -107,7 +100,7 @@ class globals {
      * @param {boolean} options.noDismiss - If true then user cannot dismiss the popup and will have to click yes or no
      * @returns {Promise<boolean>} True if the user confirmed, false otherwise
      */
-    static confirmFn(text: string, options: ConfirmOptions): Promise<boolean> {
+    static confirmFn(text: string, options: { yesText?: string, noText?: boolean, noDismiss?: boolean }): Promise<boolean> {
         return new Promise((resolve) => {
             // eslint-disable-next-line no-alert
             resolve(confirm(text));
