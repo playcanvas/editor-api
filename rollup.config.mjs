@@ -1,6 +1,7 @@
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
 import { dts } from 'rollup-plugin-dts';
 import polyfills from 'rollup-plugin-polyfill-node';
 
@@ -8,7 +9,7 @@ import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
 
 const umd = {
     external: ['@playcanvas/observer'],
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
         file: 'dist/index.js',
         format: 'umd',
@@ -18,6 +19,9 @@ const umd = {
         }
     },
     plugins: [
+        typescript({
+            sourceMap: false
+        }),
         commonjs(),
         polyfills(),
         resolve(),
@@ -45,7 +49,7 @@ const umd = {
 
 const module = {
     external: ['@playcanvas/observer'],
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
         file: 'dist/index.mjs',
         format: 'module',
@@ -54,6 +58,9 @@ const module = {
         }
     },
     plugins: [
+        typescript({
+            sourceMap: false
+        }),
         commonjs(),
         polyfills(),
         resolve()
@@ -78,6 +85,6 @@ const types = {
     ]
 };
 
-export default (args) => {
-    return process.env.target === 'types' ? [types] : [umd, module];
+export default () => {
+    return [umd, module, types];
 };
