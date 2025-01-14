@@ -999,7 +999,7 @@ ${className}.prototype.update = function(dt) {
         expect(entities).to.deep.equal([newEntity]);
 
         // test undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(newEntity.latest()).to.equal(null);
 
         // test redo
@@ -1009,7 +1009,7 @@ ${className}.prototype.update = function(dt) {
             });
         });
 
-        api.globals.history.redo();
+        await api.globals.history.redo();
 
         const redoEntity = await promise;
         expect(redoEntity).to.not.equal(null);

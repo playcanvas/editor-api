@@ -13,7 +13,7 @@ describe('Asset API tests', function () {
         api.globals.settings = null;
     });
 
-    it('replace replaces component references', function () {
+    it('replace replaces component references', async function () {
         api.globals.entities = new api.Entities();
         api.globals.schema = new api.Schema(schema);
 
@@ -41,21 +41,21 @@ describe('Asset API tests', function () {
         expect(e.get('components.testcomponent.nestedAssetRef.key.asset')).to.equal(2);
 
         // undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(e.get('components.testcomponent.assetRef')).to.equal(1);
         expect(e.get('components.testcomponent.assetArrayRef')).to.deep.equal([1]);
         expect(e.get('components.testcomponent.nestedAssetRef.key.asset')).to.equal(1);
 
         // redo
-        api.globals.history.redo();
+        await api.globals.history.redo();
 
         expect(e.get('components.testcomponent.assetRef')).to.equal(2);
         expect(e.get('components.testcomponent.assetArrayRef')).to.deep.equal([2]);
         expect(e.get('components.testcomponent.nestedAssetRef.key.asset')).to.equal(2);
     });
 
-    it('replace replaces asset references', function () {
+    it('replace replaces asset references', async function () {
         api.globals.schema = new api.Schema(schema);
 
         const asset = new api.Asset({ id: 1, type: 'test' });
@@ -89,21 +89,21 @@ describe('Asset API tests', function () {
         expect(asset.get('i18n.en')).to.equal(2);
 
         // undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(asset.get('data.assetRef')).to.equal(1);
         expect(asset.get('data.assetArrayRef')).to.deep.equal([1, 3]);
         expect(asset.get('data.nestedAssetRef.key.asset')).to.equal(1);
         expect(asset.get('i18n.en')).to.equal(1);
 
         // redo
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(asset.get('data.assetRef')).to.equal(2);
         expect(asset.get('data.assetArrayRef')).to.deep.equal([2, 3]);
         expect(asset.get('data.nestedAssetRef.key.asset')).to.equal(2);
         expect(asset.get('i18n.en')).to.equal(2);
     });
 
-    it('replace replaces script attributes', function () {
+    it('replace replaces script attributes', async function () {
         api.globals.entities = new api.Entities();
         api.globals.schema = new api.Schema(schema);
 
@@ -185,7 +185,7 @@ describe('Asset API tests', function () {
         expect(e.get('components.script.scripts.test.attributes.jsonArray.0.assetArrayRef')).to.deep.equal([2]);
 
         // undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(e.get('components.script.scripts.test.attributes.assetRef')).to.equal(1);
         expect(e.get('components.script.scripts.test.attributes.assetArrayRef')).to.deep.equal([1]);
         expect(e.get('components.script.scripts.test.attributes.json.assetRef')).to.equal(1);
@@ -194,7 +194,7 @@ describe('Asset API tests', function () {
         expect(e.get('components.script.scripts.test.attributes.jsonArray.0.assetArrayRef')).to.deep.equal([1]);
 
         // redo
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(e.get('components.script.scripts.test.attributes.assetRef')).to.equal(2);
         expect(e.get('components.script.scripts.test.attributes.assetArrayRef')).to.deep.equal([2]);
         expect(e.get('components.script.scripts.test.attributes.json.assetRef')).to.equal(2);
@@ -203,7 +203,7 @@ describe('Asset API tests', function () {
         expect(e.get('components.script.scripts.test.attributes.jsonArray.0.assetArrayRef')).to.deep.equal([2]);
     });
 
-    it('replace model mapping updates meta.userMapping', function () {
+    it('replace model mapping updates meta.userMapping', async function () {
         api.globals.schema = new api.Schema(schema);
 
         const model = new api.Asset({ id: 1, type: 'model' });
@@ -234,19 +234,19 @@ describe('Asset API tests', function () {
         expect(model2.get('meta')).to.deep.equal({ userMapping: { '0': true } });
 
         // undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(model.get('meta')).to.deep.equal({});
         expect(model2.get('meta')).to.deep.equal({});
 
         // redo
-        api.globals.history.redo();
+        await api.globals.history.redo();
 
         expect(model.get('meta')).to.deep.equal({ userMapping: { '0': true } });
         expect(model2.get('meta')).to.deep.equal({ userMapping: { '0': true } });
     });
 
-    it('replace replaces skybox in scene settings', function () {
+    it('replace replaces skybox in scene settings', async function () {
         api.globals.realtime = new api.Realtime();
         api.globals.settings = new api.Settings();
         api.globals.schema = new api.Schema(schema);
@@ -264,11 +264,11 @@ describe('Asset API tests', function () {
         expect(api.globals.settings.scene.get('render.skybox')).to.equal(2);
 
         // undo
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.settings.scene.get('render.skybox')).to.equal(1);
 
         // redo
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.settings.scene.get('render.skybox')).to.equal(2);
 
         // check unrelated skybox is not updated
