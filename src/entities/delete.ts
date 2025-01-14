@@ -1,4 +1,4 @@
-import type { EventHandle } from '@playcanvas/observer/types';
+import type { EventHandle } from '@playcanvas/observer/types/event-handle';
 
 import { findEntityReferencesInComponents, updateReferences } from './references';
 import { Entity } from '../entity';
