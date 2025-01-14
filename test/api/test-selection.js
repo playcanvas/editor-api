@@ -130,57 +130,57 @@ describe('api.Selection tests', function () {
         expect(api.globals.selection.count).to.equal(1);
     });
 
-    it('undo / redo add', function () {
+    it('undo / redo add', async function () {
         api.globals.history = new api.History();
         selection = new api.Selection();
 
         const item = new api.Entities().create();
         api.globals.selection.add(item);
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([]);
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.selection.items).to.deep.equal([item]);
     });
 
-    it('undo / redo remove', function () {
+    it('undo / redo remove', async function () {
         api.globals.history = new api.History();
         selection = new api.Selection();
 
         const item = new api.Entities().create();
         api.globals.selection.add(item);
         api.globals.selection.remove(item);
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([item]);
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.selection.items).to.deep.equal([]);
     });
 
-    it('undo / redo clear', function () {
+    it('undo / redo clear', async function () {
         api.globals.history = new api.History();
         selection = new api.Selection();
 
         const item = new api.Entities().create();
         api.globals.selection.add(item);
         api.globals.selection.clear();
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([item]);
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.selection.items).to.deep.equal([]);
     });
 
-    it('undo / redo toggle', function () {
+    it('undo / redo toggle', async function () {
         api.globals.history = new api.History();
         selection = new api.Selection();
 
         const item = new api.Entities().create();
         api.globals.selection.toggle(item);
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([]);
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.selection.items).to.deep.equal([item]);
     });
 
-    it('undo / redo set items', function () {
+    it('undo / redo set items', async function () {
         api.globals.history = new api.History();
         selection = new api.Selection();
 
@@ -188,9 +188,9 @@ describe('api.Selection tests', function () {
         const item2 = new api.Entities().create();
         api.globals.selection.add(item);
         api.globals.selection.set([item2]);
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(api.globals.selection.items).to.deep.equal([item]);
-        api.globals.history.redo();
+        await api.globals.history.redo();
         expect(api.globals.selection.items).to.deep.equal([item2]);
     });
 

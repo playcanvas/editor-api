@@ -506,7 +506,7 @@ describe('api.Entity tests', function () {
         const root = api.globals.entities.create();
         await root.addScript('test', { history: true });
 
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(root.get('components')).to.deep.equal({});
     });
 
@@ -519,7 +519,7 @@ describe('api.Entity tests', function () {
         child.addComponent('script');
         await api.globals.entities.addScript([root, child], 'test');
 
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(root.get('components')).to.deep.equal({});
         expect(child.get('components')).to.deep.equal({
             script: {
@@ -538,7 +538,7 @@ describe('api.Entity tests', function () {
         root.addComponent('script');
         await root.addScript('test', { history: true });
 
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(root.get('components')).to.deep.equal({
             script: {
                 enabled: true,
@@ -557,7 +557,7 @@ describe('api.Entity tests', function () {
         await api.globals.entities.addScript([root, child], 'test');
         await child.delete({ history: false });
 
-        api.globals.history.undo();
+        await api.globals.history.undo();
         expect(root.get('components')).to.deep.equal({});
     });
 
@@ -568,8 +568,8 @@ describe('api.Entity tests', function () {
         const root = api.globals.entities.create();
         await root.addScript('test', { history: true });
 
-        api.globals.history.undo();
-        api.globals.history.redo();
+        await api.globals.history.undo();
+        await api.globals.history.redo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -593,8 +593,8 @@ describe('api.Entity tests', function () {
         const child = api.globals.entities.create();
         await api.globals.entities.addScript([root, child], 'test', { history: true });
 
-        api.globals.history.undo();
-        api.globals.history.redo();
+        await api.globals.history.undo();
+        await api.globals.history.redo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -632,8 +632,8 @@ describe('api.Entity tests', function () {
         await api.globals.entities.addScript([root, child], 'test');
         await child.delete({ history: false });
 
-        api.globals.history.undo();
-        api.globals.history.redo();
+        await api.globals.history.undo();
+        await api.globals.history.redo();
         expect(root.get('components')).to.deep.equal({
             script: {
                 enabled: true,
@@ -699,7 +699,7 @@ describe('api.Entity tests', function () {
         await root.addScript('test');
 
         root.removeScript('test');
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -723,7 +723,7 @@ describe('api.Entity tests', function () {
         await root.addScript('test', { attributes: { attr1: 'value' } });
 
         root.removeScript('test');
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -750,7 +750,7 @@ describe('api.Entity tests', function () {
         await api.globals.entities.addScript([root, child], 'test');
 
         api.globals.entities.removeScript([root, child], 'test');
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -787,8 +787,8 @@ describe('api.Entity tests', function () {
         await root.addScript('test');
 
         root.removeScript('test');
-        api.globals.history.undo();
-        api.globals.history.redo();
+        await api.globals.history.undo();
+        await api.globals.history.redo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -808,8 +808,8 @@ describe('api.Entity tests', function () {
         await api.globals.entities.addScript([root, child], 'test');
 
         api.globals.entities.removeScript([root, child], 'test');
-        api.globals.history.undo();
-        api.globals.history.redo();
+        await api.globals.history.undo();
+        await api.globals.history.redo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
@@ -841,7 +841,7 @@ describe('api.Entity tests', function () {
         root.removeComponent('script');
         root.history.enabled = true;
 
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(root.get('components')).to.deep.equal({});
     });
@@ -859,7 +859,7 @@ describe('api.Entity tests', function () {
         await child.addScript('test');
 
         api.globals.entities.removeScript([root, child], 'test');
-        api.globals.history.undo();
+        await api.globals.history.undo();
 
         expect(root.get('components')).to.deep.equal({
             script: {
