@@ -67,7 +67,7 @@
     "docs": "typedoc",
     "lint": "eslint src rollup.config.mjs",
     "lint:fix": "eslint src rollup.config.mjs --fix",
-    "publint": "publint --level error"
+    "publint": "publint"
   },
   "engines": {
     "node": ">=18.0.0"
