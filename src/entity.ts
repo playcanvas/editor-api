@@ -603,7 +603,7 @@ class Entity extends Events {
      * entity.insert('tags', 'a_tag');
      * ```
      */
-    insert(path: string, value: any, index: number) {
+    insert(path: string, value: any, index?: number) {
         return this._observer.insert(path, value, index);
     }
 

@@ -118,7 +118,7 @@ function getUniqueNameForDuplicatedEntity(entityName: string, entities: Entity[]
  * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
  * @returns {Entity} The new entity
  */
-function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicatedIdsMap: Record<string, string>, useUniqueName: boolean) {
+function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicatedIdsMap: Record<string, string>, useUniqueName: boolean = false) {
     const originalResourceId = entity.get('resource_id');
     const data = entity.json() as Record<string, any>;
     const children = data.children;
@@ -149,7 +149,7 @@ function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicated
 
     // add children too
     children.forEach((childId: string) => {
-        duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap, undefined);
+        duplicateEntity(api.entities.get(childId), entity, undefined, duplicatedIdsMap);
     });
 
     return entity;

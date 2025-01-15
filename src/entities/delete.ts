@@ -126,7 +126,7 @@ async function deleteEntities(entities: Entity[] | Entity, options: any = {}) {
         getTotalEntityCount(entities) > USE_BACKEND_LIMIT) {
 
         if (options.history) {
-            const ok = await api.confirmFn('Deleting this many entities is not undoable. Are you sure?', undefined);
+            const ok = await api.confirmFn('Deleting this many entities is not undoable. Are you sure?');
             if (ok) {
                 await deleteInBackend(entities);
             }
