@@ -41,7 +41,7 @@ class SelectionHistory {
      * Record history action after executing function.
      * The history action will restore the previous selection.
      */
-    private wrapAction(name: any, fn: () => void) {
+    wrapAction(name: any, fn: () => void) {
         if (!this._enabled || !api.history || this._executingAction) {
             fn();
             return;
