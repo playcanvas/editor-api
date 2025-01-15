@@ -17,7 +17,7 @@ class SceneSchema {
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
-        this._schema = (this._schemaApi as any)._schema.scene;
+        this._schema = this._schemaApi.schema.scene;
     }
 
     _getDefaultData(obj: Record<string, any>) {

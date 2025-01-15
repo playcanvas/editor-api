@@ -17,7 +17,7 @@ class ComponentSchema {
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
-        this._schema = (this._schemaApi as any)._schema.scene.entities.$of.components;
+        this._schema = this._schemaApi.schema.scene.entities.$of.components;
     }
 
     _resolveLazyDefaults(defaults: Record<string, any>) {

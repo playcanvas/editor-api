@@ -7,7 +7,7 @@ import { SettingsSchema } from './schema/settings';
  * Provides methods to access the Editor schema.
  */
 class Schema {
-    private _schema: object;
+    private _schema: any;
 
     private _assetsSchema: AssetsSchema;
 
@@ -20,12 +20,19 @@ class Schema {
     /**
      * Creates new instance of API
      */
-    constructor(schema: object) {
+    constructor(schema: any) {
         this._schema = schema;
         this._assetsSchema = new AssetsSchema(this);
         this._componentSchema = new ComponentSchema(this);
         this._sceneSchema = new SceneSchema(this);
         this._settingsSchema = new SettingsSchema(this);
+    }
+
+    /**
+     * Gets the schema
+     */
+    get schema() {
+        return this._schema;
     }
 
     /**
