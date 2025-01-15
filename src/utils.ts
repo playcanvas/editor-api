@@ -7,8 +7,8 @@ class utils {
     /**
      * Deep copy an object
      *
-     * @param {Record<string, any>} data - The data to copy
-     * @returns {object} A copy of the data
+     * @param data - The data to copy
+     * @returns A copy of the data
      */
     static deepCopy(data: Record<string, any>): Record<string, any> {
         if (data == null || typeof data !== 'object') {

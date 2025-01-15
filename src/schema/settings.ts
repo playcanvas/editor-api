@@ -13,7 +13,7 @@ class SettingsSchema {
      * Creates new instance of API
      *
      * @category Internal
-     * @param {Schema} schema - The schema API
+     * @param schema - The schema API
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
@@ -44,7 +44,7 @@ class SettingsSchema {
     /**
      * Get the default settings for the project
      *
-     * @returns {*} The default settings for the project
+     * @returns The default settings for the project
      * @example
      * ```javascript
      * const projectSettings = editor.schema.settings.getDefaultProjectSettings();
@@ -57,7 +57,7 @@ class SettingsSchema {
     /**
      * Get the default settings for the user
      *
-     * @returns {*} The default settings for the user
+     * @returns The default settings for the user
      * @example
      * ```javascript
      * const userSettings = editor.schema.settings.getDefaultUserSettings();
@@ -70,7 +70,7 @@ class SettingsSchema {
     /**
      * Get the default settings for the user in the project
      *
-     * @returns {*} The default settings for the user in the project
+     * @returns The default settings for the user in the project
      * @example
      * ```javascript
      * const projectUserSettings = editor.schema.settings.getDefaultProjectUserSettings();

@@ -14,8 +14,8 @@ class Jobs extends Events {
      * Adds a new job. The specified function will be returned when the
      * job is finished.
      *
-     * @param {Function} fn - A function to be stored for this job.
-     * @returns {string} Returns a job id
+     * @param fn - A function to be stored for this job.
+     * @returns Returns a job id
      * @example
      * ```javascript
      * const jobId = editor.jobs.start(() => console.log('job was finished'));
@@ -34,8 +34,8 @@ class Jobs extends Events {
      * id is removed and the callback stored when the job was
      * started is returned.
      *
-     * @param {string} jobId - The job id
-     * @returns {Function} The function stored when the job was started
+     * @param jobId - The job id
+     * @returns The function stored when the job was started
      * @example
      * ```javascript
      * const jobId = editor.jobs.start(() => console.log('job was finished'));

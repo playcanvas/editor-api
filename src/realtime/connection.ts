@@ -34,7 +34,7 @@ class RealtimeConnection extends Events {
     /**
      * Constructor
      *
-     * @param {Realtime} realtime - The realtime API
+     * @param realtime - The realtime API
      */
     constructor(realtime: Realtime) {
         super();
@@ -53,7 +53,7 @@ class RealtimeConnection extends Events {
     /**
      * Connect to the realtime server
      *
-     * @param {string} url - The server URL
+     * @param url - The server URL
      */
     connect(url: string) {
         this._url = url;
@@ -104,8 +104,8 @@ class RealtimeConnection extends Events {
     /**
      * Send message to server
      *
-     * @param {string} name - The message name
-     * @param {object} data - The message data
+     * @param name - The message name
+     * @param data - The message data
      */
     sendMessage(name: string, data: object) {
         this.send(name + JSON.stringify(data));
@@ -114,7 +114,7 @@ class RealtimeConnection extends Events {
     /**
      * Sends a string to the server
      *
-     * @param {string} data - The message data
+     * @param data - The message data
      */
     send(data: string) {
         if (this._socket && this._socket.readyState === WebSocket.OPEN) {
@@ -125,9 +125,9 @@ class RealtimeConnection extends Events {
     /**
      * Gets a sharedb document
      *
-     * @param {string} collection - The collection name
-     * @param {string} id - The document id
-     * @returns {object} The sharedb document
+     * @param collection - The collection name
+     * @param id - The document id
+     * @returns The sharedb document
      */
     getDocument(collection: string, id: number) {
         return this._sharedb.get(collection, id.toString());

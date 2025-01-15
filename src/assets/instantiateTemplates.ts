@@ -3,7 +3,7 @@ import { globals as api } from '../globals';
 
 let evtMessenger: any;
 
-async function instantiateTemplates(assets: Asset[], parent: any, options: any) {
+async function instantiateTemplates(assets: Asset[], parent: any, options: { index?: number, extraData?: any, history?: boolean, select?: boolean } = {}) {
     parent = parent || api.entities.root;
     if (!parent) {
         throw new Error('Invalid parent');

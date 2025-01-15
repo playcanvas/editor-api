@@ -11,7 +11,7 @@ class AssetsSchema {
 
     /**
      * @category Internal
-     * @param {Schema} schema - The schema API
+     * @param schema - The schema API
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
@@ -21,8 +21,8 @@ class AssetsSchema {
     /**
      * Gets default data for asset type
      *
-     * @param {string} type - The asset type
-     * @returns {object} The default data
+     * @param type - The asset type
+     * @returns The default data
      */
     getDefaultData(type: string) {
         const field = `${type}Data`;
@@ -46,9 +46,9 @@ class AssetsSchema {
     /**
      * Gets a list of fields of a particular type for an asset type
      *
-     * @param {string} assetType - The type of the asset.
-     * @param {string} type - The desired type
-     * @returns {string[]} A list of fields
+     * @param assetType - The type of the asset.
+     * @param type - The desired type
+     * @returns A list of fields
      * @example
      * ```javascript
      * const materialAssetPaths = editor.schema.assets.getFieldsOfType('material', 'asset');

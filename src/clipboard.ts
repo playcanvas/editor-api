@@ -14,7 +14,7 @@ class Clipboard {
     /**
      * Constructor
      *
-     * @param {string} name - The name of the clipboard.
+     * @param name - The name of the clipboard.
      */
     constructor(name: string) {
         this._name = name;

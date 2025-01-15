@@ -39,8 +39,6 @@ class SceneSettings extends Events {
 
     /**
      * Creates new instance of the API
-     *
-     * @private
      */
     constructor() {
         super();
@@ -54,10 +52,8 @@ class SceneSettings extends Events {
 
     /**
      * Initialize internal observer and history.
-     *
-     * @private
      */
-    _initializeObserver() {
+    private _initializeObserver() {
         if (!this._observer) {
             this._observer = new Observer() as SceneSettingsObserver;
         }
@@ -77,10 +73,9 @@ class SceneSettings extends Events {
     /**
      * Called when a scene is loaded.
      *
-     * @param {import("../realtime/scene.js").RealtimeScene} scene - The loaded scene
-     * @private
+     * @param scene - The loaded scene
      */
-    _onLoadScene(scene: RealtimeScene) {
+    private _onLoadScene(scene: RealtimeScene) {
         this._initializeObserver();
 
         this._history.enabled = false;
@@ -93,8 +88,8 @@ class SceneSettings extends Events {
     /**
      * Checks if path exists. See the {@link SceneSettings} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @returns {boolean} True if path exists
+     * @param path - The path
+     * @returns True if path exists
      * @example
      * ```javascript
      * console.log(editor.settings.scene.has('render.fog'));
@@ -107,8 +102,8 @@ class SceneSettings extends Events {
     /**
      * Gets value at path. See the {@link SceneSettings} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @returns {any} The value
+     * @param path - The path
+     * @returns The value
      * @example
      * ```javascript
      * console.log(editor.settings.scene.get('render.fog'));
@@ -121,9 +116,9 @@ class SceneSettings extends Events {
     /**
      * Sets value at path. See the {@link SceneSettings} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @param {any} value - The value
-     * @returns {boolean} Whether the value was set
+     * @param path - The path
+     * @param value - The value
+     * @returns Whether the value was set
      * @example
      * ```javascript
      * editor.settings.scene.set('render.fog', 'none');
@@ -136,7 +131,7 @@ class SceneSettings extends Events {
     /**
      * Returns JSON representation of scene settings data
      *
-     * @returns {object} - The data
+     * @returns - The data
      * @example
      * ```javascript
      * console.log(editor.settings.scene.json());

@@ -24,9 +24,9 @@ class RealtimeAsset extends Events {
     /**
      * Constructor
      *
-     * @param {number} uniqueId - The unique asset id
-     * @param {Realtime} realtime - The realtime API
-     * @param {RealtimeConnection} connection - The realtime connection
+     * @param uniqueId - The unique asset id
+     * @param realtime - The realtime API
+     * @param connection - The realtime connection
      *
      */
     constructor(uniqueId: number, realtime: Realtime, connection: RealtimeConnection) {
@@ -75,8 +75,8 @@ class RealtimeAsset extends Events {
     /**
      * Submits sharedb operation
      *
-     * @param {object} op - The operation
-     * @param {function} [callback] - The callback
+     * @param op - The operation
+     * @param [callback] - The callback
      */
     submitOp(op: object, callback: Function) {
         if (!this._loaded) return;
@@ -93,7 +93,7 @@ class RealtimeAsset extends Events {
      * Calls the callback when there are no changes pending to be
      * sent to the server
      *
-     * @param {Function} callback - The callback
+     * @param callback - The callback
      */
     whenNothingPending(callback: Function) {
         if (this._document) {

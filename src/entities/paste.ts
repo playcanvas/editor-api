@@ -17,9 +17,9 @@ let evtMessenger: EventHandle;
  * corresponds to the specified assetId that may come from
  * a different project.
  *
- * @param {number} assetId - The asset id we are trying to remap
- * @param {object} assetsIndex - The assets index stored in localStorage that contains paths of assets
- * @returns {number} The asset id in this project
+ * @param assetId - The asset id we are trying to remap
+ * @param assetsIndex - The assets index stored in localStorage that contains paths of assets
+ * @returns The asset id in this project
  */
 function remapAsset(assetId: any, assetsIndex: Record<string, any>): number {
     if (!assetId) return null;
@@ -171,11 +171,11 @@ function remapScriptAttribute(assetAttr: any, componentAttr: any, entity: Entity
  * Remaps the resource ids of the entities and their entity references in localStorage
  * with new resource ids, also remaps asset ids.
  *
- * @param {Observer} entity - The entity we are remapping
- * @param {Entity} parent - The parent of the pasted entity
- * @param {object} data - The data in localStorage
- * @param {object} entityMapping - An index that maps old resource ids to new resource ids
- * @param {object} assetMapping - An index that maps old asset ids to new asset ids
+ * @param entity - The entity we are remapping
+ * @param parent - The parent of the pasted entity
+ * @param data - The data in localStorage
+ * @param entityMapping - An index that maps old resource ids to new resource ids
+ * @param assetMapping - An index that maps old asset ids to new asset ids
  */
 function remapEntitiesAndAssets(entity: Entity, parent: Entity, data: Record<string, any>, entityMapping: Record<string, any>, assetMapping: Record<string, any>) {
     const sameProject = (data.project === api.projectId);
@@ -340,12 +340,12 @@ function remapEntitiesAndAssets(entity: Entity, parent: Entity, data: Record<str
 /**
  * Paste entities in backend
  *
- * @param {object} data - The clipboard data
- * @param {Entity} parent - The parent
- * @param {object} options - The paste options
- * @returns {Promise<Entity[]>} A promise
+ * @param data - The clipboard data
+ * @param parent - The parent entity
+ * @param options - The paste options
+ * @returns A promise that resolves to an array of pasted entities
  */
-function pasteInBackend(data: Record<string, any>, parent: Entity, options: any = {}) {
+function pasteInBackend(data: Record<string, any>, parent: Entity, options: { history?: boolean }) {
     let entities: Entity[];
     let cancelWaitForEntities: () => void;
 
@@ -354,7 +354,7 @@ function pasteInBackend(data: Record<string, any>, parent: Entity, options: any 
         reject: null
     };
 
-    const promise = new Promise((resolve, reject) => {
+    const promise: Promise<Entity[]> = new Promise((resolve, reject) => {
         deferred.resolve = resolve;
         deferred.reject = reject;
     });
@@ -454,12 +454,12 @@ function pasteInBackend(data: Record<string, any>, parent: Entity, options: any 
  * Paste entities copied into clipboard
  * under the specified parent.
  *
- * @param {Entity} parent - The parent
- * @param {object} options - Options
- * @param {boolean} options.history - Whether to record a history action. Defaults to true.
- * @returns {Promise<Entity[]>} The new entities
+ * @param parent - The parent entity
+ * @param options - Options
+ * @param options.history - Whether to record a history action. Defaults to true.
+ * @returns A promise that resolves to an array of new entities
  */
-async function pasteEntities(parent: Entity, options: any = {}) {
+async function pasteEntities(parent: Entity, options: { history?: boolean } = {}) {
     if (options.history === undefined) {
         options.history = true;
     }

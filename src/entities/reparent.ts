@@ -6,14 +6,11 @@ import { globals as api } from '../globals';
 /**
  * Reparents entities under new parent.
  *
- * @private
- * @typedef {import("../entities").ReparentArguments} ReparentArguments
- * @param {ReparentArguments[]} data - The reparenting data
- * @param {object} [options] - Options
- * @param {boolean} [options.preserveTransform] - Whether to preserve the transform of the entities
- * @param {boolean} [options.history] - Whether to record history. Defaults to true
+ * @param data - The reparenting data
+ * @param options.preserveTransform - Whether to preserve the transform of the entities
+ * @param options.history - Whether to record history. Defaults to true
  */
-function reparentEntities(data: ReparentArguments[], options: any = {}) {
+function reparentEntities(data: ReparentArguments[], options: { preserveTransform?: boolean, history?: boolean } = {}) {
     if (options.history === undefined) {
         options.history = true;
     }

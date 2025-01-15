@@ -7,11 +7,11 @@ import { globals as api } from '../globals';
  * Waits for specified entity ids to be added to the scene.
  * Once they are the callback is called with the entities as its argument.
  *
- * @param {string[]} entityIds - The ids of the entities to wait for
- * @param {number} timeoutMs - Number of ms to wait before stopping to wait
- * @param {Function} callback - The callback to call when all entities have been added.
+ * @param entityIds - The ids of the entities to wait for
+ * @param timeoutMs - Number of ms to wait before stopping to wait
+ * @param callback - The callback to call when all entities have been added.
  * The signature is (Entity[]) => void.
- * @returns {Function} Returns a cancel function which can be called to cancel calling the
+ * @returns Returns a cancel function which can be called to cancel calling the
  * callback when the entities are added.
  */
 function wait(entityIds: string[], timeoutMs: number, callback: Function) {

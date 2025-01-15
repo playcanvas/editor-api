@@ -25,7 +25,7 @@ class History extends Events {
     /**
      * Adds history action
      *
-     * @param {HistoryAction} action - The action
+     * @param action - The action
      * @example
      * ```javascript
      * const prevSelection = editor.selection.items;
@@ -43,7 +43,7 @@ class History extends Events {
     /**
      * Adds history action and execute redo
      *
-     * @param {HistoryAction} action - The action
+     * @param action - The action
      * @example
      * ```javascript
      * const prevSelection = editor.selection.items;

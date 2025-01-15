@@ -9,7 +9,7 @@ import { globals as api } from './globals';
 export type MessagerClient = Events & {
     /**
      * Connects to the specified URL.
-     * @param {string} url - The URL to connect to.
+     * @param url - The URL to connect to.
      */
     connect(url: string): void;
 
@@ -20,14 +20,14 @@ export type MessagerClient = Events & {
 
     /**
      * Authenticates the client with the specified access token and role.
-     * @param {string} accessToken - The access token for authentication.
-     * @param {string} role - The role for authentication.
+     * @param accessToken - The access token for authentication.
+     * @param role - The role for authentication.
      */
     authenticate(accessToken: string, role: string): void;
 
     /**
      * Watches the specified project.
-     * @param {string} projectId - The ID of the project to watch.
+     * @param projectId - The ID of the project to watch.
      */
     projectWatch(projectId: string): void;
 };
@@ -47,7 +47,7 @@ class Messenger extends Events {
     /**
      * Constructor
      *
-     * @param {MessagerClient} messenger - The instance of the Messenger client - this is
+     * @param messenger - The instance of the Messenger client - this is
      * a different class which requires the Messenger client library to be downloaded.
      */
     constructor(messenger: MessagerClient) {
@@ -77,7 +77,7 @@ class Messenger extends Events {
     /**
      * Connects to the messenger server.
      *
-     * @param {string} url - The server URL
+     * @param url - The server URL
      */
     connect(url: string) {
         this._url = url;
