@@ -78,7 +78,7 @@ function reparentEntities(data: ReparentArguments[], options: any = {}) {
         if (indNew !== -1 && indNew <= parent.get('children').length) {
             parent.insert('children', entity.get('resource_id'), indNew);
         } else {
-            parent.insert('children', entity.get('resource_id'), undefined);
+            parent.insert('children', entity.get('resource_id'));
         }
         parent.history.enabled = history.parent;
 

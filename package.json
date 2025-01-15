@@ -32,7 +32,7 @@
     "@babel/eslint-parser": "^7.23.3",
     "@babel/preset-env": "^7.23.8",
     "@playcanvas/eslint-config": "2.0.8",
-    "@playcanvas/observer": "^1.5.1",
+    "@playcanvas/observer": "^1.6.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -67,6 +67,7 @@
     "docs": "typedoc",
     "lint": "eslint src rollup.config.mjs",
     "lint:fix": "eslint src rollup.config.mjs --fix",
+    "type:check": "tsc --noEmit",
     "publint": "publint"
   },
   "engines": {

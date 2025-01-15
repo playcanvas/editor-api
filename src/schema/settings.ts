@@ -17,7 +17,7 @@ class SettingsSchema {
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
-        this._schema = (this._schemaApi as any)._schema.settings;
+        this._schema = this._schemaApi.schema.settings;
     }
 
     _getDefaultData(obj: Record<string, any>, scope: string) {

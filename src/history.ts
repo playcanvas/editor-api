@@ -55,7 +55,7 @@ class History extends Events {
      * ```
      */
     addAndExecute(action: HistoryAction) {
-        (this._history as any).addAndExecute(action);
+        this._history.addAndExecute(action);
     }
 
     /**
