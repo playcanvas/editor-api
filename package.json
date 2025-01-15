@@ -64,8 +64,8 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "docs": "typedoc",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix"
+    "lint": "eslint src rollup.config.mjs",
+    "lint:fix": "eslint src rollup.config.mjs --fix"
   },
   "engines": {
     "node": ">=18.0.0"
