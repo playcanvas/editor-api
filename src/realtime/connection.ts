@@ -147,14 +147,14 @@ class RealtimeConnection extends Events {
         this._sharedb.endBulk();
     }
 
-    _onVisibilityChange() {
+    private _onVisibilityChange() {
         if (document.hidden) return;
         if (!this.connected && this._url) {
             this.connect(this._url);
         }
     }
 
-    _onConnect() {
+    private _onConnect() {
         this._connected = true;
         this._reconnectAttempts = 0;
         this._reconnectInterval = RECONNECT_INTERVAL;
@@ -162,16 +162,16 @@ class RealtimeConnection extends Events {
         this._realtime.emit('connected');
     }
 
-    _onError(msg: any) {
+    private _onError(msg: any) {
         if (this._sharedb.state === 'connected') return;
         this._realtime.emit('error', msg);
     }
 
-    _onBulkSubscribeError(msg: any) {
+    private _onBulkSubscribeError(msg: any) {
         this._realtime.emit('error:bs', msg);
     }
 
-    _onClose(reason: CloseEvent, originalOnClose: () => void) {
+    private _onClose(reason: CloseEvent, originalOnClose: () => void) {
         this._connected = false;
         this._authenticated = false;
 
@@ -187,7 +187,7 @@ class RealtimeConnection extends Events {
         }
     }
 
-    _onMessage(msg: MessageEvent<any>) {
+    private _onMessage(msg: MessageEvent<any>) {
         try {
             if (msg.data.startsWith('auth')) {
                 return this._onMessageAuth(msg);
@@ -201,7 +201,7 @@ class RealtimeConnection extends Events {
         }
     }
 
-    _onMessageAuth(_msg: MessageEvent<any>) {
+    private _onMessageAuth(_msg: MessageEvent<any>) {
         if (!this._authenticated) {
             this._authenticated = true;
             this._realtime.emit('authenticated');
@@ -210,13 +210,13 @@ class RealtimeConnection extends Events {
         return true;
     }
 
-    _onMessageSelection(msg: MessageEvent<any>) {
+    private _onMessageSelection(msg: MessageEvent<any>) {
         const data = msg.data.slice('selection:'.length);
         this._realtime.emit('selection', data);
         return true;
     }
 
-    _onMessageFs(msg: { data: any; }) {
+    private _onMessageFs(msg: { data: any; }) {
         let data = msg.data.slice('fs:'.length);
         const ind = data.indexOf(':');
         if (ind !== -1) {
@@ -232,7 +232,7 @@ class RealtimeConnection extends Events {
         return false;
     }
 
-    _sendAuth() {
+    private _sendAuth() {
         this.sendMessage('auth', {
             accessToken: api.accessToken
         });
@@ -241,8 +241,6 @@ class RealtimeConnection extends Events {
 
     /**
      * Whether the user is connected to the server
-     *
-     * @type {boolean}
      */
     get connected() {
         return this._connected;
@@ -250,8 +248,6 @@ class RealtimeConnection extends Events {
 
     /**
      * Whether the server has authenticated the user
-     *
-     * @type {boolean}
      */
     get authenticated() {
         return this._authenticated;
@@ -259,8 +255,6 @@ class RealtimeConnection extends Events {
 
     /**
      * Gets the sharedb instance
-     *
-     * @type {object}
      */
     get sharedb() {
         return this._sharedb;

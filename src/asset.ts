@@ -650,11 +650,9 @@ class Asset extends Events {
 
     /**
      * Gets observer history for this asset.
-     *
-     * @type {ObserverHistory}
      */
     get history() {
-        return this._history;
+        return this._history as ObserverHistory;
     }
 
     /**

@@ -96,8 +96,6 @@ class History extends Events {
 
     /**
      * Gets the current action
-     *
-     * @type {HistoryAction}
      */
     get currentAction() {
         return this._history.currentAction;
@@ -105,8 +103,6 @@ class History extends Events {
 
     /**
      * Gets the last action
-     *
-     * @type {HistoryAction}
      */
     get lastAction() {
         return this._history.lastAction;
@@ -114,8 +110,6 @@ class History extends Events {
 
     /**
      * Sets whether there are actions to undo.
-     *
-     * @type {boolean}
      */
     set canUndo(value) {
         this._history.canUndo = value;
@@ -123,8 +117,6 @@ class History extends Events {
 
     /**
      * Gets whether there are actions to undo.
-     *
-     * @type {boolean}
      */
     get canUndo() {
         return this._history.canUndo;
@@ -132,8 +124,6 @@ class History extends Events {
 
     /**
      * Sets whether there are actions to redo.
-     *
-     * @type {boolean}
      */
     set canRedo(value) {
         this._history.canRedo = value;
@@ -141,8 +131,6 @@ class History extends Events {
 
     /**
      * Gets whether there are actions to redo.
-     *
-     * @type {boolean}
      */
     get canRedo() {
         return this._history.canRedo;

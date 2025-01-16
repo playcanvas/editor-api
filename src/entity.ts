@@ -685,7 +685,7 @@ class Entity extends Events {
      * const door = editor.entities.root.findByName('Door');
      * ```
      */
-    findByName(name: string) {
+    findByName(name: string): Entity | null {
         if (this.get('name') === name) {
             return this;
         }
@@ -721,7 +721,7 @@ class Entity extends Events {
      * ```
      */
     listByTag(...tags: any[]) {
-        return this.filter((entity: Observer) => {
+        return this.filter((entity: Entity) => {
             const t = entity.get('tags');
             for (let i = 0; i < tags.length; i++) {
                 if (Array.isArray(tags[i])) {
@@ -759,8 +759,8 @@ class Entity extends Events {
      * const doors = editor.entities.root.filter(entity => entity.get('name').startsWith('door'));
      * ```
      */
-    filter(fn: Function) {
-        let result = [];
+    filter(fn: (entity: Entity) => boolean): Entity[] {
+        let result: Entity[] = [];
 
         if (fn(this)) {
             result.push(this);
@@ -788,7 +788,7 @@ class Entity extends Events {
      * editor.entities.root.depthFirst(entity => entities.push(entity));
      * ```
      */
-    depthFirst(fn: Function) {
+    depthFirst(fn: (entity: Entity) => void) {
         fn(this);
 
         const children = this.children;
@@ -914,7 +914,7 @@ class Entity extends Events {
      * ```
      *
      */
-    delete(options = {}) {
+    delete(options: { history?: boolean } = {}) {
         return api.entities.delete([this], options);
     }
 
@@ -933,7 +933,7 @@ class Entity extends Events {
      * door.reparent(greenHouse);
      * ```
      */
-    reparent(parent: Entity, index: number | null = null, options: { history: boolean, preserveTransform: boolean } = { history: true, preserveTransform: false }) {
+    reparent(parent: Entity, index: number | null = null, options: { history?: boolean, preserveTransform?: boolean } = {}) {
         api.entities.reparent([{
             entity: this,
             parent: parent,
@@ -944,13 +944,12 @@ class Entity extends Events {
     /**
      * Duplicates entity under the same parent
      *
-     * @param [options] - Options
-     * @param [options.history] - Whether to record a history action. Defaults to true.
-     * @param [options.select] - Whether to select the new entity. Defaults to false.
-     * @param [options.rename] - Whether to rename the duplicated entity. Defaults to false.
+     * @param options.history - Whether to record a history action. Defaults to true.
+     * @param options.select - Whether to select the new entity. Defaults to false.
+     * @param options.rename - Whether to rename the duplicated entity. Defaults to false.
      * @returns The new entity
      */
-    async duplicate(options = {}) {
+    async duplicate(options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
         const result = await api.entities.duplicate([this], options);
         return result[0];
     }
@@ -977,7 +976,7 @@ class Entity extends Events {
      * @param options.index - The desired index in the entity's scripts order to add this script.
      * @returns A promise
      */
-    addScript(scriptName: string, options: object = {}) {
+    addScript(scriptName: string, options: { attributes?: object, history?: boolean, index?: number } = {}) {
         return api.entities.addScript([this], scriptName, options);
     }
 
@@ -987,7 +986,7 @@ class Entity extends Events {
      * @param scriptName - The name of the script.
      * @param options.history - Whether to record a history action. Defaults to true.
      */
-    removeScript(scriptName: string, options: object = {}) {
+    removeScript(scriptName: string, options: { history?: boolean } = {}) {
         api.entities.removeScript([this], scriptName, options);
     }
 
@@ -1000,27 +999,21 @@ class Entity extends Events {
 
     /**
      * The parent entity.
-     *
-     * @type {Entity}
      */
     get parent() {
         const id = this.get('parent');
-        return id ? api.entities.get(id) : null;
+        return (id ? api.entities.get(id) : null) as Entity;
     }
 
     /**
      * The children entities. Warning: this creates a new array every time it's called.
-     *
-     * @type {Entity[]}
      */
     get children() {
-        return this.get('children').map((id: string) => api.entities.get(id));
+        return this.get('children').map((id: string) => api.entities.get(id)) as Entity[];
     }
 
     /**
      * The history object for this entity.
-     *
-     * @type {ObserverHistory}
      */
     get history() {
         return this._history as ObserverHistory;
@@ -1028,11 +1021,9 @@ class Entity extends Events {
 
     /**
      * The entity in the 3D viewport of the Editor.
-     *
-     * @type {pc.Entity}
      */
     get viewportEntity() {
-        return this._observer ? (this._observer as any).entity : null;
+        return (this._observer ? (this._observer as any).entity : null) as any;
     }
 }
 

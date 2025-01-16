@@ -126,18 +126,18 @@ class RealtimeScene extends Events {
         }
     }
 
-    _onError(err: any) {
+    private _onError(err: any) {
         this._realtime.emit('error:scene', err, this._uniqueId);
     }
 
-    _onLoad() {
+    private _onLoad() {
         // notify of operations
         this._document.on('op', this._onOp.bind(this));
         this._loaded = true;
         this.emit('load');
     }
 
-    _onOp(ops: any, local: boolean) {
+    private _onOp(ops: any, local: boolean) {
         if (local) return;
 
         for (let i = 0; i < ops.length; i++) {
@@ -149,8 +149,6 @@ class RealtimeScene extends Events {
 
     /**
      * Whether the scene is loaded
-     *
-     * @type {boolean}
      */
     get loaded() {
         return this._loaded;
@@ -158,26 +156,20 @@ class RealtimeScene extends Events {
 
     /**
      * The scene data
-     *
-     * @type {object}
      */
     get data() {
-        return (this._loaded && this._document) ? this._document.data : null;
+        return ((this._loaded && this._document) ? this._document.data : null) as any;
     }
 
     /**
      * The scene id - used in combination with the branch id
-     *
-     * @type {number}
      */
     get id() {
-        return this.data?.item_id;
+        return this.data?.item_id as number;
     }
 
     /**
      * The scene's unique id
-     *
-     * @type {number}
      */
     get uniqueId() {
         return this._uniqueId;

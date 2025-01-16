@@ -426,7 +426,6 @@ class Entities extends Events {
     }
 
     /**
-     * @type {Entity}
      * Gets the root Entity
      */
     get root() {

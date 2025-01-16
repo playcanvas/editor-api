@@ -138,8 +138,6 @@ class RealtimeAsset extends Events {
 
     /**
      * Whether the asset is loaded
-     *
-     * @type {boolean}
      */
     get loaded() {
         return this._loaded;
@@ -147,26 +145,20 @@ class RealtimeAsset extends Events {
 
     /**
      * The asset data
-     *
-     * @type {object}
      */
     get data() {
-        return (this._loaded && this._document) ? this._document.data : null;
+        return ((this._loaded && this._document) ? this._document.data : null) as any;
     }
 
     /**
      * The asset id - used in combination with branch id
-     *
-     * @type {number}
      */
     get id() {
-        return this.data?.item_id;
+        return this.data?.item_id as number;
     }
 
     /**
      * The asset's unique id
-     *
-     * @type {number}
      */
     get uniqueId() {
         return this._uniqueId;

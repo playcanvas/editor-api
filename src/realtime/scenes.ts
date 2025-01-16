@@ -74,8 +74,6 @@ class RealtimeScenes extends Events {
 
     /**
      * The current scene
-     *
-     * @type {RealtimeScene}
      */
     get current() {
         return this._currentScene;

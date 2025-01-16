@@ -86,8 +86,6 @@ class Messenger extends Events {
 
     /**
      * Returns true if we are connected to the messenger server.
-     *
-     * @type {boolean}
      */
     get isConnected() {
         return this._messenger.isConnected;

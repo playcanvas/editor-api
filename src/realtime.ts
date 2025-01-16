@@ -25,8 +25,6 @@ class Realtime extends Events {
 
     /**
      * Gets the realtime connection
-     *
-     * @type {RealtimeConnection}
      */
     get connection() {
         return this._connection;
@@ -34,8 +32,6 @@ class Realtime extends Events {
 
     /**
      * Gets the realtime scenes API
-     *
-     * @type {RealtimeScenes}
      */
     get scenes() {
         return this._scenes;
@@ -43,8 +39,6 @@ class Realtime extends Events {
 
     /**
      * Gets the realtime assets API
-     *
-     * @type {RealtimeAssets}
      */
     get assets() {
         return this._assets;
