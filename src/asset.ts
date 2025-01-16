@@ -407,7 +407,7 @@ class Asset extends Events {
         this._history = {};
     }
 
-    _initializeHistory() {
+    initializeHistory() {
         if (this._observer.history) return;
 
         this._history = new ObserverHistory({
@@ -419,7 +419,7 @@ class Asset extends Events {
         this._observer.history = this._history as ObserverHistory;
     }
 
-    _resetThumbnailUrls() {
+    private _resetThumbnailUrls() {
         const type = this.get('type') || '';
         if (!type.startsWith('texture')) return;
 
@@ -436,7 +436,7 @@ class Asset extends Events {
         }
     }
 
-    _onSet(path: string, value: any) {
+    private _onSet(path: string, value: any) {
         if (this._suspendOnSet || !path.startsWith('file') || path.endsWith('.url') || !this.get('file')) {
             return;
         }

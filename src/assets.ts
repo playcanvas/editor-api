@@ -150,13 +150,13 @@ class Assets extends Events {
 
     private _assets: ObserverList;
 
-    private _parseScriptCallback: Function;
+    private _parseScriptCallback: (asset: Asset) => any;
 
-    private _defaultUploadCompletedCallback: Function;
+    private _defaultUploadCompletedCallback: (uploadId: number, asset: Asset) => any;
 
-    private _defaultUploadProgressCallback: Function;
+    private _defaultUploadProgressCallback: (uploadId: number, progress: number) => any;
 
-    private _defaultUploadErrorCallback: Function;
+    private _defaultUploadErrorCallback: (uploadId: number, error: Error) => any;
 
     private _uploadId: number;
 
@@ -206,7 +206,7 @@ class Assets extends Events {
         }
     }
 
-    _onMessengerAddAsset(data: { asset: { branchId: string; id: string; source: boolean; status: string; type: any; source_asset_id: string; createdAt: any; }; }) {
+    private _onMessengerAddAsset(data: { asset: { branchId: string; id: string; source: boolean; status: string; type: any; source_asset_id: string; createdAt: any; }; }) {
         if (data.asset.branchId !== api.branchId) return;
 
         const uniqueId = parseInt(data.asset.id, 10);
@@ -238,14 +238,14 @@ class Assets extends Events {
         }
     }
 
-    _onMessengerDeleteAsset(data: { asset: { id: any; }; }) {
+    private _onMessengerDeleteAsset(data: { asset: { id: any; }; }) {
         const asset = this.getUnique(data.asset.id);
         if (asset) {
             this.remove(asset);
         }
     }
 
-    _onMessengerDeleteAssets(data: { assets: string | any[]; }) {
+    private _onMessengerDeleteAssets(data: { assets: string | any[]; }) {
         for (let i = 0; i < data.assets.length; i++) {
             const asset = this.getUnique(parseInt(data.assets[i], 10));
             if (asset) {
@@ -327,7 +327,7 @@ class Assets extends Events {
      * @param asset - The asset
      */
     add(asset: Asset) {
-        asset._initializeHistory();
+        asset.initializeHistory();
 
         const pos = this._assets.add(asset.observer);
         if (pos === null) return;
@@ -1040,8 +1040,6 @@ class Assets extends Events {
     /**
      * Sets the default callback called when on asset upload succeeds.
      * The function takes 2 arguments: the upload id, and the new asset.
-     *
-     * @type {Function<number, Asset>}
      */
     set defaultUploadCompletedCallback(value) {
         this._defaultUploadCompletedCallback = value;
@@ -1049,8 +1047,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload succeeds.
-     *
-     * @type {Function<number, Asset>}
      */
     get defaultUploadCompletedCallback() {
         return this._defaultUploadCompletedCallback;
@@ -1059,8 +1055,6 @@ class Assets extends Events {
     /**
      * Sets the default callback called when on asset upload progress.
      * The function takes 2 arguments: the upload id and the progress.
-     *
-     * @type {Function<number, number>}
      */
     set defaultUploadProgressCallback(value) {
         this._defaultUploadProgressCallback = value;
@@ -1068,8 +1062,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload progress.
-     *
-     * @type {Function<number, number>}
      */
     get defaultUploadProgressCallback() {
         return this._defaultUploadProgressCallback;
@@ -1078,8 +1070,6 @@ class Assets extends Events {
     /**
      * Sets the default callback called when on asset upload progress.
      * The function takes 2 arguments: the upload id, and the error.
-     *
-     * @type {Function<number, Error>}
      */
     set defaultUploadErrorCallback(value) {
         this._defaultUploadErrorCallback = value;
@@ -1087,8 +1077,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload fails.
-     *
-     * @type {Function<number, Error>}
      */
     get defaultUploadErrorCallback() {
         return this._defaultUploadErrorCallback;
@@ -1099,8 +1087,6 @@ class Assets extends Events {
      * callback is set, new script assets will be parsed after they
      * are created. The function takes the asset as a parameter and returns
      * a promise with a list of script names when it is done parsing.
-     *
-     * @type {Function<Asset>}
      */
     set parseScriptCallback(value) {
         this._parseScriptCallback = value;
@@ -1108,8 +1094,6 @@ class Assets extends Events {
 
     /**
      * Gets the callback which parses script assets.
-     *
-     * @type {Function<Asset>}
      */
     get parseScriptCallback() {
         return this._parseScriptCallback;

@@ -2,7 +2,6 @@
     "entryPoints": [
         "./src/index.ts",
     ],
-    "excludeNotDocumented": true,
     "excludeNotDocumentedKinds": [
         "Module",
         "Namespace",

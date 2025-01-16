@@ -60,16 +60,16 @@ class Messenger extends Events {
         messenger.on('message', this._onMessage.bind(this));
     }
 
-    _onConnect() {
+    private _onConnect() {
         this._messenger.authenticate(api.accessToken, 'designer');
         this.emit('connected');
     }
 
-    _onWelcome() {
+    private _onWelcome() {
         this._messenger.projectWatch(api.projectId as unknown as string);
     }
 
-    _onMessage(data: { name: string; data: any; }) {
+    private _onMessage(data: { name: string; data: any; }) {
         this.emit(data.name, data.data);
         this.emit('message', data.name, data.data);
     }
