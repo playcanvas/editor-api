@@ -1,5 +1,7 @@
 import { Events } from '@playcanvas/observer';
 
+import { Asset } from './asset';
+import { Entity } from './entity';
 import { globals as api } from './globals';
 
 /**
@@ -40,8 +42,6 @@ class SelectionHistory {
     /**
      * Record history action after executing function.
      * The history action will restore the previous selection.
-     *
-     * @private
      */
     wrapAction(name: any, fn: () => void) {
         if (!this._enabled || !api.history || this._executingAction) {
@@ -80,7 +80,7 @@ class SelectionHistory {
 class Selection extends Events {
     private _history: SelectionHistory;
 
-    private _items: any[];
+    private _items: (Asset | Entity)[];
 
     private _enabled: boolean;
 
@@ -120,7 +120,7 @@ class Selection extends Events {
      * editor.selection.add(editor.entities.root);
      * ```
      */
-    add(item: any, options: any = {}) {
+    add(item: any, options: { history?: boolean } = {}) {
         if (!this.enabled) return;
         if (this.has(item)) return;
 
@@ -153,7 +153,7 @@ class Selection extends Events {
      * editor.selection.remove(editor.entities.root);
      * ```
      */
-    remove(item: any, options: any = {}) {
+    remove(item: any, options: { history?: boolean } = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {
@@ -185,7 +185,7 @@ class Selection extends Events {
      * editor.selection.toggle(editor.entities.root);
      * ```
      */
-    toggle(item: any, options: any = {}) {
+    toggle(item: any, options: { history?: boolean } = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {
@@ -231,7 +231,7 @@ class Selection extends Events {
      * editor.selection.clear();
      * ```
      */
-    clear(options: any = {}) {
+    clear(options: { history?: boolean } = {}) {
         if (!this.enabled) return;
 
         const length = this._items.length;
@@ -270,7 +270,7 @@ class Selection extends Events {
      * editor.selection.set([editor.entities.root]);
      * ```
      */
-    set(items: any[], options: any = {}) {
+    set(items: any[], options: { history?: boolean } = {}) {
         if (!this.enabled) return;
 
         if (options.history === undefined) {

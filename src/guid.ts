@@ -8,7 +8,7 @@ class Guid {
     /**
      * Create an RFC4122 version 4 compliant GUID.
      *
-     * @returns {string} A new GUID.
+     * @returns A new GUID.
      */
     static create() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {

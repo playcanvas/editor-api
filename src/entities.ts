@@ -113,14 +113,14 @@ class Entities extends Events {
     /**
      * Gets entity by resource id
      *
-     * @param {string} id - The entity's resource id
-     * @returns {Entity} The entity
+     * @param id - The entity's resource id
+     * @returns The entity
      * @example
      * ```javascript
      * const entity = editor.entities.get(resourceId);
      * ```
      */
-    get(id: string) {
+    get(id: string): Entity | null {
         const e = this._entities.get(id);
         return e ? e.apiEntity : null;
     }
@@ -128,7 +128,7 @@ class Entities extends Events {
     /**
      * Returns array of all entities
      *
-     * @returns {Entity[]} The entities
+     * @returns The entities
      * @example
      * ```javascript
      * const entities = editor.entities.list();
@@ -143,7 +143,7 @@ class Entities extends Events {
      * Adds entity to list
      *
      * @category Internal
-     * @param {Entity} entity - The entity
+     * @param entity - The entity
      */
     add(entity: Entity) {
         const id = entity.get('resource_id');
@@ -171,7 +171,7 @@ class Entities extends Events {
      * Called when an entity is added from the server
      *
      * @category Internal
-     * @param {object} entityData - The entity data
+     * @param entityData - The entity data
      */
     serverAdd(entityData: { parent: Entity, children: Entity[] }) {
         const entity = new Entity(entityData as object);
@@ -184,8 +184,8 @@ class Entities extends Events {
      * Removes entity from the list
      *
      * @category Internal
-     * @param {Entity} entity - The entity
-     * @param {object} entityReferences - A map of entity references to nullify
+     * @param entity - The entity
+     * @param entityReferences - A map of entity references to nullify
      * when this entity is removed
      */
     remove(entity: Entity, entityReferences: object = null) {
@@ -235,7 +235,7 @@ class Entities extends Events {
      * Called when an entity is removed from the server
      *
      * @category Internal
-     * @param {Entity} entity - The entity
+     * @param entity - The entity
      */
     serverRemove(entity: Entity) {
         if (api.selection && api.selection.has(entity)) {
@@ -284,12 +284,11 @@ class Entities extends Events {
     /**
      * Creates new entity and adds it to the hierarchy
      *
-     * @param {CreateEntityArguments} data - Initial data for the entity
-     * @param {object} options - Options
-     * @param {number} options.index - The child index that this entity will have under its parent.
-     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
-     * @param {boolean} options.select - Whether to select new Entity. Defaults to false.
-     * @returns {Entity} The new entity
+     * @param data - Initial data for the entity
+     * @param options.index - The child index that this entity will have under its parent.
+     * @param options.history - Whether to record a history action. Defaults to true.
+     * @param options.select - Whether to select new Entity. Defaults to false.
+     * @returns The new entity
      *
      * @example
      * ```javascript
@@ -303,33 +302,31 @@ class Entities extends Events {
      * });
      *```
      */
-    create(data: CreateEntityArguments = null, options: any = {}) {
+    create(data: CreateEntityArguments = null, options: { index?: number, history?: boolean, select?: boolean } = {}) {
         return createEntity(data, options);
     }
 
     /**
      * Delete specified entities
      *
-     * @param {Entity[]|Entity} entities - The entities
-     * @param {object} options - Options
-     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @param entities - The entities
+     * @param options.history - Whether to record a history action. Defaults to true.
      *
      * @example
      * ```javascript
      * await editor.entities.delete([entity1, entity2]);
      * ```
      */
-    async delete(entities: Entity[] | Entity, options: any = {}) {
+    async delete(entities: Entity[] | Entity, options: { history?: boolean } = {}) {
         await deleteEntities(entities, options);
     }
 
     /**
      * Reparents entities under new parent.
      *
-     * @param {ReparentArguments[]} data - The reparenting data
-     * @param {object} options - Options
-     * @param {boolean} options.preserveTransform - Whether to preserve the transform of the entities. Defaults to false.
-     * @param {boolean} options.history - Whether to record history. Defaults to true
+     * @param data - The reparenting data
+     * @param options.preserveTransform - Whether to preserve the transform of the entities. Defaults to false.
+     * @param options.history - Whether to record history. Defaults to true
      * @example
      * ```javascript
      * const child = editor.entities.create();
@@ -340,23 +337,22 @@ class Entities extends Events {
      * }])
      * ```
      */
-    reparent(data: ReparentArguments[], options: any = {}) {
+    reparent(data: ReparentArguments[], options: { preserveTransform?: boolean, history?: boolean } = {}) {
         reparentEntities(data, options);
     }
 
     /**
      * Duplicates the specified entities under the same parent
      *
-     * @param {Entity[]} entities - The entities
-     * @param {object} [options] - Options
-     * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
-     * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
-     * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
-     * @returns {Promise<Entity[]>} The duplicated entities
+     * @param entities - The entities
+     * @param options.history - Whether to record a history action. Defaults to true.
+     * @param options.select - Whether to select the new entities. Defaults to false.
+     * @param options.rename - Whether to rename the duplicated entities. Defaults to false.
+     * @returns The duplicated entities
      * @example
      * const duplicated = await editor.entities.duplicate(entities);
      */
-    async duplicate(entities: Entity[], options: any = {}) {
+    async duplicate(entities: Entity[], options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
         const result = await duplicateEntities(entities, options);
         return result;
 
@@ -366,7 +362,7 @@ class Entities extends Events {
      * Copy specified entities to localStorage clipboard. Can be used
      * to paste these entities later on.
      *
-     * @param {Entity[]} entities - The entities
+     * @param entities - The entities
      */
     copyToClipboard(entities: Entity[]) {
         copyEntities(entities);
@@ -376,12 +372,11 @@ class Entities extends Events {
      * Paste entities copied into clipboard
      * under the specified parent.
      *
-     * @param {Entity} parent - The parent
-     * @param {object} options - Options
-     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
-     * @returns {Promise<Entity[]>} The new entities
+     * @param parent - The parent
+     * @param options.history - Whether to record a history action. Defaults to true.
+     * @returns The new entities
      */
-    pasteFromClipboard(parent: Entity, options: any = {}) {
+    pasteFromClipboard(parent: Entity, options: { history?: boolean } = {}) {
         return pasteEntities(parent, options);
     }
 
@@ -389,11 +384,11 @@ class Entities extends Events {
      * Waits for specified entity ids to be added to the scene.
      * Once they are the callback is called with the entities as its argument.
      *
-     * @param {string[]} entityIds - The ids of the entities to wait for
-     * @param {number} timeoutMs - Number of ms to wait before stopping to wait
-     * @param {Function} callback - The callback to call when all entities have been added.
+     * @param entityIds - The ids of the entities to wait for
+     * @param timeoutMs - Number of ms to wait before stopping to wait
+     * @param callback - The callback to call when all entities have been added.
      * The signature is (Entity[]) => void.
-     * @returns {Function} Returns a cancel function which can be called to cancel calling the
+     * @returns Returns a cancel function which can be called to cancel calling the
      * callback when the entities are added.
      */
     waitToExist(entityIds: string[], timeoutMs: number, callback: (entities: Entity[]) => void) {
@@ -404,17 +399,16 @@ class Entities extends Events {
      * Like {@link Entity.addScript} but works on multiple entities using
      * a single history action.
      *
-     * @param {Entity[]} entities - The entities.
-     * @param {string} scriptName - The name of the script.
-     * @param {object} options - Options
-     * @param {object} options.attributes - The values of attributes. Each key is the name
+     * @param entities - The entities.
+     * @param scriptName - The name of the script.
+     * @param options.attributes - The values of attributes. Each key is the name
      * of the attributes and each value is the value for that attribute. Leave undefined to
      * let the Editor set default values depending on the attribute types.
-     * @param {boolean} options.history - Whether to add a history action. Defaults to true.
-     * @param {number} options.index - The desired index in the entity's scripts order to add this script.
-     * @returns {Promise<>} A promise
+     * @param options.history - Whether to add a history action. Defaults to true.
+     * @param options.index - The desired index in the entity's scripts order to add this script.
+     * @returns A promise
      */
-    addScript(entities: Entity[], scriptName: string, options: any = {}) {
+    addScript(entities: Entity[], scriptName: string, options: { attributes?: object, history?: boolean, index?: number } = {}) {
         return addScript(entities, scriptName, options);
     }
 
@@ -422,17 +416,19 @@ class Entities extends Events {
      * Like {@link Entity.removeScript} but works on multiple entities using
      * a single history action.
      *
-     * @param {Entity[]} entities - The entities.
-     * @param {string} scriptName - The name of the script.
-     * @param {object} options - Options
-     * @param {boolean} options.history - Whether to record a history action. Defaults to true.
+     * @param entities - The entities.
+     * @param scriptName - The name of the script.
+     * @param options.history - Whether to record a history action. Defaults to true.
      */
-    removeScript(entities: Entity[], scriptName: string, options: any = {}) {
+    removeScript(entities: Entity[], scriptName: string, options: { history?: boolean } = {}) {
         removeScript(entities, scriptName, options);
     }
 
+    get raw() {
+        return this._entities;
+    }
+
     /**
-     * @type {Entity}
      * Gets the root Entity
      */
     get root() {

@@ -10,9 +10,9 @@ const validExtensions = Array.from(extensionToBoilerplateMap.keys());
  * Creates filename and script content from provided arguments. If the provide filename contains a '.mjs'
  * suffix, it will generate an ESM based class syntax.
  *
- * @param {string} filename - The desired filename.
- * @param {string} text - The desired contents of the script. If not provided boilerplate code will be used.
- * @returns {object} The filename and content of the script
+ * @param filename - The desired filename.
+ * @param text - The desired contents of the script. If not provided boilerplate code will be used.
+ * @returns The filename and content of the script
  */
 function createScript(filename: string, text: string) {
     let className = '';

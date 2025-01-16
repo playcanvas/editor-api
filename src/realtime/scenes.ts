@@ -21,8 +21,8 @@ class RealtimeScenes extends Events {
     /**
      * Constructor
      *
-     * @param {Realtime} realtime - The realtime API
-     * @param {RealtimeConnection} connection - The realtime connection
+     * @param realtime - The realtime API
+     * @param connection - The realtime connection
      */
     constructor(realtime: Realtime, connection: RealtimeConnection) {
         super();
@@ -35,8 +35,8 @@ class RealtimeScenes extends Events {
     /**
      * Loads a scene
      *
-     * @param {number} sceneId - The scene id
-     * @returns {RealtimeScene} The scene
+     * @param sceneId - The scene id
+     * @returns The scene
      */
     load(sceneId: number) {
         this._currentScene = this._scenes[sceneId];
@@ -59,7 +59,7 @@ class RealtimeScenes extends Events {
     /**
      * Unloads a scene
      *
-     * @param {number} sceneId - The scene id
+     * @param sceneId - The scene id
      */
     unload(sceneId: number) {
         if (this._scenes[sceneId]) {
@@ -74,8 +74,6 @@ class RealtimeScenes extends Events {
 
     /**
      * The current scene
-     *
-     * @type {RealtimeScene}
      */
     get current() {
         return this._currentScene;

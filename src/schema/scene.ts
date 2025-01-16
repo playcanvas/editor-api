@@ -13,7 +13,7 @@ class SceneSchema {
      * Creates new instance of API
      *
      * @category Internal
-     * @param {Schema} schema - The schema API
+     * @param schema - The schema API
      */
     constructor(schema: Schema) {
         this._schemaApi = schema;
@@ -42,7 +42,7 @@ class SceneSchema {
     /**
      * Get the default physics scene settings for the project
      *
-     * @returns {*} The default physics scene settings
+     * @returns The default physics scene settings
      * @example
      * ```javascript
      * const scenePhysicsSettings = editor.schema.scene.getDefaultPhysicsSettings();
@@ -55,7 +55,7 @@ class SceneSchema {
     /**
      * Get the default render scene settings for the project
      *
-     * @returns {*} The default physics scene settings
+     * @returns The default physics scene settings
      * @example
      * ```javascript
      * const sceneRenderSettings = editor.schema.scene.getDefaultRenderSettings();

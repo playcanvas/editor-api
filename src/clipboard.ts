@@ -14,7 +14,7 @@ class Clipboard {
     /**
      * Constructor
      *
-     * @param {string} name - The name of the clipboard.
+     * @param name - The name of the clipboard.
      */
     constructor(name: string) {
         this._name = name;
@@ -24,8 +24,6 @@ class Clipboard {
 
     /**
      * Gets whether the clipboard is empty
-     *
-     * @type {boolean}
      */
     get empty() {
         return !this._storage.has(this._name);
@@ -33,8 +31,6 @@ class Clipboard {
 
     /**
      * Sets the value to be stored in the clipboard. Pass null to clear the value from storage.
-     *
-     * @type {object | string}
      */
     set value(value: object | string) {
         if (value !== null) {
@@ -46,11 +42,9 @@ class Clipboard {
 
     /**
      * Gets the value stored in the clipboard.
-     *
-     * @type {object | string}
      */
     get value() {
-        return this._storage.get(this._name);
+        return this._storage.get(this._name) as (object | string);
     }
 }
 

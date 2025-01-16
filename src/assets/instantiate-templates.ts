@@ -1,9 +1,10 @@
 import { Asset } from '../asset';
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
 let evtMessenger: any;
 
-async function instantiateTemplates(assets: Asset[], parent: any, options: any) {
+async function instantiateTemplates(assets: Asset[], parent: any, options: { index?: number, extraData?: any, history?: boolean, select?: boolean } = {}) {
     parent = parent || api.entities.root;
     if (!parent) {
         throw new Error('Invalid parent');
@@ -15,7 +16,7 @@ async function instantiateTemplates(assets: Asset[], parent: any, options: any) 
         reject: null
     };
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<Entity[]>((resolve, reject) => {
         deferred.resolve = resolve;
         deferred.reject = reject;
     });
@@ -63,7 +64,7 @@ async function instantiateTemplates(assets: Asset[], parent: any, options: any) 
         }
     });
 
-    let entities = await promise as any;
+    let entities = await promise;
 
     // record history action
     if (api.history && (options.history || options.history === undefined)) {

@@ -19,8 +19,8 @@ class RealtimeAssets extends Events {
     /**
      * Constructor
      *
-     * @param {Realtime} realtime - The realtime API
-     * @param {RealtimeConnection} connection - The realtime connection
+     * @param realtime - The realtime API
+     * @param connection - The realtime connection
      */
     constructor(realtime: Realtime, connection: RealtimeConnection) {
         super();
@@ -32,8 +32,8 @@ class RealtimeAssets extends Events {
     /**
      * Loads an asset
      *
-     * @param {number} id - The asset's unique id
-     * @returns {RealtimeAsset} The asset
+     * @param id - The asset's unique id
+     * @returns The asset
      */
     load(id: number) {
         let asset = this._assets[id];
@@ -52,8 +52,8 @@ class RealtimeAssets extends Events {
     /**
      * Gets an already loaded asset
      *
-     * @param {number} id - The asset's unique id
-     * @returns {RealtimeAsset} The asset
+     * @param id - The asset's unique id
+     * @returns The asset
      */
     get(id: number) {
         return this._assets[id] || null;
@@ -62,7 +62,7 @@ class RealtimeAssets extends Events {
     /**
      * Unloads an asset
      *
-     * @param {number} id - The asset's unique id
+     * @param id - The asset's unique id
      */
     unload(id: number) {
         if (this._assets[id]) {

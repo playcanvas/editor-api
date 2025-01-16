@@ -25,6 +25,7 @@ export default [
             'jsdoc/require-param': 'off',
             'jsdoc/require-param-type': 'off',
             'jsdoc/require-returns': 'off',
+            'jsdoc/require-returns-type': 'off',
             'no-use-before-define': 'off'
         }
     },

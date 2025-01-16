@@ -37,8 +37,6 @@ class Schema {
 
     /**
      * Gets the assets schema
-     *
-     * @type {AssetsSchema}
      */
     get assets() {
         return this._assetsSchema;
@@ -46,8 +44,6 @@ class Schema {
 
     /**
      * Gets the component schema
-     *
-     * @type {ComponentSchema}
      */
     get components() {
         return this._componentSchema;
@@ -55,8 +51,6 @@ class Schema {
 
     /**
      * Gets the scene schema
-     *
-     * @type {SceneSchema}
      */
     get scene() {
         return this._sceneSchema;
@@ -64,8 +58,6 @@ class Schema {
 
     /**
      * Gets the settings schema
-     *
-     * @type {SettingsSchema}
      */
     get settings() {
         return this._settingsSchema;

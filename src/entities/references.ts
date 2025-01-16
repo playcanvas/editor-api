@@ -120,10 +120,8 @@ function findReferencesInComponents(entity: Entity, refType: string) {
  * Return a map of all entity reference properties in the graph. This will
  * include references of the entity and also references of its children
  *
- * @private
- * @typedef {import("../entity").Entity} Entity
- * @param {Entity} entity - The entity
- * @returns {object} The entity references
+ * @param entity - The entity
+ * @returns The entity references
  */
 function findEntityReferencesInComponents(entity: Entity) {
     return findReferencesInComponents(entity, 'entity');
@@ -132,10 +130,8 @@ function findEntityReferencesInComponents(entity: Entity) {
 /**
  * Return a map of all asset reference properties in the graph.
  *
- * @private
- * @typedef {import("../entity").Entity} Entity
- * @param {Entity} entity - The entity
- * @returns {object} The asset references
+ * @param entity - The entity
+ * @returns The asset references
  */
 function findAssetReferencesInComponents(entity: Entity) {
     return findReferencesInComponents(entity, 'asset');
@@ -144,11 +140,10 @@ function findAssetReferencesInComponents(entity: Entity) {
 /**
  * Updates references to the old value to point to the new value
  *
- * @private
- * @param {object} references - A map of references that we got
+ * @param references - A map of references that we got
  * from findEntityReferencesInComponents or findAssetReferencesInComponents.
- * @param {string|number} oldValue - The value that we want to replace
- * @param {string|number} newValue - The value that we want our references to point to
+ * @param oldValue - The value that we want to replace
+ * @param newValue - The value that we want our references to point to
  */
 function updateReferences(references: Record<string, any>, oldValue: string | number, newValue: string | number) {
     const referencesToEntity = references[oldValue];

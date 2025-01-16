@@ -4,16 +4,13 @@ import { globals as api } from '../globals';
 /**
  * Creates new entity and adds it to the hierarchy
  *
- * @private
- * @typedef {import("../entities").Entities} Entities
- * @param {object} [data] - Optional initial data for the entity
- * @param {object} [options] - Options
- * @param {number} [options.index] - The child index that this entity will have under its parent.
- * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
- * @param {boolean} [options.select] - Whether to select new Entity. Defaults to false.
- * @returns {Entity} The new entity
+ * @param data - Optional initial data for the entity
+ * @param options.index - The child index that this entity will have under its parent.
+ * @param options.history - Whether to record a history action. Defaults to true.
+ * @param options.select - Whether to select new Entity. Defaults to false.
+ * @returns The new entity
  */
-function createEntity(data: any, options: any = {}): Entity {
+function createEntity(data: any, options: { index?: number, history?: boolean, select?: boolean } = {}): Entity {
     data = data || {};
 
     if (options.history === undefined) {

@@ -25,9 +25,9 @@ class RealtimeScene extends Events {
     /**
      * Constructor
      *
-     * @param {number} uniqueId - The unique scene id
-     * @param {Realtime} realtime - The realtime API
-     * @param {RealtimeConnection} connection - The realtime connection
+     * @param uniqueId - The unique scene id
+     * @param realtime - The realtime API
+     * @param connection - The realtime connection
      */
     constructor(uniqueId: number, realtime: Realtime, connection: RealtimeConnection) {
         super();
@@ -77,7 +77,7 @@ class RealtimeScene extends Events {
     /**
      * Add entity to scene
      *
-     * @param {Entity} entity - The entity
+     * @param entity - The entity
      */
     addEntity(entity: Entity) {
         this.submitOp({
@@ -89,7 +89,7 @@ class RealtimeScene extends Events {
     /**
      * Removes entity from scene (not from children of another entity)
      *
-     * @param {Entity} entity - The entity
+     * @param entity - The entity
      */
     removeEntity(entity: Entity) {
         this.submitOp({
@@ -101,7 +101,7 @@ class RealtimeScene extends Events {
     /**
      * Submits sharedb operation
      *
-     * @param {object} op - The operation
+     * @param op - The operation
      */
     submitOp(op: object) {
         if (!this._loaded) return;
@@ -118,7 +118,7 @@ class RealtimeScene extends Events {
      * Calls the callback when there are no changes pending to be
      * sent to the server
      *
-     * @param {Function} callback - The callback
+     * @param callback - The callback
      */
     whenNothingPending(callback: Function) {
         if (this._document) {
@@ -126,18 +126,18 @@ class RealtimeScene extends Events {
         }
     }
 
-    _onError(err: any) {
+    private _onError(err: any) {
         this._realtime.emit('error:scene', err, this._uniqueId);
     }
 
-    _onLoad() {
+    private _onLoad() {
         // notify of operations
         this._document.on('op', this._onOp.bind(this));
         this._loaded = true;
         this.emit('load');
     }
 
-    _onOp(ops: any, local: boolean) {
+    private _onOp(ops: any, local: boolean) {
         if (local) return;
 
         for (let i = 0; i < ops.length; i++) {
@@ -149,8 +149,6 @@ class RealtimeScene extends Events {
 
     /**
      * Whether the scene is loaded
-     *
-     * @type {boolean}
      */
     get loaded() {
         return this._loaded;
@@ -158,26 +156,20 @@ class RealtimeScene extends Events {
 
     /**
      * The scene data
-     *
-     * @type {object}
      */
     get data() {
-        return (this._loaded && this._document) ? this._document.data : null;
+        return ((this._loaded && this._document) ? this._document.data : null) as any;
     }
 
     /**
      * The scene id - used in combination with the branch id
-     *
-     * @type {number}
      */
     get id() {
-        return this.data?.item_id;
+        return this.data?.item_id as number;
     }
 
     /**
      * The scene's unique id
-     *
-     * @type {number}
      */
     get uniqueId() {
         return this._uniqueId;

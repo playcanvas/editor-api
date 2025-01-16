@@ -15,10 +15,9 @@ const USE_BACKEND_LIMIT = 500;
  * within its subtree is duplicated, update the references to the corresponding entities within
  * the newly created duplicate subtree.
  *
- * @private
- * @param {Entity} newEntity - The new (duplicated) entity
- * @param {Entity} oldEntity - The old entity
- * @param {object} duplicatedIdsMap - Map of old id -> new id
+ * @param newEntity - The new (duplicated) entity
+ * @param oldEntity - The old entity
+ * @param duplicatedIdsMap - Map of old id -> new id
  */
 function updateDuplicatedEntityReferences(newEntity: Entity, oldEntity: Entity, duplicatedIdsMap: Record<string, string>) {
     // remap template_ent_ids for template instances
@@ -110,13 +109,12 @@ function getUniqueNameForDuplicatedEntity(entityName: string, entities: Entity[]
 /**
  * Duplicates an entity in the scene
  *
- * @private
- * @param {Entity} entity - The entity
- * @param {Entity} parent - The parent of the new entity
- * @param {number} ind - The index in the parent's children array where we want to insert the new entity
- * @param {object} duplicatedIdsMap - A guid->guid map that contains references from the source resource ids to the new resource ids
- * @param {boolean} useUniqueName - Controls whether duplicated entity will have a unique name
- * @returns {Entity} The new entity
+ * @param entity - The entity
+ * @param parent - The parent of the new entity
+ * @param ind - The index in the parent's children array where we want to insert the new entity
+ * @param duplicatedIdsMap - A guid->guid map that contains references from the source resource ids to the new resource ids
+ * @param useUniqueName - Controls whether duplicated entity will have a unique name
+ * @returns The new entity
  */
 function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicatedIdsMap: Record<string, string>, useUniqueName: boolean = false) {
     const originalResourceId = entity.get('resource_id');
@@ -155,7 +153,7 @@ function duplicateEntity(entity: Entity, parent: Entity, ind: number, duplicated
     return entity;
 }
 
-function duplicateInBackend(entities: Entity[], options: any) {
+function duplicateInBackend(entities: Entity[], options: { history?: boolean } = {}) {
     const originalEntities = entities;
     let cancelWaitForEntities: () => void;
 
@@ -239,16 +237,14 @@ function duplicateInBackend(entities: Entity[], options: any) {
 /**
  * Duplicates entities under the same parent
  *
- * @private
- * @typedef {import("../entities").Entities} Entities
- * @param {Entity[]} entities - The entities
- * @param {object} [options] - Options
- * @param {boolean} [options.history] - Whether to record a history action. Defaults to true.
- * @param {boolean} [options.select] - Whether to select the new entities. Defaults to false.
- * @param {boolean} [options.rename] - Whether to rename the duplicated entities. Defaults to false.
- * @returns {Promise<Entity[]>} The duplicated entities
+ * @param entities - The entities
+ * @param options - Options
+ * @param options.history - Whether to record a history action. Defaults to true.
+ * @param options.select - Whether to select the new entities. Defaults to false.
+ * @param options.rename - Whether to rename the duplicated entities. Defaults to false.
+ * @returns The duplicated entities
  */
-async function duplicateEntities(entities: Entity[], options: any = {}) {
+async function duplicateEntities(entities: Entity[], options: { history?: boolean, select?: boolean, rename?: boolean } = {}) {
     // copy entities for safety in undo / redo
     entities = entities.slice();
 

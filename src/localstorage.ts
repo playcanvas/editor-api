@@ -9,8 +9,8 @@ class LocalStorage {
     /**
      * Gets a key from localStorage
      *
-     * @param {string} key - The key
-     * @returns {object} The value
+     * @param key - The key
+     * @returns The value
      */
     get(key: string) {
         const value = localStorage.getItem(key);
@@ -37,8 +37,8 @@ class LocalStorage {
     /**
      * Stores a key-value to localStorage
      *
-     * @param {string} key - The key
-     * @param {object | string} value - The value
+     * @param key - The key
+     * @param value - The value
      */
     set(key: string, value: object | string) {
         const text = JSON.stringify(value);
@@ -52,7 +52,7 @@ class LocalStorage {
     /**
      * Removes a key from localStorage
      *
-     * @param {string} key - The key
+     * @param key - The key
      */
     unset(key: string) {
         localStorage.removeItem(key);
@@ -61,8 +61,8 @@ class LocalStorage {
     /**
      * Checks if key exists in local storage
      *
-     * @param {string} key - The key
-     * @returns {boolean} True or false
+     * @param key - The key
+     * @returns True or false
      */
     has(key: string) {
         return !!localStorage.getItem(key);

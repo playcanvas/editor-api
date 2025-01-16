@@ -19,8 +19,6 @@ class Settings extends Events {
 
     /**
      * Gets the settings for the currently loaded scene.
-     *
-     * @type {SceneSettings}
      */
     get scene() {
         return this._sceneSettings;

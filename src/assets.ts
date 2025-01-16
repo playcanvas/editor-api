@@ -1,16 +1,16 @@
 import { Events, ObserverList } from '@playcanvas/observer';
 
-import { Asset } from './asset';
-import { createScript } from './assets/createScript';
-import { createTemplate } from './assets/createTemplate';
-import { instantiateTemplates } from './assets/instantiateTemplates';
+import { Asset, AssetObserver } from './asset';
+import { createScript } from './assets/create-script';
+import { createTemplate } from './assets/create-template';
+import { instantiateTemplates } from './assets/instantiate-templates';
 import { uploadFile } from './assets/upload';
 import { Entity } from './entity';
 import { globals as api } from './globals';
 /**
  * Arguments passed when uploading an asset file.
  */
-type AssetUploadArguments = {
+export type AssetUploadArguments = {
     /**
      * The parent folder asset where the asset should be placed.
      */
@@ -70,7 +70,7 @@ type AssetUploadArguments = {
 /**
  * Import settings used when uploading a texture asset.
  */
-type TextureImportSettings = {
+export type TextureImportSettings = {
     /**
      * Whether to resize the texture to power of 2.
      */
@@ -85,7 +85,7 @@ type TextureImportSettings = {
 /**
  * Import settings used when uploading a scene (fbx etc.).
  */
-type SceneImportSettings = {
+export type SceneImportSettings = {
     /**
      * Whether to search for target assets to update throughout the whole project instead of just the same folder. Defaults to true.
      */
@@ -150,13 +150,13 @@ class Assets extends Events {
 
     private _assets: ObserverList;
 
-    private _parseScriptCallback: Function;
+    private _parseScriptCallback: (asset: Asset) => any;
 
-    private _defaultUploadCompletedCallback: Function;
+    private _defaultUploadCompletedCallback: (uploadId: number, asset: Asset) => any;
 
-    private _defaultUploadProgressCallback: Function;
+    private _defaultUploadProgressCallback: (uploadId: number, progress: number) => any;
 
-    private _defaultUploadErrorCallback: Function;
+    private _defaultUploadErrorCallback: (uploadId: number, error: Error) => any;
 
     private _uploadId: number;
 
@@ -165,10 +165,9 @@ class Assets extends Events {
     /**
      * Constructor
      *
-     * @param {object} options - Options
-     * @param {boolean} options.autoSubscribe - Whether to auto subscribe to asset changes when assets are loaded.
+     * @param options.autoSubscribe - Whether to auto subscribe to asset changes when assets are loaded.
      */
-    constructor(options: any = {}) {
+    constructor(options: { autoSubscribe?: boolean } = {}) {
         super();
 
         this._uniqueIdToItemId = {};
@@ -207,7 +206,7 @@ class Assets extends Events {
         }
     }
 
-    _onMessengerAddAsset(data: { asset: { branchId: string; id: string; source: boolean; status: string; type: any; source_asset_id: string; createdAt: any; }; }) {
+    private _onMessengerAddAsset(data: { asset: { branchId: string; id: string; source: boolean; status: string; type: any; source_asset_id: string; createdAt: any; }; }) {
         if (data.asset.branchId !== api.branchId) return;
 
         const uniqueId = parseInt(data.asset.id, 10);
@@ -239,14 +238,14 @@ class Assets extends Events {
         }
     }
 
-    _onMessengerDeleteAsset(data: { asset: { id: any; }; }) {
+    private _onMessengerDeleteAsset(data: { asset: { id: any; }; }) {
         const asset = this.getUnique(data.asset.id);
         if (asset) {
             this.remove(asset);
         }
     }
 
-    _onMessengerDeleteAssets(data: { assets: string | any[]; }) {
+    private _onMessengerDeleteAssets(data: { assets: string | any[]; }) {
         for (let i = 0; i < data.assets.length; i++) {
             const asset = this.getUnique(parseInt(data.assets[i], 10));
             if (asset) {
@@ -258,10 +257,10 @@ class Assets extends Events {
     /**
      * Gets asset by id
      *
-     * @param {number} id - The asset id
-     * @returns {Asset} The asset
+     * @param id - The asset id
+     * @returns The asset
      */
-    get(id: number) {
+    get(id: number): Asset | null {
         const a = this._assets.get(id);
         return a ? a.apiAsset : null;
     }
@@ -269,10 +268,10 @@ class Assets extends Events {
     /**
      * Gets asset by its unique id
      *
-     * @param {number} uniqueId - The unique id
-     * @returns {Asset} The asset
+     * @param uniqueId - The unique id
+     * @returns The asset
      */
-    getUnique(uniqueId: number) {
+    getUnique(uniqueId: number): Asset | null {
         const id = this._uniqueIdToItemId[uniqueId];
         return id ? this.get(id) : null;
     }
@@ -280,18 +279,18 @@ class Assets extends Events {
     /**
      * Returns array of all assets
      *
-     * @returns {Asset[]} The assets
+     * @returns The assets
      */
     list() {
-        return this._assets.array().map((a: { apiAsset: any; }) => a.apiAsset);
+        return this._assets.array().map((a: AssetObserver) => a.apiAsset);
     }
 
     /**
      * Finds all assets with specified tags
      *
-     * @param {...string|...string[]} tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
+     * @param tags - The tags. If multiple tags are specified then assets that contain ANY of the specified
      * tags will be included. If an argument is an array of tags then assets that contain ALL of the tags in the array will be included.
-     * @returns {Asset[]} The assets
+     * @returns The assets
      */
     listByTag(...tags: any[]) {
         return this.filter((asset: Asset) => {
@@ -325,10 +324,10 @@ class Assets extends Events {
      * Adds asset to the list
      *
      * @category Internal
-     * @param {Asset} asset - The asset
+     * @param asset - The asset
      */
     add(asset: Asset) {
-        asset._initializeHistory();
+        asset.initializeHistory();
 
         const pos = this._assets.add(asset.observer);
         if (pos === null) return;
@@ -381,7 +380,7 @@ class Assets extends Events {
      * Removes asset from the list
      *
      * @category Internal
-     * @param {Asset} asset - The asset
+     * @param asset - The asset
      */
     remove(asset: Asset) {
         if (!this._assets.has(asset.observer)) return;
@@ -421,8 +420,8 @@ class Assets extends Events {
     /**
      * Gets assets that satisfy function
      *
-     * @param {Function} fn - The function (takes an asset as an argument and returns boolean).
-     * @returns {Asset[]} The assets
+     * @param fn - The function (takes an asset as an argument and returns boolean).
+     * @returns The assets
      */
     filter(fn: Function) {
         return this._assets.data
@@ -433,8 +432,8 @@ class Assets extends Events {
     /**
      * Finds first asset that satisfies function
      *
-     * @param {Function} fn - A function that takes an asset as an argument and returns boolean.
-     * @returns {Asset} The asset
+     * @param fn - A function that takes an asset as an argument and returns boolean.
+     * @returns The asset
      */
     findOne(fn: Function) {
         const result = this._assets.data.find((observer: { apiAsset: any; }) => fn(observer.apiAsset));
@@ -446,11 +445,10 @@ class Assets extends Events {
      * subscribe to realtime changes.
      *
      * @category Internal
-     * @param {object} options - Options
-     * @param {string} options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
+     * @param options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
      * the assets returned to a smaller subset depending on the view.
      */
-    async loadAll(options: any = {}) {
+    async loadAll(options: { view?: string } = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
@@ -498,12 +496,11 @@ class Assets extends Events {
      * Loads all assets in the current project / branch
      * and subscribes to changes.
      *
-     * @param {object} options - Options
-     * @param {string} options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
+     * @param options.view - The desired view for the REST API e.g 'designer', 'shader-editor'. This might limit
      * the assets returned to a smaller subset depending on the view.
      * @category Internal
      */
-    async loadAllAndSubscribe(options: any = {}) {
+    async loadAllAndSubscribe(options: { view?: string } = {}) {
         this.clear();
 
         this.emit('load:progress', 0.1);
@@ -558,8 +555,8 @@ class Assets extends Events {
     /**
      * Gets the first script asset that contains the specified script
      *
-     * @param {string} script - The script name
-     * @returns {Asset} The script asset
+     * @param script - The script name
+     * @returns The script asset
      */
     getAssetForScript(script: string) {
         return this.findOne((asset: Asset) => {
@@ -571,11 +568,10 @@ class Assets extends Events {
     /**
      * Creates new asset
      *
-     * @private
-     * @param {AssetUploadArguments} data - The asset fields
-     * @param {TextureImportSettings|SceneImportSettings|} settings - Import settings
-     * @param {Function} onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param data - The asset fields
+     * @param settings - Import settings
+     * @param onProgress - Function to report progress
+     * @returns The new asset
      */
     async upload(data: AssetUploadArguments, settings: TextureImportSettings | SceneImportSettings = {}, onProgress: Function | null = null) {
         if (data.folder) {
@@ -617,15 +613,14 @@ class Assets extends Events {
     /**
      * Creates new anim state graph asset.
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {object} options.data - The asset data. See {@link Asset} for Animstategraph data.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.data - The asset data. See {@link Asset} for Animstategraph data.
+     * @param options.folder - The parent folder asset
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createAnimStateGraph(options: any) {
+    createAnimStateGraph(options: { name?: string; preload?: boolean; data?: object; folder?: Asset; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Anim State Graph',
             type: 'animstategraph',
@@ -638,15 +633,14 @@ class Assets extends Events {
     /**
      * Creates new bundle asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {Asset[]} options.assets - The assets that the bundle will contain
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.assets - The assets that the bundle will contain
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createBundle(options: any) {
+    createBundle(options: { name?: string; assets?: any[]; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Bundle',
             type: 'bundle',
@@ -661,15 +655,14 @@ class Assets extends Events {
     /**
      * Creates new CSS asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {string} options.text - The CSS
-     * @param {string} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.text - The CSS
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createCss(options: any) {
+    createCss(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Css',
             type: 'css',
@@ -683,19 +676,18 @@ class Assets extends Events {
     /**
      * Creates new cubemap asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {Asset[]} options.textures - The textures for each cubemap face in this order:
+     * @param options.name - The asset name
+     * @param options.textures - The textures for each cubemap face in this order:
      * right, left, up, down, front, back
-     * @param {number} options.minFilter - Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR.
-     * @param {number} options.magFilter - Cubemap magFilter value. Defaults to pc.FILTER_LINEAR.
-     * @param {number} options.anisotropy - Cubemap anisotropy value. Defaults to 1.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.minFilter - Cubemap minFilter value. Defaults to pc.FILTER_LINEAR_MIPMAP_LINEAR.
+     * @param options.magFilter - Cubemap magFilter value. Defaults to pc.FILTER_LINEAR.
+     * @param options.anisotropy - Cubemap anisotropy value. Defaults to 1.
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createCubemap(options: any) {
+    createCubemap(options: { name?: string; textures?: any[]; minFilter?: number; magFilter?: number; anisotropy?: number; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         const textures = (options.textures || new Array(6)).slice(0, 6);
         for (let i = 0; i < 6; i++) {
             textures[i] = (textures[i] ? textures[i].get('id') : null);
@@ -719,13 +711,12 @@ class Assets extends Events {
     /**
      * Creates a new folder asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.folder - The parent folder asset
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createFolder(options: any) {
+    createFolder(options: { name?: string; folder?: Asset; onProgress?: Function; }) {
         return this.upload({
             name: options.name || 'New Folder',
             type: 'folder',
@@ -736,15 +727,14 @@ class Assets extends Events {
     /**
      * Creates new HTML asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {string} options.text - The HTML
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.text - The HTML
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createHtml(options: any) {
+    createHtml(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Html',
             type: 'html',
@@ -758,17 +748,16 @@ class Assets extends Events {
     /**
      * Creates new JSON asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {object} options.json - The JSON
-     * @param {number} options.spaces - The number of spaces used for indentation. Defaults to 0
+     * @param options.name - The asset name
+     * @param options.json - The JSON
+     * @param options.spaces - The number of spaces used for indentation. Defaults to 0
      * (tightly packed output).
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createJson(options: any) {
+    createJson(options: { name?: string; json?: object; spaces?: number; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         const spaces = options.spaces ?? 0;
         const str = JSON.stringify(options.json || {}, null, spaces);
 
@@ -785,15 +774,14 @@ class Assets extends Events {
     /**
      * Creates new localization JSON asset
      *
-     * @param {object} options - The options
-     * @param {string} options.name - The asset name
-     * @param {object} options.localizationData - The localization data. If null then default data will be used.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.localizationData - The localization data. If null then default data will be used.
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createI18n(options: any) {
+    createI18n(options: { name?: string; localizationData?: object; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.createJson({
             name: options.name,
             json: options.localizationData || {
@@ -820,15 +808,14 @@ class Assets extends Events {
     /**
      * Creates new material asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {object} options.data - The material data. Default values will be used for missing fields. See {@link Asset} for material data.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.data - The material data. Default values will be used for missing fields. See {@link Asset} for material data.
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createMaterial(options: any) {
+    createMaterial(options: { name?: string; data?: Record<string, any>; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         const defaultData = api.schema.assets.getDefaultData('material') as any;
         if (options.data) {
             for (const key in defaultData) {
@@ -850,17 +837,16 @@ class Assets extends Events {
     /**
      * Creates new script asset
      *
-     * @param {object} options - Options
-     * @param {string} options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
+     * @param options.filename - The filename of the script. This will also be the name of the script asset. If not defined it will be generated
      * from the name of the script.
-     * @param {string} options.text - The contents of the script. If none then boilerplate code will be used.
-     * @param {object} options.data - The script data. See {@link Asset} for Script data.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.text - The contents of the script. If none then boilerplate code will be used.
+     * @param options.data - The script data. See {@link Asset} for Script data.
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    async createScript(options: any) {
+    async createScript(options: { filename?: string; text?: string; data?: object; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         if (!options.filename) {
             throw new Error('createScript: missing required filename');
         }
@@ -912,15 +898,14 @@ class Assets extends Events {
     /**
      * Creates new shader asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {string} options.text - The GLSL
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.text - The GLSL
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createShader(options: any) {
+    createShader(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Shader',
             type: 'shader',
@@ -934,18 +919,17 @@ class Assets extends Events {
     /**
      * Creates new sprite asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {number} options.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
-     * @param {number[]} options.frameKeys - The sprite's frame keys
-     * @param {Asset} options.textureAtlas - The sprite's texture atlas asset
-     * @param {number} options.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.pixelsPerUnit - The sprite's pixels per unit value. Defaults to 100.
+     * @param options.frameKeys - The sprite's frame keys
+     * @param options.textureAtlas - The sprite's texture atlas asset
+     * @param options.renderMode - The sprite's render mode. Defaults to pc.SPRITE_RENDERMODE_SIMPLE.
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createSprite(options: any) {
+    createSprite(options: { name?: string; pixelsPerUnit?: number; frameKeys?: any[]; textureAtlas?: Asset; renderMode?: number; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         const data: any = {};
         data.pixelsPerUnit = options.pixelsPerUnit !== undefined ? options.pixelsPerUnit : 100;
         data.frameKeys = options.frameKeys ? options.frameKeys.map((val: any) => val.toString()) : [];
@@ -964,15 +948,14 @@ class Assets extends Events {
     /**
      * Creates new text asset
      *
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {string} options.text - The text
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.text - The text
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    createText(options: any) {
+    createText(options: { name?: string; text?: string; folder?: Asset; preload?: boolean; onProgress?: Function; } = {}) {
         return this.upload({
             name: options.name || 'New Text',
             type: 'text',
@@ -986,16 +969,14 @@ class Assets extends Events {
     /**
      * Creates new template asset
      *
-     * @typedef {import("./entity").Entity} Entity
-     * @param {object} options - Options
-     * @param {string} options.name - The asset name
-     * @param {Entity} options.entity - The entity to create the template from
-     * @param {Asset} options.folder - The parent folder asset
-     * @param {boolean} options.preload - Whether to preload the asset. Defaults to true.
-     * @param {Function} options.onProgress - Function to report progress
-     * @returns {Promise<Asset>} The new asset
+     * @param options.name - The asset name
+     * @param options.entity - The entity to create the template from
+     * @param options.folder - The parent folder asset
+     * @param options.preload - Whether to preload the asset. Defaults to true.
+     * @param options.onProgress - Function to report progress
+     * @returns The new asset
      */
-    async createTemplate(options: any) {
+    async createTemplate(options: { name?: string; entity: Entity; folder?: Asset; preload?: boolean; onProgress?: Function; }) {
         const {
             entities,
             oldToNewIds
@@ -1019,7 +1000,7 @@ class Assets extends Events {
     /**
      * Deletes specified assets
      *
-     * @param {Asset[]} assets - The assets
+     * @param assets - The assets
      */
     async delete(assets: Asset[]) {
         const response = await fetch('/api/assets', {
@@ -1044,24 +1025,25 @@ class Assets extends Events {
      * Instantiates the specified template assets under the specified
      * parent entity.
      *
-     * @param {Asset[]} assets - The template assets.
-     * @param {Entity} parent - The parent entity
-     * @param {object} options - Options
-     * @param {number} options.index - The desired index under the parent to instantiate the templates.
-     * @param {boolean} options.history - Whether to record a history action.
-     * @param {boolean} options.select - Whether to select the new entities.
-     * @param {object} options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
-     * @returns {Promise<Entity[]>} The new entities
+     * @param assets - The template assets.
+     * @param parent - The parent entity
+     * @param options.index - The desired index under the parent to instantiate the templates.
+     * @param options.history - Whether to record a history action.
+     * @param options.select - Whether to select the new entities.
+     * @param options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
+     * @returns The new entities
      */
-    instantiateTemplates(assets: Asset[], parent: Entity, options = {}) {
+    instantiateTemplates(assets: Asset[], parent: Entity, options: { index?: number; history?: boolean; select?: boolean; extraData?: object; } = {}) {
         return instantiateTemplates(assets, parent, options);
+    }
+
+    get raw() {
+        return this._assets;
     }
 
     /**
      * Sets the default callback called when on asset upload succeeds.
      * The function takes 2 arguments: the upload id, and the new asset.
-     *
-     * @type {Function<number, Asset>}
      */
     set defaultUploadCompletedCallback(value) {
         this._defaultUploadCompletedCallback = value;
@@ -1069,8 +1051,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload succeeds.
-     *
-     * @type {Function<number, Asset>}
      */
     get defaultUploadCompletedCallback() {
         return this._defaultUploadCompletedCallback;
@@ -1079,8 +1059,6 @@ class Assets extends Events {
     /**
      * Sets the default callback called when on asset upload progress.
      * The function takes 2 arguments: the upload id and the progress.
-     *
-     * @type {Function<number, number>}
      */
     set defaultUploadProgressCallback(value) {
         this._defaultUploadProgressCallback = value;
@@ -1088,8 +1066,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload progress.
-     *
-     * @type {Function<number, number>}
      */
     get defaultUploadProgressCallback() {
         return this._defaultUploadProgressCallback;
@@ -1098,8 +1074,6 @@ class Assets extends Events {
     /**
      * Sets the default callback called when on asset upload progress.
      * The function takes 2 arguments: the upload id, and the error.
-     *
-     * @type {Function<number, Error>}
      */
     set defaultUploadErrorCallback(value) {
         this._defaultUploadErrorCallback = value;
@@ -1107,8 +1081,6 @@ class Assets extends Events {
 
     /**
      * Gets the default callback called when on asset upload fails.
-     *
-     * @type {Function<number, Error>}
      */
     get defaultUploadErrorCallback() {
         return this._defaultUploadErrorCallback;
@@ -1119,8 +1091,6 @@ class Assets extends Events {
      * callback is set, new script assets will be parsed after they
      * are created. The function takes the asset as a parameter and returns
      * a promise with a list of script names when it is done parsing.
-     *
-     * @type {Function<Asset>}
      */
     set parseScriptCallback(value) {
         this._parseScriptCallback = value;
@@ -1128,8 +1098,6 @@ class Assets extends Events {
 
     /**
      * Gets the callback which parses script assets.
-     *
-     * @type {Function<Asset>}
      */
     get parseScriptCallback() {
         return this._parseScriptCallback;

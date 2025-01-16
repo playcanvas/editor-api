@@ -8,8 +8,8 @@ const REGEX_CONTAINS_STAR = /\.\*\./;
  * Stores asset paths in the assets dictionary by converting the array of
  * folder ids to an array of folder names.
  *
- * @param {number[]} assetIds - The asset ids
- * @param {object} assets - The assets dictionary
+ * @param assetIds - The asset ids
+ * @param assets - The assets dictionary
  */
 function storeAssetPaths(assetIds: number[], assets: Record<number, any>) {
     if (!Array.isArray(assetIds)) {
@@ -47,8 +47,8 @@ function storeAssetPaths(assetIds: number[], assets: Record<number, any>) {
 /**
  * Gathers all asset dependencies for this entity
  *
- * @param {Entity} entity - The entity
- * @param {object} data - The helper data
+ * @param entity - The entity
+ * @param data - The helper data
  */
 function gatherDependencies(entity: Entity, data: Record<string, any>) {
     if (!ASSET_PATHS) {
@@ -213,7 +213,7 @@ function sortEntities(entities: Entity[]) {
  * Copy specified entities to localStorage clipboard. Can be used
  * to paste these entities later on.
  *
- * @param {Entity[]} entities - The entities
+ * @param entities - The entities
  */
 function copyEntities(entities: Entity[]) {
     const currentScene = api.realtime?.scenes?.current;

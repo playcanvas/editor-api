@@ -78,10 +78,10 @@ function appendCreateFields(form: FormData, data: any) {
  * Uploads an asset file in order to create a new asset
  * or update an existing asset.
  *
- * @param {object} data - The data
- * @param {object} settings - Import settings
- * @param {Function} onProgress - Progress function
- * @returns {object} The JSON response from the server
+ * @param data - The data
+ * @param settings - Import settings
+ * @param onProgress - Progress function
+ * @returns The JSON response from the server
  */
 async function uploadFile(data: Record<string, any>, settings: object = null, onProgress: Function = null) {
     let method;

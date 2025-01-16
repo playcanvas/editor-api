@@ -9,14 +9,14 @@ import { globals as api } from './globals';
  */
 export type AssetObserver = Observer & {
     /**
-     * The history of changes made to the observer.
-     */
-    history: ObserverHistory;
-
-    /**
      * The API asset associated with this observer.
      */
     apiAsset: Asset;
+
+    /**
+     * The history of changes made to the observer.
+     */
+    history: ObserverHistory;
 };
 
 /**
@@ -359,13 +359,13 @@ class Asset extends Events {
     /**
      * Constructor
      *
-     * @param {object} data - The asset data
+     * @param data - The asset data
      */
     constructor(data: any = {}) {
         super();
 
         // allow duplicate values in data.frameKeys of sprite asset
-        let options = null;
+        let options = {};
         if (data.type === 'sprite') {
             options = {
                 pathsWithDuplicates: ['data.frameKeys']
@@ -381,7 +381,7 @@ class Asset extends Events {
             path: []
         }, data);
 
-        this._observer = new Observer(data, options || {}) as AssetObserver;
+        this._observer = new Observer(data, options) as AssetObserver;
         this._observer.apiAsset = this;
         this._observer.addEmitter(this);
 
@@ -407,7 +407,7 @@ class Asset extends Events {
         this._history = {};
     }
 
-    _initializeHistory() {
+    initializeHistory() {
         if (this._observer.history) return;
 
         this._history = new ObserverHistory({
@@ -419,7 +419,7 @@ class Asset extends Events {
         this._observer.history = this._history as ObserverHistory;
     }
 
-    _resetThumbnailUrls() {
+    private _resetThumbnailUrls() {
         const type = this.get('type') || '';
         if (!type.startsWith('texture')) return;
 
@@ -436,7 +436,7 @@ class Asset extends Events {
         }
     }
 
-    _onSet(path: string, value: any) {
+    private _onSet(path: string, value: any) {
         if (this._suspendOnSet || !path.startsWith('file') || path.endsWith('.url') || !this.get('file')) {
             return;
         }
@@ -461,8 +461,8 @@ class Asset extends Events {
     /**
      * Checks if path exists. See the {@link Asset} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @returns {boolean} True if path exists
+     * @param path - The path
+     * @returns True if path exists
      */
     has(path: string) {
         return this._observer.has(path);
@@ -471,8 +471,8 @@ class Asset extends Events {
     /**
      * Gets value at path. See the {@link Asset} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @returns {any} The value
+     * @param path - The path
+     * @returns The value
      */
     get(path: string) {
         return this._observer.get(path);
@@ -481,9 +481,9 @@ class Asset extends Events {
     /**
      * Sets value at path. See the {@link Asset} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @param {any} value - The value
-     * @returns {boolean} Whether the value was set
+     * @param path - The path
+     * @param value - The value
+     * @returns Whether the value was set
      */
     set(path: string, value: any) {
         return this._observer.set(path, value);
@@ -492,8 +492,8 @@ class Asset extends Events {
     /**
      * Unsets value at path. See the {@link Asset} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @returns {boolean} Whether the value was unset
+     * @param path - The path
+     * @returns Whether the value was unset
      */
     unset(path: string) {
         return this._observer.unset(path);
@@ -503,10 +503,10 @@ class Asset extends Events {
      * Inserts value in array at path, at specified index. See the {@link Asset} overview for a
      * full list of properties.
      *
-     * @param {string} path - The path
-     * @param {any} value - The value
-     * @param {number} index - The index (if undefined the value will be inserted in the end)
-     * @returns {boolean} Whether the value was inserted
+     * @param path - The path
+     * @param value - The value
+     * @param index - The index (if undefined the value will be inserted in the end)
+     * @returns Whether the value was inserted
      */
     insert(path: any, value: any, index: any) {
         return this._observer.insert(path, value, index);
@@ -515,9 +515,9 @@ class Asset extends Events {
     /**
      * Remove value from array at path. See the {@link Asset} overview for a full list of properties.
      *
-     * @param {string} path - The path
-     * @param {any} value - The value
-     * @returns {boolean} Whether the value was removed
+     * @param path - The path
+     * @param value - The value
+     * @returns Whether the value was removed
      */
     removeValue(path: any, value: any) {
         return this._observer.removeValue(path, value);
@@ -526,7 +526,7 @@ class Asset extends Events {
     /**
      * Returns JSON representation of entity data
      *
-     * @returns {object} - The data
+     * @returns - The data
      */
     json() {
         return this._observer.json();
@@ -535,7 +535,7 @@ class Asset extends Events {
     /**
      * Returns the latest version of the Asset from the Assets API.
      *
-     * @returns {Asset} The asset
+     * @returns The asset
      */
     latest() {
         return api.assets.get(this._observer.get('id'));
@@ -619,15 +619,14 @@ class Asset extends Events {
     /**
      * Creates an instance of this template asset. Assumes this asset is a template asset.
      *
-     * @param {Entity} parent - The parent entity
-     * @param {object} options - Options
-     * @param {number} options.index - The desired index under the parent to instantiate the template.
-     * @param {boolean} options.history - Whether to record a history action.
-     * @param {boolean} options.select - Whether to select the new entity.
-     * @param {object} options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
-     * @returns {Promise<Entity>} The new entity.
+     * @param parent - The parent entity
+     * @param options.index - The desired index under the parent to instantiate the template.
+     * @param options.history - Whether to record a history action.
+     * @param options.select - Whether to select the new entity.
+     * @param options.extraData - Extra data passed to the backend. Used by the Editor on specific cases.
+     * @returns The new entity.
      */
-    async instantiateTemplate(parent: Entity, options: any) {
+    async instantiateTemplate(parent: Entity, options: { index?: number, history?: boolean, select?: boolean, extraData?: object } = {}) {
         const entities = await api.assets.instantiateTemplates([this], parent, options);
         return entities[0];
     }
@@ -635,11 +634,10 @@ class Asset extends Events {
     /**
      * Replaces any references to this asset with references to the new asset specified.
      *
-     * @param {Asset} asset - The new asset.
-     * @param {object} options - Options.
-     * @param {boolean} options.history - Whether to record a history action.
+     * @param asset - The new asset.
+     * @param options.history - Whether to record a history action.
      */
-    replace(asset: Asset, options: any = {}) {
+    replace(asset: Asset, options: { history?: boolean } = {}) {
         replace(this, asset, options);
     }
 
@@ -652,19 +650,17 @@ class Asset extends Events {
 
     /**
      * Gets observer history for this asset.
-     *
-     * @type {ObserverHistory}
      */
     get history() {
-        return this._history;
+        return this._history as ObserverHistory;
     }
 
     /**
      * Gets the file URL for an asset file.
      *
-     * @param {number} id - The asset id
-     * @param {string} filename - The desired filename
-     * @returns {string} The file URL
+     * @param id - The asset id
+     * @param filename - The desired filename
+     * @returns The file URL
      */
     static getFileUrl(id: number, filename: string) {
         return `/api/assets/${id}/file/${encodeURIComponent(filename)}?branchId=${api.branchId}`;

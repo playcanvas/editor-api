@@ -139,7 +139,7 @@ function replaceSceneSettingsRefs(oldAsset: Asset, newAsset: Asset) {
     return records;
 }
 
-function replace(oldAsset: Asset, newAsset: Asset, options: any) {
+function replace(oldAsset: Asset, newAsset: Asset, options: { history?: boolean } = {}) {
     options = options || {};
     if (options.history === undefined) {
         options.history = true;
