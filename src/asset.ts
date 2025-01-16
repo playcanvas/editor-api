@@ -365,7 +365,7 @@ class Asset extends Events {
         super();
 
         // allow duplicate values in data.frameKeys of sprite asset
-        let options = null;
+        let options = {};
         if (data.type === 'sprite') {
             options = {
                 pathsWithDuplicates: ['data.frameKeys']
@@ -381,7 +381,7 @@ class Asset extends Events {
             path: []
         }, data);
 
-        this._observer = new Observer(data, options || {}) as AssetObserver;
+        this._observer = new Observer(data, options) as AssetObserver;
         this._observer.apiAsset = this;
         this._observer.addEmitter(this);
 
