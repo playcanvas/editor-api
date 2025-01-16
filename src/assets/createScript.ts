@@ -116,7 +116,7 @@ export class ${className} extends Script {
     /**
      * Called for enabled (running state) scripts on each tick.
      * 
-     * @param dt - The delta time in seconds since the last frame.
+     * @param {number} dt - The delta time in seconds since the last frame.
      */
     update(dt) {
     }
@@ -143,7 +143,7 @@ export class ${className} extends Script {
     /**
      * Called for enabled (running state) scripts on each tick.
      * 
-     * @param dt - The delta time in seconds since the last frame.
+     * @param {number} dt - The delta time in seconds since the last frame.
      */
     update(dt: number): void {
     }
