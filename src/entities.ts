@@ -345,10 +345,9 @@ class Entities extends Events {
      * Duplicates the specified entities under the same parent
      *
      * @param entities - The entities
-     * @param [options] - Options
-     * @param [options.history] - Whether to record a history action. Defaults to true.
-     * @param [options.select] - Whether to select the new entities. Defaults to false.
-     * @param [options.rename] - Whether to rename the duplicated entities. Defaults to false.
+     * @param options.history - Whether to record a history action. Defaults to true.
+     * @param options.select - Whether to select the new entities. Defaults to false.
+     * @param options.rename - Whether to rename the duplicated entities. Defaults to false.
      * @returns The duplicated entities
      * @example
      * const duplicated = await editor.entities.duplicate(entities);

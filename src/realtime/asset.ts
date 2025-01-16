@@ -76,9 +76,9 @@ class RealtimeAsset extends Events {
      * Submits sharedb operation
      *
      * @param op - The operation
-     * @param [callback] - The callback
+     * @param callback - The callback
      */
-    submitOp(op: object, callback: Function) {
+    submitOp(op: object, callback?: Function) {
         if (!this._loaded) return;
 
         try {

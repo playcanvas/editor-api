@@ -76,9 +76,8 @@ function rememberPrevious(entities: any[]) {
  * Delete specified entities
  *
  * @param entities - The entities
- * @param [options] - Options
- * @param [options.history] - Whether to record a history action. Defaults to true.
- * @param [options.waitSubmitted] - Whether to wait till ops submitted.
+ * @param options.history - Whether to record a history action. Defaults to true.
+ * @param options.waitSubmitted - Whether to wait till ops submitted.
  */
 async function deleteEntities(entities: Entity[] | Entity, options: { history?: boolean; waitSubmitted?: boolean } = {}) {
     if (options.history === undefined) {
