@@ -9,14 +9,14 @@ import { globals as api } from './globals';
  */
 export type AssetObserver = Observer & {
     /**
-     * The history of changes made to the observer.
-     */
-    history: ObserverHistory;
-
-    /**
      * The API asset associated with this observer.
      */
     apiAsset: Asset;
+
+    /**
+     * The history of changes made to the observer.
+     */
+    history: ObserverHistory;
 };
 
 /**

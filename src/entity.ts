@@ -21,6 +21,11 @@ export type EntityObserver = Observer & {
      * A function that returns the latest observer.
      */
     latestFn: () => Observer;
+
+    /**
+     * The Engine entity associated with this observer.
+     */
+    entity: any;
 };
 
 /**

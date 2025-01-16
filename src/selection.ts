@@ -80,7 +80,7 @@ class SelectionHistory {
 class Selection extends Events {
     private _history: SelectionHistory;
 
-    private _items: (Asset |  Entity)[];
+    private _items: (Asset | Entity)[];
 
     private _enabled: boolean;
 
