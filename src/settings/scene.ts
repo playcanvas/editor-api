@@ -3,7 +3,10 @@ import { Events, Observer, ObserverHistory } from '@playcanvas/observer';
 import { globals as api } from '../globals';
 import type { RealtimeScene } from '../realtime/scene';
 
-type SceneSettingsObserver = Observer & { history: ObserverHistory };
+/**
+ * Represents an observer for the Scene Settings, extending the base Observer.
+ */
+export type SceneSettingsObserver = Observer & { history: ObserverHistory };
 
 /**
  * Represents the settings for the currently loaded scene.
