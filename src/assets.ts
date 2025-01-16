@@ -10,7 +10,7 @@ import { globals as api } from './globals';
 /**
  * Arguments passed when uploading an asset file.
  */
-type AssetUploadArguments = {
+export type AssetUploadArguments = {
     /**
      * The parent folder asset where the asset should be placed.
      */
@@ -70,7 +70,7 @@ type AssetUploadArguments = {
 /**
  * Import settings used when uploading a texture asset.
  */
-type TextureImportSettings = {
+export type TextureImportSettings = {
     /**
      * Whether to resize the texture to power of 2.
      */
@@ -85,7 +85,7 @@ type TextureImportSettings = {
 /**
  * Import settings used when uploading a scene (fbx etc.).
  */
-type SceneImportSettings = {
+export type SceneImportSettings = {
     /**
      * Whether to search for target assets to update throughout the whole project instead of just the same folder. Defaults to true.
      */
