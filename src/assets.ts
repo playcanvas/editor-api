@@ -1,9 +1,9 @@
 import { Events, ObserverList } from '@playcanvas/observer';
 
 import { Asset } from './asset';
-import { createScript } from './assets/createScript';
-import { createTemplate } from './assets/createTemplate';
-import { instantiateTemplates } from './assets/instantiateTemplates';
+import { createScript } from './assets/create-script';
+import { createTemplate } from './assets/create-template';
+import { instantiateTemplates } from './assets/instantiate-templates';
 import { uploadFile } from './assets/upload';
 import { Entity } from './entity';
 import { globals as api } from './globals';
