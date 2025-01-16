@@ -120,7 +120,7 @@ class Entities extends Events {
      * const entity = editor.entities.get(resourceId);
      * ```
      */
-    get(id: string) {
+    get(id: string): Entity | null {
         const e = this._entities.get(id);
         return e ? e.apiEntity : null;
     }
@@ -422,6 +422,10 @@ class Entities extends Events {
      */
     removeScript(entities: Entity[], scriptName: string, options: { history?: boolean } = {}) {
         removeScript(entities, scriptName, options);
+    }
+
+    get raw() {
+        return this._entities;
     }
 
     /**

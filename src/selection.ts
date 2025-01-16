@@ -1,5 +1,7 @@
 import { Events } from '@playcanvas/observer';
 
+import { Asset } from './asset';
+import { Entity } from './entity';
 import { globals as api } from './globals';
 
 /**
@@ -78,7 +80,7 @@ class SelectionHistory {
 class Selection extends Events {
     private _history: SelectionHistory;
 
-    private _items: any[];
+    private _items: (Asset |  Entity)[];
 
     private _enabled: boolean;
 

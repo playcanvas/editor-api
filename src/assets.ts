@@ -1,6 +1,6 @@
 import { Events, ObserverList } from '@playcanvas/observer';
 
-import { Asset } from './asset';
+import { Asset, AssetObserver } from './asset';
 import { createScript } from './assets/create-script';
 import { createTemplate } from './assets/create-template';
 import { instantiateTemplates } from './assets/instantiate-templates';
@@ -260,7 +260,7 @@ class Assets extends Events {
      * @param id - The asset id
      * @returns The asset
      */
-    get(id: number) {
+    get(id: number): Asset | null {
         const a = this._assets.get(id);
         return a ? a.apiAsset : null;
     }
@@ -271,7 +271,7 @@ class Assets extends Events {
      * @param uniqueId - The unique id
      * @returns The asset
      */
-    getUnique(uniqueId: number) {
+    getUnique(uniqueId: number): Asset | null {
         const id = this._uniqueIdToItemId[uniqueId];
         return id ? this.get(id) : null;
     }
@@ -282,7 +282,7 @@ class Assets extends Events {
      * @returns The assets
      */
     list() {
-        return this._assets.array().map((a: { apiAsset: any; }) => a.apiAsset);
+        return this._assets.array().map((a: AssetObserver) => a.apiAsset);
     }
 
     /**
@@ -1035,6 +1035,10 @@ class Assets extends Events {
      */
     instantiateTemplates(assets: Asset[], parent: Entity, options: { index?: number; history?: boolean; select?: boolean; extraData?: object; } = {}) {
         return instantiateTemplates(assets, parent, options);
+    }
+
+    get raw() {
+        return this._assets;
     }
 
     /**

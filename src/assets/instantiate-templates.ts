@@ -1,4 +1,5 @@
 import { Asset } from '../asset';
+import { Entity } from '../entity';
 import { globals as api } from '../globals';
 
 let evtMessenger: any;
@@ -15,7 +16,7 @@ async function instantiateTemplates(assets: Asset[], parent: any, options: { ind
         reject: null
     };
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<Entity[]>((resolve, reject) => {
         deferred.resolve = resolve;
         deferred.reject = reject;
     });
@@ -63,7 +64,7 @@ async function instantiateTemplates(assets: Asset[], parent: any, options: { ind
         }
     });
 
-    let entities = await promise as any;
+    let entities = await promise;
 
     // record history action
     if (api.history && (options.history || options.history === undefined)) {

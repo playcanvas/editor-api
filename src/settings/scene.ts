@@ -141,6 +141,10 @@ class SceneSettings extends Events {
         return this._observer.json();
     }
 
+    get observer() {
+        return this._observer;
+    }
+
     /**
      * Gets the history object for this entity
      */
