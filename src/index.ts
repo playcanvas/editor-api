@@ -9,6 +9,7 @@
  * @module Editor
  */
 
+export type * from './types/external';
 export * from './polyfills';
 export * from './globals';
 export * from './utils';
