@@ -28,6 +28,9 @@ export type EntityObserver = Observer & {
     entity: any;
 };
 
+/**
+ * The Entity class represents an entity in the Editor.
+ */
 class Entity extends Events {
     private _observer: EntityObserver;
 

@@ -8,6 +8,9 @@ import type { RealtimeScene } from '../realtime/scene';
  */
 export type SceneSettingsObserver = Observer & { history: ObserverHistory };
 
+/**
+ * The Scene Settings API provides access to the settings of the currently loaded scene.
+ */
 class SceneSettings extends Events {
     private _observer: SceneSettingsObserver;
 

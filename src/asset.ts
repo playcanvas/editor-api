@@ -19,6 +19,9 @@ export type AssetObserver = Observer & {
     history: ObserverHistory;
 };
 
+/**
+ * The Asset class represents an asset in Editor.
+ */
 class Asset extends Events {
     private _observer: AssetObserver;
 
