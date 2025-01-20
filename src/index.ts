@@ -8,9 +8,12 @@
  *
  * @module Editor
  */
-export type * from './types/external/asset';
-export type * from './types/external/entity';
-export type * from './types/external/scene-settings';
+// types
+export type * from '../external/types/asset';
+export type * from '../external/types/entity';
+export type * from '../external/types/scene-settings';
+
+// core
 export * from './polyfills';
 export * from './globals';
 export * from './utils';
