@@ -35,7 +35,7 @@
         "GitHub": "https://github.com/playcanvas"
     },
     "plugin": [
-        "typedoc-plugin-mdn-links"
+        "typedoc-plugin-mdn-links",
     ],
     "sortEntryPoints": false
 }

@@ -3,7 +3,7 @@ import { Events } from '@playcanvas/observer';
 import { SceneSettings } from './settings/scene';
 
 /**
- * The settings editor API
+ * The settings for the Editor.
  */
 class Settings extends Events {
     private _sceneSettings: SceneSettings;
