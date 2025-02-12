@@ -29,6 +29,8 @@ class RealtimeConnection extends Events {
 
     private _authenticated: boolean;
 
+    private _sendQueue: (string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>)[] = [];
+
     private _domEvtVisibilityChange: any;
 
     /**
@@ -76,12 +78,11 @@ class RealtimeConnection extends Events {
         this._sharedb.on('bs error', this._onBulkSubscribeError.bind(this));
 
         const send = this._socket.send;
-        const queue: (string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>)[] = [];
         this._socket.send = (data) => {
             if (this._socket.readyState === WebSocket.OPEN) {
                 send.call(this._socket, data);
             } else {
-                queue.push(data);
+                this._sendQueue.push(data);
             }
         };
 
@@ -94,8 +95,8 @@ class RealtimeConnection extends Events {
 
         const onopen = this._socket.onopen;
         this._socket.onopen = (ev) => {
-            while (queue.length) {
-                this._socket.send(queue.shift());
+            while (this._sendQueue.length) {
+                this._socket.send(this._sendQueue.shift());
             }
             onopen.call(this._socket, ev);
         };
