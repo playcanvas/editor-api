@@ -29,7 +29,7 @@ class RealtimeConnection extends Events {
 
     private _authenticated: boolean;
 
-    private _sendQueue: (string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>)[] = [];
+    private _sendQueue: (string | ArrayBuffer | Blob | ArrayBufferView)[] = [];
 
     private _domEvtVisibilityChange: any;
 
