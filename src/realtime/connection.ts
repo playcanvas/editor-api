@@ -29,6 +29,8 @@ class RealtimeConnection extends Events {
 
     private _authenticated: boolean;
 
+    private _sendQueue: (string | ArrayBuffer | Blob | ArrayBufferView)[] = [];
+
     private _domEvtVisibilityChange: any;
 
     /**
@@ -75,16 +77,33 @@ class RealtimeConnection extends Events {
         this._sharedb.on('error', this._onError.bind(this));
         this._sharedb.on('bs error', this._onBulkSubscribeError.bind(this));
 
-        const onmessage = this._socket.onmessage as any;
-        this._socket.onmessage = (msg) => {
-            if (!this._onMessage(msg)) {
-                onmessage(msg);
+        const send = this._socket.send;
+        this._socket.send = (data) => {
+            if (this._socket.readyState === WebSocket.OPEN) {
+                send.call(this._socket, data);
+            } else {
+                this._sendQueue.push(data);
             }
         };
 
-        const onclose = this._socket.onclose as any;
+        const onmessage = this._socket.onmessage;
+        this._socket.onmessage = (msg) => {
+            if (!this._onMessage(msg)) {
+                onmessage.call(this._socket, msg);
+            }
+        };
+
+        const onopen = this._socket.onopen;
+        this._socket.onopen = (ev) => {
+            while (this._sendQueue.length) {
+                this._socket.send(this._sendQueue.shift());
+            }
+            onopen.call(this._socket, ev);
+        };
+
+        const onclose = this._socket.onclose;
         this._socket.onclose = (reason) => {
-            this._onClose(reason, onclose);
+            this._onClose(reason, onclose.bind(this._socket));
         };
 
         document.addEventListener('visibilitychange', this._domEvtVisibilityChange);
