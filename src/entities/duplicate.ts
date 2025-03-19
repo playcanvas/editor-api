@@ -163,7 +163,7 @@ function duplicateInBackend(entities: Entity[], options: { history?: boolean } =
     };
 
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<Entity[]>((resolve, reject) => {
         deferred.resolve = resolve;
         deferred.reject = reject;
     });
@@ -231,7 +231,7 @@ function duplicateInBackend(entities: Entity[], options: { history?: boolean } =
         });
     }
 
-    return promise as Promise<Entity[]>;
+    return promise;
 }
 
 /**
