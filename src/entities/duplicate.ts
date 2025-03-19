@@ -231,7 +231,7 @@ function duplicateInBackend(entities: Entity[], options: { history?: boolean } =
         });
     }
 
-    return promise;
+    return promise as Promise<Entity[]>;
 }
 
 /**
@@ -304,7 +304,7 @@ async function duplicateEntities(entities: Entity[], options: { history?: boolea
         originalOrder[e.get('resource_id')][1] = i;
     });
 
-    let newEntities: any = [];
+    let newEntities: Entity[] = [];
 
     // If we have a lot of entities duplicate in the backend
     if (api.messenger && api.jobs && entities.length > USE_BACKEND_LIMIT) {
@@ -399,7 +399,7 @@ async function duplicateEntities(entities: Entity[], options: { history?: boolea
     }
 
     // return duplicated entities in their original order
-    const result = new Array(newEntities.length);
+    const result = new Array<Entity>(newEntities.length);
     for (const id in originalOrder) {
         const pair = originalOrder[id];
         result[pair[0]] = newEntities[pair[1]];
