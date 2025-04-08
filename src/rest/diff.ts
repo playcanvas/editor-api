@@ -27,7 +27,7 @@ export type DiffCreateOptions = {
     histItem?: string;
 };
 
-export type DiffMergeOptions = {
+export type DiffMergeData = {
     /**
      * The ID of the source branch
      */
@@ -88,13 +88,13 @@ export const diffCreate = (options: DiffCreateOptions) => {
 /**
  * Merges the diff
  *
- * @param options - The data for the merge
+ * @param data - The data for the merge
  * @returns A request that responds with the result of the merge
  */
-export const diffMerge = (options: DiffMergeOptions) => {
+export const diffMerge = (data: DiffMergeData) => {
     return Ajax.post({
         url: '/api/diff',
         auth: true,
-        data: options
+        data
     });
 };
