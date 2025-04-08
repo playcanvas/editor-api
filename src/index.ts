@@ -41,3 +41,4 @@ export * from './messenger';
 export * from './jobs';
 export * from './localstorage';
 export * from './clipboard';
+export * from './rest';

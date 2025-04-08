@@ -5,6 +5,7 @@ import type { History } from './history';
 import type { Jobs } from './jobs';
 import type { Messenger } from './messenger';
 import type { Realtime } from './realtime';
+import type { Rest } from './rest';
 import type { Schema } from './schema';
 import type { Selection } from './selection';
 import type { Settings } from './settings';
@@ -66,6 +67,13 @@ class globals {
      * @category Internal
      */
     static clipboard: Clipboard;
+
+    /**
+     * The REST API
+     * @category Internal
+     * @ignore
+     */
+    static rest: Rest;
 
     /**
      * The user's access token
