@@ -71,21 +71,6 @@ class Ajax extends Events {
     }
 
     /**
-     * @param ajax - The Ajax instance.
-     * @returns A promise that resolves when the request completes.
-     */
-    static async(ajax: Ajax) {
-        return new Promise((resolve, reject) => {
-            ajax.on('load', (_status, response) => {
-                resolve(response);
-            });
-            ajax.on('error', (_status, error) => {
-                reject(error);
-            });
-        });
-    }
-
-    /**
      * @param args - Arguments for the request.
      */
     private constructor(args: AjaxArgs) {
@@ -219,6 +204,17 @@ class Ajax extends Events {
             this._progress = progress;
             this.emit('progress', this._progress);
         }
+    }
+
+    promisify() {
+        return new Promise<any>((resolve, reject) => {
+            this.on('load', (_status, response) => {
+                resolve(response);
+            });
+            this.on('error', (_status, error) => {
+                reject(error);
+            });
+        });
     }
 
     abort() {
