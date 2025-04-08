@@ -219,13 +219,13 @@ export const storeList = (options: StoreListOptions) => {
 /**
  * Move assets to store
  *
- * @param text - The text to move the assets to
+ * @param storeId - The storeId to move the assets to
  * @param data - The data for the assets to move
  * @returns A request that responds when the assets are moved
  */
-export const storeMove = (text: string, data: StoreMoveData) => {
+export const storeMove = (storeId: number, data: StoreMoveData) => {
     return Ajax.put({
-        url: `/api/store/move/${text}`,
+        url: `/api/store/move/${storeId}`,
         auth: true,
         data
     });
