@@ -21,7 +21,7 @@ export type HomeSceneEventData = {
 /**
  * Gets the current checked out branch from the server
  *
- * @returns {Ajax} The request object
+ * @returns The request object
  */
 export const homeBranch = () => {
     return Ajax.get({
@@ -33,9 +33,9 @@ export const homeBranch = () => {
 /**
  * Gets raw file from the server
  *
- * @param {string} url - The URL of the file to get
- * @param {boolean} [notJson] - If the file is not JSON
- * @returns {Ajax} The request object
+ * @param url - The URL of the file to get
+ * @param [notJson] - If the file is not JSON
+ * @returns The request object
  */
 export const homeFile = (url: string, notJson: boolean = false) => {
     return Ajax.get({
@@ -47,8 +47,8 @@ export const homeFile = (url: string, notJson: boolean = false) => {
 /**
  * Set the users editorOpened flag to true
  *
- * @param {string} sceneId - The ID of the scene
- * @returns {Ajax} The request object
+ * @param sceneId - The ID of the scene
+ * @returns The request object
  */
 export const homeSceneOpened = (sceneId: string) => {
     return Ajax.post({
@@ -59,9 +59,9 @@ export const homeSceneOpened = (sceneId: string) => {
 /**
  * Store event on the scene
  *
- * @param {string} sceneId - The ID of the scene
- * @param {object} data - The event data
- * @returns {Ajax} The request object
+ * @param sceneId - The ID of the scene
+ * @param data - The event data
+ * @returns The request object
  */
 export const homeSceneEvent = (sceneId: string, data: HomeSceneEventData) => {
     return Ajax.post({
@@ -73,9 +73,9 @@ export const homeSceneEvent = (sceneId: string, data: HomeSceneEventData) => {
 /**
  * Update tip on the scene
  *
- * @param {string} sceneId - The ID of the scene
- * @param {string} tip - The name of the tip
- * @returns {Ajax} The request object
+ * @param sceneId - The ID of the scene
+ * @param tip - The name of the tip
+ * @returns The request object
  */
 export const homeSceneTip = (sceneId: string, tip: string) => {
     return Ajax.post({
