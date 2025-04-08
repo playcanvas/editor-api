@@ -22,11 +22,6 @@ export type CheckpointRestoreData = {
      * The ID of the branch to restore the checkpoint to
      */
     branchId: string;
-
-    /**
-     * The ID of the project to restore the checkpoint on
-     */
-    projectId: string;
 };
 
 export type CheckpointHardResetData = {
@@ -34,11 +29,6 @@ export type CheckpointHardResetData = {
      * The ID of the branch to hard reset the checkpoint to
      */
     branchId: string;
-
-    /**
-     * The ID of the project to hard reset the checkpoint on
-     */
-    projectId: string;
 };
 
 /**
