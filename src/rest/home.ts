@@ -50,7 +50,7 @@ export const homeFile = (url: string, notJson: boolean = false) => {
  * @param sceneId - The ID of the scene
  * @returns The request object
  */
-export const homeSceneOpened = (sceneId: string) => {
+export const homeSceneOpened = (sceneId: number) => {
     return Ajax.post({
         url: `/editor/scene/${sceneId}/opened`
     });
@@ -63,7 +63,7 @@ export const homeSceneOpened = (sceneId: string) => {
  * @param data - The event data
  * @returns The request object
  */
-export const homeSceneEvent = (sceneId: string, data: HomeSceneEventData) => {
+export const homeSceneEvent = (sceneId: number, data: HomeSceneEventData) => {
     return Ajax.post({
         url: `/editor/scene/${sceneId}/events`,
         data
@@ -77,7 +77,7 @@ export const homeSceneEvent = (sceneId: string, data: HomeSceneEventData) => {
  * @param tip - The name of the tip
  * @returns The request object
  */
-export const homeSceneTip = (sceneId: string, tip: string) => {
+export const homeSceneTip = (sceneId: number, tip: string) => {
     return Ajax.post({
         url: `/editor/scene/${sceneId}/tips/${tip}`
     });
