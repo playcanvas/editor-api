@@ -4,7 +4,7 @@ export type CheckpointCreateData = {
     /**
      * The ID of the project to create the checkpoint on
      */
-    projectId: string;
+    projectId: number;
 
     /**
      * The ID of the branch to create the checkpoint on

@@ -4,14 +4,14 @@ import { globals as api } from '../globals';
 
 export type SceneCreateData = {
     /**
+     * The ID of the project the scene is in
+     */
+    projectId: number;
+
+    /**
      * The ID of the branch the scene is in
      */
     branchId: string;
-
-    /**
-     * The ID of the project the scene is in
-     */
-    projectId: string;
 
     /**
      * The name of the scene

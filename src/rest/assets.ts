@@ -135,7 +135,7 @@ export type AssetPasteData = {
     /**
      * The ID of the project the assets are from
      */
-    projectId: string;
+    projectId: number;
 
     /**
      * The ID of the branch the assets are from
