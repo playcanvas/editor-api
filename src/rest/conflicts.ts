@@ -10,6 +10,21 @@ export type ConflictResolveData = {
      * The conflict ids
      */
     conflictIds: string[];
+
+    /**
+     * Use source checkpoint
+     */
+    useSrc: boolean;
+
+    /**
+     * Use destination checkpoint
+     */
+    useDst: boolean;
+
+    /**
+     * Un-resolve conflicts
+     */
+    revert: boolean;
 };
 
 /**
@@ -33,7 +48,7 @@ export const conflictsResolve = (data: ConflictResolveData) => {
  * @param file - The file
  * @returns The Ajax Request
  */
-export const conflictsUpload = (conflictId: string, file: File) => {
+export const conflictsUpload = (conflictId: string, file: File | Blob) => {
     const form = new FormData();
     form.append('file', file);
 
