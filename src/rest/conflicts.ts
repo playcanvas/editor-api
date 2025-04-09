@@ -14,17 +14,17 @@ export type ConflictResolveData = {
     /**
      * Use source checkpoint
      */
-    useSrc: boolean;
+    useSrc?: boolean;
 
     /**
      * Use destination checkpoint
      */
-    useDst: boolean;
+    useDst?: boolean;
 
     /**
      * Un-resolve conflicts
      */
-    revert: boolean;
+    revert?: boolean;
 };
 
 /**
