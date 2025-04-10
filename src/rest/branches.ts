@@ -81,33 +81,18 @@ export type BranchCheckpointArgs = {
 };
 
 // responses
-export type BranchCreateResponse = Omit<Branch, 'userId'> & {
-    user: Pick<User, 'id' | 'email' | 'fullName' | 'username' >;
-};
-export type BranchCheckoutResponse = Omit<Branch, 'userId'> & {
+export type BranchResponse = Omit<Branch, 'userId'> & {
     user: Pick<User, 'id'>;
 };
-export type BranchOpenResponse = Omit<Branch, 'userId'> & {
-    user: Pick<User, 'id'>;
-};
-export type BranchCloseResponse = Omit<Branch, 'userId'> & {
-    user: Pick<User, 'id'>;
-};
-export type BanchCloseResponse = Omit<Branch, 'userId'> & {
-    user: Pick<User, 'id'>;
-};
-export type BranchDeleteResponse = Omit<Branch, 'userId'> & {
-    user: Pick<User, 'id'>;
+export type BranchUserResponse = Omit<Branch, 'userId'> & {
+    user: Pick<User, 'id' | 'email' | 'fullName' | 'username'>;
 };
 
 /**
  * Creates a new branch
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchCreate = (args: BranchCreateArgs) => {
-    return Ajax.post<BranchCreateResponse>({
+    return Ajax.post<BranchUserResponse>({
         url: `${api.apiUrl}/branches`,
         auth: true,
         data: {
@@ -121,12 +106,9 @@ export const branchCreate = (args: BranchCreateArgs) => {
 
 /**
  * Checks out the master branch
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchCheckout = (args: BranchCheckoutArgs) => {
-    return Ajax.post<BranchCheckoutResponse>({
+    return Ajax.post<BranchResponse>({
         url: `${api.apiUrl}/branches/${args.branchId}/checkout`,
         auth: true
     });
@@ -134,12 +116,9 @@ export const branchCheckout = (args: BranchCheckoutArgs) => {
 
 /**
  * Opens a branch
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchOpen = (args: BranchOpenArgs) => {
-    return Ajax.post<BranchOpenResponse>({
+    return Ajax.post<BranchResponse>({
         url: `${api.apiUrl}/branches/${args.branchId}/open`,
         auth: true
     });
@@ -147,12 +126,9 @@ export const branchOpen = (args: BranchOpenArgs) => {
 
 /**
  * Closes a branch
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchClose = (args: BranchCloseArgs) => {
-    return Ajax.post<BranchCloseResponse>({
+    return Ajax.post<BranchResponse>({
         url: `${api.apiUrl}/branches/${args.branchId}/close`,
         auth: true
     });
@@ -160,12 +136,9 @@ export const branchClose = (args: BranchCloseArgs) => {
 
 /**
  * Deletes a branch
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchDelete = (args: BranchDeleteArgs) => {
-    return Ajax.delete<BranchDeleteResponse>({
+    return Ajax.delete<BranchResponse>({
         url: `${api.apiUrl}/branches/${args.branchId}`,
         auth: true
     });
@@ -173,9 +146,6 @@ export const branchDelete = (args: BranchDeleteArgs) => {
 
 /**
  * Get branch checkpoints
- *
- * @param args - The arguments for the request
- * @returns The Ajax wrapped response
  */
 export const branchCheckpoints = (args: BranchCheckpointArgs) => {
     const params = [];
@@ -200,7 +170,7 @@ export const branchCheckpoints = (args: BranchCheckpointArgs) => {
         params.push(`vcHistItem=${args.historyItemId}`);
     }
 
-    return Ajax.get<BranchCheckoutResponse>({
+    return Ajax.get<BranchResponse>({
         url: `${api.apiUrl}/branches/${args.branchId}/checkpoints?${params.join('&')}`,
         auth: true
     });
