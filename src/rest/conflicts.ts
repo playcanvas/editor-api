@@ -1,6 +1,6 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
-import type { Conflict } from '../types/models';
+import type { Conflict } from './models';
 
 // args
 export type ConflictResolveArgs = {
