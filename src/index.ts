@@ -42,3 +42,13 @@ export * from './jobs';
 export * from './localstorage';
 export * from './clipboard';
 export * from './rest';
+
+/**
+ * The version of the Editor API library. This is a string in semantic version format of `major.minor.patch`.
+ */
+export const version = 'PACKAGE_VERSION';
+
+/**
+ * The git revision of the Editor API library. This is a string of the git commit hash.
+ */
+export const revision = 'PACKAGE_REVISION';

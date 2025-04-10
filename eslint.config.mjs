@@ -6,7 +6,7 @@ import globals from 'globals';
 export default [
     ...playcanvasConfig,
     {
-        files: ['**/*.ts'],
+        files: ['**/*.ts', '**/*.mjs'],
         languageOptions: {
             ecmaVersion: 2022,
             sourceType: 'module',
