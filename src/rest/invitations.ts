@@ -87,7 +87,7 @@ export const invitationList = (options: InvitationListOptions) => {
     }
 
     return Ajax.get({
-        url: `${api.restUrl}/invitations?${params.join('&')}`,
+        url: `${api.apiUrl}/invitations?${params.join('&')}`,
         auth: true
     });
 };
@@ -100,7 +100,7 @@ export const invitationList = (options: InvitationListOptions) => {
  */
 export const invitationCreate = (data: InvitationCreateData) => {
     return Ajax.post({
-        url: `${api.restUrl}/invitations`,
+        url: `${api.apiUrl}/invitations`,
         auth: true,
         data
     });
@@ -114,7 +114,7 @@ export const invitationCreate = (data: InvitationCreateData) => {
  */
 export const invitationDelete = (invId: number) => {
     return Ajax.delete({
-        url: `${api.restUrl}/invitations/${invId}`,
+        url: `${api.apiUrl}/invitations/${invId}`,
         auth: true
     });
 };

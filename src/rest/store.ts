@@ -97,7 +97,7 @@ export type StoreMoveData = {
  */
 export const storeGet = (storeId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/store/${storeId}`
+        url: `${api.apiUrl}/store/${storeId}`
     });
 };
 
@@ -110,7 +110,7 @@ export const storeGet = (storeId: number) => {
  */
 export const storeUpload = (data: object, mimeType: string) => {
     return Ajax.post({
-        url: `${api.restUrl}/store/upload`,
+        url: `${api.apiUrl}/store/upload`,
         auth: true,
         data,
         mimeType
@@ -126,7 +126,7 @@ export const storeUpload = (data: object, mimeType: string) => {
  */
 export const storeClone = (storeId: number, data: StoreCloneData) => {
     return Ajax.post({
-        url: `${api.restUrl}/store/${storeId}/clone`,
+        url: `${api.apiUrl}/store/${storeId}/clone`,
         auth: true,
         data,
         notJson: true
@@ -141,7 +141,7 @@ export const storeClone = (storeId: number, data: StoreCloneData) => {
  */
 export const storeAssets = (storeId: string) => {
     return Ajax.get({
-        url: `${api.restUrl}/store/${storeId}/assets`
+        url: `${api.apiUrl}/store/${storeId}/assets`
     });
 };
 
@@ -154,7 +154,7 @@ export const storeAssets = (storeId: string) => {
  */
 export const storeAssetFile = (assetId: string, assetName: string) => {
     return Ajax.get({
-        url: `${api.restUrl}/store/assets/${assetId}/file/${assetName}`,
+        url: `${api.apiUrl}/store/assets/${assetId}/file/${assetName}`,
         notJson: true
     });
 };
@@ -166,7 +166,7 @@ export const storeAssetFile = (assetId: string, assetName: string) => {
  */
 export const storeLicenses = () => {
     return Ajax.get({
-        url: `${api.restUrl}/store/licenses`
+        url: `${api.apiUrl}/store/licenses`
     });
 };
 
@@ -212,7 +212,7 @@ export const storeList = (options: StoreListOptions) => {
     }
 
     return Ajax.get({
-        url: `${api.restUrl}/store?${params.join('&')}`,
+        url: `${api.apiUrl}/store?${params.join('&')}`,
         auth: true
     });
 };
@@ -226,7 +226,7 @@ export const storeList = (options: StoreListOptions) => {
  */
 export const storeMove = (storeId: number, data: StoreMoveData) => {
     return Ajax.put({
-        url: `${api.restUrl}/store/move/${storeId}`,
+        url: `${api.apiUrl}/store/move/${storeId}`,
         auth: true,
         data
     });

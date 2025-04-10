@@ -9,7 +9,7 @@ import { globals as api } from '../globals';
  */
 export const appCreate = (data: object) => {
     return Ajax.post({
-        url: `${api.restUrl}/apps`,
+        url: `${api.apiUrl}/apps`,
         auth: true,
         data
     });
@@ -23,7 +23,7 @@ export const appCreate = (data: object) => {
  */
 export const appDelete = (appId: number) => {
     return Ajax.delete({
-        url: `${api.restUrl}/apps/${appId}`,
+        url: `${api.apiUrl}/apps/${appId}`,
         auth: true
     });
 };
@@ -36,7 +36,7 @@ export const appDelete = (appId: number) => {
  */
 export const appList = (tags: string) => {
     return Ajax.get({
-        url: `${api.restUrl}/apps?tags=${tags}`,
+        url: `${api.apiUrl}/apps?tags=${tags}`,
         auth: true
     });
 };
@@ -49,7 +49,7 @@ export const appList = (tags: string) => {
  */
 export const appGet = (appId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/apps/${appId}`,
+        url: `${api.apiUrl}/apps/${appId}`,
         auth: true
     });
 };
@@ -62,7 +62,7 @@ export const appGet = (appId: number) => {
  */
 export const appDownload = (data: object) => {
     return Ajax.post({
-        url: `${api.restUrl}/apps/download`,
+        url: `${api.apiUrl}/apps/download`,
         auth: true,
         data
     });

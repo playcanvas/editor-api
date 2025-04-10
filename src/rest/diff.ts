@@ -80,7 +80,7 @@ export const diffCreate = (options: DiffCreateOptions) => {
     }
 
     return Ajax.post({
-        url: `${api.restUrl}/diff`,
+        url: `${api.apiUrl}/diff`,
         auth: true,
         data
     });
@@ -94,7 +94,7 @@ export const diffCreate = (options: DiffCreateOptions) => {
  */
 export const diffMerge = (data: DiffMergeData) => {
     return Ajax.post({
-        url: `${api.restUrl}/diff`,
+        url: `${api.apiUrl}/diff`,
         auth: true,
         data
     });

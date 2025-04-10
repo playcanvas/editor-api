@@ -36,7 +36,7 @@ export type ConflictResolveData = {
  */
 export const conflictsResolve = (data: ConflictResolveData) => {
     return Ajax.post({
-        url: `${api.restUrl}/conflicts/resolve`,
+        url: `${api.apiUrl}/conflicts/resolve`,
         auth: true,
         data
     });
@@ -54,7 +54,7 @@ export const conflictsUpload = (conflictId: string, file: File | Blob) => {
     form.append('file', file);
 
     return Ajax.put({
-        url: `${api.restUrl}/conflicts/${conflictId}/file`,
+        url: `${api.apiUrl}/conflicts/${conflictId}/file`,
         auth: true,
         data: form,
         ignoreContentType: true,

@@ -23,7 +23,7 @@ export type StarCreateData = {
  */
 export const starCreate = (data: StarCreateData) => {
     return Ajax.post({
-        url: `${api.restUrl}/star`,
+        url: `${api.apiUrl}/star`,
         auth: true,
         data
     });
@@ -37,7 +37,7 @@ export const starCreate = (data: StarCreateData) => {
  */
 export const starDelete = (starId: number) => {
     return Ajax.delete({
-        url: `${api.restUrl}/star/${starId}`,
+        url: `${api.apiUrl}/star/${starId}`,
         auth: true
     });
 };

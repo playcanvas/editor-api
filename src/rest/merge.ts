@@ -33,7 +33,7 @@ export type MergeApplyData = {
  */
 export const mergeCreate = (data: MergeCreateData) => {
     return Ajax.post({
-        url: `${api.restUrl}/merge`,
+        url: `${api.apiUrl}/merge`,
         auth: true,
         data: data
     });
@@ -48,7 +48,7 @@ export const mergeCreate = (data: MergeCreateData) => {
  */
 export const mergeApply = (mergeId: string, data: MergeApplyData) => {
     return Ajax.post({
-        url: `${api.restUrl}/merge/${mergeId}/apply`,
+        url: `${api.apiUrl}/merge/${mergeId}/apply`,
         auth: true,
         data
     });
@@ -62,7 +62,7 @@ export const mergeApply = (mergeId: string, data: MergeApplyData) => {
  */
 export const mergeGet = (mergeId: string) => {
     return Ajax.get({
-        url: `${api.restUrl}/merge/${mergeId}`,
+        url: `${api.apiUrl}/merge/${mergeId}`,
         auth: true
     });
 };
@@ -75,7 +75,7 @@ export const mergeGet = (mergeId: string) => {
  */
 export const mergeDelete = (mergeId: string) => {
     return Ajax.delete({
-        url: `${api.restUrl}/merge/${mergeId}`,
+        url: `${api.apiUrl}/merge/${mergeId}`,
         auth: true
     });
 };
@@ -97,7 +97,7 @@ export const mergeConflicts = (mergeId: string, conflictId: string, fileName: st
     }
 
     return Ajax.get({
-        url: `${api.restUrl}/merge/${mergeId}/conflicts/${conflictId}/file/${fileName}?${params.join('&')}`,
+        url: `${api.apiUrl}/merge/${mergeId}/conflicts/${conflictId}/file/${fileName}?${params.join('&')}`,
         auth: true,
         notJson: true
     });

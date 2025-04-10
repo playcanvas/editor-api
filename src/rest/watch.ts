@@ -23,7 +23,7 @@ export type WatchCreateData = {
  */
 export const watchCreate = (data: WatchCreateData) => {
     return Ajax.post({
-        url: `${api.restUrl}/watch`,
+        url: `${api.apiUrl}/watch`,
         auth: true,
         data
     });
@@ -37,7 +37,7 @@ export const watchCreate = (data: WatchCreateData) => {
  */
 export const watchDelete = (watchId: number) => {
     return Ajax.delete({
-        url: `${api.restUrl}/watch/${watchId}`,
+        url: `${api.apiUrl}/watch/${watchId}`,
         auth: true
     });
 };

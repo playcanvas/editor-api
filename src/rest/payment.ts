@@ -10,7 +10,7 @@ import { globals as api } from '../globals';
  */
 export const paymentSubUpdate = (userId: number, data: object) => {
     return Ajax.put({
-        url: `${api.restUrl}/payment/subscription/users/${userId}`,
+        url: `${api.apiUrl}/payment/subscription/users/${userId}`,
         auth: true,
         data
     });

@@ -36,7 +36,7 @@ export type BranchCheckpointOptions = {
  */
 export const branchCreate = (data: object) => {
     return Ajax.post({
-        url: `${api.restUrl}/branches`,
+        url: `${api.apiUrl}/branches`,
         auth: true,
         data
     });
@@ -50,7 +50,7 @@ export const branchCreate = (data: object) => {
  */
 export const branchCheckout = (branchId: string) => {
     return Ajax.post({
-        url: `${api.restUrl}/branches/${branchId}/checkout`,
+        url: `${api.apiUrl}/branches/${branchId}/checkout`,
         auth: true
     });
 };
@@ -63,7 +63,7 @@ export const branchCheckout = (branchId: string) => {
  */
 export const branchOpen = (branchId: string) => {
     return Ajax.post({
-        url: `${api.restUrl}/branches/${branchId}/open`,
+        url: `${api.apiUrl}/branches/${branchId}/open`,
         auth: true
     });
 };
@@ -76,7 +76,7 @@ export const branchOpen = (branchId: string) => {
  */
 export const branchClose = (branchId: string) => {
     return Ajax.post({
-        url: `${api.restUrl}/branches/${branchId}/close`,
+        url: `${api.apiUrl}/branches/${branchId}/close`,
         auth: true
     });
 };
@@ -89,7 +89,7 @@ export const branchClose = (branchId: string) => {
  */
 export const branchDelete = (branchId: string) => {
     return Ajax.delete({
-        url: `${api.restUrl}/branches/${branchId}`,
+        url: `${api.apiUrl}/branches/${branchId}`,
         auth: true
     });
 };
@@ -125,7 +125,7 @@ export const branchCheckpoints = (branchId: string, options: BranchCheckpointOpt
     }
 
     return Ajax.get({
-        url: `${api.restUrl}/branches/${branchId}/checkpoints?${params.join('&')}`,
+        url: `${api.apiUrl}/branches/${branchId}/checkpoints?${params.join('&')}`,
         auth: true
     });
 };

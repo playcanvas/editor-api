@@ -9,7 +9,7 @@ import { globals as api } from '../globals';
  */
 export const userCreate = (data: object) => {
     return Ajax.post({
-        url: `${api.restUrl}/users`,
+        url: `${api.apiUrl}/users`,
         auth: true,
         data
     });
@@ -23,7 +23,7 @@ export const userCreate = (data: object) => {
  */
 export const userDelete = (userId: number) => {
     return Ajax.delete({
-        url: `${api.restUrl}/users/${userId}`,
+        url: `${api.apiUrl}/users/${userId}`,
         auth: true,
         notJson: true
     });
@@ -37,7 +37,7 @@ export const userDelete = (userId: number) => {
  */
 export const userGet = (userId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/users/${userId}`,
+        url: `${api.apiUrl}/users/${userId}`,
         auth: true
     });
 };
@@ -50,7 +50,7 @@ export const userGet = (userId: number) => {
  */
 export const userCollabList = (userId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/users/${userId}/collaborators`,
+        url: `${api.apiUrl}/users/${userId}/collaborators`,
         auth: true
     });
 };
@@ -64,7 +64,7 @@ export const userCollabList = (userId: number) => {
  */
 export const userProjects = (userId: number, view: string) => {
     return Ajax.get({
-        url: `${api.restUrl}/users/${userId}/projects?view=${view}`,
+        url: `${api.apiUrl}/users/${userId}/projects?view=${view}`,
         auth: true
     });
 };
@@ -77,7 +77,7 @@ export const userProjects = (userId: number, view: string) => {
  */
 export const userUsage = (userId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/users/${userId}/usage`,
+        url: `${api.apiUrl}/users/${userId}/usage`,
         auth: true
     });
 };

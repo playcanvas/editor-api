@@ -9,7 +9,7 @@ import { globals as api } from '../globals';
  */
 export const jobGet = (jobId: number) => {
     return Ajax.get({
-        url: `${api.restUrl}/jobs/${jobId}`,
+        url: `${api.apiUrl}/jobs/${jobId}`,
         auth: true
     });
 };

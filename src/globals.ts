@@ -99,7 +99,7 @@ class globals {
     /**
      * The REST API URL
      */
-    static restUrl: string = '';
+    static apiUrl: string = '';
 
     /**
      * Whether this project is using legacy scripts
