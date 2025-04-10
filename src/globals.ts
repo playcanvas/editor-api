@@ -94,12 +94,12 @@ class globals {
     /**
      * The home URL
      */
-    static homeUrl: string;
+    static homeUrl: string = '';
 
     /**
      * The REST API URL
      */
-    static restUrl: string;
+    static restUrl: string = '';
 
     /**
      * Whether this project is using legacy scripts
