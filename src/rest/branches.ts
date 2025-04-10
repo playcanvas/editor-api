@@ -17,7 +17,7 @@ export type BranchCreateArgs = {
     /**
      * The ID of the source branch
      */
-    sourceBranchId?: string;
+    sourceBranchId: string;
 
     /**
      * the ID of the source checkpoint
@@ -55,11 +55,6 @@ export type BranchCheckpointArgs = {
     branchId: string;
 
     /**
-     * The type of task to get checkpoints for
-     */
-    taskType?: string;
-
-    /**
      * The maximum number of checkpoints to get
      */
     limit?: number;
@@ -70,6 +65,11 @@ export type BranchCheckpointArgs = {
     skip?: number;
 
     /**
+     * The type of task to get checkpoints for
+     */
+    taskType?: string;
+
+    /**
      * The ID of the graph to start from
      */
     graphStartId?: string;
@@ -77,7 +77,7 @@ export type BranchCheckpointArgs = {
     /**
      * The ID of the VC history item
      */
-    historyItemId?: string;
+    vcHistItem?: string;
 };
 
 // responses
@@ -166,8 +166,8 @@ export const branchCheckpoints = (args: BranchCheckpointArgs) => {
         params.push(`graphStartId=${args.graphStartId}`);
     }
 
-    if (args.historyItemId) {
-        params.push(`vcHistItem=${args.historyItemId}`);
+    if (args.vcHistItem) {
+        params.push(`vcHistItem=${args.vcHistItem}`);
     }
 
     return Ajax.get<BranchResponse>({
