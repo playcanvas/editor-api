@@ -1,7 +1,9 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
+import type { Merge } from '../models';
 
-export type MergeCreateData = {
+// args
+export type MergeCreateArgs = {
     /**
      * The source branch id
      */
@@ -17,87 +19,116 @@ export type MergeCreateData = {
      */
     srcBranchClose: boolean;
 };
+export type MergeApplyArgs = {
+    /**
+     * The ID of the merge
+     */
+    mergeId: string;
 
-export type MergeApplyData = {
     /**
      * Whether to finalize the merge
      */
     finalize: boolean;
 };
+export type MergeGetArgs = {
+    /**
+     * The ID of the merge
+     */
+    mergeId: string;
+};
+export type MergeDeleteArgs = {
+    /**
+     * The ID of the merge
+     */
+    mergeId: string;
+};
+export type MergeConflictsArgs = {
+    /**
+     * The ID of the merge
+     */
+    mergeId: string;
+
+    /**
+     * The ID of the conflict
+     */
+    conflictId: string;
+
+    /**
+     * The name of the file
+     */
+    fileName: string;
+
+    /**
+     * Whether the conflict is resolved
+     */
+    resolved: boolean;
+};
+
+// responses
+export type MergeResponse = Merge;
+export type MergeFileReponse = string;
 
 /**
  * Create a merge
  *
- * @param data - The merge data
- * @returns The Ajax Request
  */
-export const mergeCreate = (data: MergeCreateData) => {
-    return Ajax.post({
+export const mergeCreate = (args: MergeCreateArgs) => {
+    return Ajax.post<MergeResponse>({
         url: `${api.apiUrl}/merge`,
         auth: true,
-        data: data
+        data: {
+            srcBranchId: args.srcBranchId,
+            dstBranchId: args.dstBranchId,
+            srcBranchClose: args.srcBranchClose
+        }
     });
 };
 
 /**
  * Apply a merge
- *
- * @param mergeId - The merge id
- * @param data - The data
- * @returns The Ajax Request
  */
-export const mergeApply = (mergeId: string, data: MergeApplyData) => {
-    return Ajax.post({
-        url: `${api.apiUrl}/merge/${mergeId}/apply`,
+export const mergeApply = (args: MergeApplyArgs) => {
+    return Ajax.post<MergeResponse>({
+        url: `${api.apiUrl}/merge/${args.mergeId}/apply`,
         auth: true,
-        data
+        data: {
+            finalize: args.finalize
+        }
     });
 };
 
 /**
  * Get a merge object by merge id including all of its conflicts
- *
- * @param mergeId - The merge id
- * @returns The Ajax Request
  */
-export const mergeGet = (mergeId: string) => {
-    return Ajax.get({
-        url: `${api.apiUrl}/merge/${mergeId}`,
+export const mergeGet = (args: MergeGetArgs) => {
+    return Ajax.get<Response>({
+        url: `${api.apiUrl}/merge/${args.mergeId}`,
         auth: true
     });
 };
 
 /**
  * Force stops a merge which deletes the merge and all of its conflicts
- *
- * @param mergeId - The merge id
- * @returns The Ajax Request
  */
-export const mergeDelete = (mergeId: string) => {
-    return Ajax.delete({
-        url: `${api.apiUrl}/merge/${mergeId}`,
+export const mergeDelete = (args: MergeDeleteArgs) => {
+    return Ajax.delete<MergeResponse>({
+        url: `${api.apiUrl}/merge/${args.mergeId}`,
         auth: true
     });
 };
 
 /**
  * Get conflicts for a merge
- *
- * @param mergeId - The merge id
- * @param conflictId - The conflict id
- * @param fileName - The file name
- * @param resolved - Whether the conflict is resolved
- * @returns The Ajax Request
  */
-export const mergeConflicts = (mergeId: string, conflictId: string, fileName: string, resolved: boolean) => {
+export const mergeConflicts = (args: MergeConflictsArgs) => {
     const params = [];
 
-    if (resolved) {
+    if (args.resolved) {
         params.push('resolved=true');
     }
 
-    return Ajax.get({
-        url: `${api.apiUrl}/merge/${mergeId}/conflicts/${conflictId}/file/${fileName}?${params.join('&')}`,
+    return Ajax.get<MergeFileReponse>({
+        url: `${api.apiUrl}/merge/${args.mergeId}/conflicts/${args.conflictId}/file/${args.fileName}?${params.join('&')}`,
         auth: true,
         notJson: true
     });

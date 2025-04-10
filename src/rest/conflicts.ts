@@ -1,7 +1,9 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
+import type { Conflict } from '../models';
 
-export type ConflictResolveData = {
+// args
+export type ConflictResolveArgs = {
     /**
      * The merge id
      */
@@ -27,34 +29,49 @@ export type ConflictResolveData = {
      */
     revert?: boolean;
 };
+export type ConflictUploadArgs = {
+    /**
+     * The conflict id
+     */
+    conflictId: string;
+
+    /**
+     * The file
+     */
+    file: File | Blob;
+};
+
+// responses
+export type ConflictResponse = Omit<Conflict, 'mergedFilePath'>;
 
 /**
  * Resolve conflicts
- *
- * @param data - The data
- * @returns The Ajax Request
  */
-export const conflictsResolve = (data: ConflictResolveData) => {
-    return Ajax.post({
+export const conflictsResolve = (args: ConflictResolveArgs) => {
+    return Ajax.post<{
+        result: ConflictResponse[];
+    }>({
         url: `${api.apiUrl}/conflicts/resolve`,
         auth: true,
-        data
+        data: {
+            mergeId: args.mergeId,
+            conflictIds: args.conflictIds,
+            useSrc: args.useSrc,
+            useDst: args.useDst,
+            revert: args.revert
+        }
     });
 };
 
 /**
  * Uploads the specified file to resolve a conflict
- *
- * @param conflictId - The conflict id
- * @param file - The file
- * @returns The Ajax Request
  */
-export const conflictsUpload = (conflictId: string, file: File | Blob) => {
+export const conflictsUpload = (args: ConflictUploadArgs) => {
     const form = new FormData();
-    form.append('file', file);
+    form.append('file', args.file);
 
-    return Ajax.put({
-        url: `${api.apiUrl}/conflicts/${conflictId}/file`,
+    return Ajax.put<ConflictResponse>({
+        url: `${api.apiUrl}/conflicts/${args.conflictId}/file`,
         auth: true,
         data: form,
         ignoreContentType: true,

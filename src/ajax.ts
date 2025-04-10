@@ -31,7 +31,7 @@ type AjaxArgs = {
     notJson?: boolean;
 }
 
-class Ajax extends Events {
+class Ajax<T> extends Events {
     private _xhr: XMLHttpRequest;
 
     private _progress: number;
@@ -42,32 +42,32 @@ class Ajax extends Events {
      * @param args - Arguments for the request.
      * @returns The Ajax instance.
      */
-    static get(args: Omit<AjaxArgs, 'method'>) {
-        return new Ajax(Object.assign(args, { method: 'GET' }));
+    static get<T>(args: Omit<AjaxArgs, 'method'>) {
+        return new Ajax<T>(Object.assign(args, { method: 'GET' }));
     }
 
     /**
      * @param args - Arguments for the request.
      * @returns The Ajax instance.
      */
-    static post(args: Omit<AjaxArgs, 'method'>) {
-        return new Ajax(Object.assign(args, { method: 'POST' }));
+    static post<T>(args: Omit<AjaxArgs, 'method'>) {
+        return new Ajax<T>(Object.assign(args, { method: 'POST' }));
     }
 
     /**
      * @param args - Arguments for the request.
      * @returns The Ajax instance.
      */
-    static put(args: Omit<AjaxArgs, 'method'>) {
-        return new Ajax(Object.assign(args, { method: 'PUT' }));
+    static put<T>(args: Omit<AjaxArgs, 'method'>) {
+        return new Ajax<T>(Object.assign(args, { method: 'PUT' }));
     }
 
     /**
      * @param args - Arguments for the request.
      * @returns The Ajax instance.
      */
-    static delete(args: Omit<AjaxArgs, 'method'>) {
-        return new Ajax(Object.assign(args, { method: 'DELETE' }));
+    static delete<T>(args: Omit<AjaxArgs, 'method'>) {
+        return new Ajax<T>(Object.assign(args, { method: 'DELETE' }));
     }
 
     /**
@@ -148,7 +148,7 @@ class Ajax extends Events {
             if (this._notJson) {
                 this.emit('load', this._xhr.status, this._xhr.responseText);
             } else {
-                let json;
+                let json: T;
                 try {
                     json = JSON.parse(this._xhr.responseText);
                 } catch (ex) {
@@ -208,7 +208,7 @@ class Ajax extends Events {
 
     promisify() {
         return new Promise<any>((resolve, reject) => {
-            this.on('load', (_status, response) => {
+            this.on('load', (_status, response: T) => {
                 resolve(response);
             });
             this.on('error', (_status, error) => {
