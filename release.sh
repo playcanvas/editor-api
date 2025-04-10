@@ -8,6 +8,13 @@ if [ -z "$TYPE" ]; then
     exit 1
 fi
 
+# Confirm release
+read -p "Are you sure you want to release a new version? (y/N): " -n 1 -r
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "\nRelease cancelled."
+    exit 1
+fi
+
 # Tag release
 npm version $TYPE
 
