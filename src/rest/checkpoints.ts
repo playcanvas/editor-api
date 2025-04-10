@@ -1,6 +1,6 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
-import type { Checkpoint, User } from './models';
+import type { Checkpoint, User } from '../models';
 
 // args
 export type CheckpointCreateArgs = {

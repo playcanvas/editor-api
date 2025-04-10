@@ -1,6 +1,6 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
-import type { Merge } from './models';
+import type { Merge } from '../models';
 
 // args
 export type DiffCreateArgs = {
