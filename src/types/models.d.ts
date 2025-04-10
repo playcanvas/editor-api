@@ -40,6 +40,48 @@ export type Branch = {
     latestCheckpointId: string;
 };
 
+export type Checkpoint = {
+    /**
+     * The ID of the checkpoint
+     */
+    id: string;
+
+    /**
+     * The ID of the branch
+     */
+    branchId: string;
+
+    /**
+     * The ID of the project
+     */
+    projectId: number;
+
+    /**
+     * The ID of the user who created the checkpoint
+     */
+    userId: number;
+
+    /**
+     * The size of the checkpoint in bytes
+     */
+    size: number;
+
+    /**
+     * The version format of the checkpoint
+     */
+    version: string;
+
+    /**
+     * The date the checkpoint was created
+     */
+    createdAt: string;
+
+    /**
+     * The description of the checkpoint
+     */
+    description: string;
+};
+
 export type User = {
     /**
      * The ID of the user

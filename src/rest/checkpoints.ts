@@ -1,7 +1,9 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
+import type { Checkpoint, User } from '../types/models';
 
-export type CheckpointCreateData = {
+// args
+export type CheckpointCreateArgs = {
     /**
      * The ID of the project to create the checkpoint on
      */
@@ -17,74 +19,93 @@ export type CheckpointCreateData = {
      */
     description: string;
 };
-
-export type CheckpointRestoreData = {
+export type CheckpointGetArgs = {
+    /**
+     * The ID of the checkpoint to get
+     */
+    checkpointId: string;
+};
+export type CheckpointRestoreArgs = {
     /**
      * The ID of the branch to restore the checkpoint to
      */
     branchId: string;
-};
 
-export type CheckpointHardResetData = {
+    /**
+     * The ID of the checkpoint to restore
+     */
+    checkpointId: string;
+};
+export type CheckpointHardResetArgs = {
     /**
      * The ID of the branch to hard reset the checkpoint to
      */
     branchId: string;
+
+    /**
+     * The ID of the checkpoint to hard reset
+     */
+    checkpointId: string;
+};
+
+// responses
+export type CheckpointResponse = Pick<Checkpoint, 'id' | 'createdAt' | 'description'> & {
+    user: Pick<User, 'id'>;
+};
+export type CheckpointUserResponse = Pick<Checkpoint, 'id' | 'createdAt' | 'description'> & {
+    user: Pick<User, 'id' | 'email' | 'fullName' | 'username'>;
 };
 
 /**
  * Creates a new checkpoint
- *
- * @param data - The data for the new checkpoint
- * @returns A request that responds with the new checkpoint
  */
-export const checkpointCreate = (data: CheckpointCreateData) => {
-    return Ajax.post({
+export const checkpointCreate = (args: CheckpointCreateArgs) => {
+    return Ajax.post<CheckpointUserResponse>({
         url: `${api.apiUrl}/checkpoints`,
         auth: true,
-        data
+        data: {
+            projectId: args.projectId,
+            branchId: args.branchId,
+            description: args.description
+        }
     });
 };
 
 /**
  * Gets a checkpoint
  *
- * @param checkpointId - The ID of the checkpoint to get
- * @returns A request that responds with the checkpoint
+ * @param args - The arguments for the request
+ * @returns The Ajax wrapped response
  */
-export const checkpointGet = (checkpointId: string) => {
-    return Ajax.get({
-        url: `${api.apiUrl}/checkpoints/${checkpointId}`,
+export const checkpointGet = (args: CheckpointGetArgs) => {
+    return Ajax.get<CheckpointUserResponse>({
+        url: `${api.apiUrl}/checkpoints/${args.checkpointId}`,
         auth: true
     });
 };
 
 /**
  * Restores a checkpoint
- *
- * @param checkpointId - The ID of the checkpoint to restore
- * @param data - The data for the restore
- * @returns A request that responds with the result of the restore
  */
-export const checkpointRestore = (checkpointId: string, data: CheckpointRestoreData) => {
-    return Ajax.post({
-        url: `${api.apiUrl}/checkpoints/${checkpointId}/restore`,
+export const checkpointRestore = (args: CheckpointRestoreArgs) => {
+    return Ajax.post<CheckpointResponse>({
+        url: `${api.apiUrl}/checkpoints/${args.checkpointId}/restore`,
         auth: true,
-        data
+        data: {
+            branchId: args.branchId
+        }
     });
 };
 
 /**
  * Hard resets a checkpoint
- *
- * @param checkpointId - The ID of the checkpoint to hard reset
- * @param data - The data for the hard reset
- * @returns A request that responds with the result of the hard reset
  */
-export const checkpointHardReset = (checkpointId: string, data: CheckpointHardResetData) => {
-    return Ajax.post({
-        url: `${api.apiUrl}/checkpoints/${checkpointId}/hardreset`,
+export const checkpointHardReset = (args: CheckpointHardResetArgs) => {
+    return Ajax.post<CheckpointResponse>({
+        url: `${api.apiUrl}/checkpoints/${args.checkpointId}/hardreset`,
         auth: true,
-        data
+        data: {
+            branchId: args.branchId
+        }
     });
 };
