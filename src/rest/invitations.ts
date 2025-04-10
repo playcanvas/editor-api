@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type InvitationListOptions = {
     /**
@@ -86,7 +87,7 @@ export const invitationList = (options: InvitationListOptions) => {
     }
 
     return Ajax.get({
-        url: `/api/invitations?${params.join('&')}`,
+        url: `${api.restUrl}/invitations?${params.join('&')}`,
         auth: true
     });
 };
@@ -99,7 +100,7 @@ export const invitationList = (options: InvitationListOptions) => {
  */
 export const invitationCreate = (data: InvitationCreateData) => {
     return Ajax.post({
-        url: '/api/invitations',
+        url: `${api.restUrl}/invitations`,
         auth: true,
         data
     });
@@ -113,7 +114,7 @@ export const invitationCreate = (data: InvitationCreateData) => {
  */
 export const invitationDelete = (invId: number) => {
     return Ajax.delete({
-        url: `/api/invitations/${invId}`,
+        url: `${api.restUrl}/invitations/${invId}`,
         auth: true
     });
 };

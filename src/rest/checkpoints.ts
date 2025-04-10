@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type CheckpointCreateData = {
     /**
@@ -39,7 +40,7 @@ export type CheckpointHardResetData = {
  */
 export const checkpointCreate = (data: CheckpointCreateData) => {
     return Ajax.post({
-        url: '/api/checkpoints',
+        url: `${api.restUrl}/checkpoints`,
         auth: true,
         data
     });
@@ -53,7 +54,7 @@ export const checkpointCreate = (data: CheckpointCreateData) => {
  */
 export const checkpointGet = (checkpointId: string) => {
     return Ajax.get({
-        url: `/api/checkpoints/${checkpointId}`,
+        url: `${api.restUrl}/checkpoints/${checkpointId}`,
         auth: true
     });
 };
@@ -67,7 +68,7 @@ export const checkpointGet = (checkpointId: string) => {
  */
 export const checkpointRestore = (checkpointId: string, data: CheckpointRestoreData) => {
     return Ajax.post({
-        url: `/api/checkpoints/${checkpointId}/restore`,
+        url: `${api.restUrl}/checkpoints/${checkpointId}/restore`,
         auth: true,
         data
     });
@@ -82,7 +83,7 @@ export const checkpointRestore = (checkpointId: string, data: CheckpointRestoreD
  */
 export const checkpointHardReset = (checkpointId: string, data: CheckpointHardResetData) => {
     return Ajax.post({
-        url: `/api/checkpoints/${checkpointId}/hardreset`,
+        url: `${api.restUrl}/checkpoints/${checkpointId}/hardreset`,
         auth: true,
         data
     });

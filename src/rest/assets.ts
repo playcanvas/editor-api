@@ -357,7 +357,7 @@ export const assetsList = (options: AssetListOptions) => {
     }
 
     return Ajax.get({
-        url: `/api/assets?${params.join('&')}`
+        url: `${api.restUrl}/assets?${params.join('&')}`
     });
 };
 
@@ -369,7 +369,7 @@ export const assetsList = (options: AssetListOptions) => {
  */
 export const assetGet = (assetId: string) => {
     return Ajax.get({
-        url: `/api/assets/${assetId}`
+        url: `${api.restUrl}/assets/${assetId}`
     });
 };
 
@@ -392,7 +392,7 @@ export const assetGetFile = (assetId: string, fileName: string, options: AssetGe
     }
 
     return Ajax.get({
-        url: `/api/assets/${assetId}/file/${fileName}?${params.join('&')}`,
+        url: `${api.restUrl}/assets/${assetId}/file/${fileName}?${params.join('&')}`,
         auth: true,
         notJson: true
     });
@@ -407,7 +407,7 @@ export const assetGetFile = (assetId: string, fileName: string, options: AssetGe
  */
 export const assetReimport = (assetId: string, data: AssetReimportData) => {
     return Ajax.post({
-        url: `/api/assets/${assetId}/reimport?branchId=${api.branchId}`,
+        url: `${api.restUrl}/assets/${assetId}/reimport?branchId=${api.branchId}`,
         auth: true,
         data
     });
@@ -422,7 +422,7 @@ export const assetReimport = (assetId: string, data: AssetReimportData) => {
  */
 export const assetDuplicate = (assetId: string, data: AssetDuplicateData) => {
     return Ajax.post({
-        url: `/api/assets/${assetId}/duplicate`,
+        url: `${api.restUrl}/assets/${assetId}/duplicate`,
         auth: true,
         data,
         headers: {
@@ -440,7 +440,7 @@ export const assetDuplicate = (assetId: string, data: AssetDuplicateData) => {
  */
 export const assetPaste = (data: AssetPasteData) => {
     return Ajax.post({
-        url: '/api/assets/paste',
+        url: `${api.restUrl}/assets/paste`,
         auth: true,
         data
     });
@@ -576,7 +576,7 @@ export const assetCreate = (data: AssetCreateData, pipeline: AssetPipelineOption
     assetUpdateFields(form, data, pipeline);
 
     return Ajax.post({
-        url: '/api/assets',
+        url: `${api.restUrl}/assets`,
         auth: true,
         data: form,
         ignoreContentType: true,
@@ -605,7 +605,7 @@ export const assetUpdate = (assetId: string, data: AssetUpdateData, pipeline: As
     assetUpdateFields(form, data, pipeline);
 
     return Ajax.put({
-        url: `/api/assets/${assetId}`,
+        url: `${api.restUrl}/assets/${assetId}`,
         auth: true,
         data: form,
         ignoreContentType: true,

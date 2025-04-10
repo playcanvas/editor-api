@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 /**
  * Gets the job with the given ID
@@ -8,7 +9,7 @@ import { Ajax } from '../ajax';
  */
 export const jobGet = (jobId: number) => {
     return Ajax.get({
-        url: `/api/jobs/${jobId}`,
+        url: `${api.restUrl}/jobs/${jobId}`,
         auth: true
     });
 };

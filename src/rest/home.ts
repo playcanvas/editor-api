@@ -25,7 +25,7 @@ export type HomeSceneEventData = {
  */
 export const homeBranch = () => {
     return Ajax.get({
-        url: `/editor/project/${api.projectId}/branch`,
+        url: `${api.homeUrl}/editor/project/${api.projectId}/branch`,
         auth: true
     });
 };
@@ -52,7 +52,7 @@ export const homeFile = (url: string, notJson: boolean = false) => {
  */
 export const homeSceneOpened = (sceneId: number) => {
     return Ajax.post({
-        url: `/editor/scene/${sceneId}/opened`
+        url: `${api.homeUrl}/editor/scene/${sceneId}/opened`
     });
 };
 
@@ -65,7 +65,7 @@ export const homeSceneOpened = (sceneId: number) => {
  */
 export const homeSceneEvent = (sceneId: number, data: HomeSceneEventData) => {
     return Ajax.post({
-        url: `/editor/scene/${sceneId}/events`,
+        url: `${api.homeUrl}/editor/scene/${sceneId}/events`,
         data
     });
 };
@@ -79,6 +79,6 @@ export const homeSceneEvent = (sceneId: number, data: HomeSceneEventData) => {
  */
 export const homeSceneTip = (sceneId: number, tip: string) => {
     return Ajax.post({
-        url: `/editor/scene/${sceneId}/tips/${tip}`
+        url: `${api.homeUrl}/editor/scene/${sceneId}/tips/${tip}`
     });
 };
