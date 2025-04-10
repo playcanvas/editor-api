@@ -32,7 +32,7 @@ export type SceneCreateData = {
  */
 export const sceneCreate = (data: SceneCreateData) => {
     return Ajax.post({
-        url: '/api/scenes',
+        url: `${api.restUrl}/scenes`,
         auth: true,
         data
     });
@@ -46,7 +46,7 @@ export const sceneCreate = (data: SceneCreateData) => {
  */
 export const sceneDelete = (sceneId: number) => {
     return Ajax.delete({
-        url: `/api/scenes/${sceneId}?branchId=${api.branchId}`,
+        url: `${api.restUrl}/scenes/${sceneId}?branchId=${api.branchId}`,
         auth: true
     });
 };
@@ -55,12 +55,12 @@ export const sceneDelete = (sceneId: number) => {
  * Gets the scene with the given ID
  *
  * @param sceneId - The ID of the scene to get
- * @param [cookies] - Whether to include cookies in the request
+ * @param cookies - Whether to include cookies in the request
  * @returns A request that responds with the scene data
  */
 export const sceneGet = (sceneId: number, cookies = false) => {
     return Ajax.get({
-        url: `/api/scenes/${sceneId}?branchId=${api.branchId}`,
+        url: `${api.restUrl}/scenes/${sceneId}?branchId=${api.branchId}`,
         auth: true,
         cookies
     });

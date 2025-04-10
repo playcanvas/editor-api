@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type StarCreateData = {
     scope: {
@@ -22,7 +23,7 @@ export type StarCreateData = {
  */
 export const starCreate = (data: StarCreateData) => {
     return Ajax.post({
-        url: '/api/star',
+        url: `${api.restUrl}/star`,
         auth: true,
         data
     });
@@ -36,7 +37,7 @@ export const starCreate = (data: StarCreateData) => {
  */
 export const starDelete = (starId: number) => {
     return Ajax.delete({
-        url: `/api/star/${starId}`,
+        url: `${api.restUrl}/star/${starId}`,
         auth: true
     });
 };

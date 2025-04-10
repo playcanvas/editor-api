@@ -92,6 +92,16 @@ class globals {
     static branchId: string;
 
     /**
+     * The home URL
+     */
+    static homeUrl: string = '';
+
+    /**
+     * The REST API URL
+     */
+    static restUrl: string = '';
+
+    /**
      * Whether this project is using legacy scripts
      * @category Internal
      */

@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 /**
  * Updates the payment subscription for the given user
@@ -9,7 +10,7 @@ import { Ajax } from '../ajax';
  */
 export const paymentSubUpdate = (userId: number, data: object) => {
     return Ajax.put({
-        url: `/api/payment/subscription/users/${userId}`,
+        url: `${api.restUrl}/payment/subscription/users/${userId}`,
         auth: true,
         data
     });

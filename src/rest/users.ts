@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 /**
  * Creates a new user
@@ -8,7 +9,7 @@ import { Ajax } from '../ajax';
  */
 export const userCreate = (data: object) => {
     return Ajax.post({
-        url: '/api/users',
+        url: `${api.restUrl}/users`,
         auth: true,
         data
     });
@@ -22,7 +23,7 @@ export const userCreate = (data: object) => {
  */
 export const userDelete = (userId: number) => {
     return Ajax.delete({
-        url: `/api/users/${userId}`,
+        url: `${api.restUrl}/users/${userId}`,
         auth: true,
         notJson: true
     });
@@ -36,7 +37,7 @@ export const userDelete = (userId: number) => {
  */
 export const userGet = (userId: number) => {
     return Ajax.get({
-        url: `/api/users/${userId}`,
+        url: `${api.restUrl}/users/${userId}`,
         auth: true
     });
 };
@@ -49,7 +50,7 @@ export const userGet = (userId: number) => {
  */
 export const userCollabList = (userId: number) => {
     return Ajax.get({
-        url: `/api/users/${userId}/collaborators`,
+        url: `${api.restUrl}/users/${userId}/collaborators`,
         auth: true
     });
 };
@@ -63,7 +64,7 @@ export const userCollabList = (userId: number) => {
  */
 export const userProjects = (userId: number, view: string) => {
     return Ajax.get({
-        url: `/api/users/${userId}/projects?view=${view}`,
+        url: `${api.restUrl}/users/${userId}/projects?view=${view}`,
         auth: true
     });
 };
@@ -76,7 +77,7 @@ export const userProjects = (userId: number, view: string) => {
  */
 export const userUsage = (userId: number) => {
     return Ajax.get({
-        url: `/api/users/${userId}/usage`,
+        url: `${api.restUrl}/users/${userId}/usage`,
         auth: true
     });
 };

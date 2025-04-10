@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type DiffCreateOptions = {
     /**
@@ -79,7 +80,7 @@ export const diffCreate = (options: DiffCreateOptions) => {
     }
 
     return Ajax.post({
-        url: '/api/diff',
+        url: `${api.restUrl}/diff`,
         auth: true,
         data
     });
@@ -93,7 +94,7 @@ export const diffCreate = (options: DiffCreateOptions) => {
  */
 export const diffMerge = (data: DiffMergeData) => {
     return Ajax.post({
-        url: '/api/diff',
+        url: `${api.restUrl}/diff`,
         auth: true,
         data
     });

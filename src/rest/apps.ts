@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 /**
  * Creates a new app
@@ -8,7 +9,7 @@ import { Ajax } from '../ajax';
  */
 export const appCreate = (data: object) => {
     return Ajax.post({
-        url: '/api/apps',
+        url: `${api.restUrl}/apps`,
         auth: true,
         data
     });
@@ -22,7 +23,7 @@ export const appCreate = (data: object) => {
  */
 export const appDelete = (appId: number) => {
     return Ajax.delete({
-        url: `/api/apps/${appId}`,
+        url: `${api.restUrl}/apps/${appId}`,
         auth: true
     });
 };
@@ -35,7 +36,7 @@ export const appDelete = (appId: number) => {
  */
 export const appList = (tags: string) => {
     return Ajax.get({
-        url: `/api/apps?tags=${tags}`,
+        url: `${api.restUrl}/apps?tags=${tags}`,
         auth: true
     });
 };
@@ -48,7 +49,7 @@ export const appList = (tags: string) => {
  */
 export const appGet = (appId: number) => {
     return Ajax.get({
-        url: `/api/apps/${appId}`,
+        url: `${api.restUrl}/apps/${appId}`,
         auth: true
     });
 };
@@ -61,7 +62,7 @@ export const appGet = (appId: number) => {
  */
 export const appDownload = (data: object) => {
     return Ajax.post({
-        url: '/api/apps/download',
+        url: `${api.restUrl}/apps/download`,
         auth: true,
         data
     });

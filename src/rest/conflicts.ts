@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type ConflictResolveData = {
     /**
@@ -35,7 +36,7 @@ export type ConflictResolveData = {
  */
 export const conflictsResolve = (data: ConflictResolveData) => {
     return Ajax.post({
-        url: '/api/conflicts/resolve',
+        url: `${api.restUrl}/conflicts/resolve`,
         auth: true,
         data
     });
@@ -53,7 +54,7 @@ export const conflictsUpload = (conflictId: string, file: File | Blob) => {
     form.append('file', file);
 
     return Ajax.put({
-        url: `/api/conflicts/${conflictId}/file`,
+        url: `${api.restUrl}/conflicts/${conflictId}/file`,
         auth: true,
         data: form,
         ignoreContentType: true,
