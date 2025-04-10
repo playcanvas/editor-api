@@ -1,11 +1,23 @@
+import fs from 'fs';
+
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import { dts } from 'rollup-plugin-dts';
 import polyfills from 'rollup-plugin-polyfill-node';
 
 import { runTsc } from './utils/plugins/rollup-run-tsc.mjs';
+
+const pkg = fs.readFileSync('./package.json', 'utf-8');
+let version;
+try {
+    version = JSON.parse(pkg).version;
+} catch (e) {
+    console.error('Error parsing package.json:', e);
+    process.exit(1);
+}
 
 const umd = {
     external: ['@playcanvas/observer'],
@@ -21,6 +33,10 @@ const umd = {
     plugins: [
         typescript({
             sourceMap: false
+        }),
+        replace({
+            __VERSION__: `v${version}`,
+            preventAssignment: true
         }),
         commonjs(),
         polyfills(),
@@ -60,6 +76,10 @@ const module = {
     plugins: [
         typescript({
             sourceMap: false
+        }),
+        replace({
+            __VERSION__: `v${version}`,
+            preventAssignment: true
         }),
         commonjs(),
         polyfills(),

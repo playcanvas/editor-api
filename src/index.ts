@@ -14,6 +14,7 @@ export type * from '../external/types/entity';
 export type * from '../external/types/scene-settings';
 
 // core
+export * from './version';
 export * from './polyfills';
 export * from './globals';
 export * from './utils';
