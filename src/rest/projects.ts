@@ -353,7 +353,7 @@ export const projectImage = (projectId: number, file: File) => {
  * Fetches a list of assets for the current project
  *
  * @param view - The view to get assets for
- * @param [cookies] - Whether to include cookies in the request
+ * @param cookies - Whether to include cookies in the request
  * @returns A request that responds with the list of assets
  */
 export const projectAssets = (view: string, cookies = false) => {
@@ -406,8 +406,8 @@ export const projectBranches = (options: ProjectBranchesOptions) => {
 /**
  * Fetches a list of apps for the current project
  *
- * @param [limit] - The maximum number of apps to return
- * @param [skip] - The number of apps to skip
+ * @param limit - The maximum number of apps to return
+ * @param skip - The number of apps to skip
  * @returns A request that responds with the list of apps
  */
 export const projectApps = (limit = 0, skip = 0) => {

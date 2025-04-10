@@ -105,7 +105,7 @@ export const storeGet = (storeId: number) => {
  * Uploads a store item
  *
  * @param data - The data for the new store item
- * @param [mimeType] - The MIME type of the store item
+ * @param mimeType - The MIME type of the store item
  * @returns A request that responds with the new store item
  */
 export const storeUpload = (data: object, mimeType: string) => {

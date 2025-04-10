@@ -55,7 +55,7 @@ export const sceneDelete = (sceneId: number) => {
  * Gets the scene with the given ID
  *
  * @param sceneId - The ID of the scene to get
- * @param [cookies] - Whether to include cookies in the request
+ * @param cookies - Whether to include cookies in the request
  * @returns A request that responds with the scene data
  */
 export const sceneGet = (sceneId: number, cookies = false) => {

@@ -525,7 +525,7 @@ const assetUpdateFields = (form: FormData, data: AssetUpdateData, pipeline: Asse
  * Creates a new asset
  *
  * @param data - The data to upload
- * @param [pipeline] - The pipeline options to use for the asset
+ * @param pipeline - The pipeline options to use for the asset
  * @returns A request that responds with the result of the upload
  */
 export const assetCreate = (data: AssetCreateData, pipeline: AssetPipelineOptions = {}) => {
@@ -591,7 +591,7 @@ export const assetCreate = (data: AssetCreateData, pipeline: AssetPipelineOption
  *
  * @param assetId - The ID of the asset to update
  * @param data - The data to update
- * @param [pipeline] - The pipeline options to use for the asset
+ * @param pipeline - The pipeline options to use for the asset
  * @returns A request that responds with the result of the update
  */
 export const assetUpdate = (assetId: string, data: AssetUpdateData, pipeline: AssetPipelineOptions = {}) => {

@@ -34,7 +34,7 @@ export const homeBranch = () => {
  * Gets raw file from the server
  *
  * @param url - The URL of the file to get
- * @param [notJson] - If the file is not JSON
+ * @param notJson - If the file is not JSON
  * @returns The request object
  */
 export const homeFile = (url: string, notJson: boolean = false) => {
