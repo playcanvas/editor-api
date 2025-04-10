@@ -234,6 +234,168 @@ export type Conflict = {
     isTextualMerge?: boolean;
 };
 
+export type Merge = {
+    /**
+     * The ID of the merge
+     */
+    id: string;
+
+    /**
+     * The ID of the source branch
+     */
+    sourceBranchId: string;
+
+    /**
+     * The ID of the source checkpoint
+     */
+    sourceCheckpointId: string;
+
+    /**
+     * The ID of the destination branch
+     */
+    destinationBranchId: string;
+
+    /**
+     * The ID of the destination checkpoint
+     */
+    destinationCheckpointId: string;
+
+    /**
+     * The ID of the project
+     */
+    projectId: number;
+
+    /**
+     * The ID of the user who created the merge
+     */
+    userId: number;
+
+    /**
+     * The date the merge was created
+     */
+    createdAt: string;
+
+    /**
+     * The number of conflicts in the merge
+     */
+    numConflicts: number;
+
+    /**
+     * Whether the merge is a diff
+     */
+    isDiff: boolean;
+
+    /**
+     * The expiration time of the merge
+     */
+    expirationTime?: string;
+
+    /**
+     * The progress status of the merge
+     */
+    mergeProgressStatus?: string;
+
+    /**
+     * Whether to close the source branch after merging
+     */
+    sourceBranchClose?: boolean;
+
+    /**
+     * The conflicts of the merge
+     */
+    conflicts?: {
+        /**
+         * The ID of the conflict
+         */
+        itemId: string,
+
+        /**
+         * The type of the item
+         */
+        itemType: string,
+
+        /**
+         * The name of the item
+         */
+        itemName: string,
+
+        /**
+         * The type of the asset
+         */
+        assetType: string,
+
+        /**
+         * The immutable backup of the base value
+         */
+        baseImmutableBackup: string;
+
+        /**
+         * The immutable backup of the source value
+         */
+        srcImmutableBackup: string;
+
+        /**
+         * The immutable backup of the destination value
+         */
+        dstImmutableBackup: string;
+
+        /**
+         * The filename of the base value
+         */
+        baseFilename: string;
+
+        /**
+         * The filename of the source value
+         */
+        srcFilename: string;
+
+        /**
+         * The filename of the destination value
+         */
+        dstFilename: string;
+    }[]
+
+    /**
+     * Source checkpoint
+     */
+    srcCheckpoint?: {
+        /**
+         * The assets of the source checkpoint
+         */
+        assets: Record<string, string>;
+
+        /**
+         * The scenes of the source checkpoint
+         */
+        scenes: Record<string, Record<string, string>>;
+
+        /**
+         * The settings of the source checkpoint
+         */
+        settings: Record<string, any>
+    }
+
+    /**
+     * Destination checkpoint
+     */
+    dstCheckpoint?: {
+        /**
+         * The assets of the destination checkpoint
+         */
+        assets: Record<string, string>;
+
+        /**
+         * The scenes of the destination checkpoint
+         */
+        scenes: Record<string, Record<string, string>>;
+
+        /**
+         * The settings of the destination checkpoint
+         */
+        settings: Record<string, any>
+    }
+};
+
 export type User = {
     /**
      * The ID of the user

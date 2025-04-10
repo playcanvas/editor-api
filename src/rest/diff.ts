@@ -1,11 +1,18 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
+import type { Merge } from '../types/models';
 
-export type DiffCreateOptions = {
+// args
+export type DiffCreateArgs = {
     /**
      * The ID of the source branch
      */
     srcBranchId: string;
+
+    /**
+     * The ID of the destination branch
+     */
+    dstBranchId: string;
 
     /**
      * The ID of the source checkpoint
@@ -13,14 +20,14 @@ export type DiffCreateOptions = {
     srcCheckpointId?: string;
 
     /**
-     * The ID of the destination branch
-     */
-    dstBranchId: string;
-
-    /**
      * The ID of the destination checkpoint
      */
     dstCheckpointId?: string;
+
+    /**
+     * The ID of the merge
+     */
+    mergeId?: string;
 
     /**
      * The ID of the history item
@@ -28,74 +35,50 @@ export type DiffCreateOptions = {
     histItem?: string;
 };
 
-export type DiffMergeData = {
-    /**
-     * The ID of the source branch
-     */
-    srcBranchId: string;
-
-    /**
-     * The ID of the destination branch
-     */
-    dstBranchId: string;
-
-    /**
-     * The ID of the destination checkpoint
-     */
-    dstCheckpointId: string;
-
-    /**
-     * The ID of the merge
-     */
-    mergeId: string;
-};
+// responses
+export type DiffResponse = Merge;
 
 /**
  * Creates a new diff
  *
- * @param options - The options for the diff
+ * @param args - The options for the diff
  * @returns A request that responds with the new diff
  */
-export const diffCreate = (options: DiffCreateOptions) => {
+export const diffCreate = (args: DiffCreateArgs) => {
     const data: {
         srcBranchId: string;
         dstBranchId: string;
         srcCheckpointId?: string;
         dstCheckpointId?: string;
+        mergeId?: string;
         vcHistItem?: string;
     } = {
-        srcBranchId: options.srcBranchId,
-        dstBranchId: options.dstBranchId
+        srcBranchId: args.srcBranchId,
+        dstBranchId: args.dstBranchId
     };
-
-    if (options.histItem) {
-        data.vcHistItem = options.histItem;
+    if (args.srcCheckpointId) {
+        data.srcCheckpointId = args.srcCheckpointId;
+    }
+    if (args.dstCheckpointId) {
+        data.dstCheckpointId = args.dstCheckpointId;
+    }
+    if (args.mergeId) {
+        data.mergeId = args.mergeId;
+    }
+    if (args.histItem) {
+        data.vcHistItem = args.histItem;
     }
 
-    if (options.srcCheckpointId) {
-        data.srcCheckpointId = options.srcCheckpointId;
-    }
-    if (options.dstCheckpointId) {
-        data.dstCheckpointId = options.dstCheckpointId;
-    }
-
-    return Ajax.post({
+    return Ajax.post<DiffResponse>({
         url: `${api.apiUrl}/diff`,
         auth: true,
-        data
-    });
-};
-
-/**
- * Merges the diff
- *
- * @param data - The data for the merge
- * @returns A request that responds with the result of the merge
- */
-export const diffMerge = (data: DiffMergeData) => {
-    return Ajax.post({
-        url: `${api.apiUrl}/diff`,
-        auth: true,
-        data
+        data: {
+            srcBranchId: data.srcBranchId,
+            dstBranchId: data.dstBranchId,
+            srcCheckpointId: data.srcCheckpointId,
+            dstCheckpointId: data.dstCheckpointId,
+            mergeId: data.mergeId,
+            vcHistItem: data.vcHistItem
+        }
     });
 };
