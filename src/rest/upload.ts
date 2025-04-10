@@ -55,7 +55,7 @@ type UploadCompleteData = {
  * ID and s3 key
  */
 export const uploadStart = (data: UploadStartData): Promise<{ uploadId: string, key: string }> => {
-    return fetch('/api/upload/start-upload', {
+    return fetch(`${api.restUrl}/upload/start-upload`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -75,7 +75,7 @@ export const uploadStart = (data: UploadStartData): Promise<{ uploadId: string, 
  * @returns {Promise<{ signedUrls: string[] }>} - A promise that resolves with the signed URLs
  */
 export const uploadUrls = (data: UploadUrlsData): Promise<{ signedUrls: string[] }> => {
-    return fetch('/api/upload/signed-urls', {
+    return fetch(`${api.restUrl}/upload/signed-urls`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -95,7 +95,7 @@ export const uploadUrls = (data: UploadUrlsData): Promise<{ signedUrls: string[]
  * @returns {Promise<Response>} - A promise that resolves when the upload is complete
  */
 export const uploadComplete = (data: UploadCompleteData): Promise<Response> => {
-    return fetch('/api/upload/complete-upload', {
+    return fetch(`${api.restUrl}/upload/complete-upload`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {

@@ -1,4 +1,5 @@
 import { Ajax } from '../ajax';
+import { globals as api } from '../globals';
 
 export type WatchCreateData = {
     scope: {
@@ -22,7 +23,7 @@ export type WatchCreateData = {
  */
 export const watchCreate = (data: WatchCreateData) => {
     return Ajax.post({
-        url: '/api/watch',
+        url: `${api.restUrl}/watch`,
         auth: true,
         data
     });
@@ -36,7 +37,7 @@ export const watchCreate = (data: WatchCreateData) => {
  */
 export const watchDelete = (watchId: number) => {
     return Ajax.delete({
-        url: `/api/watch/${watchId}`,
+        url: `${api.restUrl}/watch/${watchId}`,
         auth: true
     });
 };

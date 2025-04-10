@@ -126,7 +126,7 @@ export type ProjectBranchesOptions = {
  */
 export const projectCreate = (data: ProjectCreateData) => {
     return Ajax.post({
-        url: '/api/projects',
+        url: `${api.restUrl}/projects`,
         auth: true,
         data
     });
@@ -141,7 +141,7 @@ export const projectCreate = (data: ProjectCreateData) => {
  */
 export const projectUpdate = (projectId: number, data: object) => {
     return Ajax.put({
-        url: `/api/projects/${projectId}`,
+        url: `${api.restUrl}/projects/${projectId}`,
         auth: true,
         data
     });
@@ -155,7 +155,7 @@ export const projectUpdate = (projectId: number, data: object) => {
  */
 export const projectGet = (projectId: number) => {
     return Ajax.get({
-        url: `/api/projects/${projectId}`,
+        url: `${api.restUrl}/projects/${projectId}`,
         auth: true
     });
 };
@@ -168,7 +168,7 @@ export const projectGet = (projectId: number) => {
  */
 export const projectDelete = (projectId: number) => {
     return Ajax.delete({
-        url: `/api/projects/${projectId}`,
+        url: `${api.restUrl}/projects/${projectId}`,
         auth: true,
         notJson: true
     });
@@ -182,7 +182,7 @@ export const projectDelete = (projectId: number) => {
  */
 export const projectImport = (data: ProjectImportData) => {
     return Ajax.post({
-        url: '/api/projects/import',
+        url: `${api.restUrl}/projects/import`,
         auth: true,
         data
     });
@@ -196,7 +196,7 @@ export const projectImport = (data: ProjectImportData) => {
  */
 export const projectExport = (projectId: number) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/export`,
+        url: `${api.restUrl}/projects/${projectId}/export`,
         auth: true
     });
 };
@@ -209,7 +209,7 @@ export const projectExport = (projectId: number) => {
  */
 export const projectUnlock = (projectId: number) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/unlock`,
+        url: `${api.restUrl}/projects/${projectId}/unlock`,
         auth: true
     });
 };
@@ -223,7 +223,7 @@ export const projectUnlock = (projectId: number) => {
  */
 export const projectTransfer = (projectId: number, data: ProjectTransferData) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/transfer`,
+        url: `${api.restUrl}/projects/${projectId}/transfer`,
         auth: true,
         data
     });
@@ -237,7 +237,7 @@ export const projectTransfer = (projectId: number, data: ProjectTransferData) =>
  */
 export const projectAcceptTransfer = (projectId: number) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/accept_transfer`,
+        url: `${api.restUrl}/projects/${projectId}/accept_transfer`,
         auth: true
     });
 };
@@ -250,7 +250,7 @@ export const projectAcceptTransfer = (projectId: number) => {
  */
 export const projectDeclineTransfer = (projectId: number) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/decline_transfer`,
+        url: `${api.restUrl}/projects/${projectId}/decline_transfer`,
         auth: true
     });
 };
@@ -263,7 +263,7 @@ export const projectDeclineTransfer = (projectId: number) => {
  */
 export const projectActivity = (projectId: number) => {
     return Ajax.get({
-        url: `/api/projects/${projectId}/activity`,
+        url: `${api.restUrl}/projects/${projectId}/activity`,
         auth: true
     });
 };
@@ -276,7 +276,7 @@ export const projectActivity = (projectId: number) => {
  */
 export const projectCollabList = (projectId: number) => {
     return Ajax.get({
-        url: `/api/projects/${projectId}/collaborators`,
+        url: `${api.restUrl}/projects/${projectId}/collaborators`,
         auth: true
     });
 };
@@ -290,7 +290,7 @@ export const projectCollabList = (projectId: number) => {
  */
 export const projectCollabCreate = (projectId: number, collab: ProjectCollabCreateData) => {
     return Ajax.post({
-        url: `/api/projects/${projectId}/collaborators`,
+        url: `${api.restUrl}/projects/${projectId}/collaborators`,
         auth: true,
         data: collab
     });
@@ -305,7 +305,7 @@ export const projectCollabCreate = (projectId: number, collab: ProjectCollabCrea
  */
 export const projectCollabUpdate = (projectId: number, collab: ProjectCollabUpdateData) => {
     return Ajax.put({
-        url: `/api/projects/${projectId}/collaborators/${collab.id}`,
+        url: `${api.restUrl}/projects/${projectId}/collaborators/${collab.id}`,
         auth: true,
         data: {
             access_level: collab.access_level
@@ -322,7 +322,7 @@ export const projectCollabUpdate = (projectId: number, collab: ProjectCollabUpda
  */
 export const projectCollabDelete = (projectId: number, collabId: number) => {
     return Ajax.delete({
-        url: `/api/projects/${projectId}/collaborators/${collabId}`,
+        url: `${api.restUrl}/projects/${projectId}/collaborators/${collabId}`,
         auth: true
     });
 };
@@ -339,7 +339,7 @@ export const projectImage = (projectId: number, file: File) => {
     form.append('file', file);
 
     return Ajax.post({
-        url: `/api/projects/${projectId}/image`,
+        url: `${api.restUrl}/projects/${projectId}/image`,
         auth: true,
         data: form,
         ignoreContentType: true,
@@ -353,12 +353,12 @@ export const projectImage = (projectId: number, file: File) => {
  * Fetches a list of assets for the current project
  *
  * @param view - The view to get assets for
- * @param [cookies] - Whether to include cookies in the request
+ * @param cookies - Whether to include cookies in the request
  * @returns A request that responds with the list of assets
  */
 export const projectAssets = (view: string, cookies = false) => {
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/assets?branchId=${api.branchId}&view=${view}`,
+        url: `${api.restUrl}/projects/${api.projectId}/assets?branchId=${api.branchId}&view=${view}`,
         auth: true,
         cookies
     });
@@ -371,7 +371,7 @@ export const projectAssets = (view: string, cookies = false) => {
  */
 export const projectScenes = () => {
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/scenes?branchId=${api.branchId}`,
+        url: `${api.restUrl}/projects/${api.projectId}/scenes?branchId=${api.branchId}`,
         auth: true
     });
 };
@@ -398,7 +398,7 @@ export const projectBranches = (options: ProjectBranchesOptions) => {
     }
 
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/branches?${params.join('&')}`,
+        url: `${api.restUrl}/projects/${api.projectId}/branches?${params.join('&')}`,
         auth: true
     });
 };
@@ -406,8 +406,8 @@ export const projectBranches = (options: ProjectBranchesOptions) => {
 /**
  * Fetches a list of apps for the current project
  *
- * @param [limit] - The maximum number of apps to return
- * @param [skip] - The number of apps to skip
+ * @param limit - The maximum number of apps to return
+ * @param skip - The number of apps to skip
  * @returns A request that responds with the list of apps
  */
 export const projectApps = (limit = 0, skip = 0) => {
@@ -416,7 +416,7 @@ export const projectApps = (limit = 0, skip = 0) => {
     params.push(`skip=${skip}`);
 
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/apps?${params.join('&')}`,
+        url: `${api.restUrl}/projects/${api.projectId}/apps?${params.join('&')}`,
         auth: true
     });
 };
@@ -428,7 +428,7 @@ export const projectApps = (limit = 0, skip = 0) => {
  */
 export const projectRepoList = () => {
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/repositories`,
+        url: `${api.restUrl}/projects/${api.projectId}/repositories`,
         auth: true
     });
 };
@@ -441,7 +441,7 @@ export const projectRepoList = () => {
  */
 export const projectRepoSourcefilesList = (repoService: string) => {
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/repositories/${repoService}/sourcefiles`,
+        url: `${api.restUrl}/projects/${api.projectId}/repositories/${repoService}/sourcefiles`,
         auth: true
     });
 };
@@ -455,7 +455,7 @@ export const projectRepoSourcefilesList = (repoService: string) => {
  */
 export const projectRepoSourcefile = (repoService: string, relativePath: string) => {
     return Ajax.get({
-        url: `/api/projects/${api.projectId}/repositories/${repoService}/sourcefiles/${relativePath}`,
+        url: `${api.restUrl}/projects/${api.projectId}/repositories/${repoService}/sourcefiles/${relativePath}`,
         auth: true,
         notJson: true
     });
@@ -470,7 +470,7 @@ export const projectRepoSourcefile = (repoService: string, relativePath: string)
  */
 export const projectRepoSourcefilesDelete = (fileName: string, repoService = 'directory') => {
     return Ajax.delete({
-        url: `/api/projects/${api.projectId}/repositories/${repoService}/sourcefiles/${fileName}`,
+        url: `${api.restUrl}/projects/${api.projectId}/repositories/${repoService}/sourcefiles/${fileName}`,
         auth: true
     });
 };
