@@ -206,12 +206,21 @@ class Ajax<T> extends Events {
         }
     }
 
-    promisify() {
+    /**
+     * @param onprogress - The progress callback.
+     * @returns A promise that resolves with the response.
+     */
+    promisify(onprogress: (progress: number) => void) {
+        this.unbind('progress');
+        if (onprogress) {
+            this.on('progress', onprogress);
+        }
+        this.on('progress', onprogress);
         return new Promise<T>((resolve, reject) => {
-            this.on('load', (_status, response: T) => {
+            this.once('load', (_status, response: T) => {
                 resolve(response);
             });
-            this.on('error', (_status, error) => {
+            this.once('error', (_status, error) => {
                 reject(error);
             });
         });
