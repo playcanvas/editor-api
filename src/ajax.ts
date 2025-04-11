@@ -207,7 +207,7 @@ class Ajax<T> extends Events {
     }
 
     promisify() {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<T>((resolve, reject) => {
             this.on('load', (_status, response: T) => {
                 resolve(response);
             });
