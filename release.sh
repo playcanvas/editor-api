@@ -9,9 +9,9 @@ if [ -z "$TYPE" ]; then
 fi
 
 # Confirm release
-read -p "Are you sure you want to release a new version? (y/N): " -n 1 -r
+read -p "Are you sure you want to release a new version? (y/N): " -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\nRelease cancelled."
+    echo "Release cancelled."
     exit 1
 fi
 
