@@ -101,7 +101,7 @@ export const mergeApply = (args: MergeApplyArgs) => {
  * Get a merge object by merge id including all of its conflicts
  */
 export const mergeGet = (args: MergeGetArgs) => {
-    return Ajax.get<Response>({
+    return Ajax.get<MergeResponse>({
         url: `${api.apiUrl}/merge/${args.mergeId}`,
         auth: true
     });
