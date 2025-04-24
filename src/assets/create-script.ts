@@ -107,6 +107,9 @@ import { Script } from 'playcanvas';
  * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
  */
 export class ${className} extends Script {
+
+    static scriptName = "${scriptName}"
+
     /**
      * Called when the script is about to run for the first time.
      */
@@ -134,6 +137,9 @@ import { Script } from 'playcanvas';
  * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
  */
 export class ${className} extends Script {
+
+    static scriptName = "${scriptName}"
+
     /**
      * Called when the script is about to run for the first time.
      */
