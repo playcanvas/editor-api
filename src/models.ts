@@ -319,7 +319,7 @@ export type Merge = {
         /**
          * The conflict data without the grouped fields
          */
-        data: Omit<Conflict, ConflictGroupedFields>;
+        data: Omit<Conflict, ConflictGroupedFields>[];
     })[];
 
     /**
@@ -381,7 +381,7 @@ export type Diff = Omit<Merge, 'conflicts'> & {
         /**
          * The conflict data without the grouped fields
          */
-        data: Omit<Conflict, ConflictGroupedFields & DiffHiddenFields>;
+        data: Omit<Conflict, ConflictGroupedFields & DiffHiddenFields>[];
     })[];
 };
 
