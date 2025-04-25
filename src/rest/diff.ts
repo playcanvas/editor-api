@@ -1,6 +1,6 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
-import type { Merge } from '../models';
+import type { Diff } from '../models';
 
 // args
 export type DiffCreateArgs = {
@@ -36,7 +36,7 @@ export type DiffCreateArgs = {
 };
 
 // responses
-export type DiffResponse = Merge;
+export type DiffResponse = Diff;
 
 /**
  * Creates a new diff

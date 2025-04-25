@@ -234,6 +234,18 @@ export type Conflict = {
     isTextualMerge?: boolean;
 };
 
+type ConflictGroupedFields =
+    | 'itemId'
+    | 'itemType'
+    | 'itemName'
+    | 'assetType'
+    | 'baseImmutableBackup'
+    | 'srcImmutableBackup'
+    | 'dstImmutableBackup'
+    | 'baseFilename'
+    | 'srcFilename'
+    | 'dstFilename';
+
 export type Merge = {
     /**
      * The ID of the merge
@@ -303,57 +315,12 @@ export type Merge = {
     /**
      * The conflicts of the merge
      */
-    conflicts?: {
+    conflicts?: (Pick<Conflict, ConflictGroupedFields> & {
         /**
-         * The ID of the conflict
+         * The conflict data without the grouped fields
          */
-        itemId: string,
-
-        /**
-         * The type of the item
-         */
-        itemType: string,
-
-        /**
-         * The name of the item
-         */
-        itemName: string,
-
-        /**
-         * The type of the asset
-         */
-        assetType: string,
-
-        /**
-         * The immutable backup of the base value
-         */
-        baseImmutableBackup: string;
-
-        /**
-         * The immutable backup of the source value
-         */
-        srcImmutableBackup: string;
-
-        /**
-         * The immutable backup of the destination value
-         */
-        dstImmutableBackup: string;
-
-        /**
-         * The filename of the base value
-         */
-        baseFilename: string;
-
-        /**
-         * The filename of the source value
-         */
-        srcFilename: string;
-
-        /**
-         * The filename of the destination value
-         */
-        dstFilename: string;
-    }[]
+        data: Omit<Conflict, ConflictGroupedFields>;
+    })[];
 
     /**
      * Source checkpoint
@@ -372,8 +339,8 @@ export type Merge = {
         /**
          * The settings of the source checkpoint
          */
-        settings: Record<string, any>
-    }
+        settings: Record<string, any>;
+    };
 
     /**
      * Destination checkpoint
@@ -392,8 +359,30 @@ export type Merge = {
         /**
          * The settings of the destination checkpoint
          */
-        settings: Record<string, any>
-    }
+        settings: Record<string, any>;
+    };
+};
+
+type DiffHiddenFields =
+    | 'useSrc'
+    | 'useDst'
+    | 'useMergedFile'
+    | 'baseType'
+    | 'baseImmutableBackup'
+    | 'baseFilename'
+    | 'missingInBase'
+    | 'baseTooBig';
+
+export type Diff = Omit<Merge, 'conflicts'> & {
+    /**
+     * The grouped conflicts of the diff
+     */
+    conflicts?: (Pick<Conflict, ConflictGroupedFields> & {
+        /**
+         * The conflict data without the grouped fields
+         */
+        data: Omit<Conflict, ConflictGroupedFields & DiffHiddenFields>;
+    })[];
 };
 
 export type User = {
