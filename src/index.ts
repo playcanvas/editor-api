@@ -9,6 +9,7 @@
  * @module Editor
  */
 // types
+export type * from '../external/types/config';
 export type * from '../external/types/asset';
 export type * from '../external/types/entity';
 export type * from '../external/types/scene-settings';
