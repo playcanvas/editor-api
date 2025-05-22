@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -30,6 +31,7 @@ jobs:
         run: npm test
 
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
