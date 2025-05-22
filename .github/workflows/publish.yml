@@ -23,7 +23,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build PlayCanvas
+      - name: Build PlayCanvas Editor API
         run: npm run build
 
       - name: Publish to npm
