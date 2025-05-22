@@ -53,7 +53,7 @@ export type CheckpointResponse = Pick<Checkpoint, 'id' | 'createdAt' | 'descript
     user: Pick<User, 'id'>;
 };
 export type CheckpointUserResponse = Pick<Checkpoint, 'id' | 'createdAt' | 'description'> & {
-    user: Pick<User, 'id' | 'email' | 'fullName' | 'username'>;
+    user: Pick<User, 'id' | 'fullName' | 'username'>;
 };
 
 /**
