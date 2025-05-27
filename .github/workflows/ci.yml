@@ -27,6 +27,9 @@ jobs:
       - name: Build PlayCanvas Editor API
         run: npm run build
 
+      - name: Run Publint
+        run: npm run publint
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
