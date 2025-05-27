@@ -25,6 +25,8 @@ jobs:
 
       - name: Build PlayCanvas Editor API
         run: npm run build
+        env:
+          NODE_ENV: production
 
       - name: Publish to npm
         run: npm publish
