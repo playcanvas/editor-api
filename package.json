@@ -68,8 +68,8 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "karma start test/karma.conf.js --single-run",
-    "test:debug": "karma start test/karma.conf.js --single-run=false --browsers Chrome",
+    "test": "karma start test/karma.conf.cjs --single-run",
+    "test:debug": "karma start test/karma.conf.cjs --single-run=false --browsers Chrome",
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "docs": "typedoc",
