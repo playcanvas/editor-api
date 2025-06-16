@@ -52,12 +52,12 @@ function createScript(filename: string, text: string) {
     }
 
     if (!filename) {
-        filename = `${scriptName}.js`;
+        filename = `${scriptName}.mjs`;
     }
 
     const hasValidExtension = validExtensions.some(ext => filename.endsWith(ext));
     if (!hasValidExtension) {
-        filename += '.js';
+        filename += '.mjs';
     }
 
     // Extract extension from filename
