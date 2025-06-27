@@ -108,7 +108,7 @@ import { Script } from 'playcanvas';
  */
 export class ${className} extends Script {
 
-    static scriptName = "${scriptName}";
+    static scriptName = '${scriptName}';
 
     /**
      * Called when the script is about to run for the first time.
