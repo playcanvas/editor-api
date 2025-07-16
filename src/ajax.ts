@@ -2,6 +2,13 @@ import { Events } from '@playcanvas/observer';
 
 import { globals as api } from './globals';
 
+const SUCCESS_CODES = [
+    200, // OK
+    201, // Created
+    202, // Accepted
+    204  // No Content
+];
+
 type AjaxArgs = {
     // The URL to make the request to.
     url: string;
@@ -144,7 +151,7 @@ class Ajax<T> extends Events {
         this._progress = 1;
         this.emit('progress', 1);
 
-        if (this._xhr.status === 200 || this._xhr.status === 201) {
+        if (SUCCESS_CODES.includes(this._xhr.status)) {
             if (this._notJson) {
                 this.emit('load', this._xhr.status, this._xhr.responseText);
             } else {
