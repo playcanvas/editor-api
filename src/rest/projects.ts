@@ -1,54 +1,90 @@
 import { Ajax } from '../ajax';
 import { globals as api } from '../globals';
 
-export type ProjectCreateData = {
+type ProjectRequestArgs = {
     /**
      * The name of the project
      */
-    name: string;
-
-    /**
-     * The description of the project
-     */
-    description: string;
-
-    /**
-     * Whether the project is private
-     */
-    private: boolean;
-
-    /**
-     * Whether the project's assets are private
-     */
-    private_assets: boolean;
-
-    /**
-     * The project to fork from
-     */
-    fork_from: number;
+    name?: string;
 
     /**
      * The owner of the project
      */
-    owner: number;
+    owner?: string;
+
+    /**
+     * The description of the project
+     */
+    description?: string;
+
+    /**
+     * The URL of the project
+     */
+    website?: string;
+
+    /**
+     * Whether the project is private
+     */
+    private?: boolean;
+
+    /**
+     * Whether the project's assets are private
+     */
+    private_source_assets?: boolean;
+
+    /**
+     * The ID of the project to fork from
+     */
+    fork_from?: number;
+
+    /**
+     * The image URL of the project
+     */
+    image_url?: string;
 
     /**
      * The settings for the project
      */
-    settings: {
-        /**
-         * The type of the project
-         */
-        type: string;
+    settings?: object;
 
-        /**
-         * The ID of the project
-         */
-        id: number;
-    };
+    /**
+     * The primary app ID of the project
+     */
+    primary_app?: number;
+
+    /**
+     * The tags for the project
+     */
+    tags: string[];
+}
+
+// requests
+export type ProjectCreateArgs = Omit<ProjectRequestArgs, 'name'> & {
+    /**
+     * The name of the project
+     */
+    name: string;
+}
+export type ProjectUpdateArgs = ProjectRequestArgs & {
+    /**
+     * The ID of the project to update
+     */
+    projectId: number;
+
 };
-
-export type ProjectImportData = {
+export type ProjectGetArgs = {
+    /**
+     * The ID of the project to get
+     */
+    projectId: number;
+};
+export type ProjectDeleteArgs = {
+    /**
+     * The ID of the project to delete
+     */
+    projectId: number;
+};
+export type ProjectImportArgs = {
     /**
      * The URL to export the project from
      */
@@ -59,14 +95,20 @@ export type ProjectImportData = {
      */
     owner: number;
 };
+export type ProjectExportArgs = {
+    /**
+     * The ID of the project to export
+     */
+    projectId: number;
+};
 
+// TODO: Migrate to more structured args format
 export type ProjectTransferData = {
     /**
      * The ID of the new owner of the project
      */
     owner_id: number;
 };
-
 export type ProjectCollabCreateData = {
     /**
      * The username of the collaborator
@@ -83,7 +125,6 @@ export type ProjectCollabCreateData = {
      */
     access_level: string;
 };
-
 export type ProjectCollabUpdateData = {
     /**
      * The ID of the collaborator
@@ -95,7 +136,6 @@ export type ProjectCollabUpdateData = {
      */
     access_level: string;
 };
-
 export type ProjectBranchesOptions = {
     /**
      * The maximum number of branches to return
@@ -118,57 +158,77 @@ export type ProjectBranchesOptions = {
     favorite?: boolean;
 };
 
+// responses
+// TODO: Implement response types
+export type ProjectCreateResponse = object;
+export type ProjectUpdateResponse = object;
+export type ProjectGetResponse = object;
+export type ProjectDeleteResponse = '';
+export type ProjectImportResponse = object;
+export type ProjectExportResponse = object;
+
 /**
  * Creates a new project
- *
- * @param data - The data for the new project
- * @returns A request that responds with the new project
  */
-export const projectCreate = (data: ProjectCreateData) => {
-    return Ajax.post({
+export const projectCreate = (args: ProjectCreateArgs) => {
+    return Ajax.post<ProjectCreateResponse>({
         url: `${api.apiUrl}/projects`,
         auth: true,
-        data
+        data: {
+            name: args.name,
+            owner: args.owner,
+            description: args.description,
+            website: args.website,
+            private: args.private,
+            private_source_assets: args.private_source_assets,
+            fork_from: args.fork_from,
+            image_url: args.image_url,
+            settings: args.settings,
+            primary_app: args.primary_app,
+            tags: args.tags
+        }
     });
 };
 
 /**
  * Updates a project
- *
- * @param projectId - The ID of the project to update
- * @param data - The data to update the project with
- * @returns A request that responds with the updated project
  */
-export const projectUpdate = (projectId: number, data: object) => {
-    return Ajax.put({
-        url: `${api.apiUrl}/projects/${projectId}`,
+export const projectUpdate = (args: ProjectUpdateArgs) => {
+    return Ajax.put<ProjectUpdateResponse>({
+        url: `${api.apiUrl}/projects/${args.projectId}`,
         auth: true,
-        data
+        data: {
+            name: args.name,
+            owner: args.owner,
+            description: args.description,
+            website: args.website,
+            private: args.private,
+            private_source_assets: args.private_source_assets,
+            fork_from: args.fork_from,
+            image_url: args.image_url,
+            settings: args.settings,
+            primary_app: args.primary_app,
+            tags: args.tags
+        }
     });
 };
 
 /**
  * Gets a project by ID
- *
- * @param projectId - The ID of the project to get
- * @returns A request that responds with the project
  */
-export const projectGet = (projectId: number) => {
-    return Ajax.get({
-        url: `${api.apiUrl}/projects/${projectId}`,
+export const projectGet = (args: ProjectGetArgs) => {
+    return Ajax.get<ProjectGetResponse>({
+        url: `${api.apiUrl}/projects/${args.projectId}`,
         auth: true
     });
 };
 
 /**
  * Deletes a project by ID
- *
- * @param projectId - The ID of the project to delete
- * @returns A request that responds when the project is deleted
  */
-export const projectDelete = (projectId: number) => {
-    return Ajax.delete({
-        url: `${api.apiUrl}/projects/${projectId}`,
+export const projectDelete = (args: ProjectDeleteArgs) => {
+    return Ajax.delete<ProjectDeleteResponse>({
+        url: `${api.apiUrl}/projects/${args.projectId}`,
         auth: true,
         notJson: true
     });
@@ -176,27 +236,21 @@ export const projectDelete = (projectId: number) => {
 
 /**
  * Imports a project
- *
- * @param data - The data for the project import
- * @returns A request that responds when the project is imported
  */
-export const projectImport = (data: ProjectImportData) => {
-    return Ajax.post({
+export const projectImport = (args: ProjectImportArgs) => {
+    return Ajax.post<ProjectImportResponse>({
         url: `${api.apiUrl}/projects/import`,
         auth: true,
-        data
+        data: args
     });
 };
 
 /**
  * Exports a project by ID
- *
- * @param projectId - The ID of the project to export
- * @returns A request that responds when the project is exported
  */
-export const projectExport = (projectId: number) => {
-    return Ajax.post({
-        url: `${api.apiUrl}/projects/${projectId}/export`,
+export const projectExport = (args: ProjectExportArgs) => {
+    return Ajax.post<ProjectExportResponse>({
+        url: `${api.apiUrl}/projects/${args.projectId}/export`,
         auth: true
     });
 };
