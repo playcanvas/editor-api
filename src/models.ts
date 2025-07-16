@@ -406,3 +406,45 @@ export type User = {
      */
     username: string;
 };
+
+export type Job<T extends object> = {
+    /**
+     * The unique identifier for the job.
+     */
+    id: number;
+
+    /**
+     * The scope of the job.
+     */
+    scope: {
+        /**
+         * The ID of the scope.
+         */
+        id: number;
+
+        /**
+         * The type of the scope.
+         */
+        type: string;
+    };
+
+    /**
+     * The time when the job was created.
+     */
+    created_at: string;
+
+    /**
+     * The time when the job was last modified.
+     */
+    modified_at: string;
+
+    /**
+     * The status of the job.
+     */
+    status: 'complete' | 'running' | 'error';
+
+    /**
+     * The job data.
+     */
+    data: T;
+};
