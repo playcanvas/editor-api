@@ -55,7 +55,7 @@ type ProjectRequestArgs = {
     /**
      * The tags for the project
      */
-    tags: string[];
+    tags?: string[];
 }
 
 // requests
