@@ -1,6 +1,6 @@
 {
   "name": "@playcanvas/editor-api",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "author": "PlayCanvas <support@playcanvas.com>",
   "homepage": "https://github.com/playcanvas/editor-api#readme",
   "description": "The PlayCanvas Editor API",
