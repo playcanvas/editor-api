@@ -10,10 +10,10 @@
     "api"
   ],
   "license": "MIT",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -68,15 +68,15 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "karma start test/karma.conf.cjs --single-run",
-    "test:debug": "karma start test/karma.conf.cjs --single-run=false --browsers Chrome",
     "build": "rollup -c",
-    "watch": "rollup -c -w",
     "docs": "typedoc",
     "lint": "eslint src rollup.config.mjs",
     "lint:fix": "eslint src rollup.config.mjs --fix",
+    "publint": "publint",
+    "test": "karma start test/karma.conf.cjs --single-run",
+    "test:debug": "karma start test/karma.conf.cjs --single-run=false --browsers Chrome",
     "type:check": "tsc --noEmit",
-    "publint": "publint"
+    "watch": "rollup -c -w"
   },
   "engines": {
     "node": ">=18.0.0"
