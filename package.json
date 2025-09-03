@@ -70,8 +70,8 @@
   "scripts": {
     "build": "rollup -c",
     "docs": "typedoc",
-    "lint": "eslint src rollup.config.mjs",
-    "lint:fix": "eslint src rollup.config.mjs --fix",
+    "lint": "eslint src rollup.config.mjs eslint.config.mjs",
+    "lint:fix": "eslint src rollup.config.mjs eslint.config.mjs --fix",
     "publint": "publint",
     "test": "karma start test/karma.conf.cjs --single-run",
     "test:debug": "karma start test/karma.conf.cjs --single-run=false --browsers Chrome",
