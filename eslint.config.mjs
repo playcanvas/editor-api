@@ -1,15 +1,12 @@
 import playcanvasConfig from '@playcanvas/eslint-config';
-// eslint-disable-next-line import/no-unresolved
 import typescriptParser from '@typescript-eslint/parser';
 import globals from 'globals';
 
 export default [
     ...playcanvasConfig,
     {
-        files: ['**/*.ts', '**/*.mjs'],
+        files: ['**/*.ts'],
         languageOptions: {
-            ecmaVersion: 2022,
-            sourceType: 'module',
             parser: typescriptParser,
             parserOptions: {
                 requireConfigFile: false
@@ -27,6 +24,17 @@ export default [
             'jsdoc/require-returns': 'off',
             'jsdoc/require-returns-type': 'off',
             'no-use-before-define': 'off'
+        }
+    },
+    {
+        files: ['**/*.mjs'],
+        languageOptions: {
+            globals: {
+                ...globals.node
+            }
+        },
+        rules: {
+            'import/no-unresolved': 'off'
         }
     },
     {
