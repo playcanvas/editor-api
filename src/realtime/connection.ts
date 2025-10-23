@@ -3,6 +3,7 @@ import { type } from 'ot-text';
 import * as share from 'sharedb/lib/client/index';
 share.types.register(type);
 
+import { Deferred } from '../deferred';
 import { globals as api } from '../globals';
 import { Realtime } from '../realtime';
 
@@ -37,7 +38,7 @@ class RealtimeConnection extends Events {
 
     private _authenticated: boolean;
 
-    private _sendQueue: (string | ArrayBuffer | Blob | ArrayBufferView)[] = [];
+    private _sendPromise: Deferred<void>;
 
     private _domEvtVisibilityChange: () => void;
 
@@ -92,7 +93,6 @@ class RealtimeConnection extends Events {
         this._sharedb.on('connected', () => {
             this._connected = true;
             this._reconnectAttempts = 0;
-            this._reconnectInterval = RECONNECT_INTERVAL;
 
             this.sendMessage('auth', {
                 accessToken: api.accessToken
@@ -109,15 +109,6 @@ class RealtimeConnection extends Events {
         this._sharedb.on('bs error' as any, (msg: any) => {
             this._realtime.emit('error:bs', msg);
         });
-
-        const send = this._socket.send;
-        this._socket.send = (data) => {
-            if (this._socket.readyState === WebSocket.OPEN) {
-                send.call(this._socket, data);
-            } else {
-                this._sendQueue.push(data);
-            }
-        };
 
         const onmessage = this._socket.onmessage;
         this._socket.onmessage = (msg) => {
@@ -145,14 +136,14 @@ class RealtimeConnection extends Events {
 
         const onopen = this._socket.onopen;
         this._socket.onopen = (ev) => {
-            while (this._sendQueue.length) {
-                this._socket.send(this._sendQueue.shift());
-            }
+            this._sendPromise.resolve();
             onopen.call(this._socket, ev);
         };
 
         const onclose = this._socket.onclose;
         this._socket.onclose = (reason) => {
+            this._sendPromise = new Deferred<void>();
+
             this._connected = false;
             this._authenticated = false;
 
@@ -197,10 +188,9 @@ class RealtimeConnection extends Events {
      *
      * @param data - The message data
      */
-    send(data: string) {
-        if (this._socket && this._socket.readyState === WebSocket.OPEN) {
-            this._socket.send(data);
-        }
+    async send(data: string) {
+        await this._sendPromise;
+        this._socket.send(data);
     }
 
     /**
