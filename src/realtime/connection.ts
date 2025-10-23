@@ -38,9 +38,11 @@ class RealtimeConnection extends Events {
 
     private _authenticated: boolean = false;
 
-    private _sendPromise: Deferred<void> = new Deferred<void>();
+    private _active: Deferred<WebSocket> = new Deferred<WebSocket>();
 
     private _domEvtVisibilityChange: () => void;
+
+    private _alive: ReturnType<typeof setInterval> | null = null;
 
     /**
      * Constructor
@@ -61,49 +63,33 @@ class RealtimeConnection extends Events {
         };
     }
 
-    /**
-     * Connect to the realtime server
-     *
-     * @param url - The server URL
-     */
-    connect(url: string) {
-        this._url = url;
-
-        if (this._reconnectAttempts > MAX_ATTEMPTS) {
-            this._realtime.emit('cannotConnect');
-            return;
+    private _onauth(socket: WebSocket) {
+        if (this._sharedb) {
+            this._sharedb.bindToSocket(socket);
+        } else {
+            this._sharedb = new share.Connection(socket) as ShareDb;
+            this._sharedb.on('error', (err) => {
+                if (this._sharedb?.state === 'connected') {
+                    return;
+                }
+                this._realtime.emit('error', err);
+            });
+            this._sharedb.on('bs error' as any, (msg: any) => {
+                this._realtime.emit('error:bs', msg);
+            });
         }
 
-        this._reconnectAttempts++;
-        this._realtime.emit('connecting', this._reconnectAttempts);
+        // reset keep alive
+        if (this._alive) {
+            clearInterval(this._alive);
+        }
+        this._alive = setInterval(() => {
+            this._sharedb?.ping();
+        }, 1000);
 
-        // create new socket
-        this._socket = new WebSocket(url);
-        // create new sharedb connection
-        this._sharedb = new share.Connection(this._socket) as ShareDb;
-
-        this._sharedb.on('connected', () => {
-            this._connected = true;
-            this._reconnectAttempts = 0;
-
-            this.sendMessage('auth', {
-                accessToken: api.accessToken
-            });
-
-            this._realtime.emit('connected');
-        });
-        this._sharedb.on('error', (msg: any) => {
-            if (this._sharedb.state === 'connected') {
-                return;
-            }
-            this._realtime.emit('error', msg);
-        });
-        this._sharedb.on('bs error' as any, (msg: any) => {
-            this._realtime.emit('error:bs', msg);
-        });
-
-        const onmessage = this._socket.onmessage;
-        this._socket.onmessage = (msg) => {
+        // intercept messages
+        const onmessage = socket.onmessage;
+        socket.onmessage = (msg) => {
             try {
                 // handle auth
                 if (msg.data.startsWith('auth')) {
@@ -123,27 +109,68 @@ class RealtimeConnection extends Events {
             } catch (err) {
                 console.error(err);
             }
-            onmessage.call(this._socket, msg);
+            onmessage.call(socket, msg);
         };
 
-        const onopen = this._socket.onopen;
-        this._socket.onopen = (ev) => {
-            // allow sending messages
-            this._sendPromise.resolve();
+        // allow sending messages
+        this._active.resolve(socket);
 
-            onopen.call(this._socket, ev);
+        // mark as authenticated
+        this._authenticated = true;
+        this._realtime.emit('authenticated');
+    }
+
+    /**
+     * Connect to the realtime server
+     *
+     * @param url - The server URL
+     */
+    connect(url: string) {
+        this._url = url;
+
+        if (this._reconnectAttempts > MAX_ATTEMPTS) {
+            this._realtime.emit('cannotConnect');
+            return;
+        }
+
+        this._reconnectAttempts++;
+        this._realtime.emit('connecting', this._reconnectAttempts);
+
+        // create new socket
+        const socket = new WebSocket(url);
+
+        socket.onopen = () => {
+            this._connected = true;
+            this._reconnectAttempts = 0;
+
+            socket.send(`auth${JSON.stringify({ accessToken: api.accessToken })}`);
+
+            this._realtime.emit('connected');
         };
 
-        const onclose = this._socket.onclose;
-        this._socket.onclose = (reason) => {
+        socket.onmessage = (msg) => {
+            if (msg.data.toString().startsWith('auth')) {
+
+                socket.onmessage = null; // clear this handler
+
+                this._onauth(socket);
+            }
+        };
+
+        socket.onclose = (reason) => {
             // block sending messages
-            this._sendPromise = new Deferred<void>();
+            this._active = new Deferred<WebSocket>();
+
+            // clear keep alive
+            if (this._alive) {
+                clearInterval(this._alive);
+                this._alive = null;
+            }
 
             this._connected = false;
             this._authenticated = false;
 
             this._realtime.emit('disconnect', reason);
-            onclose.call(this._socket, reason);
 
             this._realtime.emit('nextAttempt', this._reconnectInterval);
 
@@ -155,15 +182,17 @@ class RealtimeConnection extends Events {
         };
 
         document.addEventListener('visibilitychange', this._domEvtVisibilityChange);
+
+        this._socket = socket;
     }
 
     /**
      * Disconnect from the server
      */
     disconnect() {
-        if (this._socket) {
-            this._socket.close();
-        }
+        this._sharedb?.close();
+
+        this._socket?.close();
 
         document.removeEventListener('visibilitychange', this._domEvtVisibilityChange);
     }
@@ -184,8 +213,8 @@ class RealtimeConnection extends Events {
      * @param data - The message data
      */
     async send(data: string) {
-        await this._sendPromise;
-        this._socket.send(data);
+        const socket = await this._active.promise;
+        socket.send(data);
     }
 
     /**
