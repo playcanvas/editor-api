@@ -84,7 +84,12 @@ class RealtimeConnection extends Events {
             clearInterval(this._alive);
         }
         this._alive = setInterval(() => {
-            this._sharedb?.ping();
+            if (!this._sharedb) {
+                return;
+            }
+            if (this._sharedb.state === 'connected') {
+                this._sharedb.ping();
+            }
         }, 1000);
 
         // intercept messages
