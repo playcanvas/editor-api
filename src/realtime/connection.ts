@@ -128,12 +128,15 @@ class RealtimeConnection extends Events {
 
         const onopen = this._socket.onopen;
         this._socket.onopen = (ev) => {
+            // allow sending messages
             this._sendPromise.resolve();
+
             onopen.call(this._socket, ev);
         };
 
         const onclose = this._socket.onclose;
         this._socket.onclose = (reason) => {
+            // block sending messages
             this._sendPromise = new Deferred<void>();
 
             this._connected = false;
