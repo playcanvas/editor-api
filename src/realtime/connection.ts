@@ -150,7 +150,9 @@ class RealtimeConnection extends Events {
 
         socket.onmessage = (msg) => {
             if (msg.data.toString().startsWith('auth')) {
-                socket.onmessage = null; // clear this handler
+                // clear this handler
+                socket.onmessage = null;
+
                 this._onauth(socket);
             }
         };
