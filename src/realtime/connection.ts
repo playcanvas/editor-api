@@ -30,15 +30,15 @@ class RealtimeConnection extends Events {
 
     private _sharedb: ShareDb;
 
-    private _reconnectAttempts: number;
+    private _reconnectAttempts: number = 0;
 
-    private _reconnectInterval: number;
+    private _reconnectInterval: number = RECONNECT_INTERVAL;
 
-    private _connected: boolean;
+    private _connected: boolean = false;
 
-    private _authenticated: boolean;
+    private _authenticated: boolean = false;
 
-    private _sendPromise: Deferred<void>;
+    private _sendPromise: Deferred<void> = new Deferred<void>();
 
     private _domEvtVisibilityChange: () => void;
 
@@ -50,15 +50,7 @@ class RealtimeConnection extends Events {
     constructor(realtime: Realtime) {
         super();
 
-        this._url = null;
         this._realtime = realtime;
-        this._socket = null;
-        this._sharedb = null;
-        this._reconnectAttempts = 0;
-        this._reconnectInterval = RECONNECT_INTERVAL;
-        this._connected = false;
-        this._authenticated = false;
-
         this._domEvtVisibilityChange = () => {
             if (document.hidden) {
                 return;
