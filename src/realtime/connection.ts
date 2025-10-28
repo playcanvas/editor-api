@@ -176,16 +176,14 @@ class RealtimeConnection extends Events {
 
         // ! use event listener as sharedb overrides socket.on* handlers
         socket.addEventListener('close', (reason) => {
-            console.log('closed');
-
             // block sending messages
             this._active = new Deferred<WebSocket>();
 
             // clear keep alive
-            // if (this._alive) {
-            //     clearInterval(this._alive);
-            //     this._alive = null;
-            // }
+            if (this._alive) {
+                clearInterval(this._alive);
+                this._alive = null;
+            }
 
             this._connected = false;
             this._authenticated = false;
