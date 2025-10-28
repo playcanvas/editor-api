@@ -61,7 +61,6 @@ class RealtimeScene extends Events {
     unload() {
         if (!this._document) return;
 
-        this._document.unsubscribe();
         this._document.destroy();
         this._document = null;
         this._loaded = false;

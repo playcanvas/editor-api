@@ -117,6 +117,17 @@ class RealtimeConnection extends Events {
             onmessage.call(socket, msg);
         };
 
+        // intercept send to queue and forward messages
+        const send = socket.send;
+        socket.send = (data: string) => {
+            // if not open use latest send
+            if (socket.readyState !== WebSocket.OPEN) {
+                this.send(data);
+                return;
+            }
+            send.call(socket, data);
+        };
+
         // allow sending messages
         this._active.resolve(socket);
 
@@ -144,25 +155,27 @@ class RealtimeConnection extends Events {
         // create new socket
         const socket = new WebSocket(url);
 
-        socket.onopen = () => {
+        socket.addEventListener('open', () => {
             this._connected = true;
             this._reconnectAttempts = 0;
 
             socket.send(`auth${JSON.stringify({ accessToken: api.accessToken })}`);
 
             this._realtime.emit('connected');
-        };
+        });
 
-        socket.onmessage = (msg) => {
+        const onmessage = (msg: Parameters<WebSocket['onmessage']>[0]) => {
             if (msg.data.toString().startsWith('auth')) {
                 // clear this handler
-                socket.onmessage = null;
+                socket.removeEventListener('message', onmessage);
 
                 this._onauth(socket);
             }
         };
+        socket.addEventListener('message', onmessage);
 
-        socket.onclose = (reason) => {
+        // ! use event listener as sharedb overrides socket.on* handlers
+        socket.addEventListener('close', (reason) => {
             // block sending messages
             this._active = new Deferred<WebSocket>();
 
@@ -184,7 +197,7 @@ class RealtimeConnection extends Events {
                     this.connect(this._url);
                 }, this._reconnectInterval * 1000);
             }
-        };
+        });
 
         document.addEventListener('visibilitychange', this._domEvtVisibilityChange);
 
