@@ -21,7 +21,7 @@ function createScript(filename: string, text: string) {
     // tokenize filename
     const tokens = [];
     const name = filename.slice(0, -3);
-    const str = name.replace(/([^A-Z])([A-Z][^A-Z])/g, '$1 $2').replace(/([A-Z0-9]{2,})/g, ' $1');
+    const str = name.replace(/([A-Z0-9])/g, ' $1');
     const parts = str.split(/([\s\-_.])/);
 
     // filter valid tokens
@@ -118,7 +118,7 @@ export class ${className} extends Script {
 
     /**
      * Called for enabled (running state) scripts on each tick.
-     * 
+     *
      * @param {number} dt - The delta time in seconds since the last frame.
      */
     update(dt) {
@@ -148,7 +148,7 @@ export class ${className} extends Script {
 
     /**
      * Called for enabled (running state) scripts on each tick.
-     * 
+     *
      * @param {number} dt - The delta time in seconds since the last frame.
      */
     update(dt: number): void {
