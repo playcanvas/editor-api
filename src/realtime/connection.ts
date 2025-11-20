@@ -142,6 +142,11 @@ class RealtimeConnection extends Events {
      * @param url - The server URL
      */
     connect(url: string) {
+        if (this._state === 'connected') {
+            console.warn('already connected to realtime server. Disconnect first before connecting again.');
+            return;
+        }
+
         if (this._state === 'connecting') {
             console.warn('already connecting to realtime server');
             return;
