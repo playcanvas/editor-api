@@ -34,7 +34,7 @@ class RealtimeConnection extends Events {
 
     private _reconnectInterval: number = RECONNECT_INTERVAL;
 
-    private _connected: boolean = false;
+    private _state: 'connecting' | 'connected' | 'disconnected' = 'disconnected';
 
     private _authenticated: boolean = false;
 
@@ -57,7 +57,7 @@ class RealtimeConnection extends Events {
             if (document.hidden) {
                 return;
             }
-            if (!this.connected && this._url) {
+            if (this._state === 'disconnected' && this._url) {
                 this.connect(this._url);
             }
         };
@@ -142,7 +142,13 @@ class RealtimeConnection extends Events {
      * @param url - The server URL
      */
     connect(url: string) {
+        if (this._state === 'connecting') {
+            console.warn('already connecting to realtime server');
+            return;
+        }
+
         this._url = url;
+        this._state = 'connecting';
 
         if (this._reconnectAttempts > MAX_ATTEMPTS) {
             this._realtime.emit('cannotConnect');
@@ -156,7 +162,7 @@ class RealtimeConnection extends Events {
         const socket = new WebSocket(url);
 
         socket.addEventListener('open', () => {
-            this._connected = true;
+            this._state = 'connected';
             this._reconnectAttempts = 0;
 
             socket.send(`auth${JSON.stringify({ accessToken: api.accessToken })}`);
@@ -185,7 +191,7 @@ class RealtimeConnection extends Events {
                 this._alive = null;
             }
 
-            this._connected = false;
+            this._state = 'disconnected';
             this._authenticated = false;
 
             this._realtime.emit('disconnect', reason);
@@ -264,7 +270,7 @@ class RealtimeConnection extends Events {
      * Whether the user is connected to the server
      */
     get connected() {
-        return this._connected;
+        return this._state === 'connected';
     }
 
     /**
