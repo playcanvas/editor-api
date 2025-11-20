@@ -34,6 +34,8 @@ class RealtimeConnection extends Events {
 
     private _reconnectInterval: number = RECONNECT_INTERVAL;
 
+    private _connecting: boolean = false;
+
     private _connected: boolean = false;
 
     private _authenticated: boolean = false;
@@ -142,7 +144,13 @@ class RealtimeConnection extends Events {
      * @param url - The server URL
      */
     connect(url: string) {
+        if (this._connecting) {
+            console.warn('already connecting to realtime server');
+            return;
+        }
+
         this._url = url;
+        this._connecting = true;
 
         if (this._reconnectAttempts > MAX_ATTEMPTS) {
             this._realtime.emit('cannotConnect');
@@ -156,6 +164,7 @@ class RealtimeConnection extends Events {
         const socket = new WebSocket(url);
 
         socket.addEventListener('open', () => {
+            this._connecting = false;
             this._connected = true;
             this._reconnectAttempts = 0;
 
@@ -185,6 +194,7 @@ class RealtimeConnection extends Events {
                 this._alive = null;
             }
 
+            this._connecting = false;
             this._connected = false;
             this._authenticated = false;
 
